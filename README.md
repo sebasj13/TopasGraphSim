@@ -26,7 +26,9 @@ be in the z-direction, dose profiles in the x- or y-directions.
 
 ## Includes an optional GUI
 
-Comes with basic file selection and preview of the graph, as well as the option to save the graph.
+The script is intended as a command line tool, where the first argument is the path to the file,
+and the second is the number of histories. However, the GUI can also be used. It comes with basic
+file selection and preview of the graph, as well as the option to save the graph.
 
 ### Assumes a ".csv" input file format from a TOPAS Scorer with the following header format:
 
