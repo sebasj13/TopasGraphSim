@@ -59,7 +59,7 @@ def fig_to_arr(title, axis, direction, dose, std_dev, *args):
                 verticalalignment='top', bbox=props)    
         
     else:
-        HWB, CAXdev, flat_krieger, flat_stddev, S, Lpenumbra, Rpenumbra, Lintegral, Rintegral = 
+        HWB, CAXdev, flat_krieger, flat_stddev, S, Lpenumbra, Rpenumbra, Lintegral, Rintegral = \
         args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8]
         textstr = "HWB = {} mm\n{} = {} mm\n{} = {}\n{} = {}\n{} = {} mm\n{} = {} mm\n{} = {}\n{} = {}\n\
 Symmetrie = {}".format(HWB, "$CAX_{dev}$", CAXdev, "$FLAT_{Krieger}$", flat_krieger, "$FLAT_{stddev}$", flat_stddev,\
