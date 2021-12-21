@@ -30,6 +30,11 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg
 
 def fig_to_arr(title, axis, direction, dose, std_dev, *args):
     
+    """
+    A function that creates a dope profile or
+    depth dose plot and returns it as an array.
+    """
+    
     fig = Figure(figsize=(10,5), dpi=1200)
     canvas = FigureCanvasAgg(fig)
     ax = fig.add_subplot(111)
@@ -54,30 +59,14 @@ def fig_to_arr(title, axis, direction, dose, std_dev, *args):
                 verticalalignment='top', bbox=props)    
         
     else:
-        HWB, CAXdev, flat_krieger, flat_stddev, S, Lpenumbra, Rpenumbra, Lintegral, Rintegral = args[0], args[1], args[2],\
-            args[3], args[4], args[5], args[6], args[7], args[8]
-        textstr = "HWB = {} mm\n\
-{} = {} mm\n\
-{} = {}\n\
-{} = {}\n\
-{} = {} mm\n\
-{} = {} mm\n\
-{} = {}\n\
-{} = {}\n\
+        HWB, CAXdev, flat_krieger, flat_stddev, S, Lpenumbra, Rpenumbra, Lintegral, Rintegral = 
+        args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7], args[8]
+        textstr = "HWB = {} mm\n{} = {} mm\n{} = {}\n{} = {}\n{} = {} mm\n{} = {} mm\n{} = {}\n{} = {}\n\
 Symmetrie = {}".format(HWB, "$CAX_{dev}$", CAXdev, "$FLAT_{Krieger}$", flat_krieger, "$FLAT_{stddev}$", flat_stddev,\
 "$Penumbra_{L}$", Lpenumbra, "$Penumbra_{R}$", Rpenumbra,"$Integral_{L}$", Lintegral, "$Integral_{R}$", Rintegral, S)   
         ax.text(0.5, 0.5, textstr, transform=ax.transAxes, fontsize=10,
-                verticalalignment='top', bbox=props, horizontalalignment="center")
+        verticalalignment='top', bbox=props, horizontalalignment="center")
         
-    """            
-    Q2, dQ, zmax2 = calculate_pdd_parameters(xvals, yvals, None)
-    textstr = "Q     = {}\n{} = {} mm".format(Q2,"$z_{max}$",zmax2)
-    ax.text(0.845, 0.975, textstr, transform=ax.transAxes, fontsize=10,
-            verticalalignment='top', bbox=props) 
-    ax.plot(xvals,yvals, "ro", ms=2, label = "Messwerte")
-    ax.legend(loc="upper center", bbox_to_anchor=(0.912,0.9), framealpha=0.6, facecolor="wheat", edgecolor="black", fancybox = True)
-    """   
-    
     ax.grid(True, which="major")
     ax.grid(True, which="minor", color="grey", linewidth=0.1)
     
@@ -92,6 +81,10 @@ Symmetrie = {}".format(HWB, "$CAX_{dev}$", CAXdev, "$FLAT_{Krieger}$", flat_krie
     return arr        
 
 def fits(image):
+    
+    """
+    A function that scales an image to the width of the screen.
+    """
     
     scr_width = GetSystemMetrics(0)
     width = int(scr_width)   

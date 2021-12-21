@@ -24,16 +24,30 @@ from tkinter import simpledialog as sd
 
 
 def load_exp_values():
+    
+    """
+    A function to load experimental results as lists,
+    which returns them in the proper format to be plotted.
+    """
+    
     xvals = np.array([])
     direction = "X"
     yvals = []
     maximum = max(yvals)
     yvals = np.array([value/maximum for value in yvals])
     std_dev = None
+    
     return xvals, direction, yvals, std_dev
 
-
 def read_data(path):
+    
+    """
+    A function that reads the relevant data from a TOPAS simulation
+    output file in ASCII format. Determines the type of data (depth
+    dose or dose profile) and calculates the standard deviation.
+    Uses the binning information to create the proper directional 
+    scalingamd normalizes the maximum of the data to 1.
+    """
 
     with open(path) as file:
         
@@ -116,6 +130,11 @@ def read_data(path):
 
 
 def calculate_pdd_parameters(axis, dose, std_dev):
+    
+    """
+    A function to calculate the relevant 
+    descriptive parameters of depth doses.
+    """
 
     if type(std_dev) != np.ndarray:   
         TD20 = dose[(np.abs(axis-200)).argmin()] 
@@ -152,6 +171,11 @@ def calculate_pdd_parameters(axis, dose, std_dev):
 
 def calculate_dp_parameters(axis, dose, std_dev):
     
+    """
+    A function to calculate the relevant
+    descriptive parameters of dose profiles.
+    """
+    
     interpolated_axis           = np.linspace(axis[0], axis[-1], len(axis)*100)
     akima_dose_interpolator     = interpolate.Akima1DInterpolator(axis, dose)
     interpolated_dose           = np.flip(akima_dose_interpolator.__call__(interpolated_axis))
@@ -166,7 +190,7 @@ def calculate_dp_parameters(axis, dose, std_dev):
     XR50 = interpolated_axis[int(len(interpolated_axis)/2):][(np.abs(interpolated_dose[int(len(interpolated_axis)/2):len(interpolated_axis)]-0.5)).argmin()]
     XR80 = interpolated_axis[int(len(interpolated_axis)/2):][(np.abs(interpolated_dose[int(len(interpolated_axis)/2):len(interpolated_axis)]-0.8)).argmin()]
 
-
+    
     HWB          = round(abs(XR50 - XL50),5)
     CAXdev       = round(XL50 + 0.5*HWB,5)
 
@@ -193,6 +217,12 @@ def calculate_dp_parameters(axis, dose, std_dev):
 
 def create_plot(title, axis, direction, dose, std_dev, *args):
     
+    """
+    A function to create the depth dose or dose profile
+    plot of the selected simulation result file. Includes
+    the calculated descriptive parameters.
+    """
+    
     fig, ax = plt.subplots()
     plt.style.use("default")
     fig.set_dpi(600)
@@ -216,18 +246,11 @@ def create_plot(title, axis, direction, dose, std_dev, *args):
     else:
         HWB, CAXdev, flat_krieger, flat_stddev, S, Lpenumbra, Rpenumbra, Lintegral, Rintegral = args[0], args[1], args[2],\
             args[3], args[4], args[5], args[6], args[7], args[8]
-        textstr = "HWB = {} mm\n\
-{} = {} mm\n\
-{} = {}\n\
-{} = {}\n\
-{} = {} mm\n\
-{} = {} mm\n\
-{} = {}\n\
-{} = {}\n\
+        textstr = "HWB = {} mm\n{} = {} mm\n{} = {}\n{} = {}\n{} = {} mm\n{} = {} mm\n{} = {}\n{} = {}\n\
 Symmetrie = {}".format(HWB, "$CAX_{dev}$", CAXdev, "$FLAT_{Krieger}$", flat_krieger, "$FLAT_{stddev}$", flat_stddev,\
 "$Penumbra_{L}$", Lpenumbra, "$Penumbra_{R}$", Rpenumbra,"$Integral_{L}$", Lintegral, "$Integral_{R}$", Rintegral, S)   
         ax.text(0.5, 0.5, textstr, transform=ax.transAxes, fontsize=10,
-                verticalalignment='top', bbox=props, horizontalalignment="center")
+        verticalalignment='top', bbox=props, horizontalalignment="center")
             
     ax.grid(True, which="major")
     ax.grid(True, which="minor", color="grey", linewidth=0.1)
@@ -242,6 +265,11 @@ Symmetrie = {}".format(HWB, "$CAX_{dev}$", CAXdev, "$FLAT_{Krieger}$", flat_krie
 
 
 def plot_args(path, exp=False):
+    
+    """
+    A function that returns the correct plot parameters
+    for the type of simulation performed.
+    """
     
     if exp == True:
         axis, direction, dose, std_dev = load_exp_values()
