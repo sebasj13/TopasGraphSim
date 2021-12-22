@@ -46,7 +46,7 @@ def read_data(path):
     output file in ASCII format. Determines the type of data (depth
     dose or dose profile) and calculates the standard deviation.
     Uses the binning information to create the proper directional 
-    scalingamd normalizes the maximum of the data to 1.
+    scaling and normalizes the maximum of the data to 1.
     """
 
     with open(path) as file:
