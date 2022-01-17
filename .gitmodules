@@ -1,6 +1,3 @@
 [submodule "Azure-ttk-theme"]
 	path = Azure-ttk-theme
 	url = https://github.com/rdbende/Azure-ttk-theme
-[submodule "Sun-Valley-ttk-theme"]
-	path = Sun-Valley-ttk-theme
-	url = https://github.com/rdbende/Sun-Valley-ttk-theme
