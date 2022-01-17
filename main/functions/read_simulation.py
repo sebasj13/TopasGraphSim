@@ -25,6 +25,10 @@ def load(path):
 
         for line in file:
 
+            if "# R" in line or "# Phi" in line:
+                x_settings = []
+                y_settings = []
+
             if "# X" in line:
                 x_settings = list(map(float, re.findall(r"[-+]?\d*\.\d+|\d+", line)))
                 settings += [x_settings]
