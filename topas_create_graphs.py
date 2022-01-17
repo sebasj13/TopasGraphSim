@@ -19,6 +19,9 @@ def run():
     root = tk.Tk()
     root.geometry(f"{root.winfo_screenwidth()//2}x{root.winfo_screenheight()//2}+0+0")
     root.title("Simulationsauswertung")
+    root.iconbitmap(
+        str(os.path.dirname(os.path.realpath(__file__)) + "\\main\\resources\\icon.ico")
+    )
     style = ttk.Style(root)
     root.tk.call(
         "source",
