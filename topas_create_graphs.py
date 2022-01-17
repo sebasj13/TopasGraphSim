@@ -14,7 +14,7 @@ import tkinter.ttk as ttk
 from main.classes.main_viewer import MainApplication
 
 
-def main():
+def run():
 
     root = tk.Tk()
     root.geometry("960x540")
@@ -32,4 +32,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    run()
