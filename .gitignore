@@ -132,3 +132,4 @@ dmypy.json
 *.toml
 *.cfg
 *.token
+setup.py
