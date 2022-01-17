@@ -38,6 +38,8 @@ Voxel Coordinate X, Voxel Coordinate Y, Voxel Coordinate Z, {Sum/Mean} Value, St
                  .   
                  .   
                  .   
+## Usage
+
 ## Dependencies
 
 Uses the beautiful Azure-ttk dark theme by @rdbende.
