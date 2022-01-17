@@ -13,14 +13,23 @@ import tkinter.ttk as ttk
 
 from main.classes.main_viewer import MainApplication
 
-root = tk.Tk()
-root.geometry("960x540")
-root.title("Simulationsauswertung")
-style = ttk.Style(root)
-root.tk.call(
-    "source",
-    str(os.path.dirname(os.path.realpath(__file__)) + "\\Azure-ttk-theme\\azure.tcl"),
-)
-root.tk.call("set_theme", "light")
-Main = MainApplication(root)
-root.mainloop()
+
+def main():
+
+    root = tk.Tk()
+    root.geometry("960x540")
+    root.title("Simulationsauswertung")
+    style = ttk.Style(root)
+    root.tk.call(
+        "source",
+        str(
+            os.path.dirname(os.path.realpath(__file__)) + "\\Azure-ttk-theme\\azure.tcl"
+        ),
+    )
+    root.tk.call("set_theme", "light")
+    Main = MainApplication(root)
+    root.mainloop()
+
+
+if __name__ == "__main__":
+    main()
