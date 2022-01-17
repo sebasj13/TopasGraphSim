@@ -17,7 +17,7 @@ from main.classes.main_viewer import MainApplication
 def run():
 
     root = tk.Tk()
-    root.geometry("960x540")
+    root.geometry(f"{root.winfo_screenwidth()//2}x{root.winfo_screenheight()//2}+0+0")
     root.title("Simulationsauswertung")
     style = ttk.Style(root)
     root.tk.call(
