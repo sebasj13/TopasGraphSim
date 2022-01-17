@@ -7,7 +7,7 @@ Language is in german.
 
 ## Installation
 
-Install using pip install topas-create-graphs. Then, start the GUI by running:
+Install using <b>pip install topas-create-graphs</b>. Then, start the GUI by running:
 
 <img src="https://user-images.githubusercontent.com/87897942/149772476-5d950e25-9a60-40a7-a739-c80f763405c9.png"  width="400" height="200" />
 
