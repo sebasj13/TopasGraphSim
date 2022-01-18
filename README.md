@@ -1,4 +1,4 @@
-# topas-create-graphs
+# topasgraphsim
 
 ## A script to automatically plot the results of a topas simulation
 
