@@ -47,4 +47,4 @@ Voxel Coordinate X, Voxel Coordinate Y, Voxel Coordinate Z, {Sum/Mean} Value, St
 ## Dependencies
 
 Uses the beautiful Azure-ttk dark theme by @rdbende.
-Requires python3, numpy, scipy, matplotlib, PIL, cv2, and tkinter.
+Requires python3, numpy, scipy, matplotlib, Pillow, python-opencv, pywin32, and tkinter.
