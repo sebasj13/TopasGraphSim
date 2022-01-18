@@ -7,7 +7,7 @@ Created on Thu Dec 16 13:25:16 2021
 @email: sebastian.schaefer@student.uni-halle.de
 """
 
-from src.functions import dp, pdd, read_measurement, read_simulation
+from . import dp, pdd, read_measurement, read_simulation
 
 
 def plot_args(path, type):

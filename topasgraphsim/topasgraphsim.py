@@ -11,10 +11,10 @@ import os
 import tkinter as tk
 import tkinter.ttk as ttk
 
-from src.classes.main_viewer import MainApplication
+from .src.classes.main_viewer import MainApplication
 
 
-def run():
+def topasgraphsim():
 
     root = tk.Tk()
     root.geometry(f"{root.winfo_screenwidth()//2}x{root.winfo_screenheight()//2}+0+0")
@@ -36,4 +36,4 @@ def run():
 
 
 if __name__ == "__main__":
-    run()
+    topasgraphsim()

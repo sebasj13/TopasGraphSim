@@ -1,1 +1,3 @@
-graft topasgraphsim/src
+graft topasgraphsim/src/Azure-ttk-theme
+graft topasgraphsim/src/resources
+exclude __pychache__/

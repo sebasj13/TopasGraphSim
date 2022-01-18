@@ -5,8 +5,9 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib.figure import Figure
 from matplotlib.ticker import AutoMinorLocator
 from PIL import Image, ImageTk
-from src.functions.plot_args import plot_args
 from win32api import GetSystemMetrics
+
+from ..functions.plot_args import plot_args
 
 
 class DoseFigureHandler:

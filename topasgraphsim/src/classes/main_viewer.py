@@ -3,7 +3,8 @@ import tkinter as tk
 from tkinter import filedialog as fd
 
 from PIL import Image, ImageTk
-from src.classes.dose_figure_handler import DoseFigureHandler
+
+from .dose_figure_handler import DoseFigureHandler
 
 
 class MainApplication(tk.Frame):
