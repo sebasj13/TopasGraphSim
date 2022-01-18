@@ -1,0 +1,3 @@
+[submodule "topasgraphsim/src/Azure-ttk-theme"]
+	path = topasgraphsim/src/Azure-ttk-theme
+	url = https://github.com/rdbende/Azure-ttk-theme
