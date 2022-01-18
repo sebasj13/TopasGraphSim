@@ -11,7 +11,7 @@ import os
 import tkinter as tk
 import tkinter.ttk as ttk
 
-from .src.classes.main_viewer import MainApplication
+from src.classes.main_viewer import MainApplication
 
 
 def topasgraphsim():
