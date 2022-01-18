@@ -7,9 +7,9 @@ Language is in german.
 
 ## Installation
 
-Install using <b>pip install topas-create-graphs</b>. Then, start the GUI by running:
+Install using <b>pip install topasgraphsim</b>. Then, start the GUI by running:
 
-<img src="https://user-images.githubusercontent.com/87897942/149772476-5d950e25-9a60-40a7-a739-c80f763405c9.png"  width="400" height="200" />
+<img src="https://user-images.githubusercontent.com/87897942/149929356-790ad05e-1d99-4999-a5ae-35b8da894c38.png"  width="300" height="75" />
 
 ## Automatically calculates relevant parameters
 
