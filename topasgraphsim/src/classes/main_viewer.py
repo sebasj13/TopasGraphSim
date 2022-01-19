@@ -188,7 +188,7 @@ class MainApplication(tk.Frame):
         self.filemenu.entryconfig(1, state=tk.NORMAL)
         self.filemenu.entryconfig(3, state=tk.DISABLED)
         self.filemenu.entryconfig(4, state=tk.DISABLED)
-        self.menubar.delete(1)
+        self.menubar.delete(3)
         self.filenames = []
         self.canvas.itemconfig(self.image_on_canvas, image=None)
         self.menuflag = False
