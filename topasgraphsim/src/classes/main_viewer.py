@@ -12,6 +12,13 @@ class MainApplication(tk.Frame):
 
         tk.Frame.__init__(self, parent, *args, **kwargs)
         self.parent = parent
+
+        self.parent.bind("<Control-d>", self.d_key)
+        self.parent.bind("<Control-o>", self.o_key)
+        self.parent.bind("<Control-s>", self.s_key)
+        self.parent.bind("<Control-t>", self.t_key)
+        self.parent.bind("<Escape>", self.esc_key)
+
         self.pack(side="top", fill="both", expand=True)
 
         self.menubar = tk.Menu(self.parent)
@@ -21,21 +28,30 @@ class MainApplication(tk.Frame):
         self.addmeasuremenu = tk.Menu(self.menubar, tearoff=False)
 
         self.addmeasuremenu.add_command(
-            label="Tiefendosiskurve", command=lambda: self.load_file("pdd")
+            label="Tiefendosiskurve",
+            command=lambda: self.load_file("pdd"),
+            accelerator="Ctrl+T",
         )
         self.addmeasuremenu.add_command(
-            label="Dosisquerverteilung", command=lambda: self.load_file("dp")
+            label="Dosisquerverteilung",
+            command=lambda: self.load_file("dp"),
+            accelerator="Ctrl+D",
         )
 
         self.filemenu.add_command(
             label="Simulationsergebnis laden",
             command=lambda: self.load_file("simulation"),
+            accelerator="Ctrl+O",
         )
         self.filemenu.add_cascade(label="Messung laden", menu=self.addmeasuremenu)
         self.filemenu.add_separator()
-        self.filemenu.add_command(label="Ergebnis abspeichern", command=self.save_graph)
         self.filemenu.add_command(
-            label="Derzeitige Simulation schließen", command=self.close_file
+            label="Ergebnis abspeichern", command=self.save_graph, accelerator="Ctrl+S"
+        )
+        self.filemenu.add_command(
+            label="Derzeitige Simulation schließen",
+            command=self.close_file,
+            accelerator="Esc",
         )
         self.filemenu.add_separator()
         self.filemenu.add_command(label="Beenden", command=self.parent.destroy)
@@ -46,7 +62,9 @@ class MainApplication(tk.Frame):
         self.addmenu = tk.Menu(self.menubar, tearoff=False)
 
         self.addmenu.add_command(
-            label="Simulationsergebnis", command=lambda: self.load_file("simulation")
+            label="Simulationsergebnis",
+            command=lambda: self.load_file("simulation"),
+            accelerator="Ctrl+O",
         )
         self.addmenu.add_cascade(label="Messung", menu=self.addmeasuremenu)
         self.addmenu.add_separator()
@@ -89,6 +107,15 @@ class MainApplication(tk.Frame):
         self.filemenu.entryconfig(3, state=tk.NORMAL)
         self.filemenu.entryconfig(4, state=tk.NORMAL)
 
+    def d_key(self, event=None):
+        self.load_file("dp")
+
+    def o_key(self, event=None):
+        self.load_file("simulation")
+
+    def t_key(self, event=None):
+        self.load_file("pdd")
+
     def close_file(self):
 
         self.canvas.pack_forget()
@@ -101,6 +128,9 @@ class MainApplication(tk.Frame):
         self.canvas.itemconfig(self.image_on_canvas, image=None)
         self.menuflag = False
         self.DoseFigureHandler.flush()
+
+    def esc_key(self, event=None):
+        self.close_file()
 
     def remove_last_addition(self):
 
@@ -127,6 +157,9 @@ class MainApplication(tk.Frame):
 
         ImageTk.getimage(self.photoimage).save(file)
         return
+
+    def s_key(self, event=None):
+        self.save_graph()
 
     def show_preview(self):
 
