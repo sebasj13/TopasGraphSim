@@ -12,6 +12,7 @@ import tkinter as tk
 import tkinter.ttk as ttk
 
 from src.classes.main_viewer import MainApplication
+from src.classes.profile import ProfileHandler
 
 
 def topasgraphsim():
@@ -22,6 +23,9 @@ def topasgraphsim():
     root.iconbitmap(
         str(os.path.dirname(os.path.realpath(__file__)) + "\\src\\resources\\icon.ico")
     )
+
+    Profile = ProfileHandler()
+
     style = ttk.Style(root)
     root.tk.call(
         "source",
@@ -30,8 +34,16 @@ def topasgraphsim():
             + "\\src\\Azure-ttk-theme\\azure.tcl"
         ),
     )
-    root.tk.call("set_theme", "light")
     Main = MainApplication(root)
+
+    color_scheme = Profile.get_attribute("color_scheme")
+    Main.autostartdark.set(color_scheme)
+    print(Main.autostartdark.get())
+
+    Main.autostart()
+
+    root.tk.call("set_theme", color_scheme)
+
     root.mainloop()
 
 

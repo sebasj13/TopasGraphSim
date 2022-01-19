@@ -5,6 +5,7 @@ from tkinter import filedialog as fd
 from PIL import Image, ImageTk
 
 from .dose_figure_handler import DoseFigureHandler
+from .profile import ProfileHandler
 
 
 class MainApplication(tk.Frame):
@@ -13,6 +14,8 @@ class MainApplication(tk.Frame):
         tk.Frame.__init__(self, parent, *args, **kwargs)
 
         self.parent = parent
+
+        self.profile = ProfileHandler()
 
         self.parent.bind("<Control-d>", self.d_key)
         self.parent.bind("<Control-o>", self.o_key)
@@ -74,7 +77,9 @@ class MainApplication(tk.Frame):
 
         self.viewmenu = tk.Menu(self.menubar, tearoff=False)
         self.dark = tk.BooleanVar()
+
         self.dark.set(False)
+
         self.viewmenu.add_checkbutton(
             label="Hell",
             variable=self.dark,
@@ -92,6 +97,22 @@ class MainApplication(tk.Frame):
 
         self.menubar.add_cascade(label="Ansicht", menu=self.viewmenu)
 
+        self.optionsmenu = tk.Menu(self.menubar)
+
+        self.autostartdark = tk.StringVar()
+
+        self.optionsmenu.add_checkbutton(
+            label="Im dunklen Modus starten",
+            variable=self.autostartdark,
+            command=lambda: self.profile.set_attribute(
+                "color_scheme", f"{self.autostartdark.get()}"
+            ),
+            onvalue="dark",
+            offvalue="light",
+        )
+
+        self.menubar.add_cascade(label="Optionen", menu=self.optionsmenu)
+
         self.menuflag = False
         self.parent.config(menu=self.menubar)
 
@@ -104,6 +125,15 @@ class MainApplication(tk.Frame):
 
         self.current_file = None
         self.filenames = []
+
+    def autostart(self):
+        if self.autostartdark.get() == "light":
+            self.dark.set(False)
+            self.switchtheme("light")
+        else:
+            self.dark.set(True)
+            self.switchtheme("dark")
+        return
 
     def switchtheme(self, theme):
 
