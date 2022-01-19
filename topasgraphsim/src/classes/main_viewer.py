@@ -18,6 +18,7 @@ class MainApplication(tk.Frame):
         self.parent.bind("<Control-s>", self.s_key)
         self.parent.bind("<Control-t>", self.t_key)
         self.parent.bind("<Escape>", self.esc_key)
+        self.parent.bind("<Control-z>", self.z_key)
 
         self.pack(side="top", fill="both", expand=True)
 
@@ -68,7 +69,9 @@ class MainApplication(tk.Frame):
         )
         self.addmenu.add_cascade(label="Messung", menu=self.addmeasuremenu)
         self.addmenu.add_separator()
-        self.addmenu.add_command(label="Rückgängig", command=self.remove_last_addition)
+        self.addmenu.add_command(
+            label="Rückgängig", command=self.remove_last_addition, accelerator="Ctrl+Z"
+        )
         self.addmenu.entryconfig(3, state=tk.DISABLED)
 
         self.menubar.add_cascade(label="Datei", menu=self.filemenu)
@@ -145,6 +148,9 @@ class MainApplication(tk.Frame):
         self.canvas.itemconfig(self.image_on_canvas, image=None)
         self.DoseFigureHandler.flush()
         self.show_preview()
+
+    def z_key(self, event=None):
+        self.remove_last_addition()
 
     def save_graph(self):
 
