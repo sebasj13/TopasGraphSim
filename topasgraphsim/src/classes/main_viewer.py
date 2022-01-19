@@ -83,10 +83,6 @@ class MainApplication(tk.Frame):
 
         self.filenames += [(self.current_file, type)]
 
-        if len(self.filenames) == 5:
-            self.addmenu.entryconfig(0, state=tk.DISABLED)
-            self.addmenu.entryconfig(1, state=tk.DISABLED)
-
         self.show_preview()
         self.filemenu.entryconfig(0, state=tk.DISABLED)
         self.filemenu.entryconfig(1, state=tk.DISABLED)
@@ -103,13 +99,13 @@ class MainApplication(tk.Frame):
         self.menubar.delete(1)
         self.filenames = []
         self.canvas.itemconfig(self.image_on_canvas, image=None)
-        self.flag = False
+        self.menuflag = False
         self.DoseFigureHandler.flush()
 
     def remove_last_addition(self):
 
         self.filenames.pop(-1)
-        if len(self.filenames) <= 2:
+        if len(self.filenames) < 2:
             self.addmenu.entryconfig(3, state=tk.DISABLED)
 
         if len(self.filenames) <= 4:
