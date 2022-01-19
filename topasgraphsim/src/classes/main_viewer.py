@@ -118,7 +118,15 @@ class MainApplication(tk.Frame):
 
     def save_graph(self):
 
-        self.graph.save(self.current_file.replace(".csv", ".png"))
+        file = fd.asksaveasfilename(
+            defaultextension=".png", filetypes=[("Bilder", [".png", ".jpg"])]
+        )
+
+        if file is None:
+            return
+
+        ImageTk.getimage(self.photoimage).save(file)
+        return
 
     def show_preview(self):
 
