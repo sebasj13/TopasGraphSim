@@ -11,9 +11,14 @@ from ..functions.plot_args import plot_args
 
 
 class DoseFigureHandler:
-    def __init__(self):
+    def __init__(self, parent):
 
-        plt.style.use("default")
+        self.parent = parent
+
+        self.style = plt.style.use("default")
+
+        self.current_mode = self.parent.dark.get()
+
         self.colors = [
             ["go", "bo", "ro", "co", "mo"],
             ["green", "blue", "red", "cyan", "magenta"],
@@ -29,6 +34,30 @@ class DoseFigureHandler:
         self.filepaths = []
         self.filenames = []
         self.data = []
+
+    def set_style(self):
+
+        if self.parent.dark.get() != self.current_mode:
+
+            if self.parent.dark.get() == True:
+                try:
+                    self.ax.set_facecolor("#363636")
+                    self.fig.set_facecolor("#363636")
+
+                except AttributeError:
+                    pass
+            else:
+                try:
+                    self.ax.set_facecolor("#ffffff")
+                    self.fig.set_facecolor("#ffffff")
+
+                except AttributeError:
+                    pass
+
+            self.current_mode = self.parent.dark.get()
+
+            if self.filenames != []:
+                self.parent.show_preview()
 
     def flush(self):
 
@@ -184,6 +213,7 @@ class DoseFigureHandler:
 
         self.set_axis()
         self.add_plot_data(filenames)
+        self.set_style()
         self.set_x_label()
         self.create_plots_from_data()
         self.add_legend()
