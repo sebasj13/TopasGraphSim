@@ -11,6 +11,7 @@ class MainApplication(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
 
         tk.Frame.__init__(self, parent, *args, **kwargs)
+
         self.parent = parent
 
         self.parent.bind("<Control-d>", self.d_key)
@@ -23,11 +24,8 @@ class MainApplication(tk.Frame):
         self.pack(side="top", fill="both", expand=True)
 
         self.menubar = tk.Menu(self.parent)
-
         self.filemenu = tk.Menu(self.menubar, tearoff=False)
-
         self.addmeasuremenu = tk.Menu(self.menubar, tearoff=False)
-
         self.addmeasuremenu.add_command(
             label="Tiefendosiskurve",
             command=lambda: self.load_file("pdd"),
@@ -38,7 +36,6 @@ class MainApplication(tk.Frame):
             command=lambda: self.load_file("dp"),
             accelerator="Ctrl+D",
         )
-
         self.filemenu.add_command(
             label="Simulationsergebnis laden",
             command=lambda: self.load_file("simulation"),
@@ -61,7 +58,6 @@ class MainApplication(tk.Frame):
         self.filemenu.entryconfig(4, state=tk.DISABLED)
 
         self.addmenu = tk.Menu(self.menubar, tearoff=False)
-
         self.addmenu.add_command(
             label="Simulationsergebnis",
             command=lambda: self.load_file("simulation"),
@@ -75,10 +71,31 @@ class MainApplication(tk.Frame):
         self.addmenu.entryconfig(3, state=tk.DISABLED)
 
         self.menubar.add_cascade(label="Datei", menu=self.filemenu)
+
+        self.viewmenu = tk.Menu(self.menubar, tearoff=False)
+        self.dark = tk.BooleanVar()
+        self.dark.set(False)
+        self.viewmenu.add_checkbutton(
+            label="Hell",
+            variable=self.dark,
+            command=lambda: self.switchtheme("light"),
+            onvalue=0,
+            offvalue=1,
+        )
+        self.viewmenu.add_checkbutton(
+            label="Dunkel",
+            variable=self.dark,
+            command=lambda: self.switchtheme("dark"),
+            onvalue=1,
+            offvalue=0,
+        )
+
+        self.menubar.add_cascade(label="Ansicht", menu=self.viewmenu)
+
         self.menuflag = False
         self.parent.config(menu=self.menubar)
 
-        self.DoseFigureHandler = DoseFigureHandler()
+        self.DoseFigureHandler = DoseFigureHandler(self)
 
         self.canvas = tk.Canvas(self)
         self.photoimage = None
@@ -87,6 +104,21 @@ class MainApplication(tk.Frame):
 
         self.current_file = None
         self.filenames = []
+
+    def switchtheme(self, theme):
+
+        if theme == "light":
+            self.parent.tk.call("set_theme", "light")
+            self.parent.configure(background="#ffffff")
+            self.DoseFigureHandler.set_style()
+            self.dark.set(False)
+
+        else:
+            # Set dark theme
+            self.parent.tk.call("set_theme", "dark")
+            self.DoseFigureHandler.set_style()
+            self.parent.configure(background="#363636")
+            self.dark.set(True)
 
     def load_file(self, type):
 
