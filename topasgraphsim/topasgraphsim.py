@@ -38,7 +38,6 @@ def topasgraphsim():
 
     color_scheme = Profile.get_attribute("color_scheme")
     Main.autostartdark.set(color_scheme)
-    print(Main.autostartdark.get())
 
     Main.autostart()
 
