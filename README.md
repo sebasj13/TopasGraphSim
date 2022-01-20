@@ -1,14 +1,14 @@
 # topasgraphsim
 
-## A script to automatically plot the results of a topas simulation
+## A interface to automatically plot the results of topas simulations and measurements
 
 Works for percentage depth dose (pdd) and dose profiles (dp). Depth dose measurements are assumed to be in the z-direction, dose profiles in the x- or y-directions.
-Language is in german.
+Available languages: english and german.
 
 ## Installation
 
 Install using <b>pip install topasgraphsim</b>. Then, start the GUI by running:
-    
+      
 <img src="https://user-images.githubusercontent.com/87897942/149929356-790ad05e-1d99-4999-a5ae-35b8da894c38.png"  width="300" height="75" />
 
 ## Automatically calculates relevant parameters
