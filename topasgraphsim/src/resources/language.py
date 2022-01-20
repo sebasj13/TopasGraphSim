@@ -18,6 +18,9 @@ class Text:
         self.simulation = {"de": "Simulation", "en": "Simulation"}
         self.loadmeasurement = {"de": "Messung laden", "en": "Load measurement"}
         self.measurement = {"de": "Messung", "en": "Measurement"}
+        self.simulationdata = {"de": "Simulationsdateien", "en": "Simulation Data"}
+        self.measurementdata = {"de": "Messdaten", "en": "Measurement Data"}
+        self.image = {"de": "Bilder", "en": "Images"}
         self.pdd = {"de": "Tiefendosiskurve", "en": "Depth dose"}
         self.dp = {"de": "Dosisquerverteilung", "en": "Dose profile"}
         self.save = {"de": "Graph abspeichern", "en": "Save graph"}

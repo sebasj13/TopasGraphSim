@@ -232,9 +232,9 @@ class MainApplication(tk.Frame):
         """
 
         if type == "simulation":
-            filetypes = [("Simulationsergebnisse", ".csv")]
+            filetypes = [(self.text.simulationdata[self.lang], ".csv")]
         else:
-            filetypes = [("Messdaten", ["txt", ".csv"])]
+            filetypes = [(self.text.measurementdata[self.lang], ["txt", ".csv"])]
 
         self.current_file = fd.askopenfilename(
             initialdir=os.getcwd(), filetypes=filetypes
@@ -293,7 +293,8 @@ class MainApplication(tk.Frame):
         """
 
         file = fd.asksaveasfilename(
-            defaultextension=".png", filetypes=[("Bilder", [".png", ".jpg"])]
+            defaultextension=".png",
+            filetypes=[(self.text.image[self.lang], [".png", ".jpg"])],
         )
 
         if file is None:
