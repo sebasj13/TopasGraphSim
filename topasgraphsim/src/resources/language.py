@@ -37,7 +37,7 @@ class Text:
             "en": "Das geöffnete Projekt wird geschlossen. Fortfahren?",
             "de": "The current project will be closed. Continue?",
         }
-        self.symmetry = {"de": "", "en": "Symmetry"}
+        self.symmetry = {"de": "Symmetrie", "en": "Symmetry"}
         self.fwhm = {"de": "HWB", "en": "FWHM"}
         self.axis = {"de": "Achse", "en": "Axis"}
         self.orr = {"de": "oder", "en": "or"}
