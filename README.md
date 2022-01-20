@@ -4,6 +4,9 @@
 
 Works for percentage depth dose (pdd) and dose profiles (dp). Depth dose measurements are assumed to be in the z-direction, dose profiles in the x- or y-directions.
 Available languages: english and german.
+     
+![image](https://user-images.githubusercontent.com/87897942/150243578-4dc4f73c-0f0b-4852-9553-0f31ba0f18d3.png)
+
 
 ## Installation
 
