@@ -6,7 +6,7 @@ Works for percentage depth dose (pdd) and dose profiles (dp). Depth dose measure
 Available languages: english and german.
 <br></br>          
 ![image](https://user-images.githubusercontent.com/87897942/150243578-4dc4f73c-0f0b-4852-9553-0f31ba0f18d3.png)
-
+<br></br>
 ## Installation
 
 Install using pip:
@@ -15,7 +15,7 @@ Install using pip:
 pip install topasgraphmc     
 ```
      
-Then, start the GUI by running
+Then, start the GUI by running:
      
 ```console
 python -m topasgraphsim
@@ -23,12 +23,12 @@ python -m topasgraphsim
      
 ## Automatically calculates relevant parameters
 
-| Measurement type | Parameters |         |              |             |                |                 |
-|------------------|:----------:|:-------:|:------------:|:-----------:|:--------------:|:---------------:|
-|                  |            |         |              |             |                |                 |
-| Depth dose       |  Q-Factor  |  z<sub>max</sub>  |              |             |                |                 |
-|                  |            |         |              |             |                |                 |
-| Dose profile     |    FWHM    | CAX<sub>dev</sub>  | FLAT<sub>Krieger</sub>  | FLAT<sub>stddev</sub>  | Penumbra (L&R) | Integral (L&R)  |
+| Measurement type | Parameters |                   |                        |                       |                |                |
+| ---------------- | :--------: | :---------------: | :--------------------: | :-------------------: | :------------: | :------------: |
+|                  |            |                   |                        |                       |                |                |
+| Depth dose       |  Q-Factor  |  z<sub>max</sub>  |                        |                       |                |                |
+|                  |            |                   |                        |                       |                |                |
+| Dose profile     |    FWHM    | CAX<sub>dev</sub> | FLAT<sub>Krieger</sub> | FLAT<sub>stddev</sub> | Penumbra (L&R) | Integral (L&R) |
 
 - Q-Factor : Radiation Quality Factor
 - z<sub>max</sub> : Depth at Maximum
