@@ -9,40 +9,25 @@ Created on Thu Dec 16 12:47:50 2021
 
 import os
 import tkinter as tk
-import tkinter.ttk as ttk
 
 from src.classes.main_viewer import MainApplication
-from src.classes.profile import ProfileHandler
 
 
 def topasgraphsim():
 
     root = tk.Tk()
-    root.geometry(f"{root.winfo_screenwidth()//2}x{root.winfo_screenheight()//2}+0+0")
-    root.title("Simulationsauswertung")
+    # Center the window
+    screen_width = root.winfo_screenwidth()
+    screen_height = root.winfo_screenheight()
+    width = screen_width / 2
+    height = screen_height / 2
+    x = screen_width / 2 - width / 2
+    y = screen_height / 2 - height / 2
+    root.geometry("%dx%d+%d+%d" % (width, height, x, y))
     root.iconbitmap(
         str(os.path.dirname(os.path.realpath(__file__)) + "\\src\\resources\\icon.ico")
     )
-
-    Profile = ProfileHandler()
-
-    style = ttk.Style(root)
-    root.tk.call(
-        "source",
-        str(
-            os.path.dirname(os.path.realpath(__file__))
-            + "\\src\\Azure-ttk-theme\\azure.tcl"
-        ),
-    )
-    Main = MainApplication(root)
-
-    color_scheme = Profile.get_attribute("color_scheme")
-    Main.autostartdark.set(color_scheme)
-
-    Main.autostart()
-
-    root.tk.call("set_theme", color_scheme)
-
+    MainApplication(root)
     root.mainloop()
 
 
