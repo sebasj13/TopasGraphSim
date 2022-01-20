@@ -1,9 +1,11 @@
 import os
 import tkinter as tk
+import tkinter.ttk as ttk
 from tkinter import filedialog as fd
 
 from PIL import Image, ImageTk
 
+from ..resources.language import Text
 from .dose_figure_handler import DoseFigureHandler
 from .profile import ProfileHandler
 
@@ -15,8 +17,34 @@ class MainApplication(tk.Frame):
 
         self.parent = parent
 
+        # Read settings from profile.json and initialize the necessary variables
         self.profile = ProfileHandler()
+        self.lang = self.profile.get_attribute("language")
+        self.langvar = tk.StringVar()
+        self.langvar.set(self.lang)
+        self.text = Text()
+        self.dark = tk.BooleanVar()
+        self.dark.set(False)
+        self.DoseFigureHandler = DoseFigureHandler(self)
 
+        self.parent.title(self.text.window_title[self.lang])
+        style = ttk.Style(self.parent)
+        try:
+            self.parent.tk.call(
+                "source",
+                str(
+                    os.path.dirname(os.path.realpath(__file__))
+                    + "\\..\\Azure-ttk-theme\\azure.tcl"
+                ),
+            )
+        except tk.TclError:
+            pass
+        color_scheme = self.profile.get_attribute("color_scheme")
+        self.autostartdark = tk.StringVar()
+        self.autostartdark.set(color_scheme)
+        self.autostart()
+
+        # Keybinding definitions
         self.parent.bind("<Control-d>", self.d_key)
         self.parent.bind("<Control-o>", self.o_key)
         self.parent.bind("<Control-s>", self.s_key)
@@ -24,85 +52,81 @@ class MainApplication(tk.Frame):
         self.parent.bind("<Escape>", self.esc_key)
         self.parent.bind("<Control-z>", self.z_key)
 
-        self.pack(side="top", fill="both", expand=True)
-
+        # Menubar definitions
         self.menubar = tk.Menu(self.parent)
         self.filemenu = tk.Menu(self.menubar, tearoff=False)
         self.addmeasuremenu = tk.Menu(self.menubar, tearoff=False)
         self.addmeasuremenu.add_command(
-            label="Tiefendosiskurve",
+            label=self.text.pdd[self.lang],
             command=lambda: self.load_file("pdd"),
             accelerator="Ctrl+T",
         )
         self.addmeasuremenu.add_command(
-            label="Dosisquerverteilung",
+            label=self.text.dp[self.lang],
             command=lambda: self.load_file("dp"),
             accelerator="Ctrl+D",
         )
         self.filemenu.add_command(
-            label="Simulationsergebnis laden",
+            label=self.text.loadsim[self.lang],
             command=lambda: self.load_file("simulation"),
             accelerator="Ctrl+O",
         )
-        self.filemenu.add_cascade(label="Messung laden", menu=self.addmeasuremenu)
+        self.filemenu.add_cascade(
+            label=self.text.loadmeasurement[self.lang], menu=self.addmeasuremenu
+        )
         self.filemenu.add_separator()
         self.filemenu.add_command(
-            label="Ergebnis abspeichern", command=self.save_graph, accelerator="Ctrl+S"
+            label=self.text.save[self.lang],
+            command=self.save_graph,
+            accelerator="Ctrl+S",
         )
         self.filemenu.add_command(
-            label="Derzeitige Simulation schließen",
+            label=self.text.close[self.lang],
             command=self.close_file,
             accelerator="Esc",
         )
         self.filemenu.add_separator()
-        self.filemenu.add_command(label="Beenden", command=self.parent.destroy)
-
+        self.filemenu.add_command(
+            label=self.text.end[self.lang], command=self.parent.destroy
+        )
         self.filemenu.entryconfig(3, state=tk.DISABLED)
         self.filemenu.entryconfig(4, state=tk.DISABLED)
-
         self.addmenu = tk.Menu(self.menubar, tearoff=False)
         self.addmenu.add_command(
-            label="Simulationsergebnis",
+            label=self.text.simulation[self.lang],
             command=lambda: self.load_file("simulation"),
             accelerator="Ctrl+O",
         )
-        self.addmenu.add_cascade(label="Messung", menu=self.addmeasuremenu)
+        self.addmenu.add_cascade(
+            label=self.text.measurement[self.lang], menu=self.addmeasuremenu
+        )
         self.addmenu.add_separator()
         self.addmenu.add_command(
-            label="Rückgängig", command=self.remove_last_addition, accelerator="Ctrl+Z"
+            label=self.text.revert[self.lang],
+            command=self.remove_last_addition,
+            accelerator="Ctrl+Z",
         )
         self.addmenu.entryconfig(3, state=tk.DISABLED)
-
-        self.menubar.add_cascade(label="Datei", menu=self.filemenu)
-
+        self.menubar.add_cascade(label=self.text.file[self.lang], menu=self.filemenu)
         self.viewmenu = tk.Menu(self.menubar, tearoff=False)
-        self.dark = tk.BooleanVar()
-
-        self.dark.set(False)
-
         self.viewmenu.add_checkbutton(
-            label="Hell",
+            label=self.text.light[self.lang],
             variable=self.dark,
             command=lambda: self.switchtheme("light"),
             onvalue=0,
             offvalue=1,
         )
         self.viewmenu.add_checkbutton(
-            label="Dunkel",
+            label=self.text.dark[self.lang],
             variable=self.dark,
             command=lambda: self.switchtheme("dark"),
             onvalue=1,
             offvalue=0,
         )
-
-        self.menubar.add_cascade(label="Ansicht", menu=self.viewmenu)
-
+        self.menubar.add_cascade(label=self.text.view[self.lang], menu=self.viewmenu)
         self.optionsmenu = tk.Menu(self.menubar)
-
-        self.autostartdark = tk.StringVar()
-
         self.optionsmenu.add_checkbutton(
-            label="Im dunklen Modus starten",
+            label=self.text.startdark[self.lang],
             variable=self.autostartdark,
             command=lambda: self.profile.set_attribute(
                 "color_scheme", f"{self.autostartdark.get()}"
@@ -110,23 +134,44 @@ class MainApplication(tk.Frame):
             onvalue="dark",
             offvalue="light",
         )
-
-        self.menubar.add_cascade(label="Optionen", menu=self.optionsmenu)
-
-        self.menuflag = False
+        self.langmenu = tk.Menu(self.menubar)
+        self.langmenu.add_radiobutton(
+            label=self.text.german[self.lang],
+            command=lambda: self.set_language(self.langvar.get()),
+            variable=self.langvar,
+            value="de",
+        )
+        self.langmenu.add_radiobutton(
+            label=self.text.english[self.lang],
+            command=lambda: self.set_language(self.langvar.get()),
+            variable=self.langvar,
+            value="en",
+        )
+        self.optionsmenu.add_cascade(
+            label=self.text.language[self.lang], menu=self.langmenu
+        )
+        self.menubar.add_cascade(
+            label=self.text.options[self.lang], menu=self.optionsmenu
+        )
         self.parent.config(menu=self.menubar)
 
-        self.DoseFigureHandler = DoseFigureHandler(self)
-
+        # Initialize necessary variables
+        self.menuflag = False
         self.canvas = tk.Canvas(self)
         self.photoimage = None
         self.image_on_canvas = None
         self.canvas.image = None
-
         self.current_file = None
         self.filenames = []
 
+        self.pack(side="top", fill="both", expand=True)
+
     def autostart(self):
+
+        """
+        Sets the theme according to the profile.json
+        """
+
         if self.autostartdark.get() == "light":
             self.dark.set(False)
             self.switchtheme("light")
@@ -136,6 +181,10 @@ class MainApplication(tk.Frame):
         return
 
     def switchtheme(self, theme):
+
+        """
+        Switches between light and dark theme
+        """
 
         if theme == "light":
             self.parent.tk.call("set_theme", "light")
@@ -150,7 +199,32 @@ class MainApplication(tk.Frame):
             self.parent.configure(background="#363636")
             self.dark.set(True)
 
+    def set_language(self, language):
+
+        """
+        Sets the desired language and reinitiates the program
+        """
+
+        if self.menuflag == True:
+            warning = tk.messagebox.askokcancel(
+                message=self.text.languageset[self.lang]
+            )
+
+            if warning == True:
+                self.pack_forget()
+                self.profile.set_attribute("language", language)
+                self.__init__(self.parent)
+            return
+        self.pack_forget()
+        self.profile.set_attribute("language", language)
+        self.__init__(self.parent)
+        return
+
     def load_file(self, type):
+
+        """
+        Loads measurement or simulation data to be displayed
+        """
 
         if type == "simulation":
             filetypes = [("Simulationsergebnisse", ".csv")]
@@ -158,7 +232,7 @@ class MainApplication(tk.Frame):
             filetypes = [("Messdaten", ["txt", ".csv"])]
 
         self.current_file = fd.askopenfilename(
-            title="Datei auswählen...", initialdir=os.getcwd(), filetypes=filetypes
+            initialdir=os.getcwd(), filetypes=filetypes
         )
 
         if self.current_file == "":
@@ -172,16 +246,11 @@ class MainApplication(tk.Frame):
         self.filemenu.entryconfig(3, state=tk.NORMAL)
         self.filemenu.entryconfig(4, state=tk.NORMAL)
 
-    def d_key(self, event=None):
-        self.load_file("dp")
-
-    def o_key(self, event=None):
-        self.load_file("simulation")
-
-    def t_key(self, event=None):
-        self.load_file("pdd")
-
     def close_file(self):
+
+        """
+        Closes the current project
+        """
 
         self.canvas.pack_forget()
         self.filemenu.entryconfig(0, state=tk.NORMAL)
@@ -194,10 +263,11 @@ class MainApplication(tk.Frame):
         self.menuflag = False
         self.DoseFigureHandler.flush()
 
-    def esc_key(self, event=None):
-        self.close_file()
-
     def remove_last_addition(self):
+
+        """
+        Removes the graph added last
+        """
 
         self.filenames.pop(-1)
         if len(self.filenames) < 2:
@@ -211,10 +281,11 @@ class MainApplication(tk.Frame):
         self.DoseFigureHandler.flush()
         self.show_preview()
 
-    def z_key(self, event=None):
-        self.remove_last_addition()
-
     def save_graph(self):
+
+        """
+        Saves the current graph
+        """
 
         file = fd.asksaveasfilename(
             defaultextension=".png", filetypes=[("Bilder", [".png", ".jpg"])]
@@ -226,10 +297,11 @@ class MainApplication(tk.Frame):
         ImageTk.getimage(self.photoimage).save(file)
         return
 
-    def s_key(self, event=None):
-        self.save_graph()
-
     def show_preview(self):
+
+        """
+        Invokes DoseFigureHandler to create and display the graphs
+        """
 
         self.photoimage, menuflag = self.DoseFigureHandler.return_figure(self.filenames)
 
@@ -246,7 +318,7 @@ class MainApplication(tk.Frame):
             self.addmenu.entryconfig(1, state=tk.DISABLED)
 
         if menuflag == "Z" and self.menuflag == False:
-            self.menubar.add_cascade(label="Hinzufügen...", menu=self.addmenu)
+            self.menubar.add_cascade(label=self.text.add[self.lang], menu=self.addmenu)
             self.menuflag = True
         self.image_on_canvas = self.canvas.create_image(
             0, 0, anchor=tk.NW, image=self.photoimage
@@ -256,6 +328,10 @@ class MainApplication(tk.Frame):
         self.canvas.itemconfig(self.image_on_canvas, image=self.canvas.image)
 
     def handle_configure(self, event):
+
+        """
+        Dynamically resizes the graph according to the window size
+        """
 
         try:
             image_width = event.width
@@ -280,3 +356,22 @@ class MainApplication(tk.Frame):
             self.canvas.itemconfig(self.image_on_canvas, image=self.canvas.image)
         except AttributeError:
             pass
+
+    # Keybing functions
+    def esc_key(self, event=None):
+        self.close_file()
+
+    def d_key(self, event=None):
+        self.load_file("dp")
+
+    def o_key(self, event=None):
+        self.load_file("simulation")
+
+    def t_key(self, event=None):
+        self.load_file("pdd")
+
+    def z_key(self, event=None):
+        self.remove_last_addition()
+
+    def s_key(self, event=None):
+        self.save_graph()

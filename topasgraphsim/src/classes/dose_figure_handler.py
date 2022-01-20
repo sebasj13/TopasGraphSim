@@ -8,6 +8,7 @@ from PIL import Image, ImageTk
 from win32api import GetSystemMetrics
 
 from ..functions.plot_args import plot_args
+from ..resources.language import Text
 
 
 class DoseFigureHandler:
@@ -15,27 +16,32 @@ class DoseFigureHandler:
 
         self.parent = parent
 
+        # Initialize the current settings
+        self.lang = self.parent.lang
+        self.text = Text()
         self.style = plt.style.use("default")
-
         self.current_mode = self.parent.dark.get()
-
         self.colors = [
             ["go", "bo", "ro", "co", "mo"],
             ["green", "blue", "red", "cyan", "magenta"],
         ]
 
+        # Initialize the figure and axes
         self.fig = Figure(figsize=(10, 5), constrained_layout=True, dpi=600)
-
         self.canvas = FigureCanvasAgg(self.fig)
-
         self.ax = self.fig.add_subplot(111)
 
+        # Initialize necessary variables
         self.props = dict(boxstyle="round", facecolor="wheat", alpha=0.6)
         self.filepaths = []
         self.filenames = []
         self.data = []
 
     def set_style(self):
+
+        """
+        Switches the plotting style accordung to the current theme
+        """
 
         if self.parent.dark.get() != self.current_mode:
 
@@ -61,6 +67,10 @@ class DoseFigureHandler:
 
     def flush(self):
 
+        """
+        Clears the data
+        """
+
         self.filepaths = []
         self.filenames = []
         self.data = []
@@ -68,7 +78,7 @@ class DoseFigureHandler:
     def fits(self, image):
 
         """
-        A function that scales an image to the width of the screen.
+        Scales an image to the width of the screen.
         """
 
         scr_width = GetSystemMetrics(0)
@@ -84,6 +94,10 @@ class DoseFigureHandler:
 
     def set_axis(self):
 
+        """
+        Defines the layout and gridlines of the plot 
+        """
+
         self.ax.clear()
         self.ax.grid(True, which="major")
         self.ax.grid(True, which="minor", color="grey", linewidth=0.1)
@@ -92,6 +106,10 @@ class DoseFigureHandler:
         self.ax.tick_params(axis="both", which="minor", length=2)
 
     def add_plot_data(self, datanames):
+
+        """
+        Adds data to the plot queue
+        """
 
         for tuple in datanames:
             filename = tuple[0]
@@ -103,6 +121,10 @@ class DoseFigureHandler:
 
     def add_legend(self):
 
+        """
+        Adds the legend
+        """
+
         self.ax.legend(
             loc="upper right",
             framealpha=0.6,
@@ -112,6 +134,10 @@ class DoseFigureHandler:
         )
 
     def add_descriptors(self):
+
+        """
+        Adds the calculated parameters as descriptors
+        """
 
         for index, plot_data in enumerate(self.data):
 
@@ -150,7 +176,8 @@ class DoseFigureHandler:
                     plot_data[11],
                     plot_data[12],
                 )
-                textstr = "HWB = {} mm\n{} = {} mm\n{} = {}\n{} = {}\n{} = {} mm\n{} = {} mm\n{} = {}\n{} = {}\nSymmetrie = {}".format(
+                textstr = "{} = {} mm\n{} = {} mm\n{} = {}\n{} = {}\n{} = {} mm\n{} = {} mm\n{} = {}\n{} = {}\n{} = {}".format(
+                    self.text.fwhm[self.lang],
                     HWB,
                     "$CAX_{dev}$",
                     CAXdev,
@@ -166,6 +193,7 @@ class DoseFigureHandler:
                     Lintegral,
                     "$Integral_{R}$",
                     Rintegral,
+                    self.text.symmetry[self.lang],
                     S,
                 )
 
@@ -183,10 +211,18 @@ class DoseFigureHandler:
 
     def set_x_label(self):
 
-        xlabel = "{}-Achse [mm]".format(self.data[0][1])
+        """
+        Names the x-axis according to the plot
+        """
+
+        xlabel = "{}-{} [mm]".format(self.data[0][1], self.text.axis[self.lang])
         self.ax.set_xlabel(xlabel, size=12)
 
     def create_plots_from_data(self):
+
+        """
+        Creates the plots from the queue
+        """
 
         for index, plot_data in enumerate(self.data):
             self.ax.errorbar(
@@ -210,6 +246,10 @@ class DoseFigureHandler:
             )
 
     def return_figure(self, filenames):
+
+        """
+        Passes the image of the plot and the plot type to the MainApplication
+        """
 
         self.set_axis()
         self.add_plot_data(filenames)
