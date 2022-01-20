@@ -262,6 +262,8 @@ class MainApplication(tk.Frame):
         self.filemenu.entryconfig(1, state=tk.NORMAL)
         self.filemenu.entryconfig(3, state=tk.DISABLED)
         self.filemenu.entryconfig(4, state=tk.DISABLED)
+        self.addmeasuremenu.entryconfig(0, state=tk.NORMAL)
+        self.addmeasuremenu.entryconfig(1, state=tk.NORMAL)
         self.menubar.delete(3)
         self.filenames = []
         self.canvas.itemconfig(self.image_on_canvas, image=None)
@@ -323,7 +325,12 @@ class MainApplication(tk.Frame):
             self.addmenu.entryconfig(0, state=tk.DISABLED)
             self.addmenu.entryconfig(1, state=tk.DISABLED)
 
-        if menuflag == "Z" and self.menuflag == False:
+        if menuflag == "Z":
+            self.addmeasuremenu.entryconfig(1, state=tk.DISABLED)
+        else:
+            self.addmeasuremenu.entryconfig(0, state=tk.DISABLED)
+
+        if self.menuflag == False:
             self.menubar.add_cascade(label=self.text.add[self.lang], menu=self.addmenu)
             self.menuflag = True
         self.image_on_canvas = self.canvas.create_image(
