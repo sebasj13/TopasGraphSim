@@ -11,7 +11,7 @@ from .profile import ProfileHandler
 
 
 class MainApplication(tk.Frame):
-    def __init__(self, parent, *args, **kwargs):
+    def __init__(self, parent, geometry, *args, **kwargs):
 
         tk.Frame.__init__(self, parent, *args, **kwargs)
 
@@ -164,6 +164,7 @@ class MainApplication(tk.Frame):
         self.current_file = None
         self.filenames = []
 
+        self.parent.geometry(geometry)
         self.pack(side="top", fill="both", expand=True)
 
     def autostart(self):
@@ -205,6 +206,8 @@ class MainApplication(tk.Frame):
         Sets the desired language and reinitiates the program
         """
 
+        geometry = self.parent.winfo_geometry()
+
         if self.menuflag == True:
             warning = tk.messagebox.askokcancel(
                 message=self.text.languageset[self.lang]
@@ -212,12 +215,14 @@ class MainApplication(tk.Frame):
 
             if warning == True:
                 self.pack_forget()
+                self.parent.config(menu=None)
                 self.profile.set_attribute("language", language)
-                self.__init__(self.parent)
+                self.__init__(self.parent, geometry)
             return
         self.pack_forget()
+        self.parent.config(menu=None)
         self.profile.set_attribute("language", language)
-        self.__init__(self.parent)
+        self.__init__(self.parent, geometry)
         return
 
     def load_file(self, type):

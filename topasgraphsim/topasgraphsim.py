@@ -27,7 +27,7 @@ def topasgraphsim():
     root.iconbitmap(
         str(os.path.dirname(os.path.realpath(__file__)) + "\\src\\resources\\icon.ico")
     )
-    MainApplication(root)
+    MainApplication(root, root.winfo_geometry())
     root.mainloop()
 
 
