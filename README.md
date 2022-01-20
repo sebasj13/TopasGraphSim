@@ -4,16 +4,23 @@
 
 Works for percentage depth dose (pdd) and dose profiles (dp). Depth dose measurements are assumed to be in the z-direction, dose profiles in the x- or y-directions.
 Available languages: english and german.
-     
+<br></br>          
 ![image](https://user-images.githubusercontent.com/87897942/150243578-4dc4f73c-0f0b-4852-9553-0f31ba0f18d3.png)
-
 
 ## Installation
 
-Install using <b>pip install topasgraphsim</b>. Then, start the GUI by running:
-      
-<img src="https://user-images.githubusercontent.com/87897942/149929356-790ad05e-1d99-4999-a5ae-35b8da894c38.png"  width="300" height="75" />
+Install using pip:
 
+```console
+pip install topasgraphmc     
+```
+     
+Then, start the GUI by running
+     
+```console
+python -m topasgraphsim
+```
+     
 ## Automatically calculates relevant parameters
 
 | Measurement type | Parameters |         |              |             |                |                 |
