@@ -15,7 +15,7 @@ def calculate_parameters(axis, dose, std_dev):
         TD20 = dose[(np.abs(axis - 200)).argmin()]
         TD10 = dose[(np.abs(axis - 100)).argmin()]
         Q = round(1.2661 * TD20 / TD10 - 0.0595, 5)
-        zmax = round(axis[int(np.where(dose == 1)[0][0])], 5)
+        zmax = round(axis[int(np.where(dose == max(dose))[0][0])], 5)
 
         return [Q, 0, zmax]
 
@@ -33,7 +33,7 @@ def calculate_parameters(axis, dose, std_dev):
 
     interpolated_axis = np.linspace(axis[0], axis[-1], interpolation_length)
     akima_stddev_interpolator = interpolate.Akima1DInterpolator(np.flip(axis), std_dev)
-    interpolated_stddev = np.flip(akima_stddev_interpolator.__call__(interpolated_axis))
+    interpolated_stddev = np.flip(akima_stddev_interpolator.__call__(interpolated_axis))s
     akima_dose_interpolator = interpolate.Akima1DInterpolator(np.flip(axis), dose)
     interpolated_dose = np.flip(akima_dose_interpolator.__call__(interpolated_axis))
 
@@ -52,6 +52,6 @@ def calculate_parameters(axis, dose, std_dev):
         ),
         5,
     )
-    zmax = round(axis[int(np.where(dose == 1)[0][0])], 5)
+    zmax = round(axis[int(np.where(dose == max(dose))[0][0])], 5)
 
     return [Q, dQ, zmax]

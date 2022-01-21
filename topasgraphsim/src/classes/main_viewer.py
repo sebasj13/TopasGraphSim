@@ -153,6 +153,18 @@ class MainApplication(tk.Frame):
         self.menubar.add_cascade(
             label=self.text.options[self.lang], menu=self.optionsmenu
         )
+
+        self.normmenu = tk.Menu(self.menubar)
+        self.norm = tk.BooleanVar()
+        self.norm.set(True)
+        self.normmenu.add_checkbutton(
+            label=self.text.normalize[self.lang],
+            command=lambda: self.normalize(self.norm.get()),
+            variable=self.norm,
+            onvalue=1,
+            offvalue=0,
+        )
+
         self.parent.config(menu=self.menubar)
 
         # Initialize necessary variables
@@ -225,6 +237,15 @@ class MainApplication(tk.Frame):
         self.__init__(self.parent, geometry)
         return
 
+    def normalize(self, norm):
+
+        self.DoseFigureHandler.norm = self.norm.get()
+        if self.filenames != []:
+            self.canvas.itemconfig(self.image_on_canvas, image=None)
+            self.DoseFigureHandler.flush()
+            self.show_preview()
+        return
+
     def load_file(self, type):
 
         """
@@ -264,7 +285,7 @@ class MainApplication(tk.Frame):
         self.filemenu.entryconfig(4, state=tk.DISABLED)
         self.addmeasuremenu.entryconfig(0, state=tk.NORMAL)
         self.addmeasuremenu.entryconfig(1, state=tk.NORMAL)
-        self.menubar.delete(3)
+        self.menubar.delete(3, 4)
         self.filenames = []
         self.canvas.itemconfig(self.image_on_canvas, image=None)
         self.menuflag = False
@@ -332,6 +353,9 @@ class MainApplication(tk.Frame):
 
         if self.menuflag == False:
             self.menubar.add_cascade(label=self.text.add[self.lang], menu=self.addmenu)
+            self.menubar.add_cascade(
+                label=self.text.normalize[self.lang], menu=self.normmenu
+            )
             self.menuflag = True
         self.image_on_canvas = self.canvas.create_image(
             0, 0, anchor=tk.NW, image=self.photoimage
