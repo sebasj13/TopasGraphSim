@@ -14,20 +14,32 @@ def calculate_parameters(axis, dose, std_dev):
     akima_dose_interpolator = interpolate.Akima1DInterpolator(axis, dose)
     interpolated_dose = np.flip(akima_dose_interpolator.__call__(interpolated_axis))
 
-    Dose80 = [value for value in dose if value >= 0.8]
+    Dose80 = [value for value in dose if value >= 0.8 * max(dose)]
 
     D0 = (
         interpolated_dose[int(len(interpolated_dose) / 2)]
         + interpolated_dose[int(len(interpolated_dose) / 2) - 1]
     ) / 2
     XL20 = interpolated_axis[: int(len(interpolated_axis) / 2)][
-        (np.abs(interpolated_dose[: int(len(interpolated_axis) / 2)] - 0.2)).argmin()
+        (
+            np.abs(
+                interpolated_dose[: int(len(interpolated_axis) / 2)] - 0.2 * max(dose)
+            )
+        ).argmin()
     ]
     XL50 = interpolated_axis[: int(len(interpolated_axis) / 2)][
-        (np.abs(interpolated_dose[: int(len(interpolated_axis) / 2)] - 0.5)).argmin()
+        (
+            np.abs(
+                interpolated_dose[: int(len(interpolated_axis) / 2)] - 0.5 * max(dose)
+            )
+        ).argmin()
     ]
     XL80 = interpolated_axis[: int(len(interpolated_axis) / 2)][
-        (np.abs(interpolated_dose[: int(len(interpolated_axis) / 2)] - 0.8)).argmin()
+        (
+            np.abs(
+                interpolated_dose[: int(len(interpolated_axis) / 2)] - 0.8 * max(dose)
+            )
+        ).argmin()
     ]
     XR20 = interpolated_axis[int(len(interpolated_axis) / 2) :][
         (
@@ -35,7 +47,7 @@ def calculate_parameters(axis, dose, std_dev):
                 interpolated_dose[
                     int(len(interpolated_axis) / 2) : len(interpolated_axis)
                 ]
-                - 0.2
+                - 0.2 * max(dose)
             )
         ).argmin()
     ]
@@ -45,7 +57,7 @@ def calculate_parameters(axis, dose, std_dev):
                 interpolated_dose[
                     int(len(interpolated_axis) / 2) : len(interpolated_axis)
                 ]
-                - 0.5
+                - 0.5 * max(dose)
             )
         ).argmin()
     ]
@@ -55,7 +67,7 @@ def calculate_parameters(axis, dose, std_dev):
                 interpolated_dose[
                     int(len(interpolated_axis) / 2) : len(interpolated_axis)
                 ]
-                - 0.8
+                - 0.8 * max(dose)
             )
         ).argmin()
     ]
@@ -64,8 +76,8 @@ def calculate_parameters(axis, dose, std_dev):
     CAXdev = round(XL50 + 0.5 * HWB, 5)
 
     flat_krieger = round(
-        max([value for value in dose if value >= 0.95])
-        - min([value for value in dose if value >= 0.95]) / D0,
+        max([value for value in dose if value >= 0.95 * max(dose)])
+        - min([value for value in dose if value >= 0.95 * max(dose)]) / D0,
         5,
     )
     flat_stddev = round(np.std(Dose80), 5)

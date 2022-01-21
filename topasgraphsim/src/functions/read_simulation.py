@@ -1,11 +1,13 @@
-import math
-import re
 from tkinter import simpledialog as sd
 
 import numpy as np
+import topas2numpy
+
+from ..classes.profile import ProfileHandler
+from ..resources.language import Text
 
 
-def load(path):
+def load(path: str, normalize: bool):
 
     """
     A function that reads the relevant data from a TOPAS simulation
@@ -15,87 +17,48 @@ def load(path):
     scaling and normalizes the maximum of the data to 1.
     """
 
-    with open(path) as file:
+    def norm(normalize, dose, std_dev):
+        if normalize == True:
+            std_dev = std_dev / max(dose)
+            dose = dose / max(dose)
 
-        dose = []
-        std_dev = []
-        settings = []
-        step_factor = 1
-        hist = 0
+        return dose.flatten(), std_dev.flatten()
 
-        for line in file:
+    def convert_SI(val, unit_in):
+        SI = {"mm": 0.001, "cm": 0.01, "m": 1.0, "km": 1000.0}
+        return val * SI[unit_in] / SI["mm"]
 
-            if "# R" in line or "# Phi" in line:
-                x_settings = []
-                y_settings = []
-
-            if "# X" in line:
-                x_settings = list(map(float, re.findall(r"[-+]?\d*\.\d+|\d+", line)))
-                settings += [x_settings]
-                if "cm" in line:
-                    step_factor = 10
-            if "# Y" in line:
-                y_settings = list(map(float, re.findall(r"[-+]?\d*\.\d+|\d+", line)))
-                settings += [y_settings]
-                if "cm" in line:
-                    step_factor = 10
-            if "# Z" in line:
-                z_settings = list(map(float, re.findall(r"[-+]?\d*\.\d+|\d+", line)))
-                settings += [z_settings]
-                if "cm" in line:
-                    step_factor = 10
-
-            if not "#" in line:
-
-                values = line.split(",")[3:]
-                values = [
-                    float(value.replace("e", "E").replace("\n", "")) for value in values
-                ]
-                dose += [values[0]]
-
-                if hist == 0:
-                    try:
-                        histories = int(values[2])
-                        hist = histories
-                    except IndexError:
-                        hist = sd.askinteger(
-                            "Historien", "Anzahl der Historien in der Simulation:"
-                        )
-
-                std_dev += [values[1] * math.sqrt(hist)]  # * for sum, / for mean
-        if max(max(settings)) in x_settings:
-            direction = "X"
-            bins = int(x_settings[0])
-            step = x_settings[1]
-
-        elif max(max(settings)) in y_settings:
-            direction = "Y"
-            bins = int(y_settings[0])
-            step = y_settings[1]
-
-        else:
-            direction = "Z"
-            bins = int(z_settings[0])
-            step = z_settings[1]
-
-        step = step * step_factor
-
+    data = topas2numpy.BinnedResult(path)
+    bins = [dim.n_bins for dim in data.dimensions]
+    if bins.count(1) != 2:
+        print("Unsupported Experiment Type!")
+        return
+    axdict = {0: "X", 1: "Y", 2: "Z"}
+    databin_index = bins.index(max(bins))
+    direction = axdict[databin_index]
+    axis = np.array(data.dimensions[databin_index].get_bin_centers())
+    unit = data.dimensions[databin_index].unit
     if direction == "Z":
-        axis = [round(step / 2 + i * step, 3) for i in range(bins)]
+        axis = np.flip(axis)
+    axis = [convert_SI(x, unit) for x in axis]
+    scored_quantity = [i for i, j in zip(data.statistics, ["Sum", "Mean"]) if i == j][0]
+    dose = data.data[scored_quantity]
+    dose = dose.flatten()
 
-    else:
-        if bins % 2 == 0:
-            pos_half = [round(step / 2 + i * step, 3) for i in range(int(bins / 2))]
-            neg_half = pos_half[::-1]
-            neg_half = [value * -1 for value in neg_half]
-            axis = pos_half[::-1] + neg_half[::-1]
+    try:
+        std_dev = data.data["Standard_Deviation"].flatten()
+        histories = int(data.data["Histories_with_Scorer_Active"].flatten()[0])
+        std_dev = std_dev * np.sqrt(histories)
+    except KeyError as e:
+        if e.args[0] == "Histories_with_Scorer_Active":
+            lang = ProfileHandler().get_attribute("language")
+            histories = sd.askinteger(title="  ", prompt=Text().histnum[lang])
+            std_dev = data.data["Standard_Deviation"].flatten()
+
+            std_dev = std_dev * np.sqrt(histories)
         else:
-            pos_half = [round(i * step, 3) for i in range(int(bins / 2) + 1)]
-            neg_half = [round(-i * step, 3) for i in range(1, int(bins / 2) + 1)]
-            axis = pos_half[::-1] + neg_half
+            std_dev = np.array([])
 
-    axis = np.flip(np.array(axis))
-    std_dev = np.array(std_dev) / max(dose)
-    dose = np.array(dose) / max(dose)
+    dose, std_dev = norm(normalize, dose, std_dev)
 
     return axis, direction, dose, std_dev

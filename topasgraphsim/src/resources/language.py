@@ -37,6 +37,11 @@ class Text:
             "en": "Das geöffnete Projekt wird geschlossen. Fortfahren?",
             "de": "The current project will be closed. Continue?",
         }
+        self.histories = {"de": "Historien", "en": "Histories"}
+        self.histnum = {
+            "de": "Anzahl der Historien in der Simulation:",
+            "en": "Histories in Simulation:",
+        }
         self.symmetry = {"de": "Symmetrie", "en": "Symmetry"}
         self.fwhm = {"de": "HWB", "en": "FWHM"}
         self.axis = {"de": "Achse", "en": "Axis"}
@@ -44,3 +49,4 @@ class Text:
         self.language = {"de": "Sprache", "en": "Language"}
         self.german = {"de": "Deutsch", "en": "German"}
         self.english = {"de": "Englisch", "en": "English"}
+        self.normalize = {"de": "Graph normieren", "en": "Normalize graph"}

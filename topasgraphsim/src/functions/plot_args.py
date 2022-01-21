@@ -10,7 +10,7 @@ Created on Thu Dec 16 13:25:16 2021
 from . import dp, pdd, read_measurement, read_simulation
 
 
-def plot_args(path, type):
+def plot_args(path, norm, type):
 
     """
     A function that returns the correct plot parameters
@@ -18,7 +18,7 @@ def plot_args(path, type):
     """
 
     if type == "simulation":
-        axis, direction, dose, std_dev = read_simulation.load(path)
+        axis, direction, dose, std_dev = read_simulation.load(path, norm)
     else:
         axis, direction, dose, std_dev = read_measurement.load(path, type)
 

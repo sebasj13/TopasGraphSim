@@ -1,5 +1,3 @@
-from cProfile import Profile
-
 import numpy as np
 
 from ..classes.profile import ProfileHandler

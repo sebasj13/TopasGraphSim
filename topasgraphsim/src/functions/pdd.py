@@ -33,7 +33,7 @@ def calculate_parameters(axis, dose, std_dev):
 
     interpolated_axis = np.linspace(axis[0], axis[-1], interpolation_length)
     akima_stddev_interpolator = interpolate.Akima1DInterpolator(np.flip(axis), std_dev)
-    interpolated_stddev = np.flip(akima_stddev_interpolator.__call__(interpolated_axis))s
+    interpolated_stddev = np.flip(akima_stddev_interpolator.__call__(interpolated_axis))
     akima_dose_interpolator = interpolate.Akima1DInterpolator(np.flip(axis), dose)
     interpolated_dose = np.flip(akima_dose_interpolator.__call__(interpolated_axis))
 

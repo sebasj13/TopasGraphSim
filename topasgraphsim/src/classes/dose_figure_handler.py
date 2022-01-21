@@ -12,9 +12,11 @@ from ..resources.language import Text
 
 
 class DoseFigureHandler:
-    def __init__(self, parent):
+    def __init__(self, parent, norm=True):
 
         self.parent = parent
+
+        self.norm = norm
 
         # Initialize the current settings
         self.lang = self.parent.lang
@@ -116,7 +118,7 @@ class DoseFigureHandler:
             type = tuple[1]
             if filename not in self.filepaths:
                 self.filepaths += [filename]
-                self.data += [plot_args(filename, type)]
+                self.data += [plot_args(filename, self.norm, type)]
                 self.filenames += [filename.split("/")[-1]]
 
     def add_legend(self):
