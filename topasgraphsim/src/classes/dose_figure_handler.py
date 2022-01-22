@@ -225,7 +225,7 @@ class DoseFigureHandler:
                 )
 
                 self.ax.text(
-                    0.5,
+                    0.105 + 0.21 * index,
                     0.5,
                     textstr,
                     transform=self.ax.transAxes,

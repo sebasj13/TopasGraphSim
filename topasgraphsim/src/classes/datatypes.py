@@ -27,6 +27,10 @@ class Measurement:
             data = np.genfromtxt(self.filepath, delimiter=",", unpack=True)
 
         self.axis, self.dose = data[0], data[1]
+        if self.direction != "Z":
+            self.axis = np.array(
+                [x - (max(self.axis) + min(self.axis)) / 2 for x in self.axis]
+            )
         maximum = max(self.dose)
         self.norm_dose = np.array([value / maximum for value in self.dose])
 
@@ -38,9 +42,13 @@ class Measurement:
             self.norm_std_dev = None
 
         if self.direction == "Z":
-            self.params = pdd.calculate_parameters(self.axis, self.dose, self.std_dev)
+            self.params = pdd.calculate_parameters(
+                self.axis, self.norm_dose, self.norm_std_dev
+            )
         else:
-            self.params = dp.calculate_parameters(self.axis, self.dose, self.std_dev)
+            self.params = dp.calculate_parameters(
+                self.axis, self.norm_dose, self.norm_std_dev
+            )
 
 
 class Simulation:
@@ -64,10 +72,10 @@ class Simulation:
         if self.direction == "Z":
             self.axis = np.flip(self.axis)
         self.axis = [self.convert_SI(x, unit) for x in self.axis]
-        scored_quantity = [
-            i for i, j in zip(self.data.statistics, ["Sum", "Mean"]) if i == j
-        ][0]
-
+        if "Mean" in self.data.statistics:
+            scored_quantity = "Mean"
+        if "Sum" in self.data.statistics:
+            scored_quantity = "Sum"
         self.dose = self.data.data[scored_quantity]
         self.dose = self.dose.flatten()
 
@@ -82,17 +90,26 @@ class Simulation:
                 lang = ProfileHandler().get_attribute("language")
                 self.histories = sd.askinteger(title="  ", prompt=Text().histnum[lang])
                 self.std_dev = self.data.data["Standard_Deviation"].flatten()
-
-                self.std_dev = self.std_dev * np.sqrt(self.histories)
+                if scored_quantity == "Sum":
+                    self.std_dev = self.std_dev * np.sqrt(self.histories)
+                else:
+                    self.std_dev = self.std_dev / np.sqrt(self.histories)
             else:
                 std_dev = np.array([])
         self.norm_std_dev = self.std_dev / max(self.dose)
         self.norm_dose = self.dose / max(self.dose)
 
         if self.direction == "Z":
-            self.params = pdd.calculate_parameters(self.axis, self.dose, self.std_dev)
+            self.params = pdd.calculate_parameters(
+                self.axis, self.norm_dose, self.norm_std_dev
+            )
         else:
-            self.params = dp.calculate_parameters(self.axis, self.dose, self.std_dev)
+            self.axis = np.array(
+                [x - (max(self.axis) + min(self.axis)) / 2 for x in self.axis]
+            )
+            self.params = dp.calculate_parameters(
+                self.axis, self.norm_dose, self.norm_std_dev
+            )
 
     def convert_SI(self, val, unit_in):
         SI = {"mm": 0.001, "cm": 0.01, "m": 1.0, "km": 1000.0}

@@ -27,7 +27,7 @@ class MainApplication(tk.Frame):
         self.dark.set(False)
         self.norm = tk.BooleanVar()
         self.norm.set(bool(self.profile.get_attribute("normalize")))
-        self.DoseFigureHandler = DoseFigureHandler(self, self.norm)
+        self.DoseFigureHandler = DoseFigureHandler(self, self.norm.get())
 
         self.parent.title(self.text.window_title[self.lang])
         style = ttk.Style(self.parent)
