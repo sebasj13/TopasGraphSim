@@ -1,18 +1,28 @@
 # topasgraphsim
 
-## A interface to automatically plot the results of topas simulations and measurements
+## Am interface to automatically plot and interpret the results of TOPAS simulations
 
-Works for percentage depth dose (pdd) and dose profiles (dp). Depth dose measurements are assumed to be in the z-direction, dose profiles in the x- or y-directions.
+This GUI can visualize and analyze percentage depth dose (pdd) and dose profiles (dp) simulations from [TOPAS](http://www.topasmc.org/). Depth dose measurements are assumed to be in the z-direction, dose profiles in the x- or y-directions. Data readin is handled by [topas2numpy](https://github.com/davidchall/topas2numpy)
 Available languages: english and german.
 <br></br>          
-![image](https://user-images.githubusercontent.com/87897942/150243578-4dc4f73c-0f0b-4852-9553-0f31ba0f18d3.png)
-<br></br>
+![image](https://user-images.githubusercontent.com/87897942/150624839-cd4fa333-b52e-43a9-98ca-6f3a2e41340a.png)
+
+## Features
+
+ - Simultaneous plotting and parameter calculation for up to 5 datasets
+ - Graph adjustment options (marker size and line width)
+ - Reproducible graphing of simulation results
+ - Import of measurement results
+ - Easy to use keyboard shortcuts
+ - Toggle for data normalization
+ - Dark mode
+
 ## Installation
 
 Install using pip:
 
 ```console
-pip install topasgraphmc     
+pip install topasgraphsim     
 ```
      
 Then, start the GUI by running:
@@ -21,7 +31,7 @@ Then, start the GUI by running:
 python -m topasgraphsim
 ```
      
-## Automatically calculates relevant parameters
+## Calculated parameters
 
 | Measurement type | Parameters |                   |                        |                       |                |                |
 | ---------------- | :--------: | :---------------: | :--------------------: | :-------------------: | :------------: | :------------: |
@@ -39,22 +49,8 @@ python -m topasgraphsim
 - FLAT<sub>stddev</sub> : Flatness of Dose Plateau (Standard Deviation)
 - Penumbra (L&R) : Width of Left and Right Penumbra
 - Integral (L&R) : Integral below Left and Right Penumbra
-
-### Assumes a ".csv" input file format from a TOPAS Scorer with the following header format:
-
-\# TOPAS Version: {...}  
-\# Parameter File: {...}.txt  
-\# Results for scorer {...}  
-\# Scored in component: {...}  
-\# X in {...} bin of {...} cm  
-\# Y in 1 {...} of {...} cm  
-\# Z in {...} bins of {...} cm  
-\# DoseToMedium ( Gy ) : {Sum/Mean}   Standard_Deviation     
-Voxel Coordinate X, Voxel Coordinate Y, Voxel Coordinate Z, {Sum/Mean} Value, Standard_Deviation Value   
-                 .   
-                 .   
-                 .   
+     
 ## Dependencies
 
 Uses the beautiful Azure-ttk dark theme by @rdbende.
-Requires python3, numpy, scipy, matplotlib, Pillow, python-opencv, pywin32, and tkinter.
+Requires python3, numpy, scipy, matplotlib, Pillow, python-opencv, pywin32, topas2numpy and tkinter.
