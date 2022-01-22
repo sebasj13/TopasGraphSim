@@ -326,14 +326,15 @@ class MainApplication(tk.Frame):
         else:
             filetypes = [(self.text.measurementdata[self.lang], ["txt", ".csv"])]
 
-        self.current_file = fd.askopenfilename(
+        self.current_file = fd.askopenfilenames(
             initialdir=os.getcwd(), filetypes=filetypes
         )
 
         if self.current_file == "":
             return
 
-        self.filenames += [(self.current_file, type)]
+        for file in self.current_file:
+            self.filenames += [(file, type)]
 
         self.show_preview()
         self.filemenu.entryconfig(0, state=tk.DISABLED)
