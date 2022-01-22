@@ -13,7 +13,7 @@ class Text:
         self.file = {"de": "Datei", "en": "File"}
         self.view = {"de": "Ansicht", "en": "View"}
         self.options = {"de": "Optionen", "en": "Options"}
-        self.add = {"de": "Daten hinzufügen...", "en": "Add data..."}
+        self.add = {"de": "Daten hinzufügen", "en": "Add data"}
         self.loadsim = {"de": "Simulationsergebnis laden", "en": "Load simulation"}
         self.simulation = {"de": "Simulation", "en": "Simulation"}
         self.loadmeasurement = {"de": "Messung laden", "en": "Load measurement"}
@@ -49,4 +49,8 @@ class Text:
         self.language = {"de": "Sprache", "en": "Language"}
         self.german = {"de": "Deutsch", "en": "German"}
         self.english = {"de": "Englisch", "en": "English"}
-        self.normalize = {"de": "Graph normieren", "en": "Normalize graph"}
+        self.normalize = {"de": "Normieren", "en": "Normalize"}
+        self.increase = {"de": "Vergrößern", "en": "Increase"}
+        self.decrease = {"de": "Verkleinern", "en": "Decrease"}
+        self.marker = {"de": "Symbolgröße", "en": "Marker Size"}
+        self.markerline = {"de": "Liniendicke", "en": "Line Width"}

@@ -20,7 +20,7 @@ class ProfileHandler:
         data = self.read_data()
         data[key] = value
         with open(self.profile_path, "w") as profile:
-            json.dump(data, profile)
+            json.dump(data, profile, indent=4)
 
     def get_attribute(self, key):
         data = self.read_data()

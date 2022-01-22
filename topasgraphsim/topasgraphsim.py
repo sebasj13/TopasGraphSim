@@ -16,7 +16,6 @@ from src.classes.main_viewer import MainApplication
 def topasgraphsim():
 
     root = tk.Tk()
-    # Center the window
     screen_width = root.winfo_screenwidth()
     screen_height = root.winfo_screenheight()
     width = screen_width / 2

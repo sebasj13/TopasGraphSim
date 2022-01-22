@@ -25,7 +25,9 @@ class MainApplication(tk.Frame):
         self.text = Text()
         self.dark = tk.BooleanVar()
         self.dark.set(False)
-        self.DoseFigureHandler = DoseFigureHandler(self)
+        self.norm = tk.BooleanVar()
+        self.norm.set(bool(self.profile.get_attribute("normalize")))
+        self.DoseFigureHandler = DoseFigureHandler(self, self.norm)
 
         self.parent.title(self.text.window_title[self.lang])
         style = ttk.Style(self.parent)
@@ -155,14 +157,45 @@ class MainApplication(tk.Frame):
         )
 
         self.normmenu = tk.Menu(self.menubar)
-        self.norm = tk.BooleanVar()
-        self.norm.set(True)
         self.normmenu.add_checkbutton(
             label=self.text.normalize[self.lang],
             command=lambda: self.normalize(self.norm.get()),
             variable=self.norm,
-            onvalue=1,
-            offvalue=0,
+        )
+        self.normmenu.add_separator()
+        self.markersizemenu = tk.Menu(self.menubar)
+        self.markersizemenu.add_command(
+            label=Text().increase[self.lang],
+            command=lambda: self.change_marker_size(True),
+            accelerator="Ctrl + ↑",
+        )
+        self.parent.bind("<Control-Up>", self.up_down_key)
+        self.markersizemenu.add_command(
+            label=Text().decrease[self.lang],
+            command=lambda: self.change_marker_size(False),
+            accelerator="Ctrl + ↓",
+        )
+        self.parent.bind("<Control-Down>", self.up_down_key)
+
+        self.markerlinemenu = tk.Menu(self.menubar)
+        self.markerlinemenu.add_command(
+            label=Text().increase[self.lang],
+            command=lambda: self.change_line_width(True),
+            accelerator="Ctrl + →",
+        )
+        self.parent.bind("<Control-Right>", self.right_left_key)
+        self.markerlinemenu.add_command(
+            label=Text().decrease[self.lang],
+            command=lambda: self.change_line_width(False),
+            accelerator="Ctrl + ←",
+        )
+        self.parent.bind("<Control-Left>", self.right_left_key)
+
+        self.normmenu.add_cascade(
+            label=Text().markerline[self.lang], menu=self.markerlinemenu
+        )
+        self.normmenu.add_cascade(
+            label=Text().marker[self.lang], menu=self.markersizemenu
         )
 
         self.parent.config(menu=self.menubar)
@@ -240,6 +273,42 @@ class MainApplication(tk.Frame):
     def normalize(self, norm):
 
         self.DoseFigureHandler.norm = self.norm.get()
+
+        self.profile.set_attribute("normalize", int(self.norm.get()))
+
+        if self.filenames != []:
+            self.canvas.itemconfig(self.image_on_canvas, image=None)
+            self.DoseFigureHandler.flush()
+            self.show_preview()
+        return
+
+    def change_marker_size(self, boolean):
+        if boolean == True:
+            self.DoseFigureHandler.markersize += 0.2
+        else:
+            self.DoseFigureHandler.markersize -= 0.2
+
+        if self.DoseFigureHandler.markersize < 0:
+            self.DoseFigureHandler.markersize = 0
+
+        self.profile.set_attribute("markersize", self.DoseFigureHandler.markersize)
+
+        if self.filenames != []:
+            self.canvas.itemconfig(self.image_on_canvas, image=None)
+            self.DoseFigureHandler.flush()
+            self.show_preview()
+        return
+
+    def change_line_width(self, boolean):
+        if boolean == True:
+            self.DoseFigureHandler.linewidth += 0.2
+        else:
+            self.DoseFigureHandler.linewidth -= 0.2
+        if self.DoseFigureHandler.linewidth < 0.2:
+            self.DoseFigureHandler.linewidth = 0.2
+
+        self.profile.set_attribute("linewidth", self.DoseFigureHandler.linewidth)
+
         if self.filenames != []:
             self.canvas.itemconfig(self.image_on_canvas, image=None)
             self.DoseFigureHandler.flush()
@@ -290,6 +359,7 @@ class MainApplication(tk.Frame):
         self.canvas.itemconfig(self.image_on_canvas, image=None)
         self.menuflag = False
         self.DoseFigureHandler.flush()
+        self.DoseFigureHandler.plots = []
 
     def remove_last_addition(self):
 
@@ -307,6 +377,7 @@ class MainApplication(tk.Frame):
 
         self.canvas.itemconfig(self.image_on_canvas, image=None)
         self.DoseFigureHandler.flush()
+        self.DoseFigureHandler.plots.pop(-1)
         self.show_preview()
 
     def save_graph(self):
@@ -331,7 +402,7 @@ class MainApplication(tk.Frame):
         """
         Invokes DoseFigureHandler to create and display the graphs
         """
-
+        self.DoseFigureHandler.flush()
         self.photoimage, menuflag = self.DoseFigureHandler.return_figure(self.filenames)
 
         self.canvas.pack_forget()
@@ -353,9 +424,7 @@ class MainApplication(tk.Frame):
 
         if self.menuflag == False:
             self.menubar.add_cascade(label=self.text.add[self.lang], menu=self.addmenu)
-            self.menubar.add_cascade(
-                label=self.text.normalize[self.lang], menu=self.normmenu
-            )
+            self.menubar.add_cascade(label="Graph", menu=self.normmenu)
             self.menuflag = True
         self.image_on_canvas = self.canvas.create_image(
             0, 0, anchor=tk.NW, image=self.photoimage
@@ -412,3 +481,15 @@ class MainApplication(tk.Frame):
 
     def s_key(self, event=None):
         self.save_graph()
+
+    def up_down_key(self, event=None):
+        if event.keysym == "Up":
+            self.change_marker_size(True)
+        else:
+            self.change_marker_size(False)
+
+    def right_left_key(self, event=None):
+        if event.keysym == "Right":
+            self.change_line_width(True)
+        else:
+            self.change_line_width(False)

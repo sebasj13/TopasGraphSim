@@ -1,3 +1,6 @@
+import tkinter as tk
+from cProfile import label
+
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
@@ -7,8 +10,8 @@ from matplotlib.ticker import AutoMinorLocator
 from PIL import Image, ImageTk
 from win32api import GetSystemMetrics
 
-from ..functions.plot_args import plot_args
 from ..resources.language import Text
+from .datatypes import Measurement, Simulation
 
 
 class DoseFigureHandler:
@@ -23,11 +26,13 @@ class DoseFigureHandler:
         self.text = Text()
         self.style = plt.style.use("default")
         self.current_mode = self.parent.dark.get()
-        self.colors = [
-            ["go", "bo", "ro", "co", "mo"],
-            ["green", "blue", "red", "cyan", "magenta"],
-        ]
-
+        self.colors = {
+            False: ["green", "blue", "red", "cyan", "magenta"],
+            True: ["#ff7fff", "#ffff00", "#00ffff", "#ff4040", "#40ff40"],
+        }
+        self.marker = "o-."
+        self.markersize = self.parent.profile.get_attribute("markersize")
+        self.linewidth = self.parent.profile.get_attribute("linewidth")
         # Initialize the figure and axes
         self.fig = Figure(figsize=(10, 5), constrained_layout=True, dpi=600)
         self.canvas = FigureCanvasAgg(self.fig)
@@ -35,8 +40,7 @@ class DoseFigureHandler:
 
         # Initialize necessary variables
         self.props = dict(boxstyle="round", facecolor="wheat", alpha=0.6)
-        self.filepaths = []
-        self.filenames = []
+        self.plots = []
         self.data = []
 
     def set_style(self):
@@ -64,7 +68,7 @@ class DoseFigureHandler:
 
             self.current_mode = self.parent.dark.get()
 
-            if self.filenames != []:
+            if self.plots != []:
                 self.parent.show_preview()
 
     def flush(self):
@@ -73,8 +77,6 @@ class DoseFigureHandler:
         Clears the data
         """
 
-        self.filepaths = []
-        self.filenames = []
         self.data = []
 
     def fits(self, image):
@@ -116,10 +118,33 @@ class DoseFigureHandler:
         for tuple in datanames:
             filename = tuple[0]
             type = tuple[1]
-            if filename not in self.filepaths:
-                self.filepaths += [filename]
-                self.data += [plot_args(filename, self.norm, type)]
-                self.filenames += [filename.split("/")[-1]]
+            if filename not in [plotdata.filepath for plotdata in self.plots]:
+                if type == "simulation":
+                    self.plots += [Simulation(filename)]
+                else:
+                    self.plots += [Measurement(filename, type)]
+
+        for plotdata in self.plots:
+            if self.norm == True:
+                self.data += [
+                    [
+                        plotdata.axis,
+                        plotdata.direction,
+                        plotdata.norm_dose,
+                        plotdata.norm_std_dev,
+                    ]
+                    + plotdata.params
+                ]
+            else:
+                self.data += [
+                    [
+                        plotdata.axis,
+                        plotdata.direction,
+                        plotdata.dose,
+                        plotdata.std_dev,
+                    ]
+                    + plotdata.params
+                ]
 
     def add_legend(self):
 
@@ -154,7 +179,7 @@ class DoseFigureHandler:
                     fontsize=10,
                     verticalalignment="top",
                     bbox=self.props,
-                    color=self.colors[1][index],
+                    color=self.colors[self.current_mode][index],
                 )
             else:
                 (
@@ -208,7 +233,7 @@ class DoseFigureHandler:
                     verticalalignment="top",
                     bbox=self.props,
                     horizontalalignment="center",
-                    color=self.colors[1][index],
+                    color=self.colors[self.current_mode][index],
                 )
 
     def set_x_label(self):
@@ -216,7 +241,6 @@ class DoseFigureHandler:
         """
         Names the x-axis according to the plot
         """
-
         xlabel = "{}-{} [mm]".format(self.data[0][1], self.text.axis[self.lang])
         self.ax.set_xlabel(xlabel, size=12)
 
@@ -231,20 +255,21 @@ class DoseFigureHandler:
                 x=plot_data[0],
                 y=plot_data[2],
                 yerr=plot_data[3],
-                fmt=self.colors[0][index],
+                fmt="none",
                 ecolor="r",
                 elinewidth=0.5,
                 capsize=1,
                 capthick=0.2,
                 ms=2,
-                label=f"{self.filenames[index]}",
             )
             self.ax.plot(
                 plot_data[0],
                 plot_data[2],
-                "-.",
-                color=self.colors[1][index],
-                linewidth=0.5,
+                self.marker,
+                markersize=self.markersize,
+                color=self.colors[self.current_mode][index],
+                linewidth=self.linewidth,
+                label=f"{self.plots[index].filename}",
             )
 
     def return_figure(self, filenames):

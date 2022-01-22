@@ -1,1 +1,7 @@
-{"color_scheme": "light", "language": "en"}
+{
+    "color_scheme": "light",
+    "language": "de",
+    "markersize": 1.2,
+    "linewidth": 0.6000000000000001,
+    "normalize": 1
+}
