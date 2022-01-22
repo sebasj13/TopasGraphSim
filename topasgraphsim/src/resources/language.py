@@ -13,10 +13,10 @@ class Text:
         self.file = {"de": "Datei", "en": "File"}
         self.view = {"de": "Ansicht", "en": "View"}
         self.options = {"de": "Optionen", "en": "Options"}
-        self.add = {"de": "Daten hinzufügen", "en": "Add data"}
-        self.loadsim = {"de": "Simulationsergebnis laden", "en": "Load simulation"}
+        self.add = {"de": "Daten hinzufügen", "en": "Add Data"}
+        self.loadsim = {"de": "Simulationsergebnis laden", "en": "Load Simulation"}
         self.simulation = {"de": "Simulation", "en": "Simulation"}
-        self.loadmeasurement = {"de": "Messung laden", "en": "Load measurement"}
+        self.loadmeasurement = {"de": "Messung laden", "en": "Load Measurement"}
         self.measurement = {"de": "Messung", "en": "Measurement"}
         self.simulationdata = {"de": "Simulationsdateien", "en": "Simulation Data"}
         self.measurementdata = {"de": "Messdaten", "en": "Measurement Data"}
