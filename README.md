@@ -52,5 +52,5 @@ python -m topasgraphsim
      
 ## Dependencies
 
-Built using the beautiful Azure-ttk theme by @rdbende.
+Built using the beautiful Azure-ttk theme by [@rdbende](https://github.com/rdbende).
 Requires python3, numpy, scipy, matplotlib, Pillow, python-opencv, pywin32, topas2numpy and tkinter.
