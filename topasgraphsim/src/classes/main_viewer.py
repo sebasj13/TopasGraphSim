@@ -2,6 +2,7 @@ import os
 import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter import filedialog as fd
+from tkinter import simpledialog as sd
 
 from PIL import Image, ImageTk
 
@@ -208,6 +209,7 @@ class MainApplication(tk.Frame):
         self.canvas.image = None
         self.current_file = None
         self.filenames = []
+        self.rename_boxes = []
 
         self.parent.geometry(geometry)
         self.pack(side="top", fill="both", expand=True)
@@ -409,6 +411,8 @@ class MainApplication(tk.Frame):
         self.canvas.pack_forget()
         self.canvas = tk.Canvas(self)
         self.canvas.bind("<Configure>", self.handle_configure)
+        self.canvas.bind("<Button-1>", self.check_click)
+        self.canvas.bind("<Motion>", self.check_hand)
         self.canvas.pack(fill="both", expand=True)
 
         if len(self.filenames) >= 2:
@@ -434,10 +438,33 @@ class MainApplication(tk.Frame):
         self.canvas.image = self.photoimage
         self.canvas.itemconfig(self.image_on_canvas, image=self.canvas.image)
 
+        for i in range(len(self.filenames)):
+            temp = self.canvas.create_rectangle(
+                (
+                    -0.00833
+                    * max(
+                        map(
+                            len,
+                            [plot.filename for plot in self.DoseFigureHandler.plots],
+                        )
+                    )
+                    + 0.94633
+                )
+                * self.canvas.image.width(),
+                (0.023 + 0.042 * i) * self.canvas.image.height(),
+                0.988 * self.canvas.image.width(),
+                (0.065 + 0.042 * i) * self.canvas.image.height(),
+                fill="",
+                outline="",
+            )
+            self.rename_boxes += [temp]
+
+    # Keybind functions
+
     def handle_configure(self, event):
 
         """
-        Dynamically resizes the graph according to the window size
+        Dynamically resizes the graph and rename boxes according to the window size and name length
         """
 
         try:
@@ -464,7 +491,60 @@ class MainApplication(tk.Frame):
         except AttributeError:
             pass
 
-    # Keybing functions
+        temp = self.rename_boxes
+        self.rename_boxes = []
+        for i in range(len(self.filenames)):
+            x = self.canvas.image.width()
+            y = self.canvas.image.height()
+            self.canvas.delete(temp[i])
+            self.rename_boxes += [
+                self.canvas.create_rectangle(
+                    (
+                        -0.00833
+                        * max(
+                            map(
+                                len,
+                                [
+                                    plot.filename
+                                    for plot in self.DoseFigureHandler.plots
+                                ],
+                            )
+                        )
+                        + 0.94633
+                    )
+                    * x,
+                    (0.023 + 0.042 * i) * y,
+                    0.988 * x,
+                    (0.065 + 0.042 * i) * y,
+                    fill="",
+                    outline="",
+                )
+            ]
+
+    def check_hand(self, e):
+        hoverlist = []
+        for box in self.rename_boxes:
+            bbox = self.canvas.bbox(box)
+            if bbox[0] < e.x and bbox[2] > e.x and bbox[1] < e.y and bbox[3] > e.y:
+                hoverlist += [True]
+            else:
+                hoverlist += [False]
+
+        if True in hoverlist:
+            self.canvas.config(cursor="hand1")
+        else:
+            self.canvas.config(cursor="")
+
+    def check_click(self, e):
+        for index, box in enumerate(self.rename_boxes):
+            if e != None:
+                bbox = self.canvas.bbox(box)
+                if bbox[0] < e.x and bbox[2] > e.x and bbox[1] < e.y and bbox[3] > e.y:
+                    newname = sd.askstring("", self.text.changefilename[self.lang])
+                    if newname != None:
+                        self.DoseFigureHandler.plots[index].filename = newname
+                        self.show_preview()
+
     def esc_key(self, event=None):
         self.close_file()
 

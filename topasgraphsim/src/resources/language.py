@@ -54,3 +54,4 @@ class Text:
         self.decrease = {"de": "Verkleinern", "en": "Decrease"}
         self.marker = {"de": "Symbolgröße", "en": "Marker Size"}
         self.markerline = {"de": "Liniendicke", "en": "Line Width"}
+        self.changefilename = {"de": "Neuer Name:", "en": "New Name:"}
