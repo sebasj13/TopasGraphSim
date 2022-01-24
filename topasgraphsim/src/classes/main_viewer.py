@@ -3,6 +3,7 @@ import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter import filedialog as fd
 from tkinter import simpledialog as sd
+from tkinter.font import NORMAL
 
 from PIL import Image, ImageTk
 
@@ -21,14 +22,23 @@ class MainApplication(tk.Frame):
         # Read settings from profile.json and initialize the necessary variables
         self.profile = ProfileHandler()
         self.lang = self.profile.get_attribute("language")
+
         self.langvar = tk.StringVar()
         self.langvar.set(self.lang)
         self.text = Text()
+
         self.dark = tk.BooleanVar()
         self.dark.set(False)
+
         self.norm = tk.BooleanVar()
         self.norm.set(bool(self.profile.get_attribute("normalize")))
-        self.DoseFigureHandler = DoseFigureHandler(self, self.norm.get())
+
+        self.zoom = tk.BooleanVar()
+        self.zoom.set(bool(self.profile.get_attribute("zoom")))
+
+        self.DoseFigureHandler = DoseFigureHandler(
+            self, self.norm.get(), self.zoom.get()
+        )
 
         self.parent.title(self.text.window_title[self.lang])
         style = ttk.Style(self.parent)
@@ -167,8 +177,11 @@ class MainApplication(tk.Frame):
         self.normmenu = tk.Menu(self.menubar)
         self.normmenu.add_checkbutton(
             label=self.text.normalize[self.lang],
-            command=lambda: self.normalize(self.norm.get()),
+            command=self.normalize,
             variable=self.norm,
+        )
+        self.normmenu.add_checkbutton(
+            label=self.text.zoom[self.lang], command=self.zoomgraph, variable=self.zoom,
         )
         self.normmenu.add_separator()
         self.markersizemenu = tk.Menu(self.menubar)
@@ -279,11 +292,22 @@ class MainApplication(tk.Frame):
         self.__init__(self.parent, geometry)
         return
 
-    def normalize(self, norm):
+    def normalize(self):
 
         self.DoseFigureHandler.norm = self.norm.get()
 
         self.profile.set_attribute("normalize", int(self.norm.get()))
+
+        if self.filenames != []:
+            self.canvas.itemconfig(self.image_on_canvas, image=None)
+            self.DoseFigureHandler.flush()
+            self.show_preview()
+        return
+
+    def zoomgraph(self):
+        self.DoseFigureHandler.zoom = self.zoom.get()
+
+        self.profile.set_attribute("zoom", int(self.zoom.get()))
 
         if self.filenames != []:
             self.canvas.itemconfig(self.image_on_canvas, image=None)
@@ -336,14 +360,12 @@ class MainApplication(tk.Frame):
             filetypes = [(self.text.measurementdata[self.lang], ["txt", ".csv"])]
         elif type == "ptw":
             filetypes = [(self.text.ptw[self.lang], ".mcc")]
-            self.addmeasuremenu.entryconfig(2, state=tk.DISABLED)
 
         self.current_file = fd.askopenfilenames(
             initialdir=os.getcwd(), filetypes=filetypes
         )
 
         if self.current_file == "":
-            self.addmeasuremenu.entryconfig(2, state=tk.NORMAL)
             return
 
         for file in self.current_file:
@@ -366,9 +388,10 @@ class MainApplication(tk.Frame):
         self.filemenu.entryconfig(1, state=tk.NORMAL)
         self.filemenu.entryconfig(3, state=tk.DISABLED)
         self.filemenu.entryconfig(4, state=tk.DISABLED)
+        self.addmenu.entryconfig(0, state=tk.NORMAL)
+        self.addmenu.entryconfig(1, state=tk.NORMAL)
         self.addmeasuremenu.entryconfig(0, state=tk.NORMAL)
         self.addmeasuremenu.entryconfig(1, state=tk.NORMAL)
-        self.addmeasuremenu.entryconfig(2, state=tk.NORMAL)
         self.menubar.delete(3, 4)
         self.filenames = []
         self.canvas.itemconfig(self.image_on_canvas, image=None)
@@ -381,22 +404,26 @@ class MainApplication(tk.Frame):
         """
         Removes the graph added last
         """
-        if len(self.DoseFigureHandler.plots) <= len(self.filenames):
 
-            self.filenames.pop(-1)
-            self.DoseFigureHandler.plots.pop(-1)
-
-        if len(self.DoseFigureHandler.plots) < 2:
+        if len(self.filenames) == 1:
             self.close_file()
             return
+
+        if self.filenames[-1][0].endswith(".mcc") == True:
+            self.filenames.pop(-1)
+            while len(self.filenames) < len(self.DoseFigureHandler.plots):
+                self.DoseFigureHandler.plots.pop(-1)
+
+        else:
+            self.filenames.pop(-1)
+            self.DoseFigureHandler.plots.pop(-1)
 
         if len(self.filenames) <= 4:
             self.addmenu.entryconfig(0, state=tk.NORMAL)
             self.addmenu.entryconfig(1, state=tk.NORMAL)
 
-        self.canvas.itemconfig(self.image_on_canvas, image=None)
         self.DoseFigureHandler.flush()
-        self.DoseFigureHandler.plots.pop(-1)
+        self.canvas.itemconfig(self.image_on_canvas, image=None)
         self.show_preview()
 
     def save_graph(self):

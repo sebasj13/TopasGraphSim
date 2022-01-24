@@ -57,3 +57,4 @@ class Text:
         self.changefilename = {"de": "Neuer Name:", "en": "New Name:"}
         self.ptw = {"de": "PTW tbaScan", "en": "PTW tbaScan"}
         self.submit = {"de": "Fertig", "en": "Sumbit"}
+        self.zoom = {"de": "Zoomfenster anzeigen", "en": "Show zoom view"}

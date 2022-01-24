@@ -34,6 +34,8 @@ class PTWMeasurement:
             self.params = dp.calculate_parameters(
                 self.axis, self.norm_dose, self.norm_std_dev
             )
+
+        self.axis = self.axis.tolist()
         self.filename = f"PTW Scan {index}"
         self.filepath = list[2]
         self.unit = list[3]

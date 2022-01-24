@@ -46,3 +46,4 @@ class Measurement:
             self.params = dp.calculate_parameters(
                 self.axis, self.norm_dose, self.norm_std_dev
             )
+        self.axis = self.axis.tolist()

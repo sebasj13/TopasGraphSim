@@ -6,6 +6,7 @@ import numpy as np
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib.figure import Figure
 from matplotlib.ticker import AutoMinorLocator
+from mpl_toolkits.axes_grid1.inset_locator import inset_axes, mark_inset
 from PIL import Image, ImageTk
 from win32api import GetSystemMetrics
 
@@ -16,11 +17,12 @@ from .sim_import import Simulation
 
 
 class DoseFigureHandler:
-    def __init__(self, parent, norm=True):
+    def __init__(self, parent, norm, zoom):
 
         self.parent = parent
 
         self.norm = norm
+        self.zoom = zoom
 
         # Initialize the current settings
         self.lang = self.parent.lang
@@ -28,10 +30,10 @@ class DoseFigureHandler:
         self.style = plt.style.use("default")
         self.current_mode = self.parent.dark.get()
         self.colors = {
-            False: ["green", "blue", "red", "cyan", "magenta"],
+            False: ["#ff2e1b", "#ffa43c", "#1bff67", "#ff5cf1", "#493cff"],
             True: ["#ff7fff", "#ffff00", "#00ffff", "#ff4040", "#40ff40"],
         }
-        self.marker = "o-."
+        self.marker = "o--"
         self.markersize = self.parent.profile.get_attribute("markersize")
         self.linewidth = self.parent.profile.get_attribute("linewidth")
         # Initialize the figure and axes
@@ -288,6 +290,67 @@ class DoseFigureHandler:
                 linewidth=self.linewidth,
                 label=f"{self.plots[index].filename}",
             )
+
+        if self.zoom == False:
+            try:
+                self.axins.remove()
+            except:
+                pass
+
+        if self.zoom == True:
+            try:
+                self.axins.remove()
+            except:
+                pass
+
+            self.axins = inset_axes(self.ax, "28%", "28%", loc="lower left")
+            yvalsat195 = []
+            yvalsat205 = []
+            for index, plot_data in enumerate(self.data):
+                self.axins.errorbar(
+                    x=plot_data[0],
+                    y=plot_data[2],
+                    yerr=plot_data[3],
+                    fmt="none",
+                    ecolor="r",
+                    elinewidth=0.5,
+                    capsize=1,
+                    capthick=0.2,
+                    ms=2,
+                )
+                self.axins.plot(
+                    plot_data[0],
+                    plot_data[2],
+                    self.marker,
+                    markersize=self.markersize,
+                    color=self.colors[self.current_mode][index],
+                    linewidth=self.linewidth,
+                    label=f"{self.plots[index].filename}",
+                )
+                yvalsat195 += [
+                    plot_data[2][
+                        plot_data[0].index(
+                            min(plot_data[0], key=lambda x: abs(x - 195))
+                        )
+                    ]
+                ]
+                yvalsat205 += [
+                    plot_data[2][
+                        plot_data[0].index(
+                            min(plot_data[0], key=lambda x: abs(x - 205))
+                        )
+                    ]
+                ]
+
+            # sub region of the original image
+            x1, x2, y1, y2 = (195, 205, min(yvalsat205), max(yvalsat195))
+            self.axins.set_xlim(x1, x2)
+            self.axins.set_ylim(y1, y2)
+            self.axins.tick_params(
+                labelleft=False, labelbottom=False, bottom=False, left=False
+            )
+
+            mark_inset(self.ax, self.axins, loc1=2, loc2=4, fc="none", ec="0.5")
 
     def return_figure(self, filenames):
 
