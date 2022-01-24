@@ -11,7 +11,8 @@ This GUI can visualize and analyze percentage depth dose (pdd) and dose profiles
  - Simultaneous plotting and parameter calculation for up to 5 datasets
  - Graph adjustment options (marker size and line width)
  - Reproducible graphing of simulation results
- - Import of measurement results
+ - Import of measurement results (including PTW tbaScan data)
+ - Optional zoom-in window
  - Easy to use keyboard shortcuts
  - Toggle for data normalization
  - German and english language support
