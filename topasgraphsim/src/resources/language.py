@@ -14,9 +14,9 @@ class Text:
         self.view = {"de": "Ansicht", "en": "View"}
         self.options = {"de": "Optionen", "en": "Options"}
         self.add = {"de": "Daten hinzufügen", "en": "Add Data"}
-        self.loadsim = {"de": "Simulationsergebnis laden", "en": "Load Simulation"}
+        self.loadsim = {"de": "Simulationsergebnis laden", "en": "Load simulation"}
         self.simulation = {"de": "Simulation", "en": "Simulation"}
-        self.loadmeasurement = {"de": "Messung laden", "en": "Load Measurement"}
+        self.loadmeasurement = {"de": "Messung laden", "en": "Load measurement"}
         self.measurement = {"de": "Messung", "en": "Measurement"}
         self.simulationdata = {"de": "Simulationsdateien", "en": "Simulation Data"}
         self.measurementdata = {"de": "Messdaten", "en": "Measurement Data"}
@@ -25,8 +25,8 @@ class Text:
         self.dp = {"de": "Dosisquerverteilung", "en": "Dose profile"}
         self.save = {"de": "Graph abspeichern", "en": "Save graph"}
         self.close = {
-            "de": "Derzeitige Simulation schließen",
-            "en": "Close current simulation",
+            "de": "Derzeitige Ansicht schließen",
+            "en": "Close current project",
         }
         self.revert = {"de": "Rückgängig", "en": "Undo"}
         self.end = {"de": "Beenden", "en": "Close"}
@@ -55,3 +55,5 @@ class Text:
         self.marker = {"de": "Symbolgröße", "en": "Marker Size"}
         self.markerline = {"de": "Liniendicke", "en": "Line Width"}
         self.changefilename = {"de": "Neuer Name:", "en": "New Name:"}
+        self.ptw = {"de": "PTW tbaScan", "en": "PTW tbaScan"}
+        self.submit = {"de": "Fertig", "en": "Sumbit"}

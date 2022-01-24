@@ -1,5 +1,4 @@
 import tkinter as tk
-from cProfile import label
 
 import cv2
 import matplotlib.pyplot as plt
@@ -11,7 +10,9 @@ from PIL import Image, ImageTk
 from win32api import GetSystemMetrics
 
 from ..resources.language import Text
-from .datatypes import Measurement, Simulation
+from .measurement_import import Measurement
+from .ptw_import import PTWMultimporter
+from .sim_import import Simulation
 
 
 class DoseFigureHandler:
@@ -34,7 +35,7 @@ class DoseFigureHandler:
         self.markersize = self.parent.profile.get_attribute("markersize")
         self.linewidth = self.parent.profile.get_attribute("linewidth")
         # Initialize the figure and axes
-        self.fig = Figure(figsize=(10, 5), constrained_layout=True, dpi=600)
+        self.fig = Figure(figsize=(10, 5), constrained_layout=True, dpi=1200)
         self.canvas = FigureCanvasAgg(self.fig)
         self.ax = self.fig.add_subplot(111)
 
@@ -121,6 +122,13 @@ class DoseFigureHandler:
             if filename not in [plotdata.filepath for plotdata in self.plots]:
                 if type == "simulation":
                     self.plots += [Simulation(filename)]
+                elif type == "ptw":
+                    importer = PTWMultimporter(filename, self.parent.parent)
+                    importer.window.mainloop()
+                    self.plots += [plot for plot in importer.plots]
+                    importer.window.destroy()
+                    del importer
+
                 else:
                     self.plots += [Measurement(filename, type)]
 
@@ -171,8 +179,15 @@ class DoseFigureHandler:
             if len(plot_data) == 7:
                 Q, dQ, zmax = plot_data[4], plot_data[5], plot_data[6]
                 textstr = "Q     = {} ± {}\n{} = {} mm".format(Q, dQ, "$z_{max}$", zmax)
+                space = 0
+                if dQ == 0:
+                    space = 0.05
+                if len(str(Q)) == 6:
+                    space += 0.01
+                if len(str(dQ)) == 6:
+                    space += 0.01
                 self.ax.text(
-                    0.795,
+                    0.795 + space,
                     0.7 - 0.1 * index,
                     textstr,
                     transform=self.ax.transAxes,
@@ -225,7 +240,7 @@ class DoseFigureHandler:
                 )
 
                 self.ax.text(
-                    0.105 + 0.21 * index,
+                    (0.6 - 0.1 * len(self.data)) + 0.2 * index,
                     0.5,
                     textstr,
                     transform=self.ax.transAxes,
@@ -243,6 +258,8 @@ class DoseFigureHandler:
         """
         xlabel = "{}-{} [mm]".format(self.data[0][1], self.text.axis[self.lang])
         self.ax.set_xlabel(xlabel, size=12)
+        if self.norm == False:
+            self.ax.set_ylabel(self.plots[0].unit, size=12)
 
     def create_plots_from_data(self):
 
