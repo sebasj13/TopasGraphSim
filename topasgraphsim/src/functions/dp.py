@@ -72,15 +72,15 @@ def calculate_parameters(axis, dose, std_dev):
         ).argmin()
     ]
 
-    HWB = round(abs(XR50 - XL50), 5)
-    CAXdev = round(XL50 + 0.5 * HWB, 5)
+    HWB = round(abs(XR50 - XL50), 3)
+    CAXdev = round(XL50 + 0.5 * HWB, 3)
 
     flat_krieger = round(
         max([value for value in dose if value >= 0.95 * max(dose)])
         - min([value for value in dose if value >= 0.95 * max(dose)]) / D0,
         5,
     )
-    flat_stddev = round(np.std(Dose80), 5)
+    flat_stddev = round(np.std(Dose80), 3)
 
     if len(Dose80) % 2 != 0:
         Dose80 = (
@@ -92,11 +92,11 @@ def calculate_parameters(axis, dose, std_dev):
         max(
             [Dose80[i - 1] / Dose80[len(Dose80) - i] for i in range(1, len(Dose80) + 1)]
         ),
-        5,
+        3,
     )
 
-    Lpenumbra = round(abs(XL80 - XL20), 5)
-    Rpenumbra = round(abs(XR80 - XR20), 5)
+    Lpenumbra = round(abs(XL80 - XL20), 3)
+    Rpenumbra = round(abs(XR80 - XR20), 3)
 
     XL20index = np.where(interpolated_axis == XL20)[0][0]
     XL80index = np.where(interpolated_axis == XL80)[0][0]
@@ -109,7 +109,7 @@ def calculate_parameters(axis, dose, std_dev):
                 interpolated_axis[XL20index:XL80index],
             )
         ),
-        5,
+        3,
     )
     Rintegral = round(
         abs(
@@ -118,7 +118,7 @@ def calculate_parameters(axis, dose, std_dev):
                 interpolated_axis[XR80index:XR20index],
             )
         ),
-        5,
+        3,
     )
 
     return [

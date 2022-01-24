@@ -52,6 +52,7 @@ class MainApplication(tk.Frame):
         self.parent.bind("<Control-o>", self.o_key)
         self.parent.bind("<Control-s>", self.s_key)
         self.parent.bind("<Control-t>", self.t_key)
+        self.parent.bind("<Control-p>", self.p_key)
         self.parent.bind("<Escape>", self.esc_key)
         self.parent.bind("<Control-z>", self.z_key)
 
@@ -69,6 +70,12 @@ class MainApplication(tk.Frame):
             command=lambda: self.load_file("dp"),
             accelerator="Ctrl+D",
         )
+        self.addmeasuremenu.add_command(
+            label=self.text.ptw[self.lang],
+            command=lambda: self.load_file("ptw"),
+            accelerator="Ctrl+P",
+        )
+
         self.filemenu.add_command(
             label=self.text.loadsim[self.lang],
             command=lambda: self.load_file("simulation"),
@@ -325,14 +332,18 @@ class MainApplication(tk.Frame):
 
         if type == "simulation":
             filetypes = [(self.text.simulationdata[self.lang], ".csv")]
-        else:
+        elif type == "pdd" or type == "dp":
             filetypes = [(self.text.measurementdata[self.lang], ["txt", ".csv"])]
+        elif type == "ptw":
+            filetypes = [(self.text.ptw[self.lang], ".mcc")]
+            self.addmeasuremenu.entryconfig(2, state=tk.DISABLED)
 
         self.current_file = fd.askopenfilenames(
             initialdir=os.getcwd(), filetypes=filetypes
         )
 
         if self.current_file == "":
+            self.addmeasuremenu.entryconfig(2, state=tk.NORMAL)
             return
 
         for file in self.current_file:
@@ -357,6 +368,7 @@ class MainApplication(tk.Frame):
         self.filemenu.entryconfig(4, state=tk.DISABLED)
         self.addmeasuremenu.entryconfig(0, state=tk.NORMAL)
         self.addmeasuremenu.entryconfig(1, state=tk.NORMAL)
+        self.addmeasuremenu.entryconfig(2, state=tk.NORMAL)
         self.menubar.delete(3, 4)
         self.filenames = []
         self.canvas.itemconfig(self.image_on_canvas, image=None)
@@ -369,10 +381,14 @@ class MainApplication(tk.Frame):
         """
         Removes the graph added last
         """
+        if len(self.DoseFigureHandler.plots) <= len(self.filenames):
 
-        self.filenames.pop(-1)
-        if len(self.filenames) < 2:
-            self.addmenu.entryconfig(3, state=tk.DISABLED)
+            self.filenames.pop(-1)
+            self.DoseFigureHandler.plots.pop(-1)
+
+        if len(self.DoseFigureHandler.plots) < 2:
+            self.close_file()
+            return
 
         if len(self.filenames) <= 4:
             self.addmenu.entryconfig(0, state=tk.NORMAL)
@@ -413,12 +429,12 @@ class MainApplication(tk.Frame):
         self.canvas.bind("<Configure>", self.handle_configure)
         self.canvas.bind("<Button-1>", self.check_click)
         self.canvas.bind("<Motion>", self.check_hand)
-        self.canvas.pack(fill="both", expand=True)
+        self.canvas.pack(side=tk.TOP, fill="both", expand=True)
 
-        if len(self.filenames) >= 2:
+        if len(self.DoseFigureHandler.plots) >= 2:
             self.addmenu.entryconfig(3, state=tk.NORMAL)
 
-        if len(self.filenames) == 5:
+        if len(self.DoseFigureHandler.plots) == 5:
             self.addmenu.entryconfig(0, state=tk.DISABLED)
             self.addmenu.entryconfig(1, state=tk.DISABLED)
 
@@ -438,7 +454,7 @@ class MainApplication(tk.Frame):
         self.canvas.image = self.photoimage
         self.canvas.itemconfig(self.image_on_canvas, image=self.canvas.image)
 
-        for i in range(len(self.filenames)):
+        for i in range(len(self.DoseFigureHandler.plots)):
             temp = self.canvas.create_rectangle(
                 (
                     -0.00833
@@ -493,7 +509,7 @@ class MainApplication(tk.Frame):
 
         temp = self.rename_boxes
         self.rename_boxes = []
-        for i in range(len(self.filenames)):
+        for i in range(len(self.DoseFigureHandler.plots)):
             x = self.canvas.image.width()
             y = self.canvas.image.height()
             self.canvas.delete(temp[i])
@@ -522,25 +538,34 @@ class MainApplication(tk.Frame):
             ]
 
     def check_hand(self, e):
-        hoverlist = []
-        for box in self.rename_boxes:
-            bbox = self.canvas.bbox(box)
-            if bbox[0] < e.x and bbox[2] > e.x and bbox[1] < e.y and bbox[3] > e.y:
-                hoverlist += [True]
-            else:
-                hoverlist += [False]
+        if e != None:
+            try:
+                hoverlist = []
+                for box in self.rename_boxes:
+                    bbox = self.canvas.bbox(box)
+                    if (
+                        bbox[0] < e.x
+                        and bbox[2] > e.x
+                        and bbox[1] < e.y
+                        and bbox[3] > e.y
+                    ):
+                        hoverlist += [True]
+                    else:
+                        hoverlist += [False]
+            except TypeError:
+                self.show_preview()
 
-        if True in hoverlist:
-            self.canvas.config(cursor="hand1")
-        else:
-            self.canvas.config(cursor="")
+            if True in hoverlist:
+                self.canvas.config(cursor="hand1")
+            else:
+                self.canvas.config(cursor="")
 
     def check_click(self, e):
         for index, box in enumerate(self.rename_boxes):
             if e != None:
                 bbox = self.canvas.bbox(box)
                 if bbox[0] < e.x and bbox[2] > e.x and bbox[1] < e.y and bbox[3] > e.y:
-                    newname = sd.askstring("", self.text.changefilename[self.lang])
+                    newname = sd.askstring("", self.text.changefilename[self.lang],)
                     if newname != None:
                         self.DoseFigureHandler.plots[index].filename = newname
                         self.show_preview()
@@ -559,6 +584,9 @@ class MainApplication(tk.Frame):
 
     def z_key(self, event=None):
         self.remove_last_addition()
+
+    def p_key(self, event=None):
+        self.load_file("ptw")
 
     def s_key(self, event=None):
         self.save_graph()
