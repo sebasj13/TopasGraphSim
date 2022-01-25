@@ -3,6 +3,7 @@ import tkinter as tk
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
+from attr import Attribute
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib.figure import Figure
 from matplotlib.ticker import AutoMinorLocator
@@ -30,15 +31,16 @@ class DoseFigureHandler:
         self.style = plt.style.use("default")
         self.current_mode = self.parent.dark.get()
         self.colors = {
-            False: ["#ff2e1b", "#ffa43c", "#1bff67", "#ff5cf1", "#493cff"],
+            False: ["#ffa43c", "#ff2e1b", "#1bff67", "#ff5cf1", "#493cff"],
             True: ["#ff7fff", "#ffff00", "#00ffff", "#ff4040", "#40ff40"],
         }
         self.marker = "o--"
         self.markersize = self.parent.profile.get_attribute("markersize")
         self.linewidth = self.parent.profile.get_attribute("linewidth")
         # Initialize the figure and axes
-        self.fig = Figure(figsize=(10, 5), constrained_layout=True, dpi=1200)
+        self.fig = Figure(figsize=(10, 5), constrained_layout=True, dpi=600)
         self.canvas = FigureCanvasAgg(self.fig)
+        self.fig.set_canvas(self.canvas)
         self.ax = self.fig.add_subplot(111)
 
         # Initialize necessary variables
@@ -275,7 +277,7 @@ class DoseFigureHandler:
                 y=plot_data[2],
                 yerr=plot_data[3],
                 fmt="none",
-                ecolor="r",
+                ecolor="black",
                 elinewidth=0.5,
                 capsize=1,
                 capthick=0.2,
@@ -303,6 +305,38 @@ class DoseFigureHandler:
             except:
                 pass
 
+            self.canvas.draw()
+            self.transform = self.ax.transData
+            self.inverted_transform = self.ax.transData.inverted()
+            width, height = self.fig.canvas.get_width_height()
+
+            self.focuspoint = self.plots[0].axis[len(self.plots[-1].axis) // 2]
+            try:
+                self.focuspoint = self.inverted_transform.transform(
+                    (
+                        width
+                        * (self.parent.canvas.coords(self.parent.oval)[0] + 5)
+                        / self.parent.canvas.image.width(),
+                        1,
+                    )
+                )
+                self.focuspoint = self.plots[-1].axis[
+                    np.abs(
+                        np.asarray(self.plots[-1].axis - self.focuspoint[0])
+                    ).argmin()
+                ]
+            except AttributeError:
+                pass
+            except IndexError:
+                pass
+
+            pixels = self.transform.transform(np.vstack([plot_data[0], plot_data[2]]).T)
+            x, y = pixels.T
+            y = height - y
+
+            self.pixelx = x[self.plots[-1].axis.index(self.focuspoint)] / width
+            self.pixely = y[self.plots[-1].axis.index(self.focuspoint)] / height
+
             self.axins = inset_axes(self.ax, "28%", "28%", loc="lower left")
             yvalsat195 = []
             yvalsat205 = []
@@ -312,7 +346,7 @@ class DoseFigureHandler:
                     y=plot_data[2],
                     yerr=plot_data[3],
                     fmt="none",
-                    ecolor="r",
+                    ecolor="black",
                     elinewidth=0.5,
                     capsize=1,
                     capthick=0.2,
@@ -330,20 +364,31 @@ class DoseFigureHandler:
                 yvalsat195 += [
                     plot_data[2][
                         plot_data[0].index(
-                            min(plot_data[0], key=lambda x: abs(x - 195))
+                            min(
+                                plot_data[0],
+                                key=lambda x: abs(x - (self.focuspoint - 5)),
+                            )
                         )
                     ]
                 ]
                 yvalsat205 += [
                     plot_data[2][
                         plot_data[0].index(
-                            min(plot_data[0], key=lambda x: abs(x - 205))
+                            min(
+                                plot_data[0],
+                                key=lambda x: abs(x - (self.focuspoint + 5)),
+                            )
                         )
                     ]
                 ]
 
             # sub region of the original image
-            x1, x2, y1, y2 = (195, 205, min(yvalsat205), max(yvalsat195))
+            x1, x2, y1, y2 = (
+                self.focuspoint - 6,
+                self.focuspoint + 6,
+                0.95 * min(yvalsat205),
+                1.05 * max(yvalsat195),
+            )
             self.axins.set_xlim(x1, x2)
             self.axins.set_ylim(y1, y2)
             self.axins.tick_params(
