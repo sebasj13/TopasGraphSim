@@ -224,6 +224,7 @@ class MainApplication(tk.Frame):
         # Initialize necessary variables
         self.menuflag = False
         self.canvas = tk.Canvas(self)
+        self._drag_data = {"x": 0, "y": 0, "item": None}
         self.photoimage = None
         self.image_on_canvas = None
         self.canvas.image = None
@@ -456,6 +457,7 @@ class MainApplication(tk.Frame):
         self.canvas.bind("<Configure>", self.handle_configure)
         self.canvas.bind("<Button-1>", self.check_click)
         self.canvas.bind("<Motion>", self.check_hand)
+        self.canvas.bind("<Double-Button-1>", self.new_zoom)
         self.canvas.pack(side=tk.TOP, fill="both", expand=True)
 
         if len(self.DoseFigureHandler.plots) >= 2:
@@ -502,7 +504,25 @@ class MainApplication(tk.Frame):
             )
             self.rename_boxes += [temp]
 
-    # Keybind functions
+        self.pixelx = self.DoseFigureHandler.pixelx
+        self.pixely = self.DoseFigureHandler.pixely
+
+        self.oval = self.canvas.create_oval(
+            self.pixelx * self.canvas.image.width() - 5,
+            self.pixely * self.canvas.image.height() - 5,
+            self.pixelx * self.canvas.image.width() + 5,
+            self.pixely * self.canvas.image.height() + 5,
+            fill="",
+            outline="",
+            tags="token",
+        )
+
+    def new_zoom(self, event):
+
+        delta_x = event.x - self.canvas.coords(self.oval)[0] + 5
+        delta_y = event.y - self.canvas.coords(self.oval)[1] + 5
+        self.canvas.move(self.oval, delta_x, delta_y)
+        self.show_preview()
 
     def handle_configure(self, event):
 
@@ -561,8 +581,22 @@ class MainApplication(tk.Frame):
                     (0.065 + 0.042 * i) * y,
                     fill="",
                     outline="",
+                    tags="rename",
                 )
             ]
+
+        self.canvas.delete("token")
+
+        if self.zoom.get() == True:
+            self.oval = self.canvas.create_oval(
+                self.pixelx * self.canvas.image.width() - 5,
+                self.pixely * self.canvas.image.height() - 5,
+                self.pixelx * self.canvas.image.width() + 5,
+                self.pixely * self.canvas.image.height() + 5,
+                fill="",
+                outline="",
+                tags="token",
+            )
 
     def check_hand(self, e):
         if e != None:
