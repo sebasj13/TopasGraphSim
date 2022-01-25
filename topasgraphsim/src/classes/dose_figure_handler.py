@@ -381,8 +381,8 @@ class DoseFigureHandler:
             x1, x2, y1, y2 = (
                 self.focuspoint - 6,
                 self.focuspoint + 6,
-                0.95 * min(yvalsat205),
-                1.05 * max(yvalsat195),
+                0.99 * min(yvalsat205),
+                1.01 * max(yvalsat195),
             )
             self.axins.set_xlim(x1, x2)
             self.axins.set_ylim(y1, y2)
