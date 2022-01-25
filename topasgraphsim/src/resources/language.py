@@ -13,6 +13,10 @@ class Text:
             "de": "Derzeitige Ansicht schließen",
             "en": "Close current project",
         }
+        self.closeprompt = {
+            "de": "Graph wurde noch nicht gespeichert. Trotzdem Schließen?",
+            "en": "Graph was not saved. Close anyways?",
+        }
         self.dark = {"de": "Dunkel", "en": "Dark"}
         self.decrease = {"de": "Verkleinern", "en": "Decrease"}
         self.dp = {"de": "Dosisquerverteilung", "en": "Dose profile"}
