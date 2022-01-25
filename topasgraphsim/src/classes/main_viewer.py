@@ -19,6 +19,8 @@ class MainApplication(tk.Frame):
 
         self.parent = parent
 
+        self.parent.protocol("WM_DELETE_WINDOW", lambda: self.save_graph(True))
+
         # Read settings from profile.json and initialize the necessary variables
         self.profile = ProfileHandler()
         self.lang = self.profile.get_attribute("language")
@@ -222,6 +224,7 @@ class MainApplication(tk.Frame):
         self.parent.config(menu=self.menubar)
 
         # Initialize necessary variables
+        self.saved = True
         self.menuflag = False
         self.canvas = tk.Canvas(self)
         self._drag_data = {"x": 0, "y": 0, "item": None}
@@ -377,6 +380,7 @@ class MainApplication(tk.Frame):
         self.filemenu.entryconfig(1, state=tk.DISABLED)
         self.filemenu.entryconfig(3, state=tk.NORMAL)
         self.filemenu.entryconfig(4, state=tk.NORMAL)
+        self.saved = False
 
     def close_file(self):
 
@@ -399,6 +403,7 @@ class MainApplication(tk.Frame):
         self.menuflag = False
         self.DoseFigureHandler.flush()
         self.DoseFigureHandler.plots = []
+        self.saved = True
 
     def remove_last_addition(self):
 
@@ -427,11 +432,24 @@ class MainApplication(tk.Frame):
         self.canvas.itemconfig(self.image_on_canvas, image=None)
         self.show_preview()
 
-    def save_graph(self):
+    def save_graph(self, exit=False):
 
         """
         Saves the current graph
         """
+
+        if exit == True:
+            if self.saved == False:
+
+                prompt = sd.messagebox.askyesno("", self.text.closeprompt[self.lang])
+                if prompt == True:
+                    self.parent.destroy()
+                    return
+                else:
+                    return
+            else:
+                self.parent.destroy()
+                return
 
         file = fd.asksaveasfilename(
             defaultextension=".png",
@@ -442,6 +460,7 @@ class MainApplication(tk.Frame):
             return
 
         ImageTk.getimage(self.photoimage).save(file)
+        self.saved = True
         return
 
     def show_preview(self):
