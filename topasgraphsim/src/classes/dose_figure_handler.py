@@ -305,7 +305,7 @@ class DoseFigureHandler:
             self.inverted_transform = self.ax.transData.inverted()
             width, height = self.fig.canvas.get_width_height()
 
-            self.focuspoint = self.plots[0].axis[len(self.plots[-1].axis) // 2]
+            self.focuspoint = self.plots[-1].axis[len(self.plots[-1].axis) // 2]
             try:
                 self.focuspoint = self.inverted_transform.transform(
                     (

@@ -1,8 +1,8 @@
 {
     "color_scheme": "light",
     "language": "en",
-    "markersize": 1.4,
-    "linewidth": 0.6000000000000001,
+    "markersize": 0,
+    "linewidth": 1.0,
     "normalize": 1,
     "zoom": 1
 }
