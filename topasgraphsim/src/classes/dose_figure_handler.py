@@ -293,17 +293,12 @@ class DoseFigureHandler:
                 label=f"{self.plots[index].filename}",
             )
 
-        if self.zoom == False:
-            try:
-                self.axins.remove()
-            except:
-                pass
+        try:
+            self.axins.remove()
+        except:
+            pass
 
         if self.zoom == True:
-            try:
-                self.axins.remove()
-            except:
-                pass
 
             self.canvas.draw()
             self.transform = self.ax.transData

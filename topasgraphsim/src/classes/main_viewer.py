@@ -504,25 +504,29 @@ class MainApplication(tk.Frame):
             )
             self.rename_boxes += [temp]
 
-        self.pixelx = self.DoseFigureHandler.pixelx
-        self.pixely = self.DoseFigureHandler.pixely
+        if self.zoom.get() == True:
 
-        self.oval = self.canvas.create_oval(
-            self.pixelx * self.canvas.image.width() - 5,
-            self.pixely * self.canvas.image.height() - 5,
-            self.pixelx * self.canvas.image.width() + 5,
-            self.pixely * self.canvas.image.height() + 5,
-            fill="",
-            outline="",
-            tags="token",
-        )
+            self.pixelx = self.DoseFigureHandler.pixelx
+            self.pixely = self.DoseFigureHandler.pixely
+
+            self.oval = self.canvas.create_oval(
+                self.pixelx * self.canvas.image.width() - 5,
+                self.pixely * self.canvas.image.height() - 5,
+                self.pixelx * self.canvas.image.width() + 5,
+                self.pixely * self.canvas.image.height() + 5,
+                fill="",
+                outline="",
+                tags="token",
+            )
 
     def new_zoom(self, event):
 
-        delta_x = event.x - self.canvas.coords(self.oval)[0] + 5
-        delta_y = event.y - self.canvas.coords(self.oval)[1] + 5
-        self.canvas.move(self.oval, delta_x, delta_y)
-        self.show_preview()
+        if self.zoom.get() == True:
+
+            delta_x = event.x - self.canvas.coords(self.oval)[0] + 5
+            delta_y = event.y - self.canvas.coords(self.oval)[1] + 5
+            self.canvas.move(self.oval, delta_x, delta_y)
+            self.show_preview()
 
     def handle_configure(self, event):
 
