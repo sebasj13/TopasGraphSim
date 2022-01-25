@@ -4,5 +4,6 @@
     "markersize": 0,
     "linewidth": 1.0,
     "normalize": 1,
-    "zoom": 1
+    "zoom": 1,
+    "fullscreen": false
 }

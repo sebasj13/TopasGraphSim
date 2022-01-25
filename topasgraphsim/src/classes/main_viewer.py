@@ -38,6 +38,9 @@ class MainApplication(tk.Frame):
         self.zoom = tk.BooleanVar()
         self.zoom.set(bool(self.profile.get_attribute("zoom")))
 
+        self.fullscreen = tk.BooleanVar()
+        self.fullscreen.set(bool(self.profile.get_attribute("fullscreen")))
+
         self.DoseFigureHandler = DoseFigureHandler(
             self, self.norm.get(), self.zoom.get()
         )
@@ -145,6 +148,16 @@ class MainApplication(tk.Frame):
             onvalue=1,
             offvalue=0,
         )
+
+        self.viewmenu.add_checkbutton(
+            label=self.text.fullscreen[self.lang],
+            variable=self.fullscreen,
+            command=self.toggle_fullscreen,
+            onvalue=1,
+            offvalue=0,
+            accelerator="F11",
+        )
+
         self.menubar.add_cascade(label=self.text.view[self.lang], menu=self.viewmenu)
         self.optionsmenu = tk.Menu(self.menubar)
         self.optionsmenu.add_checkbutton(
@@ -236,7 +249,13 @@ class MainApplication(tk.Frame):
         self.rename_boxes = []
 
         self.parent.geometry(geometry)
+        self.parent.attributes("-fullscreen", self.fullscreen.get())
         self.pack(side="top", fill="both", expand=True)
+
+    def toggle_fullscreen(self, event=None):
+        self.parent.attributes("-fullscreen", not self.parent.attributes("-fullscreen"))
+        self.fullscreen.set(self.parent.attributes("-fullscreen"))
+        self.profile.set_attribute("fullscreen", bool(self.fullscreen.get()))
 
     def autostart(self):
 

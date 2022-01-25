@@ -27,6 +27,8 @@ def topasgraphsim():
         str(os.path.dirname(os.path.realpath(__file__)) + "\\src\\resources\\icon.ico")
     )
     app = MainApplication(root, root.winfo_geometry())
+    root.bind("<F11>", app.toggle_fullscreen)
+
     root.mainloop()
 
 

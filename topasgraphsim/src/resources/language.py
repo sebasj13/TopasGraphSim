@@ -23,6 +23,7 @@ class Text:
         self.end = {"de": "Beenden", "en": "Close"}
         self.english = {"de": "Englisch", "en": "English"}
         self.file = {"de": "Datei", "en": "File"}
+        self.fullscreen = {"de": "Vollbild", "en": "Fullscreen"}
         self.fwhm = {"de": "HWB", "en": "FWHM"}
         self.german = {"de": "Deutsch", "en": "German"}
         self.histnum = {
