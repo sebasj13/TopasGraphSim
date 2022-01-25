@@ -65,6 +65,7 @@ class Simulation:
             self.axis = np.array(
                 [x - (max(self.axis) + min(self.axis)) / 2 for x in self.axis]
             )
+            self.axis = self.axis.tolist()
             self.params = dp.calculate_parameters(
                 self.axis, self.norm_dose, self.norm_std_dev
             )

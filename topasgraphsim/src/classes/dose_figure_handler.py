@@ -329,6 +329,8 @@ class DoseFigureHandler:
             x, y = pixels.T
             y = height - y
 
+            print(type(self.plots[-1].axis))
+
             self.pixelx = x[self.plots[-1].axis.index(self.focuspoint)] / width
             self.pixely = y[self.plots[-1].axis.index(self.focuspoint)] / height
 
