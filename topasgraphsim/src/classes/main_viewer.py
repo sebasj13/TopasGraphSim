@@ -109,7 +109,7 @@ class MainApplication(tk.Frame):
         )
         self.filemenu.add_separator()
         self.filemenu.add_command(
-            label=self.text.end[self.lang], command=self.parent.destroy
+            label=self.text.end[self.lang], command=lambda: self.save_graph(True)
         )
         self.filemenu.entryconfig(3, state=tk.DISABLED)
         self.filemenu.entryconfig(4, state=tk.DISABLED)
