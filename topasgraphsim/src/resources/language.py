@@ -33,6 +33,16 @@ class Text:
         self.histories = {"de": "Historien", "en": "Histories"}
         self.image = {"de": "Bilder", "en": "Images"}
         self.increase = {"de": "Vergrößern", "en": "Increase"}
+        self.incordata = {
+            "de": {
+                1: " wurde nicht importiert - unpassender Messtyp!",
+                2: " wurden nicht importiert - unpassende Messtypen!",
+            },
+            "en": {
+                1: " was not imported - incompatible measurement!",
+                2: " were not imported - incompatible measurements!",
+            },
+        }
         self.language = {"de": "Sprache", "en": "Language"}
         self.languageset = {
             "en": "Das geöffnete Projekt wird geschlossen. Fortfahren?",

@@ -1,9 +1,8 @@
-import tkinter as tk
+import tkinter.simpledialog as sd
 
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
-from attr import Attribute
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib.figure import Figure
 from matplotlib.ticker import AutoMinorLocator
@@ -120,16 +119,46 @@ class DoseFigureHandler:
         Adds data to the plot queue
         """
 
+        test = [plotdata.direction for plotdata in self.plots]
         for tuple in datanames:
             filename = tuple[0]
             type = tuple[1]
             if filename not in [plotdata.filepath for plotdata in self.plots]:
                 if type == "simulation":
-                    self.plots += [Simulation(filename)]
+                    sim = Simulation(filename)
+                    if test == []:
+                        self.plots += [sim]
+                    elif sim.direction in test:
+                        self.plots += [sim]
+                    else:
+                        sd.messagebox.showinfo(
+                            "", f"{sim.filename}" + self.text.incordata[self.lang][1]
+                        )
                 elif type == "ptw":
                     importer = PTWMultimporter(filename, self.parent.parent)
                     importer.window.mainloop()
-                    self.plots += [plot for plot in importer.plots]
+                    measurements = [plot for plot in importer.plots]
+                    fails = []
+                    for plot in measurements:
+                        if test == []:
+                            self.plots += [plot]
+                        elif plot.direction in test:
+                            self.plots += [plot]
+                        else:
+                            fails += [plot]
+
+                    if fails != []:
+                        names = ""
+                        for f in fails:
+                            names += str(f.filename) + ", "
+                        names = names[:-2]
+                        var = 1
+                        if len(fails) >= 2:
+                            var = 2
+                        sd.messagebox.showinfo(
+                            "", f"{names}" + self.text.incordata[self.lang][var],
+                        )
+
                     importer.window.destroy()
                     del importer
 
