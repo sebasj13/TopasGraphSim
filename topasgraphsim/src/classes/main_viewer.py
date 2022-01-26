@@ -3,6 +3,7 @@ import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter import filedialog as fd
 from tkinter import simpledialog as sd
+from tkinter.font import NORMAL
 
 from PIL import Image, ImageTk
 
@@ -18,6 +19,9 @@ class MainApplication(tk.Frame):
 
         self.parent = parent
 
+        self.parent.protocol("WM_DELETE_WINDOW", lambda: self.save_graph(True))
+
+        # Read settings from profile.json and initialize the necessary variables
         self.profile = ProfileHandler()
         self.lang = self.profile.get_attribute("language")
 
@@ -25,32 +29,8 @@ class MainApplication(tk.Frame):
         self.langvar.set(self.lang)
         self.text = Text()
 
-        self.parent.geometry(geometry)
-        self.parent.title(self.text.window_title[self.lang])
-        self.style = ttk.Style(self.parent)
-        color_scheme = self.profile.get_attribute("color_scheme")
-
-        try:
-            self.parent.tk.call(
-                "source",
-                str(
-                    os.path.dirname(os.path.realpath(__file__))
-                    + "\\..\\Azure-ttk-theme\\azure.tcl"
-                ),
-            )
-        except tk.TclError:
-            pass
-
-        # tkVariables
-
         self.dark = tk.BooleanVar()
         self.dark.set(False)
-        self.autostartdark = tk.StringVar()
-        self.autostartdark.set(color_scheme)
-
-        self.fullscreen = tk.BooleanVar()
-        self.fullscreen.set(bool(self.profile.get_attribute("fullscreen")))
-        self.parent.attributes("-fullscreen", self.fullscreen.get())
 
         self.norm = tk.BooleanVar()
         self.norm.set(bool(self.profile.get_attribute("normalize")))
@@ -61,31 +41,46 @@ class MainApplication(tk.Frame):
         self.half = tk.BooleanVar()
         self.half.set(bool(self.profile.get_attribute("halfview")))
 
+        self.fullscreen = tk.BooleanVar()
+        self.fullscreen.set(bool(self.profile.get_attribute("fullscreen")))
+
         self.axlims = tk.IntVar()
         self.axlims.set(0)
 
         self.DoseFigureHandler = DoseFigureHandler(self)
+
+        self.parent.title(self.text.window_title[self.lang])
+        style = ttk.Style(self.parent)
+        try:
+            self.parent.tk.call(
+                "source",
+                str(
+                    os.path.dirname(os.path.realpath(__file__))
+                    + "\\..\\Azure-ttk-theme\\azure.tcl"
+                ),
+            )
+        except tk.TclError:
+            pass
+        color_scheme = self.profile.get_attribute("color_scheme")
+        self.autostartdark = tk.StringVar()
+        self.autostartdark.set(color_scheme)
         self.autostart()
-        # self.canvas = tk.Canvas(self)
 
-        # Menubar Definitions
+        # Keybinding definitions
+        self.parent.bind("<Control-d>", self.d_key)
+        self.parent.bind("<Control-o>", self.o_key)
+        self.parent.bind("<Control-s>", self.s_key)
+        self.parent.bind("<Control-t>", self.t_key)
+        self.parent.bind("<Control-p>", self.p_key)
+        self.parent.bind("<Escape>", self.esc_key)
+        self.parent.bind("<Control-z>", self.z_key)
+        self.parent.bind("<F11>", self.toggle_fullscreen)
+        self.parent.bind("<MouseWheel>", self.change_x_limits)
 
+        # Menubar definitions
         self.menubar = tk.Menu(self.parent)
-
-        # File Menu
-
         self.filemenu = tk.Menu(self.menubar, tearoff=False)
-
-        self.filemenu.add_command(
-            label=self.text.loadsim[self.lang],
-            command=lambda: self.load_file("simulation"),
-            accelerator="Ctrl+O",
-        )
-
-        # Add Measurement Submenu
-
         self.addmeasuremenu = tk.Menu(self.menubar, tearoff=False)
-
         self.addmeasuremenu.add_command(
             label=self.text.pdd[self.lang],
             command=lambda: self.load_file("pdd"),
@@ -102,8 +97,11 @@ class MainApplication(tk.Frame):
             accelerator="Ctrl+P",
         )
 
-        # Filemenu Continued
-
+        self.filemenu.add_command(
+            label=self.text.loadsim[self.lang],
+            command=lambda: self.load_file("simulation"),
+            accelerator="Ctrl+O",
+        )
         self.filemenu.add_cascade(
             label=self.text.loadmeasurement[self.lang], menu=self.addmeasuremenu
         )
@@ -124,11 +122,24 @@ class MainApplication(tk.Frame):
         )
         self.filemenu.entryconfig(3, state=tk.DISABLED)
         self.filemenu.entryconfig(4, state=tk.DISABLED)
-
-        # View Menu
-
+        self.addmenu = tk.Menu(self.menubar, tearoff=False)
+        self.addmenu.add_command(
+            label=self.text.simulation[self.lang],
+            command=lambda: self.load_file("simulation"),
+            accelerator="Ctrl+O",
+        )
+        self.addmenu.add_cascade(
+            label=self.text.measurement[self.lang], menu=self.addmeasuremenu
+        )
+        self.addmenu.add_separator()
+        self.addmenu.add_command(
+            label=self.text.revert[self.lang],
+            command=self.remove_last_addition,
+            accelerator="Ctrl+Z",
+        )
+        self.addmenu.entryconfig(3, state=tk.DISABLED)
+        self.menubar.add_cascade(label=self.text.file[self.lang], menu=self.filemenu)
         self.viewmenu = tk.Menu(self.menubar, tearoff=False)
-
         self.viewmenu.add_checkbutton(
             label=self.text.light[self.lang],
             variable=self.dark,
@@ -153,10 +164,8 @@ class MainApplication(tk.Frame):
             accelerator="F11",
         )
 
-        # Options Menu
-
+        self.menubar.add_cascade(label=self.text.view[self.lang], menu=self.viewmenu)
         self.optionsmenu = tk.Menu(self.menubar)
-
         self.optionsmenu.add_checkbutton(
             label=self.text.startdark[self.lang],
             variable=self.autostartdark,
@@ -166,11 +175,7 @@ class MainApplication(tk.Frame):
             onvalue="dark",
             offvalue="light",
         )
-
-        # Change Language Submenu
-
         self.langmenu = tk.Menu(self.menubar)
-
         self.langmenu.add_radiobutton(
             label=self.text.german[self.lang],
             command=lambda: self.set_language(self.langvar.get()),
@@ -183,64 +188,42 @@ class MainApplication(tk.Frame):
             variable=self.langvar,
             value="en",
         )
-
-        # Options Menu Continued
-
         self.optionsmenu.add_cascade(
             label=self.text.language[self.lang], menu=self.langmenu
         )
-
-        # Add Data Menu
-
-        self.addmenu = tk.Menu(self.menubar, tearoff=False)
-
-        self.addmenu.add_command(
-            label=self.text.simulation[self.lang],
-            command=lambda: self.load_file("simulation"),
-            accelerator="Ctrl+O",
+        self.menubar.add_cascade(
+            label=self.text.options[self.lang], menu=self.optionsmenu
         )
-        self.addmenu.add_cascade(
-            label=self.text.measurement[self.lang], menu=self.addmeasuremenu
-        )
-        self.addmenu.add_separator()
-        self.addmenu.add_command(
-            label=self.text.revert[self.lang],
-            command=self.remove_last_addition,
-            accelerator="Ctrl+Z",
-        )
-        self.addmenu.entryconfig(3, state=tk.DISABLED)
-
-        # Graph Options Menu
 
         self.normmenu = tk.Menu(self.menubar)
 
-        # Change Graph Lines Submenu
-
         self.markersizemenu = tk.Menu(self.menubar)
-
         self.markersizemenu.add_command(
             label=Text().increase[self.lang],
             command=lambda: self.change_marker_size(True),
             accelerator="Ctrl + ↑",
         )
+        self.parent.bind("<Control-Up>", self.up_down_key)
         self.markersizemenu.add_command(
             label=Text().decrease[self.lang],
             command=lambda: self.change_marker_size(False),
             accelerator="Ctrl + ↓",
         )
+        self.parent.bind("<Control-Down>", self.up_down_key)
+
         self.markerlinemenu = tk.Menu(self.menubar)
         self.markerlinemenu.add_command(
             label=Text().increase[self.lang],
             command=lambda: self.change_line_width(True),
             accelerator="Ctrl + →",
         )
+        self.parent.bind("<Control-Right>", self.right_left_key)
         self.markerlinemenu.add_command(
             label=Text().decrease[self.lang],
             command=lambda: self.change_line_width(False),
             accelerator="Ctrl + ←",
         )
-
-        # Graph Options Menu continued
+        self.parent.bind("<Control-Left>", self.right_left_key)
 
         self.normmenu.add_cascade(
             label=Text().markerline[self.lang], menu=self.markerlinemenu
@@ -248,12 +231,14 @@ class MainApplication(tk.Frame):
         self.normmenu.add_cascade(
             label=Text().marker[self.lang], menu=self.markersizemenu
         )
+
         self.normmenu.add_separator()
         self.normmenu.add_checkbutton(
             label=self.text.normalize[self.lang],
             command=self.normalize,
             variable=self.norm,
         )
+
         self.normmenu.add_checkbutton(
             label=self.text.zoom[self.lang], command=self.zoomgraph, variable=self.zoom,
         )
@@ -261,21 +246,13 @@ class MainApplication(tk.Frame):
             label=self.text.half[self.lang], command=self.halfgraph, variable=self.half,
         )
 
-        # Configure Menus in order of appearance
-
-        self.menubar.add_cascade(label=self.text.file[self.lang], menu=self.filemenu)
-        self.menubar.add_cascade(label=self.text.view[self.lang], menu=self.viewmenu)
-        self.menubar.add_cascade(
-            label=self.text.options[self.lang], menu=self.optionsmenu
-        )
-
         self.parent.config(menu=self.menubar)
 
         # Initialize necessary variables
-
         self.saved = True
         self.menuflag = False
         self.canvas = tk.Canvas(self)
+        self._drag_data = {"x": 0, "y": 0, "item": None}
         self.photoimage = None
         self.image_on_canvas = None
         self.canvas.image = None
@@ -283,31 +260,143 @@ class MainApplication(tk.Frame):
         self.filenames = []
         self.rename_boxes = []
 
-        # Keybinding definitions
-
-        self.parent.bind("<Control-d>", lambda event: self.load_file("dp"))
-        self.parent.bind("<Control-o>", lambda event: self.load_file("simulation"))
-        self.parent.bind("<Control-p>", lambda event: self.load_file("ptw"))
-        self.parent.bind("<Control-t>", lambda event: self.load_file("pdd"))
-        self.parent.bind("<Control-s>", lambda event: self.save_graph(False))
-        self.parent.bind("<Control-z>", lambda event: self.remove_last_addition)
-        self.parent.bind("<Escape>", self.close_file)
-        self.parent.bind("<F11>", self.toggle_fullscreen)
-        self.parent.protocol("WM_DELETE_WINDOW", lambda: self.save_graph(True))
-
-        self.parent.bind("<Control-Up>", lambda event: self.change_line_width)
-        self.parent.bind("<Control-Down>", lambda event: self.change_line_width)
-        self.parent.bind("<Control-Left>", lambda event: self.change_marker_size)
-        self.parent.bind("<Control-Right>", lambda event: self.change_marker_size)
-        self.parent.bind("<MouseWheel>", lambda event: self.change_x_limits)
-
+        self.parent.geometry(geometry)
+        self.parent.attributes("-fullscreen", self.fullscreen.get())
         self.pack(side="top", fill="both", expand=True)
 
+    def toggle_fullscreen(self, event=None):
+        self.parent.attributes("-fullscreen", not self.parent.attributes("-fullscreen"))
+        self.fullscreen.set(self.parent.attributes("-fullscreen"))
+        self.profile.set_attribute("fullscreen", bool(self.fullscreen.get()))
+
+    def autostart(self):
+
+        """
+        Sets the theme according to the profile.json
+        """
+
+        if self.autostartdark.get() == "light":
+            self.dark.set(False)
+            self.switchtheme("light")
+        else:
+            self.dark.set(True)
+            self.switchtheme("dark")
         return
 
-    # Filemenu Functions
+    def switchtheme(self, theme):
 
-    def load_file(self, type, event=None):
+        """
+        Switches between light and dark theme
+        """
+
+        if theme == "light":
+            self.parent.tk.call("set_theme", "light")
+            self.parent.configure(background="#ffffff")
+            self.DoseFigureHandler.set_style()
+            self.dark.set(False)
+
+        else:
+            # Set dark theme
+            self.parent.tk.call("set_theme", "dark")
+            self.DoseFigureHandler.set_style()
+            self.parent.configure(background="#363636")
+            self.dark.set(True)
+
+    def change_x_limits(self, event=None):
+        if event.delta > 0:
+            self.axlims.set(self.axlims.get() - 5)
+        elif event.delta < 0:
+            self.axlims.set(self.axlims.get() + 5)
+        self.show_preview()
+
+    def set_language(self, language):
+
+        """
+        Sets the desired language and reinitiates the program
+        """
+
+        geometry = self.parent.winfo_geometry()
+
+        if self.menuflag == True:
+            warning = tk.messagebox.askokcancel(
+                message=self.text.languageset[self.lang]
+            )
+
+            if warning == True:
+                self.pack_forget()
+                self.parent.config(menu=None)
+                self.profile.set_attribute("language", language)
+                self.__init__(self.parent, geometry)
+            return
+        self.pack_forget()
+        self.parent.config(menu=None)
+        self.profile.set_attribute("language", language)
+        self.__init__(self.parent, geometry)
+        return
+
+    def normalize(self):
+
+        self.DoseFigureHandler.norm = self.norm.get()
+
+        self.profile.set_attribute("normalize", int(self.norm.get()))
+
+        if self.filenames != []:
+            self.canvas.itemconfig(self.image_on_canvas, image=None)
+            self.DoseFigureHandler.flush()
+            self.show_preview()
+        return
+
+    def zoomgraph(self):
+        self.DoseFigureHandler.zoom = self.zoom.get()
+
+        self.profile.set_attribute("zoom", int(self.zoom.get()))
+
+        if self.filenames != []:
+            self.canvas.itemconfig(self.image_on_canvas, image=None)
+            self.DoseFigureHandler.flush()
+            self.show_preview()
+        return
+
+    def halfgraph(self):
+        self.DoseFigureHandler.half = self.half.get()
+        self.profile.set_attribute("halfview", self.half.get())
+        self.show_preview()
+        return
+
+    def change_marker_size(self, boolean):
+        if boolean == True:
+            self.DoseFigureHandler.markersize += 0.2
+        else:
+            self.DoseFigureHandler.markersize -= 0.2
+
+        if self.DoseFigureHandler.markersize < 0:
+            self.DoseFigureHandler.markersize = 0
+
+        self.profile.set_attribute("markersize", self.DoseFigureHandler.markersize)
+
+        if self.filenames != []:
+            self.canvas.itemconfig(self.image_on_canvas, image=None)
+            self.DoseFigureHandler.flush()
+            self.show_preview()
+        return
+
+    def change_line_width(self, boolean):
+        if boolean == True:
+            self.DoseFigureHandler.linewidth += 0.2
+        else:
+            self.DoseFigureHandler.linewidth -= 0.2
+        if self.DoseFigureHandler.linewidth < 0.2:
+            self.DoseFigureHandler.linewidth = 0.2
+
+        self.profile.set_attribute("linewidth", self.DoseFigureHandler.linewidth)
+
+        if self.filenames != []:
+            self.canvas.itemconfig(self.image_on_canvas, image=None)
+            self.DoseFigureHandler.flush()
+            self.show_preview()
+        return
+
+    def load_file(self, type):
 
         """
         Loads measurement or simulation data to be displayed
@@ -337,9 +426,7 @@ class MainApplication(tk.Frame):
         self.filemenu.entryconfig(4, state=tk.NORMAL)
         self.saved = False
 
-        return
-
-    def close_file(self, event=None):
+    def close_file(self):
 
         """
         Closes the current project
@@ -363,9 +450,7 @@ class MainApplication(tk.Frame):
         self.saved = True
         self.axlims.set(0)
 
-        return
-
-    def remove_last_addition(self, event=None):
+    def remove_last_addition(self):
 
         """
         Removes the graph added last
@@ -392,9 +477,7 @@ class MainApplication(tk.Frame):
         self.canvas.itemconfig(self.image_on_canvas, image=None)
         self.show_preview()
 
-        return
-
-    def save_graph(self, exit=False, event=None):
+    def save_graph(self, exit=False):
 
         """
         Saves the current graph
@@ -418,184 +501,23 @@ class MainApplication(tk.Frame):
             filetypes=[(self.text.image[self.lang], [".png", ".jpg"])],
         )
 
-        try:
-            ImageTk.getimage(self.photoimage).save(file)
-            self.saved = True
-        except:
-            pass
-
-        return
-
-    # View Menu Functions
-
-    def toggle_fullscreen(self, event=None):
-        self.parent.attributes("-fullscreen", not self.parent.attributes("-fullscreen"))
-        self.fullscreen.set(self.parent.attributes("-fullscreen"))
-        self.profile.set_attribute("fullscreen", bool(self.fullscreen.get()))
-
-    def switchtheme(self, theme):
-
-        """
-        Switches between light and dark theme
-        """
-
-        if theme == "light":
-            self.parent.tk.call("set_theme", "light")
-            self.parent.configure(background="#ffffff")
-            self.DoseFigureHandler.set_style()
-            self.dark.set(False)
-
-        else:
-            # Set dark theme
-            self.parent.tk.call("set_theme", "dark")
-            self.DoseFigureHandler.set_style()
-            self.parent.configure(background="#363636")
-            self.dark.set(True)
-
-        return
-
-    # Options Menu Functions
-
-    def autostart(self):
-
-        """
-        Sets the theme according to the profile.json
-        """
-
-        if self.autostartdark.get() == "light":
-            self.dark.set(False)
-            self.switchtheme("light")
-        else:
-            self.dark.set(True)
-            self.switchtheme("dark")
-
-        return
-
-    def set_language(self, language):
-
-        """
-        Sets the desired language and reinitiates the program
-        """
-
-        geometry = self.parent.winfo_geometry()
-
-        if self.menuflag == True:
-            warning = tk.messagebox.askokcancel(
-                message=self.text.languageset[self.lang]
-            )
-
-            if warning == True:
-                self.pack_forget()
-                self.parent.config(menu=None)
-                self.profile.set_attribute("language", language)
-                self.__init__(self.parent, geometry)
+        if file is None:
             return
-        self.pack_forget()
-        self.parent.config(menu=None)
-        self.profile.set_attribute("language", language)
-        self.__init__(self.parent, geometry)
 
+        ImageTk.getimage(self.photoimage).save(file)
+        self.saved = True
         return
-
-    # Graph Options Submenu Functions
-
-    def change_marker_size(self, event=None):
-        if event.keysym == "Up":
-            self.DoseFigureHandler.markersize += 0.2
-        else:
-            self.DoseFigureHandler.markersize -= 0.2
-
-        if self.DoseFigureHandler.markersize < 0:
-            self.DoseFigureHandler.markersize = 0
-
-        self.profile.set_attribute("markersize", self.DoseFigureHandler.markersize)
-
-        if self.filenames != []:
-            self.canvas.itemconfig(self.image_on_canvas, image=None)
-            self.DoseFigureHandler.flush()
-            self.show_preview()
-
-        return
-
-    def change_line_width(self, event=None):
-        if event.keysym == "Right":
-            self.DoseFigureHandler.linewidth += 0.2
-        else:
-            self.DoseFigureHandler.linewidth -= 0.2
-        if self.DoseFigureHandler.linewidth < 0.2:
-            self.DoseFigureHandler.linewidth = 0.2
-
-        self.profile.set_attribute("linewidth", self.DoseFigureHandler.linewidth)
-
-        if self.filenames != []:
-            self.canvas.itemconfig(self.image_on_canvas, image=None)
-            self.DoseFigureHandler.flush()
-            self.show_preview()
-
-        return
-
-    def change_x_limits(self, event=None):
-        if event.delta > 0:
-            self.axlims.set(self.axlims.get() - 5)
-        elif event.delta < 0:
-            self.axlims.set(self.axlims.get() + 5)
-        self.show_preview()
-
-    def normalize(self):
-
-        self.DoseFigureHandler.norm = self.norm.get()
-
-        self.profile.set_attribute("normalize", int(self.norm.get()))
-
-        if self.filenames != []:
-            self.canvas.itemconfig(self.image_on_canvas, image=None)
-            self.DoseFigureHandler.flush()
-            self.show_preview()
-
-        return
-
-    def zoomgraph(self):
-        self.DoseFigureHandler.zoom = self.zoom.get()
-
-        self.profile.set_attribute("zoom", int(self.zoom.get()))
-
-        if self.filenames != []:
-            self.canvas.itemconfig(self.image_on_canvas, image=None)
-            self.DoseFigureHandler.flush()
-            self.show_preview()
-
-        return
-
-    def new_zoom(self, event=None):
-
-        if self.zoom.get() == True:
-
-            delta_x = event.x - self.canvas.coords(self.oval)[0] + 5
-            delta_y = event.y - self.canvas.coords(self.oval)[1] + 5
-            self.canvas.move(self.oval, delta_x, delta_y)
-            self.show_preview()
-
-    def halfgraph(self):
-        self.DoseFigureHandler.half = self.half.get()
-        self.profile.set_attribute("halfview", self.half.get())
-        self.show_preview()
-
-        return
-
-    # Preview Function
 
     def show_preview(self):
 
         """
         Invokes DoseFigureHandler to create and display the graphs
         """
-
         self.DoseFigureHandler.flush()
         self.photoimage, menuflag = self.DoseFigureHandler.return_figure(self.filenames)
+
         self.canvas.pack_forget()
         self.canvas = tk.Canvas(self)
-
-        self.canvas.update()
         self.canvas.bind("<Configure>", self.handle_configure)
         self.canvas.bind("<Button-1>", self.check_click)
         self.canvas.bind("<Motion>", self.check_hand)
@@ -620,10 +542,10 @@ class MainApplication(tk.Frame):
             self.menubar.add_cascade(label=self.text.add[self.lang], menu=self.addmenu)
             self.menubar.add_cascade(label="Graph", menu=self.normmenu)
             self.menuflag = True
-
         self.image_on_canvas = self.canvas.create_image(
             0, 0, anchor=tk.NW, image=self.photoimage
         )
+
         self.canvas.image = self.photoimage
         self.canvas.itemconfig(self.image_on_canvas, image=self.canvas.image)
 
@@ -664,11 +586,16 @@ class MainApplication(tk.Frame):
                 tags="token",
             )
 
-        return
+    def new_zoom(self, event):
 
-    # Dynamic Resizing Function
+        if self.zoom.get() == True:
 
-    def handle_configure(self, event=None):
+            delta_x = event.x - self.canvas.coords(self.oval)[0] + 5
+            delta_y = event.y - self.canvas.coords(self.oval)[1] + 5
+            self.canvas.move(self.oval, delta_x, delta_y)
+            self.show_preview()
+
+    def handle_configure(self, event):
 
         """
         Dynamically resizes the graph and rename boxes according to the window size and name length
@@ -743,17 +670,17 @@ class MainApplication(tk.Frame):
                 tags="token",
             )
 
-    def check_hand(self, event=None):
-        if event != None:
+    def check_hand(self, e):
+        if e != None:
             try:
                 hoverlist = []
                 for box in self.rename_boxes:
                     bbox = self.canvas.bbox(box)
                     if (
-                        bbox[0] < event.x
-                        and bbox[2] > event.x
-                        and bbox[1] < event.y
-                        and bbox[3] > event.y
+                        bbox[0] < e.x
+                        and bbox[2] > e.x
+                        and bbox[1] < e.y
+                        and bbox[3] > e.y
                     ):
                         hoverlist += [True]
                     else:
@@ -766,17 +693,45 @@ class MainApplication(tk.Frame):
             else:
                 self.canvas.config(cursor="")
 
-    def check_click(self, event=None):
+    def check_click(self, e):
         for index, box in enumerate(self.rename_boxes):
-            if event != None:
+            if e != None:
                 bbox = self.canvas.bbox(box)
-                if (
-                    bbox[0] < event.x
-                    and bbox[2] > event.x
-                    and bbox[1] < event.y
-                    and bbox[3] > event.y
-                ):
+                if bbox[0] < e.x and bbox[2] > e.x and bbox[1] < e.y and bbox[3] > e.y:
                     newname = sd.askstring("", self.text.changefilename[self.lang],)
                     if newname != None:
                         self.DoseFigureHandler.plots[index].filename = newname
                         self.show_preview()
+
+    def esc_key(self, event=None):
+        self.close_file()
+
+    def d_key(self, event=None):
+        self.load_file("dp")
+
+    def o_key(self, event=None):
+        self.load_file("simulation")
+
+    def t_key(self, event=None):
+        self.load_file("pdd")
+
+    def z_key(self, event=None):
+        self.remove_last_addition()
+
+    def p_key(self, event=None):
+        self.load_file("ptw")
+
+    def s_key(self, event=None):
+        self.save_graph()
+
+    def up_down_key(self, event=None):
+        if event.keysym == "Up":
+            self.change_marker_size(True)
+        else:
+            self.change_marker_size(False)
+
+    def right_left_key(self, event=None):
+        if event.keysym == "Right":
+            self.change_line_width(True)
+        else:
+            self.change_line_width(False)
