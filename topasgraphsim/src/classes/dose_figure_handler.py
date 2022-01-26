@@ -140,13 +140,16 @@ class DoseFigureHandler:
                 elif type == "ptw":
                     importer = PTWMultimporter(filename, self.parent.parent)
                     importer.window.mainloop()
+                    importer.window.destroy()
                     measurements = [plot for plot in importer.plots]
                     fails = []
                     for plot in measurements:
                         if test == []:
                             self.plots += [plot]
+                            test += [plotdata.direction for plotdata in self.plots]
                         elif plot.direction in test:
                             self.plots += [plot]
+                            test += [plotdata.direction for plotdata in self.plots]
                         else:
                             fails += [plot]
 
@@ -161,8 +164,6 @@ class DoseFigureHandler:
                         sd.messagebox.showinfo(
                             "", f"{names}" + self.text.incordata[self.lang][var],
                         )
-
-                    importer.window.destroy()
                     del importer
 
                 else:
