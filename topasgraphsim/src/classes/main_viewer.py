@@ -44,6 +44,9 @@ class MainApplication(tk.Frame):
         self.fullscreen = tk.BooleanVar()
         self.fullscreen.set(bool(self.profile.get_attribute("fullscreen")))
 
+        self.axlims = tk.IntVar()
+        self.axlims.set(0)
+
         self.DoseFigureHandler = DoseFigureHandler(self)
 
         self.parent.title(self.text.window_title[self.lang])
@@ -72,6 +75,7 @@ class MainApplication(tk.Frame):
         self.parent.bind("<Escape>", self.esc_key)
         self.parent.bind("<Control-z>", self.z_key)
         self.parent.bind("<F11>", self.toggle_fullscreen)
+        self.parent.bind("<MouseWheel>", self.change_x_limits)
 
         # Menubar definitions
         self.menubar = tk.Menu(self.parent)
@@ -298,6 +302,13 @@ class MainApplication(tk.Frame):
             self.parent.configure(background="#363636")
             self.dark.set(True)
 
+    def change_x_limits(self, event=None):
+        if event.delta > 0:
+            self.axlims.set(self.axlims.get() - 5)
+        elif event.delta < 0:
+            self.axlims.set(self.axlims.get() + 5)
+        self.show_preview()
+
     def set_language(self, language):
 
         """
@@ -437,6 +448,7 @@ class MainApplication(tk.Frame):
         self.DoseFigureHandler.flush()
         self.DoseFigureHandler.plots = []
         self.saved = True
+        self.axlims.set(0)
 
     def remove_last_addition(self):
 

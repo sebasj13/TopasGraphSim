@@ -23,6 +23,10 @@ class Simulation:
         axdict = {0: "X", 1: "Y", 2: "Z"}
         databin_index = bins.index(max(bins))
         self.direction = axdict[databin_index]
+        if self.direction != "Z":
+            self.direction = "X- {} Y".format(
+                Text().orr[ProfileHandler().get_attribute("language")]
+            )
 
         self.axis = np.array(self.data.dimensions[databin_index].get_bin_centers())
         unit = self.data.dimensions[databin_index].unit

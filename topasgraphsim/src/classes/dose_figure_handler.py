@@ -25,6 +25,7 @@ class DoseFigureHandler:
         self.norm = self.parent.norm.get()
         self.zoom = self.parent.zoom.get()
         self.half = self.parent.half.get()
+        self.axlims = (self.parent.axlims.get(), self.parent.axlims.get())
         self.addmenu = False
 
         # Initialize the current settings
@@ -32,89 +33,15 @@ class DoseFigureHandler:
         self.text = Text()
         self.style = plt.style.use("default")
         self.current_mode = self.parent.dark.get()
-        self.colors = {
-            False: ["#ffa43c", "#ff2e1b", "#1bff67", "#ff5cf1", "#493cff"],
-            True: ["#ff7fff", "#ffff00", "#00ffff", "#ff4040", "#40ff40"],
-        }
+        self.colors = ["#009F6B", "#C40233", "#0087BD", "#FFD300", "#000000"]
         self.marker = "o--"
         self.markersize = self.parent.profile.get_attribute("markersize")
         self.linewidth = self.parent.profile.get_attribute("linewidth")
-        # Initialize the figure and axes
-        self.fig = Figure(figsize=(10, 5), constrained_layout=True, dpi=600)
-        self.canvas = FigureCanvasAgg(self.fig)
-        self.fig.set_canvas(self.canvas)
-        self.ax = self.fig.add_subplot(111)
 
         # Initialize necessary variables
         self.props = dict(boxstyle="round", facecolor="wheat", alpha=0.6)
         self.plots = []
         self.data = []
-
-    def set_style(self):
-
-        """
-        Switches the plotting style accordung to the current theme
-        """
-
-        if self.parent.dark.get() != self.current_mode:
-
-            if self.parent.dark.get() == True:
-                try:
-                    self.ax.set_facecolor("#363636")
-                    self.fig.set_facecolor("#363636")
-
-                except AttributeError:
-                    pass
-            else:
-                try:
-                    self.ax.set_facecolor("#ffffff")
-                    self.fig.set_facecolor("#ffffff")
-
-                except AttributeError:
-                    pass
-
-            self.current_mode = self.parent.dark.get()
-
-            if self.plots != []:
-                self.parent.show_preview()
-
-    def flush(self):
-
-        """
-        Clears the data
-        """
-
-        self.data = []
-
-    def fits(self, image):
-
-        """
-        Scales an image to the width of the screen.
-        """
-
-        scr_width = GetSystemMetrics(0)
-        width = int(scr_width)
-        scale_factor = image.shape[1] / width
-        image = cv2.resize(
-            image,
-            (width, int(image.shape[0] / scale_factor)),
-            interpolation=cv2.INTER_AREA,
-        )
-
-        return image
-
-    def set_axis(self):
-
-        """
-        Defines the layout and gridlines of the plot 
-        """
-
-        self.ax.clear()
-        self.ax.grid(True, which="major")
-        self.ax.grid(True, which="minor", color="grey", linewidth=0.1)
-        self.ax.xaxis.set_minor_locator(AutoMinorLocator())
-        self.ax.yaxis.set_minor_locator(AutoMinorLocator())
-        self.ax.tick_params(axis="both", which="minor", length=2)
 
     def add_plot_data(self, datanames):
 
@@ -183,6 +110,83 @@ class DoseFigureHandler:
                 + plotdata.params
             ]
 
+        if self.plots[0].direction == "Z":
+            figsize = (10, 5)
+        else:
+            figsize = (10, 6)
+
+        # Initialize the figure and axes
+        self.fig = Figure(figsize, constrained_layout=True, dpi=600)
+        self.canvas = FigureCanvasAgg(self.fig)
+        self.fig.set_canvas(self.canvas)
+        self.ax = self.fig.add_subplot(111)
+
+    def set_style(self):
+
+        """
+        Switches the plotting style accordung to the current theme
+        """
+
+        if self.parent.dark.get() != self.current_mode:
+
+            if self.parent.dark.get() == True:
+                try:
+                    self.ax.set_facecolor("#363636")
+                    self.fig.set_facecolor("#363636")
+
+                except AttributeError:
+                    pass
+            else:
+                try:
+                    self.ax.set_facecolor("#ffffff")
+                    self.fig.set_facecolor("#ffffff")
+
+                except AttributeError:
+                    pass
+
+            self.current_mode = self.parent.dark.get()
+
+            if self.plots != []:
+                self.parent.show_preview()
+
+    def flush(self):
+
+        """
+        Clears the data
+        """
+
+        self.data = []
+
+    def fits(self, image):
+
+        """
+        Scales an image to the width of the screen.
+        """
+
+        scr_width = GetSystemMetrics(0)
+        width = int(scr_width)
+        scale_factor = image.shape[1] / width
+        image = cv2.resize(
+            image,
+            (width, int(image.shape[0] / scale_factor)),
+            interpolation=cv2.INTER_AREA,
+        )
+
+        return image
+
+    def set_axis(self):
+
+        """
+        Defines the layout and gridlines of the plot 
+        """
+
+        self.ax.clear()
+        self.ax.grid(True, which="major")
+        self.ax.grid(True, which="minor", color="grey", linewidth=0.1)
+        self.ax.xaxis.set_minor_locator(AutoMinorLocator())
+        self.ax.yaxis.set_minor_locator(AutoMinorLocator())
+        self.ax.tick_params(axis="both", which="minor", length=2)
+
     def add_legend(self):
 
         """
@@ -203,6 +207,27 @@ class DoseFigureHandler:
         Adds the calculated parameters as descriptors
         """
 
+        if self.plots[0].direction != "Z":
+
+            if self.half == False:
+                positionsx = [
+                    0.1,
+                    0.1,
+                    0.901,
+                    0.901,
+                    0.1,
+                ]
+                positionsy = [0.98, 0.68, 0.75, 0.45, 0.38]
+            else:
+                positionsx = [
+                    0.7,
+                    0.7,
+                    0.901,
+                    0.901,
+                    0.7,
+                ]
+                positionsy = [0.98, 0.68, 0.68, 0.38, 0.38]
+
         for index, plot_data in enumerate(self.data):
 
             if len(plot_data) == 7:
@@ -217,13 +242,13 @@ class DoseFigureHandler:
                     space += 0.01
                 self.ax.text(
                     0.795 + space,
-                    0.7 - 0.1 * index,
+                    0.955 - len(self.plots) * 0.0475 - 0.1 * index,
                     textstr,
                     transform=self.ax.transAxes,
                     fontsize=10,
                     verticalalignment="top",
                     bbox=self.props,
-                    color=self.colors[self.current_mode][index],
+                    color=self.colors[index],
                 )
             else:
                 (
@@ -267,17 +292,16 @@ class DoseFigureHandler:
                     self.text.symmetry[self.lang],
                     S,
                 )
-
                 self.ax.text(
-                    (0.6 - 0.1 * len(self.data)) + 0.2 * index,
-                    0.5,
+                    positionsx[index],
+                    positionsy[index],
                     textstr,
                     transform=self.ax.transAxes,
                     fontsize=10,
                     verticalalignment="top",
                     bbox=self.props,
                     horizontalalignment="center",
-                    color=self.colors[self.current_mode][index],
+                    color=self.colors[index],
                 )
 
     def set_x_label(self):
@@ -302,18 +326,18 @@ class DoseFigureHandler:
                 y=plot_data[2],
                 yerr=plot_data[3],
                 fmt="none",
-                ecolor="black",
-                elinewidth=0.5,
-                capsize=1,
-                capthick=0.2,
-                ms=2,
+                ecolor=self.colors[index],
+                elinewidth=0.625,
+                capsize=1.25,
+                capthick=0.25,
+                ms=2.5,
             )
             self.ax.plot(
                 plot_data[0],
                 plot_data[2],
                 self.marker,
                 markersize=self.markersize,
-                color=self.colors[self.current_mode][index],
+                color=self.colors[index],
                 linewidth=self.linewidth,
                 label=f"{self.plots[index].filename}",
             )
@@ -363,7 +387,11 @@ class DoseFigureHandler:
                 y[self.plots[-1].axis[self.half].index(self.focuspoint)] / height
             )
 
-            self.axins = inset_axes(self.ax, "28%", "28%", loc="lower left")
+            loc = "lower left"
+            if self.half == False and self.plots[0].direction != "Z":
+                loc = "lower center"
+
+            self.axins = inset_axes(self.ax, "28%", "28%", loc=loc)
             yvalsat195 = []
             yvalsat205 = []
             for index, plot_data in enumerate(self.data):
@@ -372,18 +400,18 @@ class DoseFigureHandler:
                     y=plot_data[2],
                     yerr=plot_data[3],
                     fmt="none",
-                    ecolor="black",
-                    elinewidth=0.5,
-                    capsize=1,
-                    capthick=0.2,
-                    ms=2,
+                    ecolor=self.colors[index],
+                    elinewidth=0.625,
+                    capsize=1.25,
+                    capthick=0.25,
+                    ms=2.5,
                 )
                 self.axins.plot(
                     plot_data[0],
                     plot_data[2],
                     self.marker,
                     markersize=self.markersize,
-                    color=self.colors[self.current_mode][index],
+                    color=self.colors[index],
                     linewidth=self.linewidth,
                     label=f"{self.plots[index].filename}",
                 )
@@ -433,14 +461,27 @@ class DoseFigureHandler:
         """
 
         self.half = self.parent.half.get()
-
-        self.set_axis()
         self.add_plot_data(filenames)
+        self.set_axis()
         self.set_style()
         self.set_x_label()
         self.create_plots_from_data()
-        self.add_legend()
         self.add_descriptors()
+        self.add_legend()
+
+        self.ax.set_aspect("auto")
+
+        self.axlims = (self.parent.axlims.get(), self.parent.axlims.get())
+        if self.plots[0].direction == "Z" or self.half == True:
+            self.axlims = (0, self.axlims[1])
+        self.ax.set_xlim(
+            left=self.ax.get_xlim()[0] - self.axlims[0],
+            right=self.ax.get_xlim()[1] + self.axlims[1],
+        )
+        self.ax.set_xbound(
+            lower=self.ax.get_xlim()[0] - self.axlims[0],
+            upper=self.ax.get_xlim()[1] + self.axlims[1],
+        )
 
         self.canvas.draw()
         buffer = self.canvas.buffer_rgba()

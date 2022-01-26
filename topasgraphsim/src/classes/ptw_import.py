@@ -48,13 +48,19 @@ class PTWMeasurement:
             },
             False: {True: self.norm_dose, False: self.dose},
         }
-        self.std_dev = {
-            True: {
-                True: self.norm_std_dev[len(self.norm_std_dev) // 2 :],
-                False: self.std_dev[len(self.std_dev) // 2 :],
-            },
-            False: {True: self.norm_std_dev, False: self.std_dev},
-        }
+        if self.std_dev != None:
+            self.std_dev = {
+                True: {
+                    True: self.norm_std_dev[len(self.norm_std_dev) // 2 :],
+                    False: self.std_dev[len(self.std_dev) // 2 :],
+                },
+                False: {True: self.norm_std_dev, False: self.std_dev},
+            }
+        else:
+            self.std_dev = {
+                True: {True: None, False: None,},
+                False: {True: None, False: None},
+            }
 
 
 class PTWMultimporter:

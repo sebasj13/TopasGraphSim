@@ -1,10 +1,10 @@
 {
     "color_scheme": "light",
-    "language": "de",
-    "markersize": 1,
-    "linewidth": 1,
+    "language": "en",
+    "markersize": 0.8,
+    "linewidth": 0.8,
     "normalize": 1,
-    "zoom": 1,
+    "zoom": 0,
     "fullscreen": false,
     "halfview": false
 }
