@@ -51,8 +51,15 @@ class Measurement:
         self.axis = {True: self.axis[len(self.axis) // 2 :], False: self.axis}
         self.dose = {
             True: {
-                True: self.norm_dose[len(self.norm_dose // 2) :],
+                True: self.norm_dose[len(self.norm_dose) // 2 :],
                 False: self.dose[len(self.dose) // 2 :],
             },
             False: {True: self.norm_dose, False: self.dose},
+        }
+        self.std_dev = {
+            True: {
+                True: self.norm_std_dev[len(self.norm_std_dev) // 2 :],
+                False: self.std_dev[len(self.std_dev) // 2 :],
+            },
+            False: {True: self.norm_std_dev, False: self.std_dev},
         }

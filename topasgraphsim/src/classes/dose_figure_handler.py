@@ -178,7 +178,7 @@ class DoseFigureHandler:
                     plotdata.axis[self.half],
                     plotdata.direction,
                     plotdata.dose[self.half][self.norm],
-                    plotdata.norm_std_dev,
+                    plotdata.std_dev[self.half][self.norm],
                 ]
                 + plotdata.params
             ]
