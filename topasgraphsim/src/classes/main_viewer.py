@@ -315,23 +315,17 @@ class MainApplication(tk.Frame):
         Sets the desired language and reinitiates the program
         """
 
-        geometry = self.parent.winfo_geometry()
-
-        if self.menuflag == True:
-            warning = tk.messagebox.askokcancel(
-                message=self.text.languageset[self.lang]
-            )
-
-            if warning == True:
-                self.pack_forget()
-                self.parent.config(menu=None)
-                self.profile.set_attribute("language", language)
-                self.__init__(self.parent, geometry)
-            return
+        plots = self.DoseFigureHandler.plots
+        axlims = self.axlims.get()
         self.pack_forget()
+        geometry = self.parent.winfo_geometry()
         self.parent.config(menu=None)
         self.profile.set_attribute("language", language)
         self.__init__(self.parent, geometry)
+        self.DoseFigureHandler.plots = plots
+        self.axlims.set(axlims)
+        self.show_preview()
+
         return
 
     def normalize(self):
