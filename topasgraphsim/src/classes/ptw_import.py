@@ -40,6 +40,15 @@ class PTWMeasurement:
         self.filepath = list[2]
         self.unit = list[3]
 
+        self.axis = {True: self.axis[len(self.axis) // 2 :], False: self.axis}
+        self.dose = {
+            True: {
+                True: self.norm_dose[len(self.norm_dose) // 2 :],
+                False: self.dose[len(self.dose) // 2 :],
+            },
+            False: {True: self.norm_dose, False: self.dose},
+        }
+
 
 class PTWMultimporter:
     def __init__(self, filepath, geometry):

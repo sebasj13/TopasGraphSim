@@ -69,6 +69,14 @@ class Simulation:
             self.params = dp.calculate_parameters(
                 self.axis, self.norm_dose, self.norm_std_dev
             )
+        self.axis = {True: self.axis[len(self.axis) // 2 :], False: self.axis}
+        self.dose = {
+            True: {
+                True: self.norm_dose[len(self.norm_dose // 2) :],
+                False: self.dose[len(self.dose) // 2 :],
+            },
+            False: {True: self.norm_dose, False: self.dose},
+        }
 
     def convert_SI(self, val, unit_in):
         SI = {"mm": 0.001, "cm": 0.01, "m": 1.0, "km": 1000.0}

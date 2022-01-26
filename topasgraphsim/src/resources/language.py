@@ -26,6 +26,7 @@ class Text:
         self.fullscreen = {"de": "Vollbild", "en": "Fullscreen"}
         self.fwhm = {"de": "HWB", "en": "FWHM"}
         self.german = {"de": "Deutsch", "en": "German"}
+        self.half = {"de": "Halbe Querverteilung anzeigen", "en": "Show half profile"}
         self.histnum = {
             "de": "Anzahl der Historien in der Simulation:",
             "en": "Histories in Simulation:",
