@@ -38,12 +38,13 @@ class MainApplication(tk.Frame):
         self.zoom = tk.BooleanVar()
         self.zoom.set(bool(self.profile.get_attribute("zoom")))
 
+        self.half = tk.BooleanVar()
+        self.half.set(bool(self.profile.get_attribute("halfview")))
+
         self.fullscreen = tk.BooleanVar()
         self.fullscreen.set(bool(self.profile.get_attribute("fullscreen")))
 
-        self.DoseFigureHandler = DoseFigureHandler(
-            self, self.norm.get(), self.zoom.get()
-        )
+        self.DoseFigureHandler = DoseFigureHandler(self)
 
         self.parent.title(self.text.window_title[self.lang])
         style = ttk.Style(self.parent)
@@ -70,6 +71,7 @@ class MainApplication(tk.Frame):
         self.parent.bind("<Control-p>", self.p_key)
         self.parent.bind("<Escape>", self.esc_key)
         self.parent.bind("<Control-z>", self.z_key)
+        self.parent.bind("<F11>", self.toggle_fullscreen)
 
         # Menubar definitions
         self.menubar = tk.Menu(self.parent)
@@ -190,15 +192,7 @@ class MainApplication(tk.Frame):
         )
 
         self.normmenu = tk.Menu(self.menubar)
-        self.normmenu.add_checkbutton(
-            label=self.text.normalize[self.lang],
-            command=self.normalize,
-            variable=self.norm,
-        )
-        self.normmenu.add_checkbutton(
-            label=self.text.zoom[self.lang], command=self.zoomgraph, variable=self.zoom,
-        )
-        self.normmenu.add_separator()
+
         self.markersizemenu = tk.Menu(self.menubar)
         self.markersizemenu.add_command(
             label=Text().increase[self.lang],
@@ -232,6 +226,20 @@ class MainApplication(tk.Frame):
         )
         self.normmenu.add_cascade(
             label=Text().marker[self.lang], menu=self.markersizemenu
+        )
+
+        self.normmenu.add_separator()
+        self.normmenu.add_checkbutton(
+            label=self.text.normalize[self.lang],
+            command=self.normalize,
+            variable=self.norm,
+        )
+
+        self.normmenu.add_checkbutton(
+            label=self.text.zoom[self.lang], command=self.zoomgraph, variable=self.zoom,
+        )
+        self.normmenu.add_checkbutton(
+            label=self.text.half[self.lang], command=self.halfgraph, variable=self.half,
         )
 
         self.parent.config(menu=self.menubar)
@@ -336,6 +344,12 @@ class MainApplication(tk.Frame):
             self.canvas.itemconfig(self.image_on_canvas, image=None)
             self.DoseFigureHandler.flush()
             self.show_preview()
+        return
+
+    def halfgraph(self):
+        self.DoseFigureHandler.half = self.half.get()
+        self.profile.set_attribute("halfview", self.half.get())
+        self.show_preview()
         return
 
     def change_marker_size(self, boolean):
@@ -507,8 +521,10 @@ class MainApplication(tk.Frame):
 
         if menuflag == "Z":
             self.addmeasuremenu.entryconfig(1, state=tk.DISABLED)
+            self.normmenu.entryconfig(5, state=tk.DISABLED)
         else:
             self.addmeasuremenu.entryconfig(0, state=tk.DISABLED)
+            self.normmenu.entryconfig(5, state=tk.NORMAL)
 
         if self.menuflag == False:
             self.menubar.add_cascade(label=self.text.add[self.lang], menu=self.addmenu)

@@ -1,3 +1,4 @@
+import tkinter as tk
 import tkinter.simpledialog as sd
 
 import cv2
@@ -17,12 +18,14 @@ from .sim_import import Simulation
 
 
 class DoseFigureHandler:
-    def __init__(self, parent, norm, zoom):
+    def __init__(self, parent):
 
         self.parent = parent
 
-        self.norm = norm
-        self.zoom = zoom
+        self.norm = self.parent.norm.get()
+        self.zoom = self.parent.zoom.get()
+        self.half = self.parent.half.get()
+        self.addmenu = False
 
         # Initialize the current settings
         self.lang = self.parent.lang
@@ -165,27 +168,19 @@ class DoseFigureHandler:
                 else:
                     self.plots += [Measurement(filename, type)]
 
+        if self.plots[0].direction == "Z":
+            self.half = False
+
         for plotdata in self.plots:
-            if self.norm == True:
-                self.data += [
-                    [
-                        plotdata.axis,
-                        plotdata.direction,
-                        plotdata.norm_dose,
-                        plotdata.norm_std_dev,
-                    ]
-                    + plotdata.params
+            self.data += [
+                [
+                    plotdata.axis[self.half],
+                    plotdata.direction,
+                    plotdata.dose[self.half][self.norm],
+                    plotdata.norm_std_dev,
                 ]
-            else:
-                self.data += [
-                    [
-                        plotdata.axis,
-                        plotdata.direction,
-                        plotdata.dose,
-                        plotdata.std_dev,
-                    ]
-                    + plotdata.params
-                ]
+                + plotdata.params
+            ]
 
     def add_legend(self):
 
@@ -334,7 +329,9 @@ class DoseFigureHandler:
             self.inverted_transform = self.ax.transData.inverted()
             width, height = self.fig.canvas.get_width_height()
 
-            self.focuspoint = self.plots[-1].axis[len(self.plots[-1].axis) // 2]
+            self.focuspoint = self.plots[-1].axis[self.half][
+                len(self.plots[-1].axis[self.half]) // 2
+            ]
             try:
                 self.focuspoint = self.inverted_transform.transform(
                     (
@@ -344,9 +341,9 @@ class DoseFigureHandler:
                         1,
                     )
                 )
-                self.focuspoint = self.plots[-1].axis[
+                self.focuspoint = self.plots[-1].axis[self.half][
                     np.abs(
-                        np.asarray(self.plots[-1].axis - self.focuspoint[0])
+                        np.asarray(self.plots[-1].axis[self.half] - self.focuspoint[0])
                     ).argmin()
                 ]
             except AttributeError:
@@ -358,8 +355,12 @@ class DoseFigureHandler:
             x, y = pixels.T
             y = height - y
 
-            self.pixelx = x[self.plots[-1].axis.index(self.focuspoint)] / width
-            self.pixely = y[self.plots[-1].axis.index(self.focuspoint)] / height
+            self.pixelx = (
+                x[self.plots[-1].axis[self.half].index(self.focuspoint)] / width
+            )
+            self.pixely = (
+                y[self.plots[-1].axis[self.half].index(self.focuspoint)] / height
+            )
 
             self.axins = inset_axes(self.ax, "28%", "28%", loc="lower left")
             yvalsat195 = []
@@ -413,6 +414,9 @@ class DoseFigureHandler:
                 0.99 * min(yvalsat205),
                 1.01 * max(yvalsat195),
             )
+            if self.half == True:
+                x1, x2 = x1 + 3, x2 - 3
+
             self.axins.set_xlim(x1, x2)
             self.axins.set_ylim(y1, y2)
             self.axins.tick_params(
@@ -426,6 +430,8 @@ class DoseFigureHandler:
         """
         Passes the image of the plot and the plot type to the MainApplication
         """
+
+        self.half = self.parent.half.get()
 
         self.set_axis()
         self.add_plot_data(filenames)
