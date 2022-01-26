@@ -4,7 +4,7 @@
     "markersize": 0.8,
     "linewidth": 0.8,
     "normalize": 1,
-    "zoom": 0,
+    "zoom": 1,
     "fullscreen": false,
-    "halfview": false
+    "halfview": true
 }
