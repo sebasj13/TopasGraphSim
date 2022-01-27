@@ -22,6 +22,17 @@ class MainApplication(tk.Frame):
         self.parent.protocol("WM_DELETE_WINDOW", lambda: self.save_graph(True))
 
         # Read settings from profile.json and initialize the necessary variables
+
+        self.saved = True
+        self.menuflag = False
+        self.canvas = tk.Canvas(self)
+        self.photoimage = None
+        self.image_on_canvas = None
+        self.canvas.image = None
+        self.current_file = None
+        self.filenames = []
+        self.rename_boxes = []
+
         self.profile = ProfileHandler()
         self.lang = self.profile.get_attribute("language")
 
@@ -61,6 +72,11 @@ class MainApplication(tk.Frame):
             )
         except tk.TclError:
             pass
+
+        self.parent.geometry(geometry)
+        self.parent.attributes("-fullscreen", self.fullscreen.get())
+        self.pack(side="top", fill="both", expand=True)
+
         color_scheme = self.profile.get_attribute("color_scheme")
         self.autostartdark = tk.StringVar()
         self.autostartdark.set(color_scheme)
@@ -248,22 +264,6 @@ class MainApplication(tk.Frame):
 
         self.parent.config(menu=self.menubar)
 
-        # Initialize necessary variables
-        self.saved = True
-        self.menuflag = False
-        self.canvas = tk.Canvas(self)
-        self._drag_data = {"x": 0, "y": 0, "item": None}
-        self.photoimage = None
-        self.image_on_canvas = None
-        self.canvas.image = None
-        self.current_file = None
-        self.filenames = []
-        self.rename_boxes = []
-
-        self.parent.geometry(geometry)
-        self.parent.attributes("-fullscreen", self.fullscreen.get())
-        self.pack(side="top", fill="both", expand=True)
-
     def toggle_fullscreen(self, event=None):
         self.parent.attributes("-fullscreen", not self.parent.attributes("-fullscreen"))
         self.fullscreen.set(self.parent.attributes("-fullscreen"))
@@ -292,15 +292,15 @@ class MainApplication(tk.Frame):
         if theme == "light":
             self.parent.tk.call("set_theme", "light")
             self.parent.configure(background="#ffffff")
-            self.DoseFigureHandler.set_style()
-            self.dark.set(False)
+            if self.filenames != []:
+                self.show_preview()
 
         else:
             # Set dark theme
             self.parent.tk.call("set_theme", "dark")
-            self.DoseFigureHandler.set_style()
             self.parent.configure(background="#363636")
-            self.dark.set(True)
+            if self.filenames != []:
+                self.show_preview()
 
     def change_x_limits(self, event=None):
         if event.delta > 0:

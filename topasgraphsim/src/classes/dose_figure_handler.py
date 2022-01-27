@@ -32,7 +32,6 @@ class DoseFigureHandler:
         self.lang = self.parent.lang
         self.text = Text()
         self.style = plt.style.use("default")
-        self.current_mode = self.parent.dark.get()
         self.colors = ["#009F6B", "#C40233", "#0087BD", "#FFD300", "#000000"]
         self.marker = "o--"
         self.markersize = self.parent.profile.get_attribute("markersize")
@@ -127,27 +126,14 @@ class DoseFigureHandler:
         Switches the plotting style accordung to the current theme
         """
 
-        if self.parent.dark.get() != self.current_mode:
+        if self.parent.dark.get() == True:
+            self.ax.set_facecolor("#363636")
+            self.fig.set_facecolor("#363636")
+        else:
 
-            if self.parent.dark.get() == True:
-                try:
-                    self.ax.set_facecolor("#363636")
-                    self.fig.set_facecolor("#363636")
-
-                except AttributeError:
-                    pass
-            else:
-                try:
-                    self.ax.set_facecolor("#ffffff")
-                    self.fig.set_facecolor("#ffffff")
-
-                except AttributeError:
-                    pass
-
-            self.current_mode = self.parent.dark.get()
-
-            if self.plots != []:
-                self.parent.show_preview()
+            self.ax.set_facecolor("#ffffff")
+            self.fig.set_facecolor("#ffffff")
+        return
 
     def flush(self):
 
@@ -462,15 +448,14 @@ class DoseFigureHandler:
 
         self.half = self.parent.half.get()
         self.add_plot_data(filenames)
+
         self.set_axis()
-        self.set_style()
         self.set_x_label()
         self.create_plots_from_data()
         self.add_descriptors()
         self.add_legend()
-
         self.ax.set_aspect("auto")
-
+        self.set_style()
         self.axlims = (self.parent.axlims.get(), self.parent.axlims.get())
         if self.plots[0].direction == "Z" or self.half == True:
             self.axlims = (0, self.axlims[1])
