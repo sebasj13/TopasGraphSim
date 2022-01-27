@@ -333,6 +333,18 @@ class DoseFigureHandler:
         except:
             pass
 
+        self.axlims = (self.parent.axlims.get(), self.parent.axlims.get())
+        if self.plots[0].direction == "Z" or self.half == True:
+            self.axlims = (0, self.axlims[1])
+        self.ax.set_xlim(
+            left=self.ax.get_xlim()[0] - self.axlims[0],
+            right=self.ax.get_xlim()[1] + self.axlims[1],
+        )
+        self.ax.set_xbound(
+            lower=self.ax.get_xlim()[0] - self.axlims[0],
+            upper=self.ax.get_xlim()[1] + self.axlims[1],
+        )
+
         if self.zoom == True:
 
             self.canvas.draw()
@@ -456,17 +468,6 @@ class DoseFigureHandler:
         self.add_legend()
         self.ax.set_aspect("auto")
         self.set_style()
-        self.axlims = (self.parent.axlims.get(), self.parent.axlims.get())
-        if self.plots[0].direction == "Z" or self.half == True:
-            self.axlims = (0, self.axlims[1])
-        self.ax.set_xlim(
-            left=self.ax.get_xlim()[0] - self.axlims[0],
-            right=self.ax.get_xlim()[1] + self.axlims[1],
-        )
-        self.ax.set_xbound(
-            lower=self.ax.get_xlim()[0] - self.axlims[0],
-            upper=self.ax.get_xlim()[1] + self.axlims[1],
-        )
 
         self.canvas.draw()
         buffer = self.canvas.buffer_rgba()
