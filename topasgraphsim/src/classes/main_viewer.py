@@ -324,7 +324,8 @@ class MainApplication(tk.Frame):
         self.__init__(self.parent, geometry)
         self.DoseFigureHandler.plots = plots
         self.axlims.set(axlims)
-        self.show_preview()
+        if plots != []:
+            self.show_preview()
 
         return
 

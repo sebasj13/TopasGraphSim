@@ -18,10 +18,11 @@ def topasgraphsim():
     root = tk.Tk()
     screen_width = root.winfo_screenwidth()
     screen_height = root.winfo_screenheight()
-    width = screen_width / 2
-    height = screen_height / 2
-    x = screen_width / 2 - width / 2
-    y = screen_height / 2 - height / 2
+    width = screen_width // 2
+    height = screen_height // 2
+    x = screen_width // 2 - width // 2
+    y = screen_height // 2 - height // 2
+    root.minsize(width, height)
     root.geometry("%dx%d+%d+%d" % (width, height, x, y))
     root.iconbitmap(
         str(os.path.dirname(os.path.realpath(__file__)) + "\\src\\resources\\icon.ico")
