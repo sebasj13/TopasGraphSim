@@ -8,7 +8,9 @@ class Text:
 
         self.add = {"de": "Daten hinzufügen", "en": "Add Data"}
         self.axis = {"de": "Achse", "en": "Axis"}
+        self.centeraxis = {"de": "Zentralstrahl", "en": "Center axis"}
         self.changefilename = {"de": "Neuer Name:", "en": "New Name:"}
+        self.choosenormalization = {"de": "Normieren auf ...", "en": "Normalize to ..."}
         self.close = {
             "de": "Derzeitige Ansicht schließen",
             "en": "Close current project",
@@ -23,6 +25,7 @@ class Text:
         self.end = {"de": "Beenden", "en": "Close"}
         self.english = {"de": "Englisch", "en": "English"}
         self.file = {"de": "Datei", "en": "File"}
+        self.flank = {"de": "Flanke", "en": "Flank"}
         self.fullscreen = {"de": "Vollbild", "en": "Fullscreen"}
         self.fwhm = {"de": "HWB", "en": "FWHM"}
         self.german = {"de": "Deutsch", "en": "German"}
@@ -56,7 +59,9 @@ class Text:
         self.markerline = {"de": "Liniendicke", "en": "Line Width"}
         self.measurement = {"de": "Messung", "en": "Measurement"}
         self.measurementdata = {"de": "Messdaten", "en": "Measurement Data"}
+        self.maximum = {"de": "Maximum", "en": "Maximum"}
         self.normalize = {"de": "Normieren", "en": "Normalize"}
+        self.normalization = {"de": "Normierung", "en": "Normalization"}
         self.options = {"de": "Optionen", "en": "Options"}
         self.orr = {"de": "oder", "en": "or"}
         self.pdd = {"de": "Tiefendosiskurve", "en": "Depth dose"}

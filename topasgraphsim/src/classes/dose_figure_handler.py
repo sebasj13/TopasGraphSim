@@ -23,6 +23,7 @@ class DoseFigureHandler:
         self.parent = parent
 
         self.norm = self.parent.norm.get()
+        self.normvalue = "max"
         self.zoom = self.parent.zoom.get()
         self.half = self.parent.half.get()
         self.axlims = (self.parent.axlims.get(), self.parent.axlims.get())
@@ -99,12 +100,29 @@ class DoseFigureHandler:
             self.half = False
 
         for plotdata in self.plots:
+            if self.norm == True:
+                if self.normvalue == "max":
+                    plotdata.normpoint = max(plotdata.dose[self.half])
+                elif self.normvalue == "flank":
+                    search_array = plotdata.dose[self.half] / max(
+                        plotdata.dose[self.half]
+                    )
+                    plotdata.normpoint = np.asarray(plotdata.dose[self.half])[
+                        (np.abs(search_array - 0.5)).argmin()
+                    ]
+                else:
+                    plotdata.normpoint = plotdata.dose[self.half][
+                        len(plotdata.dose) // 2
+                    ]
+
+            else:
+                plotdata.normpoint = 1
             self.data += [
                 [
                     plotdata.axis[self.half],
                     plotdata.direction,
-                    plotdata.dose[self.half][self.norm],
-                    plotdata.std_dev[self.half][self.norm],
+                    plotdata.dose[self.half] / plotdata.normpoint,
+                    plotdata.std_dev[self.half] / plotdata.normpoint,
                 ]
                 + plotdata.params
             ]
@@ -307,17 +325,20 @@ class DoseFigureHandler:
         """
 
         for index, plot_data in enumerate(self.data):
-            self.ax.errorbar(
-                x=plot_data[0],
-                y=plot_data[2],
-                yerr=plot_data[3],
-                fmt="none",
-                ecolor=self.colors[index],
-                elinewidth=0.625,
-                capsize=1.25,
-                capthick=0.25,
-                ms=2.5,
-            )
+            try:
+                self.ax.errorbar(
+                    x=plot_data[0],
+                    y=plot_data[2],
+                    yerr=plot_data[3],
+                    fmt="none",
+                    ecolor=self.colors[index],
+                    elinewidth=0.625,
+                    capsize=1.25,
+                    capthick=0.25,
+                    ms=2.5,
+                )
+            except ValueError:
+                pass
             self.ax.plot(
                 plot_data[0],
                 plot_data[2],
@@ -393,17 +414,20 @@ class DoseFigureHandler:
             yvalsat195 = []
             yvalsat205 = []
             for index, plot_data in enumerate(self.data):
-                self.axins.errorbar(
-                    x=plot_data[0],
-                    y=plot_data[2],
-                    yerr=plot_data[3],
-                    fmt="none",
-                    ecolor=self.colors[index],
-                    elinewidth=0.625,
-                    capsize=1.25,
-                    capthick=0.25,
-                    ms=2.5,
-                )
+                try:
+                    self.axins.errorbar(
+                        x=plot_data[0],
+                        y=plot_data[2],
+                        yerr=plot_data[3],
+                        fmt="none",
+                        ecolor=self.colors[index],
+                        elinewidth=0.625,
+                        capsize=1.25,
+                        capthick=0.25,
+                        ms=2.5,
+                    )
+                except ValueError:
+                    pass
                 self.axins.plot(
                     plot_data[0],
                     plot_data[2],

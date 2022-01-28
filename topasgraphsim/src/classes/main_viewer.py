@@ -58,6 +58,9 @@ class MainApplication(tk.Frame):
         self.axlims = tk.IntVar()
         self.axlims.set(0)
 
+        self.normvaluemenu = tk.StringVar()
+        self.normvaluemenu.set("max")
+
         self.DoseFigureHandler = DoseFigureHandler(self)
 
         self.parent.title(self.text.window_title[self.lang])
@@ -249,10 +252,37 @@ class MainApplication(tk.Frame):
         )
 
         self.normmenu.add_separator()
-        self.normmenu.add_checkbutton(
+        self.normalizemenu = tk.Menu(self.menubar)
+        self.normalizemenu.add_checkbutton(
             label=self.text.normalize[self.lang],
             command=self.normalize,
             variable=self.norm,
+        )
+        self.normalize_cascade = tk.Menu(self.menubar)
+        self.normalize_cascade.add_radiobutton(
+            label=self.text.maximum[self.lang],
+            variable=self.normvaluemenu,
+            value="max",
+            command=self.change_normalization,
+        )
+        self.normalize_cascade.add_radiobutton(
+            label=self.text.flank[self.lang],
+            variable=self.normvaluemenu,
+            value="flank",
+            command=self.change_normalization,
+        )
+        self.normalize_cascade.add_radiobutton(
+            label=self.text.centeraxis[self.lang],
+            variable=self.normvaluemenu,
+            value="center",
+            command=self.change_normalization,
+        )
+        self.normalizemenu.add_cascade(
+            label=self.text.choosenormalization[self.lang], menu=self.normalize_cascade
+        )
+
+        self.normmenu.add_cascade(
+            label=self.text.normalization[self.lang], menu=self.normalizemenu
         )
 
         self.normmenu.add_checkbutton(
@@ -334,6 +364,21 @@ class MainApplication(tk.Frame):
         self.DoseFigureHandler.norm = self.norm.get()
 
         self.profile.set_attribute("normalize", int(self.norm.get()))
+
+        if self.filenames != []:
+            self.canvas.itemconfig(self.image_on_canvas, image=None)
+            self.DoseFigureHandler.flush()
+            self.show_preview()
+        return
+
+    def change_normalization(self):
+
+        if self.normvaluemenu.get() == "max":
+            self.DoseFigureHandler.normvalue = "max"
+        elif self.normvaluemenu.get() == "flank":
+            self.DoseFigureHandler.normvalue = "flank"
+        else:
+            self.DoseFigureHandler.normvalue = "center"
 
         if self.filenames != []:
             self.canvas.itemconfig(self.image_on_canvas, image=None)
