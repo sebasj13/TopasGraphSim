@@ -8,6 +8,7 @@ class Text:
 
         self.add = {"de": "Daten hinzufügen", "en": "Add Data"}
         self.axis = {"de": "Achse", "en": "Axis"}
+        self.caxcorrection = {"de":"Zentralstrahlkorrektur","en":"Center axis correction"}
         self.centeraxis = {"de": "Zentralstrahl", "en": "Center axis"}
         self.changefilename = {"de": "Neuer Name:", "en": "New Name:"}
         self.choosenormalization = {"de": "Normieren auf ...", "en": "Normalize to ..."}

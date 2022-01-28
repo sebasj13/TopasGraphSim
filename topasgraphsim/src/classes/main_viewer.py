@@ -49,6 +49,9 @@ class MainApplication(tk.Frame):
         self.errorbars = tk.BooleanVar()
         self.errorbars.set(True)
 
+        self.caxcorrection = tk.BooleanVar()
+        self.caxcorrection.set(False)
+
         self.zoom = tk.BooleanVar()
         self.zoom.set(bool(self.profile.get_attribute("zoom")))
 
@@ -299,6 +302,11 @@ class MainApplication(tk.Frame):
         self.normmenu.add_checkbutton(
             label=self.text.half[self.lang], command=self.halfgraph, variable=self.half,
         )
+        self.normmenu.add_checkbutton(
+            label=self.text.caxcorrection[self.lang],
+            command=self.correct_caxdev,
+            variable=self.caxcorrection,
+        )
 
         self.parent.config(menu=self.menubar)
 
@@ -381,6 +389,15 @@ class MainApplication(tk.Frame):
 
     def show_errorbars(self):
         self.DoseFigureHandler.errorbars = self.errorbars.get()
+
+        if self.filenames != []:
+            self.canvas.itemconfig(self.image_on_canvas, image=None)
+            self.DoseFigureHandler.flush()
+            self.show_preview()
+        return
+
+    def correct_caxdev(self):
+        self.DoseFigureHandler.caxcorrection = self.caxcorrection.get()
 
         if self.filenames != []:
             self.canvas.itemconfig(self.image_on_canvas, image=None)
@@ -591,9 +608,11 @@ class MainApplication(tk.Frame):
         if menuflag == "Z":
             self.addmeasuremenu.entryconfig(1, state=tk.DISABLED)
             self.normmenu.entryconfig(6, state=tk.DISABLED)
+            self.normmenu.entryconfig(7, state=tk.DISABLED)
         else:
             self.addmeasuremenu.entryconfig(0, state=tk.DISABLED)
-            self.normmenu.entryconfig(5, state=tk.NORMAL)
+            self.normmenu.entryconfig(6, state=tk.NORMAL)
+            self.normmenu.entryconfig(7, state=tk.NORMAL)
             self.canvas.place_forget()
             self.canvas.place(
                 relheight=1, relwidth=1, relx=0.55556, rely=0.5, anchor=tk.CENTER
