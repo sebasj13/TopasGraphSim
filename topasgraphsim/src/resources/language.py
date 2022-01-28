@@ -24,6 +24,7 @@ class Text:
         self.dp = {"de": "Dosisquerverteilung", "en": "Dose profile"}
         self.end = {"de": "Beenden", "en": "Close"}
         self.english = {"de": "Englisch", "en": "English"}
+        self.errorbars = {"de": "Fehlerbalken anzeigen", "en": "Show error bars"}
         self.file = {"de": "Datei", "en": "File"}
         self.flank = {"de": "Flanke", "en": "Flank"}
         self.fullscreen = {"de": "Vollbild", "en": "Fullscreen"}

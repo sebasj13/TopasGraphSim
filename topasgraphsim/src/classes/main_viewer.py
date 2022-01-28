@@ -46,6 +46,9 @@ class MainApplication(tk.Frame):
         self.norm = tk.BooleanVar()
         self.norm.set(bool(self.profile.get_attribute("normalize")))
 
+        self.errorbars = tk.BooleanVar()
+        self.errorbars.set(True)
+
         self.zoom = tk.BooleanVar()
         self.zoom.set(bool(self.profile.get_attribute("zoom")))
 
@@ -252,6 +255,11 @@ class MainApplication(tk.Frame):
         )
 
         self.normmenu.add_separator()
+        self.normmenu.add_checkbutton(
+            label=self.text.errorbars[self.lang],
+            command=self.show_errorbars,
+            variable=self.errorbars,
+        )
         self.normalizemenu = tk.Menu(self.menubar)
         self.normalizemenu.add_checkbutton(
             label=self.text.normalize[self.lang],
@@ -364,6 +372,15 @@ class MainApplication(tk.Frame):
         self.DoseFigureHandler.norm = self.norm.get()
 
         self.profile.set_attribute("normalize", int(self.norm.get()))
+
+        if self.filenames != []:
+            self.canvas.itemconfig(self.image_on_canvas, image=None)
+            self.DoseFigureHandler.flush()
+            self.show_preview()
+        return
+
+    def show_errorbars(self):
+        self.DoseFigureHandler.errorbars = self.errorbars.get()
 
         if self.filenames != []:
             self.canvas.itemconfig(self.image_on_canvas, image=None)
@@ -573,7 +590,7 @@ class MainApplication(tk.Frame):
 
         if menuflag == "Z":
             self.addmeasuremenu.entryconfig(1, state=tk.DISABLED)
-            self.normmenu.entryconfig(5, state=tk.DISABLED)
+            self.normmenu.entryconfig(6, state=tk.DISABLED)
         else:
             self.addmeasuremenu.entryconfig(0, state=tk.DISABLED)
             self.normmenu.entryconfig(5, state=tk.NORMAL)
