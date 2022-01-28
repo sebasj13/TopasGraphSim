@@ -22,8 +22,8 @@ def topasgraphsim():
     height = screen_height // 2
     x = screen_width // 2 - width // 2
     y = screen_height // 2 - height // 2
-    root.minsize(width, height)
-    root.geometry("%dx%d+%d+%d" % (width, height, x, y))
+    root.minsize(width + 50, height)
+    root.geometry("%dx%d+%d+%d" % (width + 50, height, x - 25, y))
     root.iconbitmap(
         str(os.path.dirname(os.path.realpath(__file__)) + "\\src\\resources\\icon.ico")
     )
