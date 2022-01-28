@@ -777,7 +777,11 @@ class MainApplication(tk.Frame):
             if e != None:
                 bbox = self.canvas.bbox(box)
                 if bbox[0] < e.x and bbox[2] > e.x and bbox[1] < e.y and bbox[3] > e.y:
-                    newname = sd.askstring("", self.text.changefilename[self.lang],)
+                    newname = sd.askstring(
+                        "",
+                        self.text.changefilename[self.lang],
+                        initialvalue=self.DoseFigureHandler.plots[index].filename,
+                    )
                     if newname != None:
                         self.DoseFigureHandler.plots[index].filename = newname
                         self.show_preview()
