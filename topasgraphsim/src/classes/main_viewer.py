@@ -472,7 +472,7 @@ class MainApplication(tk.Frame):
         Closes the current project
         """
 
-        self.canvas.pack_forget()
+        self.canvas.place_forget()
         self.filemenu.entryconfig(0, state=tk.NORMAL)
         self.filemenu.entryconfig(1, state=tk.NORMAL)
         self.filemenu.entryconfig(3, state=tk.DISABLED)
@@ -556,13 +556,13 @@ class MainApplication(tk.Frame):
         self.DoseFigureHandler.flush()
         self.photoimage, menuflag = self.DoseFigureHandler.return_figure(self.filenames)
 
-        self.canvas.pack_forget()
+        self.canvas.place_forget()
         self.canvas = tk.Canvas(self)
         self.canvas.bind("<Configure>", self.handle_configure)
         self.canvas.bind("<Button-1>", self.check_click)
         self.canvas.bind("<Motion>", self.check_hand)
         self.canvas.bind("<Double-Button-1>", self.new_zoom)
-        self.canvas.pack(side=tk.TOP, fill="both", expand=True)
+        self.canvas.place(relheight=1, relwidth=1, relx=0.5, rely=0.5, anchor=tk.CENTER)
 
         if len(self.DoseFigureHandler.plots) >= 2:
             self.addmenu.entryconfig(3, state=tk.NORMAL)
@@ -577,7 +577,10 @@ class MainApplication(tk.Frame):
         else:
             self.addmeasuremenu.entryconfig(0, state=tk.DISABLED)
             self.normmenu.entryconfig(5, state=tk.NORMAL)
-
+            self.canvas.place_forget()
+            self.canvas.place(
+                relheight=1, relwidth=1, relx=0.55556, rely=0.5, anchor=tk.CENTER
+            )
         if self.menuflag == False:
             self.menubar.add_cascade(label=self.text.add[self.lang], menu=self.addmenu)
             self.menubar.add_cascade(label="Graph", menu=self.normmenu)
