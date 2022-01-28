@@ -24,6 +24,7 @@ class DoseFigureHandler:
 
         self.norm = self.parent.norm.get()
         self.normvalue = "max"
+        self.errorbars = True
         self.zoom = self.parent.zoom.get()
         self.half = self.parent.half.get()
         self.axlims = (self.parent.axlims.get(), self.parent.axlims.get())
@@ -320,20 +321,21 @@ class DoseFigureHandler:
         """
 
         for index, plot_data in enumerate(self.data):
-            try:
-                self.ax.errorbar(
-                    x=plot_data[0],
-                    y=plot_data[2],
-                    yerr=plot_data[3],
-                    fmt="none",
-                    ecolor=self.colors[index],
-                    elinewidth=0.625,
-                    capsize=1.25,
-                    capthick=0.25,
-                    ms=2.5,
-                )
-            except ValueError:
-                pass
+            if self.errorbars == True:
+                try:
+                    self.ax.errorbar(
+                        x=plot_data[0],
+                        y=plot_data[2],
+                        yerr=plot_data[3],
+                        fmt="none",
+                        ecolor=self.colors[index],
+                        elinewidth=0.625,
+                        capsize=1.25,
+                        capthick=0.25,
+                        ms=2.5,
+                    )
+                except ValueError:
+                    pass
             self.ax.plot(
                 plot_data[0],
                 plot_data[2],
@@ -409,20 +411,21 @@ class DoseFigureHandler:
             yvalsat195 = []
             yvalsat205 = []
             for index, plot_data in enumerate(self.data):
-                try:
-                    self.axins.errorbar(
-                        x=plot_data[0],
-                        y=plot_data[2],
-                        yerr=plot_data[3],
-                        fmt="none",
-                        ecolor=self.colors[index],
-                        elinewidth=0.625,
-                        capsize=1.25,
-                        capthick=0.25,
-                        ms=2.5,
-                    )
-                except ValueError:
-                    pass
+                if self.errorbars == True:
+                    try:
+                        self.axins.errorbar(
+                            x=plot_data[0],
+                            y=plot_data[2],
+                            yerr=plot_data[3],
+                            fmt="none",
+                            ecolor=self.colors[index],
+                            elinewidth=0.625,
+                            capsize=1.25,
+                            capthick=0.25,
+                            ms=2.5,
+                        )
+                    except ValueError:
+                        pass
                 self.axins.plot(
                     plot_data[0],
                     plot_data[2],
