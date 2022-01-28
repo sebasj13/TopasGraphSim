@@ -104,12 +104,7 @@ class DoseFigureHandler:
                 if self.normvalue == "max":
                     plotdata.normpoint = max(plotdata.dose[self.half])
                 elif self.normvalue == "flank":
-                    search_array = plotdata.dose[self.half] / max(
-                        plotdata.dose[self.half]
-                    )
-                    plotdata.normpoint = np.asarray(plotdata.dose[self.half])[
-                        (np.abs(search_array - 0.5)).argmin()
-                    ]
+                    plotdata.normpoint = max(plotdata.dose[self.half]) * 0.5
                 else:
                     plotdata.normpoint = plotdata.dose[self.half][
                         len(plotdata.dose) // 2
