@@ -25,6 +25,7 @@ class DoseFigureHandler:
         self.norm = self.parent.norm.get()
         self.normvalue = "max"
         self.errorbars = True
+        self.caxcorrection = False
         self.zoom = self.parent.zoom.get()
         self.half = self.parent.half.get()
         self.axlims = (self.parent.axlims.get(), self.parent.axlims.get())
@@ -272,6 +273,10 @@ class DoseFigureHandler:
                     plot_data[11],
                     plot_data[12],
                 )
+
+                if self.caxcorrection == True:
+                    CAXdev = 0
+
                 textstr = "{} = {} mm\n{} = {} mm\n{} = {}\n{} = {}\n{} = {} mm\n{} = {} mm\n{} = {}\n{} = {}\n{} = {}".format(
                     self.text.fwhm[self.lang],
                     HWB,
@@ -321,6 +326,9 @@ class DoseFigureHandler:
         """
 
         for index, plot_data in enumerate(self.data):
+            if self.caxcorrection == True:
+                plot_data[0] = [x - plot_data[5] for x in plot_data[0]]
+
             if self.errorbars == True:
                 try:
                     self.ax.errorbar(
