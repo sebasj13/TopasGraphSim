@@ -58,12 +58,10 @@ class Simulation:
                     self.std_dev = self.std_dev / np.sqrt(self.histories)
             else:
                 std_dev = np.array([])
-        self.norm_std_dev = self.std_dev / max(self.dose)
-        self.norm_dose = self.dose / max(self.dose)
 
         if self.direction == "Z":
             self.params = pdd.calculate_parameters(
-                self.axis, self.norm_dose, self.norm_std_dev
+                self.axis, self.dose / max(self.dose), self.std_dev / max(self.dose)
             )
         else:
             self.axis = np.array(
@@ -71,22 +69,15 @@ class Simulation:
             )
             self.axis = self.axis.tolist()
             self.params = dp.calculate_parameters(
-                self.axis, self.norm_dose, self.norm_std_dev
+                self.axis, self.dose / max(self.dose), self.std_dev / max(self.dose)
             )
+
+        self.normpoint = max(self.dose)
         self.axis = {True: self.axis[len(self.axis) // 2 :], False: self.axis}
-        self.dose = {
-            True: {
-                True: self.norm_dose[len(self.norm_dose) // 2 :],
-                False: self.dose[len(self.dose) // 2 :],
-            },
-            False: {True: self.norm_dose, False: self.dose},
-        }
+        self.dose = {True: self.dose[len(self.dose) // 2 :], False: self.dose}
         self.std_dev = {
-            True: {
-                True: self.norm_std_dev[len(self.norm_std_dev) // 2 :],
-                False: self.std_dev[len(self.std_dev) // 2 :],
-            },
-            False: {True: self.norm_std_dev, False: self.std_dev},
+            True: self.std_dev[len(self.std_dev) // 2 :],
+            False: self.std_dev,
         }
 
     def convert_SI(self, val, unit_in):
