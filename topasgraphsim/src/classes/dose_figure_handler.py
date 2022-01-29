@@ -47,8 +47,7 @@ class DoseFigureHandler:
 
     def add_plot_data(self, datanames):
 
-        """
-        Adds data to the plot queue
+        """Adds data to the plot queue
         """
 
         test = [plotdata.direction for plotdata in self.plots]
@@ -135,10 +134,11 @@ class DoseFigureHandler:
         self.fig.set_canvas(self.canvas)
         self.ax = self.fig.add_subplot(111)
 
+        return
+
     def set_style(self):
 
-        """
-        Switches the plotting style accordung to the current theme
+        """Switches the plotting style according to the current theme
         """
 
         if self.parent.dark.get() == True:
@@ -148,20 +148,21 @@ class DoseFigureHandler:
 
             self.ax.set_facecolor("#ffffff")
             self.fig.set_facecolor("#ffffff")
+
         return
 
     def flush(self):
 
-        """
-        Clears the data
+        """Clears the data
         """
 
         self.data = []
 
+        return
+
     def fits(self, image):
 
-        """
-        Scales an image to the width of the screen.
+        """Scales an image to the width of the screen.
         """
 
         scr_width = GetSystemMetrics(0)
@@ -177,8 +178,7 @@ class DoseFigureHandler:
 
     def set_axis(self):
 
-        """
-        Defines the layout and gridlines of the plot 
+        """Defines the layout and gridlines of the plot 
         """
 
         self.ax.clear()
@@ -188,10 +188,11 @@ class DoseFigureHandler:
         self.ax.yaxis.set_minor_locator(AutoMinorLocator())
         self.ax.tick_params(axis="both", which="minor", length=2)
 
+        return
+
     def add_legend(self):
 
-        """
-        Adds the legend
+        """Adds the legend
         """
 
         self.ax.legend(
@@ -202,10 +203,11 @@ class DoseFigureHandler:
             fancybox=True,
         )
 
+        return
+
     def add_descriptors(self):
 
-        """
-        Adds the calculated parameters as descriptors
+        """Adds the calculated parameters as descriptors
         """
 
         if self.plots[0].direction != "Z":
@@ -309,20 +311,22 @@ class DoseFigureHandler:
                     color=self.colors[index],
                 )
 
+        return
+
     def set_x_label(self):
 
-        """
-        Names the x-axis according to the plot
+        """Names the x-axis according to the plot type
         """
         xlabel = "{}-{} [mm]".format(self.data[0][1], self.text.axis[self.lang])
         self.ax.set_xlabel(xlabel, size=12)
         if self.norm == False:
             self.ax.set_ylabel(self.plots[0].unit, size=12)
 
+        return
+
     def create_plots_from_data(self):
 
-        """
-        Creates the plots from the queue
+        """Creates the plots from the queue
         """
 
         for index, plot_data in enumerate(self.data):
@@ -482,10 +486,11 @@ class DoseFigureHandler:
 
             mark_inset(self.ax, self.axins, loc1=2, loc2=4, fc="none", ec="0.5")
 
+        return
+
     def return_figure(self, filenames):
 
-        """
-        Passes the image of the plot and the plot type to the MainApplication
+        """Passes the image of the plot and the plot type to the MainApplication
         """
 
         self.half = self.parent.half.get()
