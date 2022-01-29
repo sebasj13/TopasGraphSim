@@ -94,11 +94,11 @@ class MainApplication(tk.Frame):
         # Keybinding definitions
         self.parent.bind("<Control-d>", lambda type: self.load_file("dp"))
         self.parent.bind("<Control-o>", lambda type: self.load_file("simulation"))
-        self.parent.bind("<Control-s>", self.s_key)
+        self.parent.bind("<Control-s>", self.save_graph)
         self.parent.bind("<Control-t>", lambda type: self.load_file("pdd"))
-        self.parent.bind("<Control-p>", self.p_key)
+        self.parent.bind("<Control-p>", lambda type: self.load_file("ptw"))
         self.parent.bind("<Escape>", self.close_file)
-        self.parent.bind("<Control-z>", self.z_key)
+        self.parent.bind("<Control-z>", self.remove_last_addition)
         self.parent.bind("<F11>", self.toggle_fullscreen)
         self.parent.bind("<MouseWheel>", self.change_x_limits)
 
@@ -228,13 +228,15 @@ class MainApplication(tk.Frame):
             command=lambda: self.change_marker_size(True),
             accelerator="Ctrl + ↑",
         )
-        self.parent.bind("<Control-Up>", self.up_down_key)
+        self.parent.bind("<Control-Up>", lambda boolean: self.change_marker_size(True))
         self.markersizemenu.add_command(
             label=Text().decrease[self.lang],
             command=lambda: self.change_marker_size(False),
             accelerator="Ctrl + ↓",
         )
-        self.parent.bind("<Control-Down>", self.up_down_key)
+        self.parent.bind(
+            "<Control-Down>", lambda boolean: self.change_marker_size(False)
+        )
 
         self.markerlinemenu = tk.Menu(self.menubar)
         self.markerlinemenu.add_command(
@@ -242,13 +244,17 @@ class MainApplication(tk.Frame):
             command=lambda: self.change_line_width(True),
             accelerator="Ctrl + →",
         )
-        self.parent.bind("<Control-Right>", self.right_left_key)
+        self.parent.bind(
+            "<Control-Right>", lambda boolean: self.change_line_width(True)
+        )
         self.markerlinemenu.add_command(
             label=Text().decrease[self.lang],
             command=lambda: self.change_line_width(False),
             accelerator="Ctrl + ←",
         )
-        self.parent.bind("<Control-Left>", self.right_left_key)
+        self.parent.bind(
+            "<Control-Left>", lambda boolean: self.change_line_width(False)
+        )
 
         self.normmenu.add_cascade(
             label=Text().markerline[self.lang], menu=self.markerlinemenu
@@ -437,7 +443,7 @@ class MainApplication(tk.Frame):
         self.show_preview()
         return
 
-    def change_marker_size(self, boolean):
+    def change_marker_size(self, boolean, event=None):
         if boolean == True:
             self.DoseFigureHandler.markersize += 0.2
         else:
@@ -454,7 +460,7 @@ class MainApplication(tk.Frame):
             self.show_preview()
         return
 
-    def change_line_width(self, boolean):
+    def change_line_width(self, boolean, event=None):
         if boolean == True:
             self.DoseFigureHandler.linewidth += 0.2
         else:
@@ -524,7 +530,7 @@ class MainApplication(tk.Frame):
         self.saved = True
         self.axlims.set(0)
 
-    def remove_last_addition(self):
+    def remove_last_addition(self, event=None):
 
         """
         Removes the graph added last
@@ -785,15 +791,6 @@ class MainApplication(tk.Frame):
                     if newname != None:
                         self.DoseFigureHandler.plots[index].filename = newname
                         self.show_preview()
-
-    def z_key(self, event=None):
-        self.remove_last_addition()
-
-    def p_key(self, event=None):
-        self.load_file("ptw")
-
-    def s_key(self, event=None):
-        self.save_graph()
 
     def up_down_key(self, event=None):
         if event.keysym == "Up":
