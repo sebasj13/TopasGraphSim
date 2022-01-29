@@ -92,7 +92,7 @@ class MainApplication(tk.Frame):
         self.autostart()
 
         # Keybinding definitions
-        self.parent.bind("<Control-d>", self.d_key)
+        self.parent.bind("<Control-d>", lambda type: self.load_file("dp"))
         self.parent.bind("<Control-o>", self.o_key)
         self.parent.bind("<Control-s>", self.s_key)
         self.parent.bind("<Control-t>", self.t_key)
@@ -470,7 +470,7 @@ class MainApplication(tk.Frame):
             self.show_preview()
         return
 
-    def load_file(self, type):
+    def load_file(self, type, event=None):
 
         """
         Loads measurement or simulation data to be displayed
@@ -785,9 +785,6 @@ class MainApplication(tk.Frame):
                     if newname != None:
                         self.DoseFigureHandler.plots[index].filename = newname
                         self.show_preview()
-
-    def d_key(self, event=None):
-        self.load_file("dp")
 
     def o_key(self, event=None):
         self.load_file("simulation")
