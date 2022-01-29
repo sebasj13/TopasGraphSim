@@ -93,9 +93,9 @@ class MainApplication(tk.Frame):
 
         # Keybinding definitions
         self.parent.bind("<Control-d>", lambda type: self.load_file("dp"))
-        self.parent.bind("<Control-o>", self.o_key)
+        self.parent.bind("<Control-o>", lambda type: self.load_file("simulation"))
         self.parent.bind("<Control-s>", self.s_key)
-        self.parent.bind("<Control-t>", self.t_key)
+        self.parent.bind("<Control-t>", lambda type: self.load_file("pdd"))
         self.parent.bind("<Control-p>", self.p_key)
         self.parent.bind("<Escape>", self.close_file)
         self.parent.bind("<Control-z>", self.z_key)
@@ -785,12 +785,6 @@ class MainApplication(tk.Frame):
                     if newname != None:
                         self.DoseFigureHandler.plots[index].filename = newname
                         self.show_preview()
-
-    def o_key(self, event=None):
-        self.load_file("simulation")
-
-    def t_key(self, event=None):
-        self.load_file("pdd")
 
     def z_key(self, event=None):
         self.remove_last_addition()
