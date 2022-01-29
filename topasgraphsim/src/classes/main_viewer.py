@@ -101,8 +101,20 @@ class MainApplication(tk.Frame):
         self.parent.bind("<Control-z>", self.remove_last_addition)
         self.parent.bind("<F11>", self.toggle_fullscreen)
         self.parent.bind("<MouseWheel>", self.change_x_limits)
+        self.parent.bind("<Control-Up>", lambda boolean: self.change_marker_size(True))
+        self.parent.bind(
+            "<Control-Down>", lambda boolean: self.change_marker_size(False)
+        )
+
+        self.parent.bind(
+            "<Control-Right>", lambda boolean: self.change_line_width(True)
+        )
+        self.parent.bind(
+            "<Control-Left>", lambda boolean: self.change_line_width(False)
+        )
 
         # Menubar definitions
+
         self.menubar = tk.Menu(self.parent)
         self.filemenu = tk.Menu(self.menubar, tearoff=False)
         self.addmeasuremenu = tk.Menu(self.menubar, tearoff=False)
@@ -228,14 +240,11 @@ class MainApplication(tk.Frame):
             command=lambda: self.change_marker_size(True),
             accelerator="Ctrl + ↑",
         )
-        self.parent.bind("<Control-Up>", lambda boolean: self.change_marker_size(True))
+
         self.markersizemenu.add_command(
             label=Text().decrease[self.lang],
             command=lambda: self.change_marker_size(False),
             accelerator="Ctrl + ↓",
-        )
-        self.parent.bind(
-            "<Control-Down>", lambda boolean: self.change_marker_size(False)
         )
 
         self.markerlinemenu = tk.Menu(self.menubar)
@@ -244,16 +253,11 @@ class MainApplication(tk.Frame):
             command=lambda: self.change_line_width(True),
             accelerator="Ctrl + →",
         )
-        self.parent.bind(
-            "<Control-Right>", lambda boolean: self.change_line_width(True)
-        )
+
         self.markerlinemenu.add_command(
             label=Text().decrease[self.lang],
             command=lambda: self.change_line_width(False),
             accelerator="Ctrl + ←",
-        )
-        self.parent.bind(
-            "<Control-Left>", lambda boolean: self.change_line_width(False)
         )
 
         self.normmenu.add_cascade(
@@ -316,15 +320,9 @@ class MainApplication(tk.Frame):
 
         self.parent.config(menu=self.menubar)
 
-    def toggle_fullscreen(self, event=None):
-        self.parent.attributes("-fullscreen", not self.parent.attributes("-fullscreen"))
-        self.fullscreen.set(self.parent.attributes("-fullscreen"))
-        self.profile.set_attribute("fullscreen", bool(self.fullscreen.get()))
-
     def autostart(self):
 
-        """
-        Sets the theme according to the profile.json
+        """Sets the theme according to the profile.json
         """
 
         if self.autostartdark.get() == "light":
@@ -333,12 +331,12 @@ class MainApplication(tk.Frame):
         else:
             self.dark.set(True)
             self.switchtheme("dark")
+
         return
 
     def switchtheme(self, theme):
 
-        """
-        Switches between light and dark theme
+        """Switches between light and dark theme
         """
 
         if theme == "light":
@@ -354,17 +352,30 @@ class MainApplication(tk.Frame):
             if self.filenames != []:
                 self.show_preview()
 
+        return
+
+    def toggle_fullscreen(self, event=None):
+
+        """Toggle between fullscreen and normal view
+        """
+
+        self.parent.attributes("-fullscreen", not self.parent.attributes("-fullscreen"))
+        self.fullscreen.set(self.parent.attributes("-fullscreen"))
+        self.profile.set_attribute("fullscreen", bool(self.fullscreen.get()))
+
     def change_x_limits(self, event=None):
+
         if event.delta > 0:
             self.axlims.set(self.axlims.get() - 5)
         elif event.delta < 0:
             self.axlims.set(self.axlims.get() + 5)
         self.show_preview()
 
+        return
+
     def set_language(self, language):
 
-        """
-        Sets the desired language and reinitiates the program
+        """Sets the desired language and reinitiates the program
         """
 
         plots = self.DoseFigureHandler.plots
@@ -381,105 +392,9 @@ class MainApplication(tk.Frame):
 
         return
 
-    def normalize(self):
-
-        self.DoseFigureHandler.norm = self.norm.get()
-
-        self.profile.set_attribute("normalize", int(self.norm.get()))
-
-        if self.filenames != []:
-            self.canvas.itemconfig(self.image_on_canvas, image=None)
-            self.DoseFigureHandler.flush()
-            self.show_preview()
-        return
-
-    def show_errorbars(self):
-        self.DoseFigureHandler.errorbars = self.errorbars.get()
-
-        if self.filenames != []:
-            self.canvas.itemconfig(self.image_on_canvas, image=None)
-            self.DoseFigureHandler.flush()
-            self.show_preview()
-        return
-
-    def correct_caxdev(self):
-        self.DoseFigureHandler.caxcorrection = self.caxcorrection.get()
-
-        if self.filenames != []:
-            self.canvas.itemconfig(self.image_on_canvas, image=None)
-            self.DoseFigureHandler.flush()
-            self.show_preview()
-        return
-
-    def change_normalization(self):
-
-        if self.normvaluemenu.get() == "max":
-            self.DoseFigureHandler.normvalue = "max"
-        elif self.normvaluemenu.get() == "flank":
-            self.DoseFigureHandler.normvalue = "flank"
-        else:
-            self.DoseFigureHandler.normvalue = "center"
-
-        if self.filenames != []:
-            self.canvas.itemconfig(self.image_on_canvas, image=None)
-            self.DoseFigureHandler.flush()
-            self.show_preview()
-        return
-
-    def zoomgraph(self):
-        self.DoseFigureHandler.zoom = self.zoom.get()
-
-        self.profile.set_attribute("zoom", int(self.zoom.get()))
-
-        if self.filenames != []:
-            self.canvas.itemconfig(self.image_on_canvas, image=None)
-            self.DoseFigureHandler.flush()
-            self.show_preview()
-        return
-
-    def halfgraph(self):
-        self.DoseFigureHandler.half = self.half.get()
-        self.profile.set_attribute("halfview", self.half.get())
-        self.show_preview()
-        return
-
-    def change_marker_size(self, boolean, event=None):
-        if boolean == True:
-            self.DoseFigureHandler.markersize += 0.2
-        else:
-            self.DoseFigureHandler.markersize -= 0.2
-
-        if self.DoseFigureHandler.markersize < 0:
-            self.DoseFigureHandler.markersize = 0
-
-        self.profile.set_attribute("markersize", self.DoseFigureHandler.markersize)
-
-        if self.filenames != []:
-            self.canvas.itemconfig(self.image_on_canvas, image=None)
-            self.DoseFigureHandler.flush()
-            self.show_preview()
-        return
-
-    def change_line_width(self, boolean, event=None):
-        if boolean == True:
-            self.DoseFigureHandler.linewidth += 0.2
-        else:
-            self.DoseFigureHandler.linewidth -= 0.2
-        if self.DoseFigureHandler.linewidth < 0.2:
-            self.DoseFigureHandler.linewidth = 0.2
-
-        self.profile.set_attribute("linewidth", self.DoseFigureHandler.linewidth)
-
-        if self.filenames != []:
-            self.canvas.itemconfig(self.image_on_canvas, image=None)
-            self.DoseFigureHandler.flush()
-            self.show_preview()
-        return
-
     def load_file(self, type, event=None):
 
-        """
-        Loads measurement or simulation data to be displayed
+        """Loads measurement or simulation data to be displayed
         """
 
         if type == "simulation":
@@ -506,10 +421,11 @@ class MainApplication(tk.Frame):
         self.filemenu.entryconfig(4, state=tk.NORMAL)
         self.saved = False
 
+        return
+
     def close_file(self, event=None):
 
-        """
-        Closes the current project
+        """Closes the current project
         """
 
         self.canvas.place_forget()
@@ -529,6 +445,84 @@ class MainApplication(tk.Frame):
         self.DoseFigureHandler.plots = []
         self.saved = True
         self.axlims.set(0)
+
+        return
+
+    def save_graph(self, exit=False):
+
+        """Saves the current graph as an image
+        """
+
+        if exit == True:
+            if self.saved == False:
+
+                prompt = sd.messagebox.askyesno("", self.text.closeprompt[self.lang])
+                if prompt == True:
+                    self.parent.destroy()
+                    return
+                else:
+                    return
+            else:
+                self.parent.destroy()
+                return
+
+        file = fd.asksaveasfilename(
+            defaultextension=".png",
+            filetypes=[(self.text.image[self.lang], [".png", ".jpg"])],
+        )
+
+        if file is None:
+            return
+
+        ImageTk.getimage(self.photoimage).save(file)
+        self.saved = True
+
+        return
+
+    def normalize(self):
+
+        """Choose whether or not the displayed graph should be normalized
+        """
+
+        self.DoseFigureHandler.norm = self.norm.get()
+
+        self.profile.set_attribute("normalize", int(self.norm.get()))
+
+        if self.filenames != []:
+            self.canvas.itemconfig(self.image_on_canvas, image=None)
+            self.DoseFigureHandler.flush()
+            self.show_preview()
+
+        return
+
+    def show_errorbars(self):
+
+        """Choose whether or not the displayed graph should be contain errorbars
+        """
+
+        self.DoseFigureHandler.errorbars = self.errorbars.get()
+
+        if self.filenames != []:
+            self.canvas.itemconfig(self.image_on_canvas, image=None)
+            self.DoseFigureHandler.flush()
+            self.show_preview()
+
+        return
+
+    def correct_caxdev(self):
+
+        """Choose whether or not the displayed dose
+        profiles should be center-axis-corrected
+        """
+
+        self.DoseFigureHandler.caxcorrection = self.caxcorrection.get()
+
+        if self.filenames != []:
+            self.canvas.itemconfig(self.image_on_canvas, image=None)
+            self.DoseFigureHandler.flush()
+            self.show_preview()
+
+        return
 
     def remove_last_addition(self, event=None):
 
@@ -557,41 +551,101 @@ class MainApplication(tk.Frame):
         self.canvas.itemconfig(self.image_on_canvas, image=None)
         self.show_preview()
 
-    def save_graph(self, exit=False):
+        return
 
+    def change_normalization(self):
+
+        """Change the normalization to different points
         """
-        Saves the current graph
+
+        if self.normvaluemenu.get() == "max":
+            self.DoseFigureHandler.normvalue = "max"
+        elif self.normvaluemenu.get() == "flank":
+            self.DoseFigureHandler.normvalue = "flank"
+        else:
+            self.DoseFigureHandler.normvalue = "center"
+
+        if self.filenames != []:
+            self.canvas.itemconfig(self.image_on_canvas, image=None)
+            self.DoseFigureHandler.flush()
+            self.show_preview()
+
+        return
+
+    def zoomgraph(self):
+
+        """Choose whether or not the displayed graph
+        should contain inset axis for a zoom view
         """
 
-        if exit == True:
-            if self.saved == False:
+        self.DoseFigureHandler.zoom = self.zoom.get()
 
-                prompt = sd.messagebox.askyesno("", self.text.closeprompt[self.lang])
-                if prompt == True:
-                    self.parent.destroy()
-                    return
-                else:
-                    return
-            else:
-                self.parent.destroy()
-                return
+        self.profile.set_attribute("zoom", int(self.zoom.get()))
 
-        file = fd.asksaveasfilename(
-            defaultextension=".png",
-            filetypes=[(self.text.image[self.lang], [".png", ".jpg"])],
-        )
+        if self.filenames != []:
+            self.canvas.itemconfig(self.image_on_canvas, image=None)
+            self.DoseFigureHandler.flush()
+            self.show_preview()
 
-        if file is None:
-            return
+        return
 
-        ImageTk.getimage(self.photoimage).save(file)
-        self.saved = True
+    def halfgraph(self):
+
+        """Choose whether or not to only show half of the dose profile
+        """
+
+        self.DoseFigureHandler.half = self.half.get()
+        self.profile.set_attribute("halfview", self.half.get())
+        self.show_preview()
+
+        return
+
+    def change_marker_size(self, boolean, event=None):
+
+        """Change the size of the matplotlib markers in the graph
+        """
+
+        if boolean == True:
+            self.DoseFigureHandler.markersize += 0.2
+        else:
+            self.DoseFigureHandler.markersize -= 0.2
+
+        if self.DoseFigureHandler.markersize < 0:
+            self.DoseFigureHandler.markersize = 0
+
+        self.profile.set_attribute("markersize", self.DoseFigureHandler.markersize)
+
+        if self.filenames != []:
+            self.canvas.itemconfig(self.image_on_canvas, image=None)
+            self.DoseFigureHandler.flush()
+            self.show_preview()
+
+        return
+
+    def change_line_width(self, boolean, event=None):
+
+        """Change the width of the matplotlib lines in the graph
+        """
+
+        if boolean == True:
+            self.DoseFigureHandler.linewidth += 0.2
+        else:
+            self.DoseFigureHandler.linewidth -= 0.2
+        if self.DoseFigureHandler.linewidth < 0.2:
+            self.DoseFigureHandler.linewidth = 0.2
+
+        self.profile.set_attribute("linewidth", self.DoseFigureHandler.linewidth)
+
+        if self.filenames != []:
+            self.canvas.itemconfig(self.image_on_canvas, image=None)
+            self.DoseFigureHandler.flush()
+            self.show_preview()
         return
 
     def show_preview(self):
 
         """
-        Invokes DoseFigureHandler to create and display the graphs
+        Invokes DoseFigureHandler to create and display the graphs with the selected options
         """
         self.DoseFigureHandler.flush()
         self.photoimage, menuflag = self.DoseFigureHandler.return_figure(self.filenames)
@@ -683,7 +737,8 @@ class MainApplication(tk.Frame):
     def handle_configure(self, event):
 
         """
-        Dynamically resizes the graph and rename boxes according to the window size and name length
+        Dynamically resizes the graph, rename boxes and zoom window selector
+        according to the window size and name length
         """
 
         try:
@@ -756,6 +811,10 @@ class MainApplication(tk.Frame):
             )
 
     def check_hand(self, e):
+
+        """Shows a different curson when hovering over a rename box
+        """
+
         if e != None:
             try:
                 hoverlist = []
@@ -779,6 +838,10 @@ class MainApplication(tk.Frame):
                 self.canvas.config(cursor="")
 
     def check_click(self, e):
+
+        """Renames a plot when the associated box is clicked
+        """
+
         for index, box in enumerate(self.rename_boxes):
             if e != None:
                 bbox = self.canvas.bbox(box)
@@ -791,15 +854,3 @@ class MainApplication(tk.Frame):
                     if newname != None:
                         self.DoseFigureHandler.plots[index].filename = newname
                         self.show_preview()
-
-    def up_down_key(self, event=None):
-        if event.keysym == "Up":
-            self.change_marker_size(True)
-        else:
-            self.change_marker_size(False)
-
-    def right_left_key(self, event=None):
-        if event.keysym == "Right":
-            self.change_line_width(True)
-        else:
-            self.change_line_width(False)
