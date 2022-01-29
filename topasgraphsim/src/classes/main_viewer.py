@@ -97,7 +97,7 @@ class MainApplication(tk.Frame):
         self.parent.bind("<Control-s>", self.s_key)
         self.parent.bind("<Control-t>", self.t_key)
         self.parent.bind("<Control-p>", self.p_key)
-        self.parent.bind("<Escape>", self.esc_key)
+        self.parent.bind("<Escape>", self.close_file)
         self.parent.bind("<Control-z>", self.z_key)
         self.parent.bind("<F11>", self.toggle_fullscreen)
         self.parent.bind("<MouseWheel>", self.change_x_limits)
@@ -500,7 +500,7 @@ class MainApplication(tk.Frame):
         self.filemenu.entryconfig(4, state=tk.NORMAL)
         self.saved = False
 
-    def close_file(self):
+    def close_file(self, event=None):
 
         """
         Closes the current project
@@ -785,9 +785,6 @@ class MainApplication(tk.Frame):
                     if newname != None:
                         self.DoseFigureHandler.plots[index].filename = newname
                         self.show_preview()
-
-    def esc_key(self, event=None):
-        self.close_file()
 
     def d_key(self, event=None):
         self.load_file("dp")
