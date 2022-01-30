@@ -301,11 +301,10 @@ class MainApplication(tk.Frame):
         self.parent.config(menu=self.menubar)
 
         self.parent.title(self.text.window_title[self.lang])
-
-        # self.parent.geometry(geometry)
-        # self.parent.attributes("-fullscreen", self.fullscreen.get())
-        # self.autostart()
-        # self.pack(side="top", fill="both", expand=True)
+        self.pack(side="top", fill="both", expand=True)
+        self.parent.geometry(geometry)
+        self.parent.attributes("-fullscreen", self.fullscreen.get())
+        self.autostart()
 
     def autostart(self):
 
