@@ -364,14 +364,16 @@ class MainApplication(tk.Frame):
         """
 
         plots = self.DoseFigureHandler.plots
+        filenames = self.filenames
         axlims = self.axlims.get()
         self.pack_forget()
         self.parent.config(menu=None)
         self.profile.set_attribute("language", language)
         self.__init__(self.parent)
-        self.DoseFigureHandler.plots = plots
-        self.axlims.set(axlims)
         if plots != []:
+            self.filenames = filenames
+            self.DoseFigureHandler.plots = plots
+            self.axlims.set(axlims)
             self.show_preview()
 
         return
@@ -472,7 +474,6 @@ class MainApplication(tk.Frame):
         self.DoseFigureHandler.norm = self.norm.get()
 
         self.profile.set_attribute("normalize", int(self.norm.get()))
-
         if self.filenames != []:
             self.canvas.itemconfig(self.image_on_canvas, image=None)
             self.DoseFigureHandler.flush()
