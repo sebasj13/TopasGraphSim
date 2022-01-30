@@ -1,6 +1,5 @@
 import os
 import tkinter as tk
-import tkinter.ttk as ttk
 from tkinter import filedialog as fd
 from tkinter import simpledialog as sd
 from tkinter.font import NORMAL
@@ -40,6 +39,9 @@ class MainApplication(tk.Frame):
         self.langvar.set(self.lang)
         self.text = Text()
 
+        self.autostartdark = tk.StringVar()
+        self.autostartdark.set(self.profile.get_attribute("color_scheme"))
+
         self.dark = tk.BooleanVar()
         self.dark.set(False)
 
@@ -69,28 +71,6 @@ class MainApplication(tk.Frame):
 
         self.DoseFigureHandler = DoseFigureHandler(self)
 
-        self.parent.title(self.text.window_title[self.lang])
-        style = ttk.Style(self.parent)
-        try:
-            self.parent.tk.call(
-                "source",
-                str(
-                    os.path.dirname(os.path.realpath(__file__))
-                    + "\\..\\Azure-ttk-theme\\azure.tcl"
-                ),
-            )
-        except tk.TclError:
-            pass
-
-        self.parent.geometry(geometry)
-        self.parent.attributes("-fullscreen", self.fullscreen.get())
-        self.pack(side="top", fill="both", expand=True)
-
-        color_scheme = self.profile.get_attribute("color_scheme")
-        self.autostartdark = tk.StringVar()
-        self.autostartdark.set(color_scheme)
-        self.autostart()
-
         # Keybinding definitions
         self.parent.bind("<Control-d>", lambda type: self.load_file("dp"))
         self.parent.bind("<Control-o>", lambda type: self.load_file("simulation"))
@@ -115,7 +95,7 @@ class MainApplication(tk.Frame):
 
         # Menubar definitions
 
-        self.menubar = tk.Menu(self.parent)
+        self.menubar = tk.Menu(self.parent, tearoff=False)
         self.filemenu = tk.Menu(self.menubar, tearoff=False)
         self.addmeasuremenu = tk.Menu(self.menubar, tearoff=False)
         self.addmeasuremenu.add_command(
@@ -202,7 +182,7 @@ class MainApplication(tk.Frame):
         )
 
         self.menubar.add_cascade(label=self.text.view[self.lang], menu=self.viewmenu)
-        self.optionsmenu = tk.Menu(self.menubar)
+        self.optionsmenu = tk.Menu(self.menubar, tearoff=False)
         self.optionsmenu.add_checkbutton(
             label=self.text.startdark[self.lang],
             variable=self.autostartdark,
@@ -212,7 +192,7 @@ class MainApplication(tk.Frame):
             onvalue="dark",
             offvalue="light",
         )
-        self.langmenu = tk.Menu(self.menubar)
+        self.langmenu = tk.Menu(self.menubar, tearoff=False)
         self.langmenu.add_radiobutton(
             label=self.text.german[self.lang],
             command=lambda: self.set_language(self.langvar.get()),
@@ -232,9 +212,9 @@ class MainApplication(tk.Frame):
             label=self.text.options[self.lang], menu=self.optionsmenu
         )
 
-        self.normmenu = tk.Menu(self.menubar)
+        self.normmenu = tk.Menu(self.menubar, tearoff=False)
 
-        self.markersizemenu = tk.Menu(self.menubar)
+        self.markersizemenu = tk.Menu(self.menubar, tearoff=False)
         self.markersizemenu.add_command(
             label=Text().increase[self.lang],
             command=lambda: self.change_marker_size(True),
@@ -247,7 +227,7 @@ class MainApplication(tk.Frame):
             accelerator="Ctrl + ↓",
         )
 
-        self.markerlinemenu = tk.Menu(self.menubar)
+        self.markerlinemenu = tk.Menu(self.menubar, tearoff=False)
         self.markerlinemenu.add_command(
             label=Text().increase[self.lang],
             command=lambda: self.change_line_width(True),
@@ -273,13 +253,13 @@ class MainApplication(tk.Frame):
             command=self.show_errorbars,
             variable=self.errorbars,
         )
-        self.normalizemenu = tk.Menu(self.menubar)
+        self.normalizemenu = tk.Menu(self.menubar, tearoff=False)
         self.normalizemenu.add_checkbutton(
             label=self.text.normalize[self.lang],
             command=self.normalize,
             variable=self.norm,
         )
-        self.normalize_cascade = tk.Menu(self.menubar)
+        self.normalize_cascade = tk.Menu(self.menubar, tearoff=False)
         self.normalize_cascade.add_radiobutton(
             label=self.text.maximum[self.lang],
             variable=self.normvaluemenu,
@@ -319,6 +299,13 @@ class MainApplication(tk.Frame):
         )
 
         self.parent.config(menu=self.menubar)
+
+        self.parent.title(self.text.window_title[self.lang])
+
+        # self.parent.geometry(geometry)
+        # self.parent.attributes("-fullscreen", self.fullscreen.get())
+        # self.autostart()
+        # self.pack(side="top", fill="both", expand=True)
 
     def autostart(self):
 
