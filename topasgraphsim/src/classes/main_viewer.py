@@ -302,7 +302,6 @@ class MainApplication(tk.Frame):
 
         self.parent.title(self.text.window_title[self.lang])
         self.pack(side="top", fill="both", expand=True)
-        #self.parent.geometry(geometry)
         self.parent.attributes("-fullscreen", self.fullscreen.get())
         self.autostart()
 
@@ -367,10 +366,9 @@ class MainApplication(tk.Frame):
         plots = self.DoseFigureHandler.plots
         axlims = self.axlims.get()
         self.pack_forget()
-        geometry = self.parent.winfo_geometry()
         self.parent.config(menu=None)
         self.profile.set_attribute("language", language)
-        self.__init__(self.parent, geometry)
+        self.__init__(self.parent)
         self.DoseFigureHandler.plots = plots
         self.axlims.set(axlims)
         if plots != []:
