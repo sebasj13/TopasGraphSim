@@ -9,7 +9,7 @@ class Measurement:
     def __init__(self, filepath, type):
 
         self.filepath = filepath
-        self.filename = self.filepath.split("/")[-1]
+        self.filename = self.filepath.split("/")[-1][:-4]
 
         if type == "pdd":
             self.direction = "Z"

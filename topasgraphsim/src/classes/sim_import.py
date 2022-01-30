@@ -12,7 +12,7 @@ class Simulation:
     def __init__(self, filepath):
 
         self.filepath = filepath
-        self.filename = self.filepath.split("/")[-1]
+        self.filename = self.filepath.split("/")[-1][:-4]
 
         self.data = topas2numpy.BinnedResult(self.filepath)
         bins = [dim.n_bins for dim in self.data.dimensions]
