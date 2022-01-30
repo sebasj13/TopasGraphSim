@@ -440,7 +440,7 @@ class MainApplication(tk.Frame):
         self.menubar.delete(3, 4)
         self.filenames = []
         self.canvas.itemconfig(self.image_on_canvas, image=None)
-        self.menuflag = False
+        self.menuflag = str
         self.DoseFigureHandler.flush()
         self.DoseFigureHandler.plots = []
         self.saved = True

@@ -1,4 +1,5 @@
 import os
+import re
 import tkinter as tk
 import tkinter.ttk as ttk
 
@@ -14,12 +15,7 @@ class PTWMeasurement:
 
         self.axis = list[0]
         self.dose = list[1]
-        if self.axis[0] < 0:
-            self.direction = "X- {} Y".format(
-                Text().orr[ProfileHandler().get_attribute("language")]
-            )
-        else:
-            self.direction = "Z"
+        self.direction = list[4]
         self.normpoint = max(self.dose)
 
         self.std_dev = []
@@ -51,11 +47,45 @@ class PTWMultimporter:
 
         with open(filepath, "r") as file:
             lines = file.readlines()
-            unit = str
+            unit = ""
             self.alldata = []
+            axes = {}
+            direction = ""
             for index, line in enumerate(lines):
                 if "MEAS_UNIT" in line:
                     unit = line.split("=")[-1]
+
+                elif (
+                    bool(
+                        re.match(
+                            re.compile(r"^INPLANE_AXIS$"), line.split("=")[0].strip()
+                        )
+                    )
+                    == True
+                ):
+                    axes["INPLANE_PROFILE"] = line.split("=")[-1][0]
+                elif (
+                    bool(
+                        re.match(
+                            re.compile(r"^CROSSPLANE_AXIS$"), line.split("=")[0].strip()
+                        )
+                    )
+                    == True
+                ):
+                    axes["CROSSPLANE_PROFILE"] = line.split("=")[-1][0]
+                elif (
+                    bool(
+                        re.match(
+                            re.compile(r"^DEPTH_AXIS$"), line.split("=")[0].strip()
+                        )
+                    )
+                    == True
+                ):
+                    axes["PDD"] = line.split("=")[-1][0]
+
+                elif "SCAN_CURVETYPE" in line:
+                    direction = axes[line.split("=")[-1][:-1]]
+
                 if "BEGIN_DATA" in line:
                     xdata, ydata = [], []
                     i = 1
@@ -63,8 +93,12 @@ class PTWMultimporter:
                         xdata += [float(lines[index + i].split("\t")[3])]
                         ydata += [float(lines[index + i].split("\t")[5])]
                         i += 1
-                    self.alldata += [[np.array(xdata), np.array(ydata), filepath, unit]]
-                    unit = str
+                    self.alldata += [
+                        [np.array(xdata), np.array(ydata), filepath, unit, direction]
+                    ]
+                    unit = ""
+                    direction = ""
+                    axes = {}
 
         self.plots = []
 

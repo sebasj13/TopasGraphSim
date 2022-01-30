@@ -59,8 +59,13 @@ class DoseFigureHandler:
                     sim = Simulation(filename)
                     if test == []:
                         self.plots += [sim]
-                    elif sim.direction in test:
+                    elif sim.direction == "Z" and "Z" in test:
                         self.plots += [sim]
+                    elif sim.direction == "X" and "X" in test or "Y" in test:
+                        self.plots += [sim]
+                    elif sim.direction == "Y" and "X" in test or "Y" in test:
+                        self.plots += [sim]
+
                     else:
                         sd.messagebox.showinfo(
                             "", f"{sim.filename}" + self.text.incordata[self.lang][1]
@@ -74,10 +79,12 @@ class DoseFigureHandler:
                     for plot in measurements:
                         if test == []:
                             self.plots += [plot]
-                            test += [plotdata.direction for plotdata in self.plots]
-                        elif plot.direction in test:
+                        elif plot.direction == "Z" and "Z" in test:
                             self.plots += [plot]
-                            test += [plotdata.direction for plotdata in self.plots]
+                        elif plot.direction == "X" and "X" in test or "Y" in test:
+                            self.plots += [plot]
+                        elif plot.direction == "Y" and "X" in test or "Y" in test:
+                            self.plots += [plot]
                         else:
                             fails += [plot]
 
@@ -317,7 +324,14 @@ class DoseFigureHandler:
 
         """Names the x-axis according to the plot type
         """
-        xlabel = "{}-{} [mm]".format(self.data[0][1], self.text.axis[self.lang])
+
+        directions = [plot.direction for plot in self.plots]
+        if directions.count(directions[0]) == len(directions):
+
+            xlabel = f"{directions[0]}-{self.text.axis[self.lang]} [mm]"
+        else:
+            xlabel = f"X- {self.text.orr[self.lang]} Y-{self.text.axis[self.lang]}"
+
         self.ax.set_xlabel(xlabel, size=12)
         if self.norm == False:
             self.ax.set_ylabel(self.plots[0].unit, size=12)
