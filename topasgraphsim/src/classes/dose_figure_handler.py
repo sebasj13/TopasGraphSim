@@ -89,6 +89,7 @@ class DoseFigureHandler:
                             fails += [plot]
 
                     if fails != []:
+                        self.parent.filenames.pop(-1)
                         names = ""
                         for f in fails:
                             names += str(f.filename) + ", "
@@ -99,6 +100,7 @@ class DoseFigureHandler:
                         sd.messagebox.showinfo(
                             "", f"{names}" + self.text.incordata[self.lang][var],
                         )
+
                     del importer
 
                 else:
