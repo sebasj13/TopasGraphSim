@@ -8,7 +8,10 @@ class Text:
 
         self.add = {"de": "Daten hinzufügen", "en": "Add Data"}
         self.axis = {"de": "Achse", "en": "Axis"}
-        self.caxcorrection = {"de":"Zentralstrahlkorrektur","en":"Center axis correction"}
+        self.caxcorrection = {
+            "de": "Zentralstrahlkorrektur",
+            "en": "Center axis correction",
+        }
         self.centeraxis = {"de": "Zentralstrahl", "en": "Center axis"}
         self.changefilename = {"de": "Neuer Name:", "en": "New Name:"}
         self.choosenormalization = {"de": "Normieren auf ...", "en": "Normalize to ..."}
@@ -70,6 +73,10 @@ class Text:
         self.ptw = {"de": "PTW tbaScan", "en": "PTW tbaScan"}
         self.revert = {"de": "Rückgängig", "en": "Undo"}
         self.save = {"de": "Graph abspeichern", "en": "Save graph"}
+        self.scanaxis = {
+            "de": "Scanrichtung: [X = Ja | Y = Nein]",
+            "en": "Scan axis: [X = Yes | Y = No]",
+        }
         self.simulation = {"de": "Simulation", "en": "Simulation"}
         self.simulationdata = {"de": "Simulationsdateien", "en": "Simulation Data"}
         self.startdark = {"de": "Im dunklen Modus starten", "en": "Start in dark mode"}
