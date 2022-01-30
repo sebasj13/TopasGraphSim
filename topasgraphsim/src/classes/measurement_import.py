@@ -14,9 +14,7 @@ class Measurement:
         if type == "pdd":
             self.direction = "Z"
         else:
-            self.direction = "X- {} Y".format(
-                Text().orr[ProfileHandler().get_attribute("language")]
-            )
+            self.direction = "X"
 
         if filepath.endswith(".txt"):
             data = np.loadtxt(self.filepath, unpack=True)
