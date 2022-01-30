@@ -134,10 +134,19 @@ class MainApplication(tk.Frame):
             accelerator="Ctrl+P",
         )
 
-        self.filemenu.add_command(
-            label=self.text.loadsim[self.lang],
+        self.addsimmenu = tk.Menu(self.menubar)
+
+        self.addsimmenu.add_command(
+            label="TOPAS",
             command=lambda: self.load_file("simulation"),
             accelerator="Ctrl+O",
+        )
+        self.addsimmenu.add_command(
+            label="3Ddose", command=lambda: self.load_file("egs"),
+        )
+
+        self.filemenu.add_cascade(
+            label=self.text.loadsim[self.lang], menu=self.addsimmenu
         )
         self.filemenu.add_cascade(
             label=self.text.loadmeasurement[self.lang], menu=self.addmeasuremenu
@@ -160,10 +169,8 @@ class MainApplication(tk.Frame):
         self.filemenu.entryconfig(3, state=tk.DISABLED)
         self.filemenu.entryconfig(4, state=tk.DISABLED)
         self.addmenu = tk.Menu(self.menubar, tearoff=False)
-        self.addmenu.add_command(
-            label=self.text.simulation[self.lang],
-            command=lambda: self.load_file("simulation"),
-            accelerator="Ctrl+O",
+        self.addmenu.add_cascade(
+            label=self.text.simulation[self.lang], menu=self.addsimmenu
         )
         self.addmenu.add_cascade(
             label=self.text.measurement[self.lang], menu=self.addmeasuremenu
@@ -398,7 +405,10 @@ class MainApplication(tk.Frame):
         """
 
         if type == "simulation":
-            filetypes = [(self.text.simulationdata[self.lang], [".csv", ".bin"])]
+            filetypes = [(self.text.topas[self.lang], [".csv", ".bin"])]
+        if type == "egs":
+            filetypes = [(self.text.egs[self.lang], [".csv", ".bin"])]
+
         elif type == "pdd" or type == "dp":
             filetypes = [(self.text.measurementdata[self.lang], ["txt", ".csv"])]
         elif type == "ptw":

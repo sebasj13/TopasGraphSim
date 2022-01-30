@@ -78,3 +78,10 @@ class Simulation:
     def convert_SI(self, val, unit_in):
         SI = {"mm": 0.001, "cm": 0.01, "m": 1.0, "km": 1000.0}
         return val * SI[unit_in] / SI["mm"]
+
+
+class EGSSimulation:
+    def __init__(self, filepath):
+
+        self.filepath = filepath
+        self.filename = self.filepath.split("/")[-1][:-7]
