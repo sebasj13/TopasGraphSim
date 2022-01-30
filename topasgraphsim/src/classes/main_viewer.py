@@ -398,7 +398,7 @@ class MainApplication(tk.Frame):
         """
 
         if type == "simulation":
-            filetypes = [(self.text.simulationdata[self.lang], ".csv")]
+            filetypes = [(self.text.simulationdata[self.lang], [".csv", ".bin"])]
         elif type == "pdd" or type == "dp":
             filetypes = [(self.text.measurementdata[self.lang], ["txt", ".csv"])]
         elif type == "ptw":
