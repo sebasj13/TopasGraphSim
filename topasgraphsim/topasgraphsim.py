@@ -25,7 +25,7 @@ def topasgraphsim():
     y = screen_height // 2 - height // 2
     root.minsize(width + 50, height)
     root.geometry("%dx%d+%d+%d" % (width + 50, height, x - 25, y))
-    style = ttk.Style(root)
+    ttk.Style(root)
     root.tk.call(
         "source",
         str(
@@ -33,7 +33,7 @@ def topasgraphsim():
             + "\\src\\Azure-ttk-theme\\azure.tcl"
         ),
     )
-    app = MainApplication(root, root.winfo_geometry())
+    MainApplication(root)
     root.after(
         50,
         root.iconbitmap(

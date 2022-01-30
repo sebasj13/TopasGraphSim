@@ -12,9 +12,9 @@ from .profile import ProfileHandler
 
 
 class MainApplication(tk.Frame):
-    def __init__(self, parent, geometry, *args, **kwargs):
+    def __init__(self, parent):
 
-        tk.Frame.__init__(self, parent, *args, **kwargs)
+        tk.Frame.__init__(self, parent)
 
         self.parent = parent
 
@@ -302,7 +302,7 @@ class MainApplication(tk.Frame):
 
         self.parent.title(self.text.window_title[self.lang])
         self.pack(side="top", fill="both", expand=True)
-        self.parent.geometry(geometry)
+        #self.parent.geometry(geometry)
         self.parent.attributes("-fullscreen", self.fullscreen.get())
         self.autostart()
 
@@ -430,6 +430,7 @@ class MainApplication(tk.Frame):
         self.DoseFigureHandler.flush()
         self.DoseFigureHandler.plots = []
         self.saved = True
+        self.menuflag = False
         self.axlims.set(0)
 
         return
