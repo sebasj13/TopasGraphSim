@@ -1,3 +1,5 @@
+from tkinter import simpledialog as sd
+
 import numpy as np
 
 from ..functions import dp, pdd
@@ -14,7 +16,13 @@ class Measurement:
         if type == "pdd":
             self.direction = "Z"
         else:
-            self.direction = "X"
+            answer = sd.askquestion(
+                "", self.Text().scanaxis[ProfileHandler().get_attribute("language")]
+            )
+            if answer == "yes":
+                self.direction = "X"
+            else:
+                self.direction = "Y"
 
         if filepath.endswith(".txt"):
             data = np.loadtxt(self.filepath, unpack=True)
