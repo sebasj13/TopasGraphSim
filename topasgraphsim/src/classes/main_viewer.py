@@ -60,6 +60,9 @@ class MainApplication(tk.Frame):
         self.half = tk.BooleanVar()
         self.half.set(bool(self.profile.get_attribute("halfview")))
 
+        self.calcparams = tk.BooleanVar()
+        self.calcparams.set(False)
+
         self.fullscreen = tk.BooleanVar()
         self.fullscreen.set(bool(self.profile.get_attribute("fullscreen")))
 
@@ -305,6 +308,12 @@ class MainApplication(tk.Frame):
             variable=self.caxcorrection,
         )
 
+        self.normmenu.add_checkbutton(
+            label=self.text.calcparams[self.lang],
+            command=self.calculate_parameters,
+            variable=self.calcparams,
+        )
+
         self.parent.config(menu=self.menubar)
 
         self.parent.title(self.text.window_title[self.lang])
@@ -510,6 +519,21 @@ class MainApplication(tk.Frame):
         """
 
         self.DoseFigureHandler.caxcorrection = self.caxcorrection.get()
+
+        if self.filenames != []:
+            self.canvas.itemconfig(self.image_on_canvas, image=None)
+            self.DoseFigureHandler.flush()
+            self.show_preview()
+
+        return
+
+    def calculate_parameters(self):
+
+        """Choose whether or not the displayed dose
+        profiles should be center-axis-corrected
+        """
+
+        self.DoseFigureHandler.calcparams = self.calcparams.get()
 
         if self.filenames != []:
             self.canvas.itemconfig(self.image_on_canvas, image=None)

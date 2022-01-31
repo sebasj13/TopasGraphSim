@@ -8,6 +8,7 @@ class Text:
 
         self.add = {"de": "Daten hinzufügen", "en": "Add Data"}
         self.axis = {"de": "Achse", "en": "Axis"}
+        self.calcparams = {"de": "Parameter berechnen", "en": "Calculate parameters"}
         self.caxcorrection = {
             "de": "Zentralstrahlkorrektur",
             "en": "Center axis correction",

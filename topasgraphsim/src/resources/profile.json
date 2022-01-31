@@ -6,5 +6,5 @@
     "normalize": 1,
     "zoom": 1,
     "fullscreen": false,
-    "halfview": true
+    "halfview": false
 }

@@ -54,19 +54,6 @@ class Simulation:
             else:
                 std_dev = np.array([])
 
-        if self.direction == "Z":
-            self.params = pdd.calculate_parameters(
-                self.axis, self.dose / max(self.dose), self.std_dev / max(self.dose)
-            )
-        else:
-            self.axis = np.array(
-                [x - (max(self.axis) + min(self.axis)) / 2 for x in self.axis]
-            )
-            self.axis = self.axis.tolist()
-            self.params = dp.calculate_parameters(
-                self.axis, self.dose / max(self.dose), self.std_dev / max(self.dose)
-            )
-
         self.normpoint = max(self.dose)
         self.axis = {True: self.axis[len(self.axis) // 2 :], False: self.axis}
         self.dose = {True: self.dose[len(self.dose) // 2 :], False: self.dose}
@@ -74,6 +61,26 @@ class Simulation:
             True: self.std_dev[len(self.std_dev) // 2 :],
             False: self.std_dev,
         }
+
+    def params(self):
+        if self.direction == "Z":
+            return pdd.calculate_parameters(
+                self.axis[True],
+                self.dose[True] / max(self.dose[True]),
+                self.std_dev[True] / max(self.dose[True]),
+            )
+        else:
+            self.axis[True] = np.array(
+                [
+                    x - (max(self.axis[True]) + min(self.axis[True])) / 2
+                    for x in self.axis[True]
+                ]
+            )
+            self.axis[True] = self.axis[True].tolist()
+
+            return dp.calculate_parameters(
+                self.axis[True], self.dose[True] / max(self.dose[True])
+            )
 
     def convert_SI(self, val, unit_in):
         SI = {"mm": 0.001, "cm": 0.01, "m": 1.0, "km": 1000.0}

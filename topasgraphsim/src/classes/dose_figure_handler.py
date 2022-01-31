@@ -23,6 +23,7 @@ class DoseFigureHandler:
         self.parent = parent
 
         self.norm = self.parent.norm.get()
+        self.calcparams = self.parent.calcparams.get()
         self.normvalue = "max"
         self.errorbars = True
         self.caxcorrection = False
@@ -136,7 +137,6 @@ class DoseFigureHandler:
                         [x / plotdata.normpoint for x in plotdata.std_dev[self.half]]
                     ),
                 ]
-                + plotdata.params
             ]
 
         if self.plots[0].direction == "Z":
@@ -225,6 +225,14 @@ class DoseFigureHandler:
 
         """Adds the calculated parameters as descriptors
         """
+
+        data = []
+        for index, data in enumerate(self.data):
+            data += [[data, self.plots[index].params()]]
+
+        print(data)
+
+        self.data = data
 
         if self.plots[0].direction != "Z":
 
@@ -353,8 +361,11 @@ class DoseFigureHandler:
         """
 
         for index, plot_data in enumerate(self.data):
-            if self.caxcorrection == True:
-                plot_data[0] = [x - plot_data[5] for x in plot_data[0]]
+
+            if self.calcparams == True:
+
+                if self.caxcorrection == True:
+                    plot_data[0] = [x - plot_data[5] for x in plot_data[0]]
 
             if self.errorbars == True:
                 try:
@@ -522,7 +533,8 @@ class DoseFigureHandler:
         self.set_axis()
         self.set_x_label()
         self.create_plots_from_data()
-        self.add_descriptors()
+        if self.calcparams == True:
+            self.add_descriptors()
         self.add_legend()
         self.ax.set_aspect("auto")
         self.set_style()

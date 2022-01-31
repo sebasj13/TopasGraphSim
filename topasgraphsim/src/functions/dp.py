@@ -3,12 +3,15 @@ import scipy.integrate as integrate
 import scipy.interpolate as interpolate
 
 
-def calculate_parameters(axis, dose, std_dev):
+def calculate_parameters(axis, dose):
 
     """
     A function to calculate the relevant
     descriptive parameters of dose profiles.
     """
+
+    print(axis)
+    print(dose)
 
     interpolated_axis = np.linspace(axis[0], axis[-1], len(axis) * 100)
     akima_dose_interpolator = interpolate.Akima1DInterpolator(axis, dose)
