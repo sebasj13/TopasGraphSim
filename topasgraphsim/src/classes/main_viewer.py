@@ -382,14 +382,17 @@ class MainApplication(tk.Frame):
 
         """Loads measurement or simulation data to be displayed
         """
+        filetypes = [
+            (self.text.simulationdata[self.lang], [".csv", ".bin", ".3ddose"]),
+            (self.text.measurementdata[self.lang], ["txt", ".csv"]),
+            (self.text.ptw[self.lang], ".mcc"),
+        ]
 
-        if type == "simulation":
-            filetypes = [(self.text.simulationdata[self.lang], [".csv", ".bin"])]
-        elif type == "pdd" or type == "dp":
-            filetypes = [(self.text.measurementdata[self.lang], ["txt", ".csv"])]
+        if type == "dp" or type == "pdd":
+            filetypes.insert(0, filetypes.pop(1))
+
         elif type == "ptw":
-            filetypes = [(self.text.ptw[self.lang], ".mcc")]
-
+            filetypes.insert(0, filetypes.pop(2))
         self.current_file = fd.askopenfilenames(
             initialdir=os.getcwd(), filetypes=filetypes
         )
