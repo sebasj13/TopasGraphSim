@@ -58,8 +58,7 @@ class Simulation:
             self.axis = np.array(
                 [x - (max(self.axis) + min(self.axis)) / 2 for x in self.axis]
             )
-
-        self.axis = self.axis.tolist()
+            self.axis = self.axis.tolist()
 
         self.normpoint = max(self.dose)
         self.axis = {True: self.axis[len(self.axis) // 2 :], False: self.axis}

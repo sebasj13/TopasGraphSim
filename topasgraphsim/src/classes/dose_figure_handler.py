@@ -225,14 +225,13 @@ class DoseFigureHandler:
 
         """Adds the calculated parameters as descriptors
         """
-
+        temp = self.data
         new_data = []
         for index, data in enumerate(self.data):
             params = self.plots[index].params()
             new_data += [[data, params]]
 
         self.data = new_data
-
         if self.plots[0].direction != "Z":
 
             if self.half == False:
@@ -256,7 +255,8 @@ class DoseFigureHandler:
 
         for index, plot_data in enumerate(self.data):
 
-            if len(plot_data[1]) == 7:
+            if len(plot_data[1]) == 3:
+
                 Q, dQ, zmax = plot_data[1][0], plot_data[1][1], plot_data[1][2]
                 textstr = "Q     = {} ± {}\n{} = {} mm".format(Q, dQ, "$z_{max}$", zmax)
                 space = 0
@@ -276,6 +276,7 @@ class DoseFigureHandler:
                     bbox=self.props,
                     color=self.colors[index],
                 )
+
             else:
                 (
                     HWB,
@@ -333,7 +334,7 @@ class DoseFigureHandler:
                     horizontalalignment="center",
                     color=self.colors[index],
                 )
-
+        self.data = temp
         return
 
     def set_x_label(self):

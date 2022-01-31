@@ -258,11 +258,7 @@ class MainApplication(tk.Frame):
         )
 
         self.normmenu.add_separator()
-        self.normmenu.add_checkbutton(
-            label=self.text.errorbars[self.lang],
-            command=self.show_errorbars,
-            variable=self.errorbars,
-        )
+
         self.normalizemenu = tk.Menu(self.menubar, tearoff=False)
         self.normalizemenu.add_checkbutton(
             label=self.text.normalize[self.lang],
@@ -295,14 +291,19 @@ class MainApplication(tk.Frame):
         self.normmenu.add_cascade(
             label=self.text.normalization[self.lang], menu=self.normalizemenu
         )
-
+        self.normmenu.add_checkbutton(
+            label=self.text.errorbars[self.lang],
+            command=self.show_errorbars,
+            variable=self.errorbars,
+        )
         self.normmenu.add_checkbutton(
             label=self.text.zoom[self.lang], command=self.zoomgraph, variable=self.zoom,
         )
+
         self.normmenu.add_checkbutton(
             label=self.text.half[self.lang], command=self.halfgraph, variable=self.half,
         )
-
+        self.normmenu.add_separator()
         self.normmenu.add_checkbutton(
             label=self.text.calcparams[self.lang],
             command=self.calculate_parameters,
@@ -314,7 +315,8 @@ class MainApplication(tk.Frame):
             command=self.correct_caxdev,
             variable=self.caxcorrection,
         )
-        self.normmenu.entryconfig(8, state=tk.DISABLED)
+
+        self.normmenu.entryconfig(9, state=tk.DISABLED)
         self.parent.config(menu=self.menubar)
 
         self.parent.title(self.text.window_title[self.lang])
@@ -444,11 +446,12 @@ class MainApplication(tk.Frame):
         self.menubar.delete(3, 4)
         self.filenames = []
         self.canvas.itemconfig(self.image_on_canvas, image=None)
-        self.menuflag = str
         self.DoseFigureHandler.flush()
         self.DoseFigureHandler.plots = []
         self.saved = True
         self.menuflag = False
+        self.DoseFigureHandler.caxcorrection = False
+        self.caxcorrection.set(False)
         self.axlims.set(0)
 
         return
@@ -537,9 +540,11 @@ class MainApplication(tk.Frame):
         self.DoseFigureHandler.calcparams = self.calcparams.get()
 
         if self.calcparams.get() == True:
-            self.normmenu.entryconfig(8, state=tk.NORMAL)
+            if self.direction != "Z":
+                self.normmenu.entryconfig(9, state=tk.NORMAL)
         else:
-            self.normmenu.entryconfig(8, state=tk.DISABLED)
+            self.normmenu.entryconfig(9, state=tk.DISABLED)
+            self.caxcorrection.set(False)
 
         if self.filenames != []:
             self.canvas.itemconfig(self.image_on_canvas, image=None)
@@ -672,7 +677,7 @@ class MainApplication(tk.Frame):
         Invokes DoseFigureHandler to create and display the graphs with the selected options
         """
         self.DoseFigureHandler.flush()
-        self.photoimage, menuflag = self.DoseFigureHandler.return_figure(self.filenames)
+        self.photoimage, self.direction = self.DoseFigureHandler.return_figure(self.filenames)
 
         self.canvas.place_forget()
         self.canvas = tk.Canvas(self)
@@ -688,15 +693,12 @@ class MainApplication(tk.Frame):
         if len(self.DoseFigureHandler.plots) == 5:
             self.addmenu.entryconfig(0, state=tk.DISABLED)
             self.addmenu.entryconfig(1, state=tk.DISABLED)
-
-        if menuflag == "Z":
+        if self.direction == "Z":
             self.addmeasuremenu.entryconfig(1, state=tk.DISABLED)
             self.normmenu.entryconfig(6, state=tk.DISABLED)
-            self.normmenu.entryconfig(7, state=tk.DISABLED)
         else:
             self.addmeasuremenu.entryconfig(0, state=tk.DISABLED)
             self.normmenu.entryconfig(6, state=tk.NORMAL)
-            self.normmenu.entryconfig(7, state=tk.NORMAL)
             self.canvas.place_forget()
             self.canvas.place(
                 relheight=1, relwidth=1, relx=0.55556, rely=0.5, anchor=tk.CENTER
