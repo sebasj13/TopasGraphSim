@@ -14,7 +14,7 @@ from win32api import GetSystemMetrics
 from ..resources.language import Text
 from .measurement_import import Measurement
 from .ptw_import import PTWMultimporter
-from .sim_import import Simulation
+from .sim_import import EGSSimulation, Simulation
 
 
 class DoseFigureHandler:
@@ -70,6 +70,11 @@ class DoseFigureHandler:
                         sd.messagebox.showinfo(
                             "", f"{sim.filename}" + self.text.incordata[self.lang][1]
                         )
+
+                elif type == "egs":
+                    sim = EGSSimulation(filename)
+                    ##!!!###
+
                 elif type == "ptw":
                     importer = PTWMultimporter(filename, self.parent.parent)
                     importer.window.mainloop()

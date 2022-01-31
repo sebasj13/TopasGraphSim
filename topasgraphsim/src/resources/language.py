@@ -26,6 +26,7 @@ class Text:
         self.dark = {"de": "Dunkel", "en": "Dark"}
         self.decrease = {"de": "Verkleinern", "en": "Decrease"}
         self.dp = {"de": "Dosisquerverteilung", "en": "Dose profile"}
+        self.egs = {"de": "EGS Simulationsdateien", "en": "EGS Simulation Data"}
         self.end = {"de": "Beenden", "en": "Close"}
         self.english = {"de": "Englisch", "en": "English"}
         self.errorbars = {"de": "Fehlerbalken anzeigen", "en": "Show error bars"}
@@ -60,6 +61,7 @@ class Text:
         self.light = {"de": "Hell", "en": "Light"}
         self.loadmeasurement = {"de": "Messung laden", "en": "Load measurement"}
         self.loadsim = {"de": "Simulationsergebnis laden", "en": "Load simulation"}
+
         self.marker = {"de": "Symbolgröße", "en": "Marker Size"}
         self.markerline = {"de": "Liniendicke", "en": "Line Width"}
         self.measurement = {"de": "Messung", "en": "Measurement"}
@@ -78,10 +80,10 @@ class Text:
             "en": "Scan axis: [X = Yes | Y = No]",
         }
         self.simulation = {"de": "Simulation", "en": "Simulation"}
-        self.simulationdata = {"de": "Simulationsdateien", "en": "Simulation Data"}
         self.startdark = {"de": "Im dunklen Modus starten", "en": "Start in dark mode"}
         self.submit = {"de": "Fertig", "en": "Sumbit"}
         self.symmetry = {"de": "Symmetrie", "en": "Symmetry"}
+        self.topas = {"de": "TOPAS Simulationsdateien", "en": "TOPAS Simulation Data"}
         self.view = {"de": "Ansicht", "en": "View"}
         self.window_title = {
             "de": "TopasMC Simulationsauswertung",
