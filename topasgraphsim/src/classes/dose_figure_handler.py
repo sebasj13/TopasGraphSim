@@ -76,7 +76,7 @@ class DoseFigureHandler:
                     ##!!!###
 
                 elif type == "ptw":
-                    importer = PTWMultimporter(filename, self.parent.parent)
+                    importer = PTWMultimporter(filename, self.parent)
                     importer.window.mainloop()
                     importer.window.destroy()
                     measurements = [plot for plot in importer.plots]
@@ -132,7 +132,9 @@ class DoseFigureHandler:
                     plotdata.axis[self.half],
                     plotdata.direction,
                     plotdata.dose[self.half] / plotdata.normpoint,
-                    plotdata.std_dev[self.half] / plotdata.normpoint,
+                    np.array(
+                        [x / plotdata.normpoint for x in plotdata.std_dev[self.half]]
+                    ),
                 ]
                 + plotdata.params
             ]

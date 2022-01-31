@@ -45,6 +45,10 @@ class PTWMeasurement:
 class PTWMultimporter:
     def __init__(self, filepath, geometry):
 
+        self.text = Text()
+        self.lang = ProfileHandler().get_attribute("language")
+        self.main_viewer = geometry
+
         with open(filepath, "r") as file:
             lines = file.readlines()
             unit = ""
@@ -101,7 +105,6 @@ class PTWMultimporter:
                     axes = {}
 
         self.plots = []
-
         self.window = tk.Toplevel()
         self.window.wm_attributes("-toolwindow", True)
         self.window.title("PTW tbaScan")
@@ -114,7 +117,7 @@ class PTWMultimporter:
         ]
         self.height = 29 * (len(self.alldata) + 1)
         self.window.geometry(
-            f"120x{self.height}+{self.geometry[0]}+{25+(self.geometry[0]+self.geometry[2])//2-self.height//2}"
+            f"240x{self.height}+{self.geometry[0]}+{25+(self.geometry[0]+self.geometry[2])//2-self.height//2}"
         )
         self.window.iconbitmap(
             str(
@@ -126,8 +129,17 @@ class PTWMultimporter:
         self.frame.pack()
         self.variables = [tk.BooleanVar() for i in range(len(self.alldata))]
         [var.set(False) for var in self.variables]
+        textdict = {
+            "X": f"{self.text.dp[self.lang]}" + " X",
+            "Y": f"{self.text.dp[self.lang]}" + " Y",
+            "Z": f"{self.text.pdd[self.lang]}",
+        }
         self.buttons = [
-            ttk.Checkbutton(self.frame, variable=self.variables[i], text=f"Scan {i+1}",)
+            ttk.Checkbutton(
+                self.frame,
+                variable=self.variables[i],
+                text=f"Scan {i+1}: {textdict[PTWMeasurement(self.alldata[i], i+1).direction]}",
+            )
             for i in range(len(self.alldata))
         ]
         [button.grid() for button in self.buttons]
@@ -137,6 +149,12 @@ class PTWMultimporter:
             command=self.submit,
         )
         self.submitbutton.grid()
+        self.window.protocol("WM_DELETE_WINDOW", self.close)
+
+    def close(self):
+        self.plots = []
+        self.main_viewer.filenames.pop(-1)
+        self.window.destroy()
 
     def submit(self, event=None):
 
@@ -145,6 +163,7 @@ class PTWMultimporter:
         for index, dataset in enumerate(self.alldata):
             if self.variables[index].get() == True:
                 self.plots += [PTWMeasurement(dataset, index + 1)]
+
                 if len(self.variables) == 5:
                     break
 
