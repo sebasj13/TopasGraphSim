@@ -23,6 +23,7 @@ class DoseFigureHandler:
         self.parent = parent
 
         self.norm = self.parent.norm.get()
+        self.calcparams = self.parent.calcparams.get()
         self.normvalue = "max"
         self.errorbars = True
         self.caxcorrection = False
@@ -136,7 +137,6 @@ class DoseFigureHandler:
                         [x / plotdata.normpoint for x in plotdata.std_dev[self.half]]
                     ),
                 ]
-                + plotdata.params
             ]
 
         if self.plots[0].direction == "Z":
@@ -225,7 +225,13 @@ class DoseFigureHandler:
 
         """Adds the calculated parameters as descriptors
         """
+        temp = self.data
+        new_data = []
+        for index, data in enumerate(self.data):
+            params = self.plots[index].params()
+            new_data += [[data, params]]
 
+        self.data = new_data
         if self.plots[0].direction != "Z":
 
             if self.half == False:
@@ -249,8 +255,9 @@ class DoseFigureHandler:
 
         for index, plot_data in enumerate(self.data):
 
-            if len(plot_data) == 7:
-                Q, dQ, zmax = plot_data[4], plot_data[5], plot_data[6]
+            if len(plot_data[1]) == 3:
+
+                Q, dQ, zmax = plot_data[1][0], plot_data[1][1], plot_data[1][2]
                 textstr = "Q     = {} ± {}\n{} = {} mm".format(Q, dQ, "$z_{max}$", zmax)
                 space = 0
                 if dQ == 0:
@@ -269,6 +276,7 @@ class DoseFigureHandler:
                     bbox=self.props,
                     color=self.colors[index],
                 )
+
             else:
                 (
                     HWB,
@@ -281,15 +289,15 @@ class DoseFigureHandler:
                     Lintegral,
                     Rintegral,
                 ) = (
-                    plot_data[4],
-                    plot_data[5],
-                    plot_data[6],
-                    plot_data[7],
-                    plot_data[8],
-                    plot_data[9],
-                    plot_data[10],
-                    plot_data[11],
-                    plot_data[12],
+                    plot_data[1][0],
+                    plot_data[1][1],
+                    plot_data[1][2],
+                    plot_data[1][3],
+                    plot_data[1][4],
+                    plot_data[1][5],
+                    plot_data[1][6],
+                    plot_data[1][7],
+                    plot_data[1][8],
                 )
 
                 if self.caxcorrection == True:
@@ -326,7 +334,7 @@ class DoseFigureHandler:
                     horizontalalignment="center",
                     color=self.colors[index],
                 )
-
+        self.data = temp
         return
 
     def set_x_label(self):
@@ -353,8 +361,11 @@ class DoseFigureHandler:
         """
 
         for index, plot_data in enumerate(self.data):
-            if self.caxcorrection == True:
-                plot_data[0] = [x - plot_data[5] for x in plot_data[0]]
+
+            if self.calcparams == True:
+
+                if self.caxcorrection == True:
+                    plot_data[0] = [x - self.plots[index].cax for x in plot_data[0]]
 
             if self.errorbars == True:
                 try:
@@ -522,7 +533,14 @@ class DoseFigureHandler:
         self.set_axis()
         self.set_x_label()
         self.create_plots_from_data()
-        self.add_descriptors()
+        if self.calcparams == True:
+            try:
+                self.add_descriptors()
+            except Exception as e:
+                self.parent.calcparams.set(False)
+                self.calcparams = False
+                sd.messagebox.showwarning("", self.text.calcfail[self.lang])
+
         self.add_legend()
         self.ax.set_aspect("auto")
         self.set_style()

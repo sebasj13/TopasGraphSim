@@ -20,15 +20,6 @@ class PTWMeasurement:
 
         self.std_dev = []
 
-        if self.direction == "Z":
-            self.params = pdd.calculate_parameters(
-                self.axis, self.dose / max(self.dose), self.std_dev
-            )
-        else:
-            self.params = dp.calculate_parameters(
-                self.axis, self.dose / max(self.dose), self.std_dev
-            )
-
         self.axis = self.axis.tolist()
         self.filepath = list[2]
         self.filename = self.filepath.split("/")[-1][:-4] + f" - Scan {index}"
@@ -40,6 +31,20 @@ class PTWMeasurement:
             True: self.std_dev,
             False: self.std_dev,
         }
+
+    def params(self):
+        if self.direction == "Z":
+            return pdd.calculate_parameters(
+                np.array(self.axis[False]),
+                self.dose[False] / max(self.dose[False]),
+                [],
+            )
+        else:
+            params = dp.calculate_parameters(
+                self.axis[False], self.dose[False] / max(self.dose[False])
+            )
+            self.cax = params[1]
+            return params
 
 
 class PTWMultimporter:

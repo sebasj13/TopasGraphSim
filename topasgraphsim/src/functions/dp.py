@@ -3,7 +3,7 @@ import scipy.integrate as integrate
 import scipy.interpolate as interpolate
 
 
-def calculate_parameters(axis, dose, std_dev):
+def calculate_parameters(axis, dose):
 
     """
     A function to calculate the relevant
