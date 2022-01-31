@@ -534,7 +534,13 @@ class DoseFigureHandler:
         self.set_x_label()
         self.create_plots_from_data()
         if self.calcparams == True:
-            self.add_descriptors()
+            try:
+                self.add_descriptors()
+            except Exception as e:
+                self.parent.calcparams.set(False)
+                self.calcparams = False
+                sd.messagebox.showwarning("", self.text.calcfail[self.lang])
+
         self.add_legend()
         self.ax.set_aspect("auto")
         self.set_style()
