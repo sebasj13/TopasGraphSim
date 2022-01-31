@@ -384,7 +384,12 @@ class MainApplication(tk.Frame):
 
         plots = self.DoseFigureHandler.plots
         filenames = self.filenames
+        dark = self.dark.get()
         axlims = self.axlims.get()
+        calcparams = self.calcparams.get()
+        caxcorrection = self.caxcorrection.get()
+        normalize = self.norm.get()
+        errorbars = self.errorbars.get()
         self.pack_forget()
         self.parent.config(menu=None)
         self.profile.set_attribute("language", language)
@@ -392,7 +397,12 @@ class MainApplication(tk.Frame):
         if plots != []:
             self.filenames = filenames
             self.DoseFigureHandler.plots = plots
+            self.dark.set(dark)
             self.axlims.set(axlims)
+            self.calcparams.set(calcparams)
+            self.caxcorrection.set(caxcorrection)
+            self.norm.set(normalize)
+            self.errorbars.set(errorbars)
             self.show_preview()
 
         return
@@ -677,7 +687,9 @@ class MainApplication(tk.Frame):
         Invokes DoseFigureHandler to create and display the graphs with the selected options
         """
         self.DoseFigureHandler.flush()
-        self.photoimage, self.direction = self.DoseFigureHandler.return_figure(self.filenames)
+        self.photoimage, self.direction = self.DoseFigureHandler.return_figure(
+            self.filenames
+        )
 
         self.canvas.place_forget()
         self.canvas = tk.Canvas(self)

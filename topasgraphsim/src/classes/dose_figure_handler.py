@@ -451,7 +451,8 @@ class DoseFigureHandler:
 
             loc = "lower left"
             if self.half == False and self.plots[0].direction != "Z":
-                loc = "lower center"
+                if self.ax.get_xlim()[1] > 30:
+                    loc = "lower center"
 
             self.axins = inset_axes(self.ax, "28%", "28%", loc=loc)
             yvalsat195 = []
