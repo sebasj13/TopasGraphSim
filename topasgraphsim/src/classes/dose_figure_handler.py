@@ -226,13 +226,12 @@ class DoseFigureHandler:
         """Adds the calculated parameters as descriptors
         """
 
-        data = []
+        new_data = []
         for index, data in enumerate(self.data):
-            data += [[data, self.plots[index].params()]]
+            params = self.plots[index].params()
+            new_data += [[data, params]]
 
-        print(data)
-
-        self.data = data
+        self.data = new_data
 
         if self.plots[0].direction != "Z":
 
@@ -257,8 +256,8 @@ class DoseFigureHandler:
 
         for index, plot_data in enumerate(self.data):
 
-            if len(plot_data) == 7:
-                Q, dQ, zmax = plot_data[4], plot_data[5], plot_data[6]
+            if len(plot_data[1]) == 7:
+                Q, dQ, zmax = plot_data[1][0], plot_data[1][1], plot_data[1][2]
                 textstr = "Q     = {} ± {}\n{} = {} mm".format(Q, dQ, "$z_{max}$", zmax)
                 space = 0
                 if dQ == 0:
@@ -289,15 +288,15 @@ class DoseFigureHandler:
                     Lintegral,
                     Rintegral,
                 ) = (
-                    plot_data[4],
-                    plot_data[5],
-                    plot_data[6],
-                    plot_data[7],
-                    plot_data[8],
-                    plot_data[9],
-                    plot_data[10],
-                    plot_data[11],
-                    plot_data[12],
+                    plot_data[1][0],
+                    plot_data[1][1],
+                    plot_data[1][2],
+                    plot_data[1][3],
+                    plot_data[1][4],
+                    plot_data[1][5],
+                    plot_data[1][6],
+                    plot_data[1][7],
+                    plot_data[1][8],
                 )
 
                 if self.caxcorrection == True:
@@ -365,7 +364,7 @@ class DoseFigureHandler:
             if self.calcparams == True:
 
                 if self.caxcorrection == True:
-                    plot_data[0] = [x - plot_data[5] for x in plot_data[0]]
+                    plot_data[0] = [x - self.plots[index].cax for x in plot_data[0]]
 
             if self.errorbars == True:
                 try:

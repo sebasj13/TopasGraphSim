@@ -302,11 +302,6 @@ class MainApplication(tk.Frame):
         self.normmenu.add_checkbutton(
             label=self.text.half[self.lang], command=self.halfgraph, variable=self.half,
         )
-        self.normmenu.add_checkbutton(
-            label=self.text.caxcorrection[self.lang],
-            command=self.correct_caxdev,
-            variable=self.caxcorrection,
-        )
 
         self.normmenu.add_checkbutton(
             label=self.text.calcparams[self.lang],
@@ -314,6 +309,12 @@ class MainApplication(tk.Frame):
             variable=self.calcparams,
         )
 
+        self.normmenu.add_checkbutton(
+            label=self.text.caxcorrection[self.lang],
+            command=self.correct_caxdev,
+            variable=self.caxcorrection,
+        )
+        self.normmenu.entryconfig(8, state=tk.DISABLED)
         self.parent.config(menu=self.menubar)
 
         self.parent.title(self.text.window_title[self.lang])
@@ -534,6 +535,11 @@ class MainApplication(tk.Frame):
         """
 
         self.DoseFigureHandler.calcparams = self.calcparams.get()
+
+        if self.calcparams.get() == True:
+            self.normmenu.entryconfig(8, state=tk.NORMAL)
+        else:
+            self.normmenu.entryconfig(8, state=tk.DISABLED)
 
         if self.filenames != []:
             self.canvas.itemconfig(self.image_on_canvas, image=None)
