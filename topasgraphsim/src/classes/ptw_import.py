@@ -126,8 +126,12 @@ class PTWMultimporter:
         )
         self.window.iconbitmap(
             str(
-                os.path.dirname(os.path.realpath(__file__))
-                + "\\..\\resources\\icon.ico"
+                os.path.join(
+                    os.path.dirname(os.path.realpath(__file__)),
+                    "..",
+                    "resources",
+                    "icon.ico",
+                )
             )
         )
         self.frame = tk.Frame(self.window)

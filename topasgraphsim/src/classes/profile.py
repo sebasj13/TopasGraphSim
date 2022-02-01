@@ -6,8 +6,12 @@ class ProfileHandler:
     def __init__(self):
 
         self.profile_path = str(
-            os.path.dirname(os.path.realpath(__file__))
-            + "\\..\\resources\\profile.json"
+            os.path.join(
+                os.path.dirname(os.path.realpath(__file__)),
+                "..",
+                "resources",
+                "profile.json",
+            )
         )
         self.profile = self.read_data()
 

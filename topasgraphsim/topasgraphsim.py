@@ -29,8 +29,12 @@ def topasgraphsim():
     root.tk.call(
         "source",
         str(
-            os.path.dirname(os.path.realpath(__file__))
-            + "\\src\\Azure-ttk-theme\\azure.tcl"
+            os.path.join(
+                os.path.dirname(os.path.realpath(__file__)),
+                "src",
+                "Azure-ttk-theme",
+                "azure.tcl",
+            )
         ),
     )
     MainApplication(root)
@@ -38,8 +42,12 @@ def topasgraphsim():
         50,
         root.iconbitmap(
             str(
-                os.path.dirname(os.path.realpath(__file__))
-                + "\\src\\resources\\icon.ico"
+                os.path.join(
+                    os.path.dirname(os.path.realpath(__file__)),
+                    "src",
+                    "resources",
+                    "icon.ico",
+                )
             )
         ),
     )
