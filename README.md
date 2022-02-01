@@ -71,13 +71,19 @@ This GUI can visualize and analyze percentage depth dose (pdd) and dose profiles
 Install using pip:
 
 ```console
-pip install topasgraphsim     
+$ pip install topasgraphsim     
 ```
      
 Then, start the GUI by running:
      
 ```console
-python -m topasgraphsim
+$ python -m topasgraphsim
+```
+
+Or, if your Python is added to $PATH, simply run:
+
+```console
+$ topasgraphsim
 ```
 
 ## Parameters
