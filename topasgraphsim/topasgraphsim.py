@@ -39,18 +39,15 @@ def topasgraphsim():
     )
     MainApplication(root)
 
-    icon = "@icon.xbm"
+    icon = ("@resources", "icon.xbm")
     if "nt" == os.name:
-        icon = "icon.ico"
+        icon = ("resources", "icon.ico")
     root.after(
         50,
         root.wm_iconbitmap(
             bitmap=str(
                 os.path.join(
-                    os.path.dirname(os.path.realpath(__file__)),
-                    "src",
-                    "resources",
-                    f"{icon}",
+                    os.path.dirname(os.path.realpath(__file__)), "src", icon[0], icon[1]
                 )
             )
         ),
