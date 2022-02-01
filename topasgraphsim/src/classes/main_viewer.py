@@ -2,6 +2,7 @@ import os
 import tkinter as tk
 from tkinter import filedialog as fd
 from tkinter import simpledialog as sd
+from tkinter.colorchooser import askcolor
 
 import win32api
 from PIL import Image, ImageTk

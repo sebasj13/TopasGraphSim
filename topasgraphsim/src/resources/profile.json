@@ -7,6 +7,13 @@
     "zoom": 1,
     "fullscreen": false,
     "halfview": false,
+    "default_colors": [
+        "#009F6B",
+        "#C40233",
+        "#00008B",
+        "#BCA136",
+        "#654321"
+    ],
     "colors": [
         "#009F6B",
         "#C40233",
