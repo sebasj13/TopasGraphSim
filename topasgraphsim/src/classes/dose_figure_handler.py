@@ -1,4 +1,3 @@
-import tkinter as tk
 import tkinter.simpledialog as sd
 
 import cv2
@@ -36,7 +35,7 @@ class DoseFigureHandler:
         self.lang = self.parent.lang
         self.text = Text()
         self.style = plt.style.use("default")
-        self.colors = ["#009F6B", "#C40233", "#00008B", "#BCA136", "#654321"]
+        self.colors = self.parent.profile.get_attribute("colors")
         self.marker = "o--"
         self.markersize = self.parent.profile.get_attribute("markersize")
         self.linewidth = self.parent.profile.get_attribute("linewidth")

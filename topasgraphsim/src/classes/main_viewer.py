@@ -2,7 +2,7 @@ import os
 import tkinter as tk
 from tkinter import filedialog as fd
 from tkinter import simpledialog as sd
-from tkinter.font import NORMAL
+from tkinter.colorchooser import askcolor
 
 from PIL import Image, ImageTk
 
@@ -257,6 +257,10 @@ class MainApplication(tk.Frame):
             label=Text().marker[self.lang], menu=self.markersizemenu
         )
 
+        self.normmenu.add_command(
+            label=self.text.resetcolors[self.lang], command=self.reset_colors
+        )
+
         self.normmenu.add_separator()
 
         self.normalizemenu = tk.Menu(self.menubar, tearoff=False)
@@ -316,7 +320,7 @@ class MainApplication(tk.Frame):
             variable=self.caxcorrection,
         )
 
-        self.normmenu.entryconfig(9, state=tk.DISABLED)
+        self.normmenu.entryconfig(10, state=tk.DISABLED)
         self.parent.config(menu=self.menubar)
 
         self.parent.title(self.text.window_title[self.lang])
@@ -551,9 +555,9 @@ class MainApplication(tk.Frame):
 
         if self.calcparams.get() == True:
             if self.direction != "Z":
-                self.normmenu.entryconfig(9, state=tk.NORMAL)
+                self.normmenu.entryconfig(10, state=tk.NORMAL)
         else:
-            self.normmenu.entryconfig(9, state=tk.DISABLED)
+            self.normmenu.entryconfig(10, state=tk.DISABLED)
             self.caxcorrection.set(False)
 
         if self.filenames != []:
@@ -681,6 +685,13 @@ class MainApplication(tk.Frame):
             self.show_preview()
         return
 
+    def reset_colors(self):
+        self.profile.set_attribute(
+            "colors", self.profile.get_attribute("default_colors")
+        )
+        self.DoseFigureHandler.colors = self.profile.get_attribute("default_colors")
+        self.show_preview()
+
     def show_preview(self):
 
         """
@@ -695,6 +706,7 @@ class MainApplication(tk.Frame):
         self.canvas = tk.Canvas(self)
         self.canvas.bind("<Configure>", self.handle_configure)
         self.canvas.bind("<Button-1>", self.check_click)
+        self.canvas.bind("<Button-3>", self.check_right_click)
         self.canvas.bind("<Motion>", self.check_hand)
         self.canvas.bind("<Double-Button-1>", self.new_zoom)
         self.canvas.place(relheight=1, relwidth=1, relx=0.5, rely=0.5, anchor=tk.CENTER)
@@ -707,10 +719,10 @@ class MainApplication(tk.Frame):
             self.addmenu.entryconfig(1, state=tk.DISABLED)
         if self.direction == "Z":
             self.addmeasuremenu.entryconfig(1, state=tk.DISABLED)
-            self.normmenu.entryconfig(6, state=tk.DISABLED)
+            self.normmenu.entryconfig(7, state=tk.DISABLED)
         else:
             self.addmeasuremenu.entryconfig(0, state=tk.DISABLED)
-            self.normmenu.entryconfig(6, state=tk.NORMAL)
+            self.normmenu.entryconfig(7, state=tk.NORMAL)
             self.canvas.place_forget()
             self.canvas.place(
                 relheight=1, relwidth=1, relx=0.55556, rely=0.5, anchor=tk.CENTER
@@ -892,3 +904,27 @@ class MainApplication(tk.Frame):
                     if newname != None:
                         self.DoseFigureHandler.plots[index].filename = newname
                         self.show_preview()
+
+    def check_right_click(self, e):
+
+        """Reassigns a color to a plot when the associated box is right-clicked
+        """
+
+        for index, box in enumerate(self.rename_boxes):
+            if e != None:
+                bbox = self.canvas.bbox(box)
+                if bbox != None:
+                    if (
+                        bbox[0] < e.x
+                        and bbox[2] > e.x
+                        and bbox[1] < e.y
+                        and bbox[3] > e.y
+                    ):
+                        newcolor = askcolor(color=self.DoseFigureHandler.colors[index])
+                        if newcolor != None:
+                            self.DoseFigureHandler.colors[index] = newcolor[1]
+                            self.profile.set_attribute(
+                                "colors", self.DoseFigureHandler.colors
+                            )
+                            self.show_preview()
+
