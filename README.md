@@ -3,9 +3,6 @@
 ## Am interface to automatically plot and interpret the results of TOPAS simulations
 
 This GUI can visualize and analyze percentage depth dose (pdd) and dose profiles (dp) simulations from [TOPAS](http://www.topasmc.org/). Depth dose measurements are assumed to be in the z-direction, dose profiles in the x- or y-directions. Data read-in is handled by [topas2numpy](https://github.com/davidchall/topas2numpy).
-![dpp](https://user-images.githubusercontent.com/87897942/151981360-cf68656e-0e84-4f78-ad66-6d5c6dc93f36.png)
-
-![dp](https://user-images.githubusercontent.com/87897942/151981372-086df228-f8be-4b7c-9bae-58ce54321633.png)
 
 ## Features
 
@@ -25,6 +22,12 @@ This GUI can visualize and analyze percentage depth dose (pdd) and dose profiles
  - Easy to use keyboard shortcuts (see manual below)
  - German and english language support
  - Dark mode
+
+ ## Screenshots
+
+ ![dpp](https://user-images.githubusercontent.com/87897942/151981360-cf68656e-0e84-4f78-ad66-6d5c6dc93f36.png)
+
+![dp](https://user-images.githubusercontent.com/87897942/151981372-086df228-f8be-4b7c-9bae-58ce54321633.png)
 
  ## Manual
 
@@ -96,7 +99,7 @@ Depending on the imported measurement, the following parameters can be calculate
 - FLAT<sub>stddev</sub> : Flatness of Dose Plateau (Standard Deviation)
 - Penumbra (L&R) : Width of Left and Right Penumbra
 - Integral (L&R) : Integral below Left and Right Penumbra
-     
+
 ## Dependencies
 
 Built using the beautiful Azure-ttk theme by [@rdbende](https://github.com/rdbende).
