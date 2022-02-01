@@ -4,7 +4,7 @@ from tkinter import filedialog as fd
 from tkinter import simpledialog as sd
 from tkinter.colorchooser import askcolor
 
-import win32api
+import pynput
 from PIL import Image, ImageTk
 
 from ..resources.language import Text
@@ -845,7 +845,8 @@ class MainApplication(tk.Frame):
             x = self.parent.winfo_pointerx()
             y = int(self.parent.winfo_pointery())
             y += dy * factor
-            win32api.SetCursorPos((x, int(y)))
+            pynput.mouse.Controller().position = (x, y)
+            # win32api.SetCursorPos((x, int(y)))
             self.index = new_index
             self.show_preview()
             self.canvas.config(cursor="hand1")

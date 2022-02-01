@@ -8,7 +8,6 @@ from matplotlib.figure import Figure
 from matplotlib.ticker import AutoMinorLocator
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes, mark_inset
 from PIL import Image, ImageTk
-from win32api import GetSystemMetrics
 
 from ..resources.language import Text
 from .measurement_import import Measurement
@@ -180,8 +179,7 @@ class DoseFigureHandler:
         """Scales an image to the width of the screen.
         """
 
-        scr_width = GetSystemMetrics(0)
-        width = int(scr_width)
+        width = self.parent.parent.winfo_screenwidth()
         scale_factor = image.shape[1] / width
         image = cv2.resize(
             image,
