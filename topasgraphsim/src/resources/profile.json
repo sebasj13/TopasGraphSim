@@ -1,8 +1,8 @@
 {
     "color_scheme": "light",
     "language": "de",
-    "markersize": 1.5999999999999994,
-    "linewidth": 1.7999999999999998,
+    "markersize": 0.19999999999999962,
+    "linewidth": 0.6000000000000001,
     "normalize": 1,
     "zoom": 1,
     "fullscreen": false,
@@ -15,10 +15,10 @@
         "#654321"
     ],
     "colors": [
-        "#d7756a",
         "#C40233",
-        "#00008B",
         "#BCA136",
-        "#654321"
+        "#654321",
+        "#521d83",
+        "#00008B"
     ]
 }

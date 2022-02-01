@@ -742,6 +742,9 @@ class MainApplication(tk.Frame):
         self.canvas.itemconfig(self.image_on_canvas, image=self.canvas.image)
 
         for i in range(len(self.DoseFigureHandler.plots)):
+            normdiff = 0
+            if self.norm.get() == True:
+                normdiff = 0.035
             factor = (self.canvas.image.width() / self.canvas.image.height()) / 2
             temp = self.canvas.create_rectangle(
                 (
@@ -755,9 +758,9 @@ class MainApplication(tk.Frame):
                     + 0.94633
                 )
                 * self.canvas.image.width(),
-                (0.023 + 0.042 * i) * self.canvas.image.height() * factor,
+                (0.023 + normdiff + 0.042 * i) * self.canvas.image.height() * factor,
                 0.988 * self.canvas.image.width(),
-                (0.065 + 0.042 * i) * self.canvas.image.height() * factor,
+                (0.065 + normdiff + 0.042 * i) * self.canvas.image.height() * factor,
                 fill="",
                 outline="",
             )
@@ -885,6 +888,9 @@ class MainApplication(tk.Frame):
             x = self.canvas.image.width()
             y = self.canvas.image.height()
             self.canvas.delete(temp[i])
+            normdiff = 0
+            if self.norm.get() == False:
+                normdiff = 0.035
             factor = (self.canvas.image.width() / self.canvas.image.height()) / 2
             self.rename_boxes += [
                 self.canvas.create_rectangle(
@@ -902,9 +908,9 @@ class MainApplication(tk.Frame):
                         + 0.94633
                     )
                     * x,
-                    (0.023 + 0.042 * i) * y * factor,
+                    (0.023 + normdiff + 0.042 * i) * y * factor,
                     0.988 * x,
-                    (0.065 + 0.042 * i) * y * factor,
+                    (0.065 + normdiff + 0.042 * i) * y * factor,
                     fill="",
                     outline="",
                     tags="rename",
