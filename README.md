@@ -16,6 +16,7 @@ This GUI can visualize and analyze percentage depth dose (pdd) and dose profiles
      * Line width
      * Zoom-in window
      * Half view of dose profiles
+ - Center axis deviation correction
  - Import of EGS simulation results
  - Import of custom measurements (as numpy .txt files)
  - Import of PTW tbaScan (MEPHYSTO mc<sup>2</sup>) measurements
