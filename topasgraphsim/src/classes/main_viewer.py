@@ -846,7 +846,6 @@ class MainApplication(tk.Frame):
             y = int(self.parent.winfo_pointery())
             y += dy * factor
             pynput.mouse.Controller().position = (x, y)
-            # win32api.SetCursorPos((x, int(y)))
             self.index = new_index
             self.show_preview()
             self.canvas.config(cursor="hand1")
