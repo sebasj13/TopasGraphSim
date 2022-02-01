@@ -147,13 +147,13 @@ class PTWMultimporter:
             )
             for i in range(len(self.alldata))
         ]
-        [button.grid() for button in self.buttons]
+        [button.grid(sticky="W") for button in self.buttons]
         self.submitbutton = ttk.Button(
             self.frame,
             text=Text().submit[ProfileHandler().get_attribute("language")],
             command=self.submit,
         )
-        self.submitbutton.grid()
+        self.submitbutton.grid(sticky="S")
         self.window.protocol("WM_DELETE_WINDOW", self.close)
 
     def close(self):
