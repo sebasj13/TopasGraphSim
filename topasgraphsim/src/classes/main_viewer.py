@@ -429,7 +429,7 @@ class MainApplication(tk.Frame):
             initialdir=os.getcwd(), filetypes=filetypes
         )
 
-        if self.current_file == "":
+        if self.current_file == "" or self.current_file == ():
             return
 
         for file in self.current_file:
