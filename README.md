@@ -8,15 +8,58 @@ This GUI can visualize and analyze percentage depth dose (pdd) and dose profiles
 
 ## Features
 
+ - Reproducible graphing and analysis of TOPAS simulation for medical physics
  - Simultaneous plotting and parameter calculation for up to 5 datasets
- - Graph adjustment options (marker size and line width)
- - Reproducible graphing of simulation results
- - Import of measurement results (including PTW tbaScan data)
- - Optional zoom-in window
- - Easy to use keyboard shortcuts
- - Toggle for data normalization
+ - Graph adjustment options
+     * Normalization (On/Off)
+     * Error bars (On/Off)
+     * Graph order and colors
+     * Marker size
+     * Line width
+     * Zoom-in window
+     * Half view of dose profiles
+ - Import of EGS simulation results
+ - Import of custom measurements (as numpy .txt files)
+ - Import of PTW tbaScan (MEPHYSTO mc<sup>2</sup>) measurements
+ - Easy to use keyboard shortcuts (see manual below)
  - German and english language support
  - Dark mode
+
+ ## Manual
+
+ Most customization options are available via the menubar, however the workflow can be sped up greatly by using the included keyboard and mouse shortcuts documented below.
+
+ ### Loading and saving data
+
+|Keyboard Shortcut| Associated Function |
+|---|---|
+| <kbd>Ctrl</kbd> + <kbd>O</kbd> | Open a TOPAS simulation file [*.csv *.bin] |
+| <kbd>Ctrl</kbd> + <kbd>P</kbd> | Open a PTW tbaScan file [*.mcc]            |
+| <kbd>Ctrl</kbd> + <kbd>T</kbd> | Open a PDD measurement file [*.txt]        |
+| <kbd>Ctrl</kbd> + <kbd>D</kbd> | Open a DP measurement file [*.txt]         |
+| <kbd>Ctrl</kbd> + <kbd>S</kbd> | Save the current graph [*.png *.jpg]       |
+| <kbd>Ctrl</kbd> + <kbd>Z</kbd> | Remove the last imported dataset           |
+| <kbd>Escape</kbd>              | Close the current project           |
+
+### Adjusting the Graph Style
+
+|Mouse/Keyboard Shortcut| Associated Function |
+|---|---|
+| <kbd>Ctrl</kbd> + <kbd>↑</kbd> <kbd>↓</kbd> | Increase/decrease the marker size|
+| <kbd>Ctrl</kbd> + <kbd>←</kbd> <kbd>→</kbd> | Increase/decrease the line width |
+| <kbd>Scrollwheel</kbd>                      | Increase/decrease the X-axis limits |
+| <kbd>Double Left Click</kbd> on <kbd>Graph</kbd>| Change zoom window location |
+
+
+
+### Adjusting the Graph Legend
+
+|Mouse/Keyboard Shortcut| Associated Function |
+|---|---|
+| <kbd>Hover</kbd> over <kbd>Graph Name</kbd> + <kbd>↑</kbd> <kbd>↓</kbd>  | Change the graph order |
+| <kbd>Left Click</kbd> on <kbd>Graph Name</kbd> | Rename the selected graph          |
+| <kbd>Right Click</kbd> on <kbd>Graph Name</kbd>| Change color of the selected graph |
+
 
 ## Installation
 
@@ -31,8 +74,10 @@ Then, start the GUI by running:
 ```console
 python -m topasgraphsim
 ```
-     
-## Calculated parameters
+
+## Parameters
+
+Depending on the imported measurement, the following parameters can be calculated:
 
 | Measurement type | Parameters |                   |                        |                       |                |                |
 | ---------------- | :--------: | :---------------: | :--------------------: | :-------------------: | :------------: | :------------: |
@@ -54,4 +99,10 @@ python -m topasgraphsim
 ## Dependencies
 
 Built using the beautiful Azure-ttk theme by [@rdbende](https://github.com/rdbende).
-Requires python3, numpy, scipy, matplotlib, Pillow, python-opencv, pywin32, topas2numpy and tkinter.
+Requires python3, numpy, scipy, matplotlib, Pillow, python-opencv, pynput, topas2numpy and tkinter.
+
+<b>Note:</b> Linux users need to have python3-tk installed. If it isnt installed yet, use:
+
+```console
+sudo apt-get install python3-tk
+```
