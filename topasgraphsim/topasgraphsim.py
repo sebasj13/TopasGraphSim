@@ -10,6 +10,7 @@ Created on Thu Dec 16 12:47:50 2021
 import os
 import tkinter as tk
 import tkinter.ttk as ttk
+from tkinter import PhotoImage
 
 from src.classes.main_viewer import MainApplication
 
@@ -39,17 +40,18 @@ def topasgraphsim():
     )
     MainApplication(root)
 
-    icon = ("@resources", "icon.xbm")
-    if "nt" == os.name:
-        icon = ("resources", "icon.ico")
     root.after(
         50,
-        root.wm_iconbitmap(
-            bitmap=str(
-                os.path.join(
-                    os.path.dirname(os.path.realpath(__file__)), "src", icon[0], icon[1]
+        root.iconphoto(
+            True,
+            PhotoImage(
+                file=os.path.join(
+                    os.path.dirname(os.path.realpath(__file__)),
+                    "src",
+                    "resources",
+                    "icon.png",
                 )
-            )
+            ),
         ),
     )
     root.mainloop()
