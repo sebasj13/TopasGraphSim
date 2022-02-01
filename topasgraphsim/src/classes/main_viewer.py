@@ -2,8 +2,8 @@ import os
 import tkinter as tk
 from tkinter import filedialog as fd
 from tkinter import simpledialog as sd
-from tkinter.font import NORMAL
 
+import win32api
 from PIL import Image, ImageTk
 
 from ..resources.language import Text
@@ -697,6 +697,8 @@ class MainApplication(tk.Frame):
         self.canvas.bind("<Button-1>", self.check_click)
         self.canvas.bind("<Motion>", self.check_hand)
         self.canvas.bind("<Double-Button-1>", self.new_zoom)
+        self.parent.bind("<Up>", lambda boolean: self.change_order(True))
+        self.parent.bind("<Down>", lambda boolean: self.change_order(False))
         self.canvas.place(relheight=1, relwidth=1, relx=0.5, rely=0.5, anchor=tk.CENTER)
 
         if len(self.DoseFigureHandler.plots) >= 2:
@@ -771,6 +773,67 @@ class MainApplication(tk.Frame):
             delta_y = event.y - self.canvas.coords(self.oval)[1] + 5
             self.canvas.move(self.oval, delta_x, delta_y)
             self.show_preview()
+
+    def change_order(self, boolean):
+
+        if self.index != None:
+
+            x = self.parent.winfo_pointerx()
+            y = self.parent.winfo_pointery()
+
+            if boolean == True:
+
+                new_index = self.index - 1
+                dy = -0.044
+
+                if self.index == 0:
+                    new_index = len(self.rename_boxes) - 1
+                    dy = 0.044 * (len(self.rename_boxes) - 1)
+
+            else:
+                if self.index + 1 == len(self.rename_boxes):
+                    new_index = 0
+                    dy = -0.044 * (len(self.rename_boxes) - 1)
+
+                else:
+                    new_index = self.index + 1
+                    dy = 0.044
+            (
+                self.DoseFigureHandler.plots[self.index],
+                self.DoseFigureHandler.plots[new_index],
+            ) = (
+                self.DoseFigureHandler.plots[new_index],
+                self.DoseFigureHandler.plots[self.index],
+            )
+            (
+                self.DoseFigureHandler.colors[self.index],
+                self.DoseFigureHandler.colors[new_index],
+            ) = (
+                self.DoseFigureHandler.colors[new_index],
+                self.DoseFigureHandler.colors[self.index],
+            )
+            self.profile.set_attribute("colors", self.DoseFigureHandler.colors)
+
+            try:
+                (self.filenames[self.index], self.filenames[new_index],) = (
+                    self.filenames[new_index],
+                    self.filenames[self.index],
+                )
+            except IndexError:
+                pass
+
+            factor = (
+                1000 * self.parent.winfo_height() / self.parent.winfo_screenheight()
+            )
+
+            x = self.parent.winfo_pointerx()
+            y = int(self.parent.winfo_pointery())
+            y += dy * factor
+            win32api.SetCursorPos((x, int(y)))
+            self.index = new_index
+            self.show_preview()
+            self.canvas.config(cursor="hand1")
+            return
 
     def handle_configure(self, event):
 
@@ -874,6 +937,11 @@ class MainApplication(tk.Frame):
                 self.canvas.config(cursor="hand1")
             else:
                 self.canvas.config(cursor="")
+
+            try:
+                self.index = hoverlist.index(True)
+            except Exception as e:
+                self.index = None
 
     def check_click(self, e):
 
