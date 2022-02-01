@@ -3,8 +3,9 @@
 ## Am interface to automatically plot and interpret the results of TOPAS simulations
 
 This GUI can visualize and analyze percentage depth dose (pdd) and dose profiles (dp) simulations from [TOPAS](http://www.topasmc.org/). Depth dose measurements are assumed to be in the z-direction, dose profiles in the x- or y-directions. Data read-in is handled by [topas2numpy](https://github.com/davidchall/topas2numpy).
-<br></br>          
-![Screenshot 2022-01-24 170455](https://user-images.githubusercontent.com/87897942/150819409-8b761000-df95-442f-a8fd-f599b2981918.png)
+![dpp](https://user-images.githubusercontent.com/87897942/151981360-cf68656e-0e84-4f78-ad66-6d5c6dc93f36.png)
+
+![dp](https://user-images.githubusercontent.com/87897942/151981372-086df228-f8be-4b7c-9bae-58ce54321633.png)
 
 ## Features
 
