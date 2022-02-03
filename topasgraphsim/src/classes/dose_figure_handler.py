@@ -9,6 +9,7 @@ from matplotlib.ticker import AutoMinorLocator
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes, mark_inset
 from PIL import Image, ImageTk
 
+from ..functions import dp
 from ..resources.language import Text
 from .measurement_import import Measurement
 from .ptw_import import PTWMultimporter
@@ -178,7 +179,11 @@ class DoseFigureHandler:
                 if self.calcparams == True:
 
                     if self.caxcorrection == True:
-                        plot_data[0] = [x + self.plots[index].cax for x in plot_data[0]]
+                        plot_data[0] = [
+                            x
+                            + dp.calculate_parameters(plot_data[0], plot_data[2], True)
+                            for x in plot_data[0]
+                        ]
 
                 data += [[plot_data[0], plot_data[2]]]
 

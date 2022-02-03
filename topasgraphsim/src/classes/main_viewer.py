@@ -326,7 +326,6 @@ class MainApplication(tk.Frame):
             variable=self.caxcorrection,
         )
 
-        self.normmenu.entryconfig(10, state=tk.DISABLED)
         self.normmenu.add_checkbutton(
             label=self.text.differenceplot[self.lang],
             command=self.differenceplot,
@@ -587,13 +586,6 @@ class MainApplication(tk.Frame):
 
         self.DoseFigureHandler.calcparams = self.calcparams.get()
 
-        if self.calcparams.get() == True:
-            if self.direction != "Z":
-                self.normmenu.entryconfig(10, state=tk.NORMAL)
-        else:
-            self.normmenu.entryconfig(10, state=tk.DISABLED)
-            self.caxcorrection.set(False)
-
         self.refresh()
 
         return
@@ -773,9 +765,11 @@ class MainApplication(tk.Frame):
         if self.direction == "Z":
             self.addmeasuremenu.entryconfig(1, state=tk.DISABLED)
             self.normmenu.entryconfig(7, state=tk.DISABLED)
+            self.normmenu.entryconfig(10, state=tk.DISABLED)
         else:
             self.addmeasuremenu.entryconfig(0, state=tk.DISABLED)
             self.normmenu.entryconfig(7, state=tk.NORMAL)
+            self.normmenu.entryconfig(10, state=tk.NORMAL)
             self.canvas.place_forget()
             self.canvas.place(
                 relheight=1, relwidth=1, relx=0.55556, rely=0.5, anchor=tk.CENTER
