@@ -138,7 +138,7 @@ class DoseFigureHandler:
 
             self.data += [
                 [
-                    np.array([x + caxdev for x in plotdata.axis[self.half]]),
+                    np.array([x + caxdev for x in plotdata.axis[self.half]]).tolist(),
                     plotdata.direction,
                     plotdata.dose[self.half] / plotdata.normpoint,
                     np.array(
