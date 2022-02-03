@@ -325,14 +325,14 @@ class MainApplication(tk.Frame):
             command=self.correct_caxdev,
             variable=self.caxcorrection,
         )
-
+        self.normmenu.add_separator()
         self.normmenu.add_checkbutton(
             label=self.text.differenceplot[self.lang],
             command=self.differenceplot,
             variable=self.diffplot,
         )
 
-        self.normmenu.entryconfig(11, state=tk.DISABLED)
+        self.normmenu.entryconfig(12, state=tk.DISABLED)
 
         self.errlimmenu = tk.Menu(self.menubar, tearoff=False)
         self.errlimmenu.add_command(
@@ -350,7 +350,7 @@ class MainApplication(tk.Frame):
         self.normmenu.add_cascade(
             label=Text().errlimmenu[self.lang], menu=self.errlimmenu
         )
-        self.normmenu.entryconfig(12, state=tk.DISABLED)
+        self.normmenu.entryconfig(13, state=tk.DISABLED)
         self.parent.config(menu=self.menubar)
 
         self.parent.title(self.text.window_title[self.lang])
@@ -475,7 +475,7 @@ class MainApplication(tk.Frame):
         self.filemenu.entryconfig(3, state=tk.NORMAL)
         self.filemenu.entryconfig(4, state=tk.NORMAL)
         if len(self.filenames) > 2:
-            self.normmenu.entryconfig(11, state=tk.DISABLED)
+            self.normmenu.entryconfig(12, state=tk.DISABLED)
         self.saved = False
 
         return
@@ -494,8 +494,8 @@ class MainApplication(tk.Frame):
         self.addmenu.entryconfig(1, state=tk.NORMAL)
         self.addmeasuremenu.entryconfig(0, state=tk.NORMAL)
         self.addmeasuremenu.entryconfig(1, state=tk.NORMAL)
-        self.normmenu.entryconfig(11, state=tk.DISABLED)
         self.normmenu.entryconfig(12, state=tk.DISABLED)
+        self.normmenu.entryconfig(13, state=tk.DISABLED)
         self.menubar.delete(3, 4)
         self.filenames = []
         self.canvas.itemconfig(self.image_on_canvas, image=None)
@@ -603,7 +603,7 @@ class MainApplication(tk.Frame):
         if len(self.filenames) == 2:
             self.diffplot.set(False)
             self.DoseFigureHandler.diffplot = False
-            self.normmenu.entryconfig(11, state=tk.DISABLED)
+            self.normmenu.entryconfig(12, state=tk.DISABLED)
 
         if self.filenames[-1][0].endswith(".mcc") == True:
             self.filenames.pop(-1)
@@ -644,9 +644,9 @@ class MainApplication(tk.Frame):
 
         self.DoseFigureHandler.diffplot = self.diffplot.get()
         if self.diffplot.get() == True:
-            self.normmenu.entryconfig(12, state=tk.NORMAL)
+            self.normmenu.entryconfig(13, state=tk.NORMAL)
         else:
-            self.normmenu.entryconfig(12, state=tk.DISABLED)
+            self.normmenu.entryconfig(13, state=tk.DISABLED)
 
         self.refresh()
 
@@ -750,14 +750,32 @@ class MainApplication(tk.Frame):
         self.canvas.bind("<Double-Button-1>", self.new_zoom)
         self.parent.bind("<Up>", lambda boolean: self.change_order(True))
         self.parent.bind("<Down>", lambda boolean: self.change_order(False))
-        self.canvas.place(relheight=1, relwidth=1, relx=0.5, rely=0.5, anchor=tk.CENTER)
+
+        if self.direction == "Z":
+            if self.diffplot.get() == False:
+                self.canvas.place(
+                    relheight=1, relwidth=1, relx=0.5, rely=0.5, anchor=tk.CENTER
+                )
+            else:
+                self.canvas.place(
+                    relheight=1, relwidth=1, relx=0.59, rely=0.5, anchor=tk.CENTER
+                )
+        else:
+            if self.diffplot.get() == False:
+                self.canvas.place(
+                    relheight=1, relwidth=1, relx=0.55556, rely=0.5, anchor=tk.CENTER
+                )
+            else:
+                self.canvas.place(
+                    relheight=1, relwidth=1, relx=0.65, rely=0.5, anchor=tk.CENTER
+                )
 
         if len(self.DoseFigureHandler.plots) >= 2:
             self.addmenu.entryconfig(3, state=tk.NORMAL)
-            self.normmenu.entryconfig(11, state=tk.DISABLED)
+            self.normmenu.entryconfig(12, state=tk.DISABLED)
 
         if len(self.DoseFigureHandler.plots) == 2:
-            self.normmenu.entryconfig(11, state=tk.NORMAL)
+            self.normmenu.entryconfig(12, state=tk.NORMAL)
 
         if len(self.DoseFigureHandler.plots) == 5:
             self.addmenu.entryconfig(0, state=tk.DISABLED)
@@ -770,10 +788,7 @@ class MainApplication(tk.Frame):
             self.addmeasuremenu.entryconfig(0, state=tk.DISABLED)
             self.normmenu.entryconfig(7, state=tk.NORMAL)
             self.normmenu.entryconfig(10, state=tk.NORMAL)
-            self.canvas.place_forget()
-            self.canvas.place(
-                relheight=1, relwidth=1, relx=0.55556, rely=0.5, anchor=tk.CENTER
-            )
+
         if self.menuflag == False:
             self.menubar.add_cascade(label=self.text.add[self.lang], menu=self.addmenu)
             self.menubar.add_cascade(label="Graph", menu=self.normmenu)

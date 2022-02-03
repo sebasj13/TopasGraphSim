@@ -145,11 +145,13 @@ class DoseFigureHandler:
     def difference_plot(self):
 
         if self.plots[0].direction == "Z":
-            self.figsize = (10, 5)
+            self.figsize = [10, 5]
         else:
-            self.figsize = (10, 6)
+            self.figsize = [10, 6]
 
         if self.diffplot == True:
+
+            self.figsize[1] *= 1.33333
 
             gs_kw = dict(height_ratios=[3, 1])
             self.fig, axd = plt.subplot_mosaic(
@@ -162,7 +164,6 @@ class DoseFigureHandler:
             )
             self.ax = axd["top"]
             self.diffax = axd["bottom"]
-            self.diffax.set_ylabel("%")
 
         else:
             self.fig = Figure(self.figsize, constrained_layout=True, dpi=600)
@@ -202,10 +203,23 @@ class DoseFigureHandler:
                 for i in range(len(data[0][0]))
             ]
 
-            self.diffax.plot(data[0][0], difference, color="black", linewidth=1)
+            self.diffax.plot(
+                data[0][0],
+                difference,
+                color="black",
+                linewidth=0.6,
+                label=self.text.error[self.lang],
+            )
             if self.errlim == None:
                 self.errlim = max(difference) + 1
             self.diffax.set_ylim(-self.errlim, self.errlim)
+            self.diffax.legend(
+                loc="upper right",
+                framealpha=0.6,
+                facecolor="wheat",
+                edgecolor="black",
+                fancybox=True,
+            )
         return
 
     def set_style(self):
@@ -292,8 +306,8 @@ class DoseFigureHandler:
         """Adds the calculated parameters as descriptors
         """
 
-        if self.diffplot == True:
-            return
+        #if self.diffplot == True:
+        #    return
 
         temp = self.data
         new_data = []
