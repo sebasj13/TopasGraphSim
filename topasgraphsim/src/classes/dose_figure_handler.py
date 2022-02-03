@@ -362,7 +362,7 @@ class DoseFigureHandler:
             if self.calcparams == True:
 
                 if self.caxcorrection == True:
-                    plot_data[0] = [x - self.plots[index].cax for x in plot_data[0]]
+                    plot_data[0] = [x + self.plots[index].cax for x in plot_data[0]]
 
             if self.errorbars == True:
                 try:
