@@ -654,12 +654,17 @@ class MainApplication(tk.Frame):
 
     def change_errlims(self, boolean):
         if boolean == True:
-            self.DoseFigureHandler.errlim += 2
+            self.DoseFigureHandler.errlim[0] -= 2
+            self.DoseFigureHandler.errlim[1] += 2
         else:
-            self.DoseFigureHandler.errlim -= 2
+            self.DoseFigureHandler.errlim[0] += 2
+            self.DoseFigureHandler.errlim[1] -= 2
 
-        if self.DoseFigureHandler.errlim == 0:
-            self.DoseFigureHandler.errlim = 2
+        if (
+            self.DoseFigureHandler.errlim[0] <= 0
+            or self.DoseFigureHandler.errlim[1] <= 0
+        ):
+            self.DoseFigureHandler.errlim = [-2, 2]
 
         self.refresh()
 

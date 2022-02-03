@@ -177,15 +177,6 @@ class DoseFigureHandler:
             data = []
             for index, plot_data in enumerate(self.data[:2]):
 
-                if self.calcparams == True:
-
-                    if self.caxcorrection == True:
-                        plot_data[0] = [
-                            x
-                            + dp.calculate_parameters(plot_data[0], plot_data[2], True)
-                            for x in plot_data[0]
-                        ]
-
                 data += [[plot_data[0], plot_data[2]]]
 
             if np.all(np.diff(data[1][0]) > 0) == False:
@@ -211,8 +202,8 @@ class DoseFigureHandler:
                 label=self.text.error[self.lang],
             )
             if self.errlim == None:
-                self.errlim = max(difference) + 1
-            self.diffax.set_ylim(-self.errlim, self.errlim)
+                self.errlim = [min(difference) - 1, max(difference) + 1]
+            self.diffax.set_ylim(self.errlim)
             self.diffax.legend(
                 loc="upper right",
                 framealpha=0.6,
@@ -305,9 +296,6 @@ class DoseFigureHandler:
 
         """Adds the calculated parameters as descriptors
         """
-
-        #if self.diffplot == True:
-        #    return
 
         temp = self.data
         new_data = []
@@ -449,10 +437,12 @@ class DoseFigureHandler:
 
         for index, plot_data in enumerate(self.data):
 
-            if self.calcparams == True:
+            if self.caxcorrection == True:
 
-                if self.caxcorrection == True:
-                    plot_data[0] = [x + self.plots[index].cax for x in plot_data[0]]
+                plot_data[0] = [
+                    x + dp.calculate_parameters(plot_data[0], plot_data[2], True)
+                    for x in plot_data[0]
+                ]
 
             if self.errorbars == True:
                 try:

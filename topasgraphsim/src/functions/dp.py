@@ -3,7 +3,7 @@ import scipy.integrate as integrate
 import scipy.interpolate as interpolate
 
 
-def calculate_parameters(axis, dose, hwb=False):
+def calculate_parameters(axis, dose, cax=False):
 
     """
     A function to calculate the relevant
@@ -73,9 +73,9 @@ def calculate_parameters(axis, dose, hwb=False):
     ]
 
     HWB = round(abs(XR50 - XL50), 3)
-    if hwb == True:
-        return HWB
     CAXdev = round(XL50 + 0.5 * HWB, 3)
+    if cax == True:
+        return CAXdev
 
     flat_krieger = round(
         max([value for value in dose if value >= 0.95 * max(dose)])
