@@ -6,7 +6,7 @@
     "normalize": 1,
     "zoom": 1,
     "fullscreen": false,
-    "halfview": true,
+    "halfview": false,
     "default_colors": [
         "#009F6B",
         "#C40233",

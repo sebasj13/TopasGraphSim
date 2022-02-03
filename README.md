@@ -11,6 +11,7 @@ This GUI can visualize and analyze percentage depth dose (pdd) and dose profiles
  - Graph adjustment options
      * Normalization (On/Off)
      * Error bars (On/Off)
+     * Difference plot between two datasets
      * Graph order and colors
      * Marker size
      * Line width
@@ -53,6 +54,7 @@ This GUI can visualize and analyze percentage depth dose (pdd) and dose profiles
 | <kbd>Ctrl</kbd> + <kbd>↑</kbd> <kbd>↓</kbd> | Increase/decrease the marker size|
 | <kbd>Ctrl</kbd> + <kbd>←</kbd> <kbd>→</kbd> | Increase/decrease the line width |
 | <kbd>Scrollwheel</kbd>                      | Increase/decrease the X-axis limits |
+| <kbd>Ctrl</kbd> + <kbd>+</kbd> <kbd>-</kbd> | Increase/decrease the error plot limits |
 | <kbd>Double Left Click</kbd> on <kbd>Graph</kbd>| Change zoom window location |
 
 
