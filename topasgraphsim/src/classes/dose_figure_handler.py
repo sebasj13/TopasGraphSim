@@ -187,13 +187,15 @@ class DoseFigureHandler:
                 )
             else:
                 interpolated_data = np.interp(
-                    data[0][0], data[1][0], data[1][1]
-                )  # Evaluate graph 2 at x-values of graph 1; graph 1 is reference
+                    data[0][0], data[1][0], data[1][1], left=0, right=0
+                )
             difference = [
                 100 * (interpolated_data[i] - data[0][1][i]) / (data[0][1][i])
                 for i in range(len(data[0][0]))
             ]
 
+            difference[:] = [x if round(x, 1) != -100 else 0 for x in difference]
+            difference[:] = [x if round(x, 1) != 100 else 0 for x in difference]
             self.diffax.plot(
                 data[0][0],
                 difference,

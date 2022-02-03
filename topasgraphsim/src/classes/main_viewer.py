@@ -660,12 +660,6 @@ class MainApplication(tk.Frame):
             self.DoseFigureHandler.errlim[0] += 2
             self.DoseFigureHandler.errlim[1] -= 2
 
-        if (
-            self.DoseFigureHandler.errlim[0] <= 0
-            or self.DoseFigureHandler.errlim[1] <= 0
-        ):
-            self.DoseFigureHandler.errlim = [-2, 2]
-
         self.refresh()
 
     def zoomgraph(self):
