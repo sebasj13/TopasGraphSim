@@ -30,11 +30,16 @@ class Text:
         }
         self.dark = {"de": "Dunkel", "en": "Dark"}
         self.decrease = {"de": "Verkleinern", "en": "Decrease"}
+        self.differenceplot = {
+            "de": "Differenzgraph anzeigen",
+            "en": "Show difference plot",
+        }
         self.dp = {"de": "Dosisquerverteilung", "en": "Dose profile"}
         self.egs = {"de": "EGS Simulationsdateien", "en": "EGS Simulation Data"}
         self.end = {"de": "Beenden", "en": "Close"}
         self.english = {"de": "Englisch", "en": "English"}
         self.errorbars = {"de": "Fehlerbalken anzeigen", "en": "Show error bars"}
+        self.errlimmenu = {"de": "Fehlergrenze einstellen", "en": "Change error limits"}
         self.file = {"de": "Datei", "en": "File"}
         self.flank = {"de": "Flanke", "en": "Flank"}
         self.fullscreen = {"de": "Vollbild", "en": "Fullscreen"}

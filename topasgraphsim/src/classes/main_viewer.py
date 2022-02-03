@@ -55,6 +55,9 @@ class MainApplication(tk.Frame):
         self.caxcorrection = tk.BooleanVar()
         self.caxcorrection.set(False)
 
+        self.diffplot = tk.BooleanVar()
+        self.diffplot.set(False)
+
         self.zoom = tk.BooleanVar()
         self.zoom.set(bool(self.profile.get_attribute("zoom")))
 
@@ -85,6 +88,8 @@ class MainApplication(tk.Frame):
         self.parent.bind("<Control-z>", self.remove_last_addition)
         self.parent.bind("<F11>", self.toggle_fullscreen)
         self.parent.bind("<MouseWheel>", self.change_x_limits)
+        self.parent.bind("<Control-plus>", lambda boolean: self.change_errlims(True))
+        self.parent.bind("<Control-minus>", lambda boolean: self.change_errlims(False))
         self.parent.bind("<Control-Up>", lambda boolean: self.change_marker_size(True))
         self.parent.bind(
             "<Control-Down>", lambda boolean: self.change_marker_size(False)
@@ -322,6 +327,31 @@ class MainApplication(tk.Frame):
         )
 
         self.normmenu.entryconfig(10, state=tk.DISABLED)
+        self.normmenu.add_checkbutton(
+            label=self.text.differenceplot[self.lang],
+            command=self.differenceplot,
+            variable=self.diffplot,
+        )
+
+        self.normmenu.entryconfig(11, state=tk.DISABLED)
+
+        self.errlimmenu = tk.Menu(self.menubar, tearoff=False)
+        self.errlimmenu.add_command(
+            label=Text().increase[self.lang],
+            command=lambda: self.change_errlims(True),
+            accelerator="Ctrl + +",
+        )
+
+        self.errlimmenu.add_command(
+            label=Text().decrease[self.lang],
+            command=lambda: self.change_errlims(False),
+            accelerator="Ctrl + -",
+        )
+
+        self.normmenu.add_cascade(
+            label=Text().errlimmenu[self.lang], menu=self.errlimmenu
+        )
+        self.normmenu.entryconfig(12, state=tk.DISABLED)
         self.parent.config(menu=self.menubar)
 
         self.parent.title(self.text.window_title[self.lang])
@@ -395,6 +425,8 @@ class MainApplication(tk.Frame):
         caxcorrection = self.caxcorrection.get()
         normalize = self.norm.get()
         errorbars = self.errorbars.get()
+        diffplot = self.diffplot.get()
+        errlim = self.DoseFigureHandler.errlim
         self.pack_forget()
         self.parent.config(menu=None)
         self.profile.set_attribute("language", language)
@@ -408,6 +440,9 @@ class MainApplication(tk.Frame):
             self.caxcorrection.set(caxcorrection)
             self.norm.set(normalize)
             self.errorbars.set(errorbars)
+            self.diffplot.set(diffplot)
+            self.DoseFigureHandler.diffplot = diffplot
+            self.DoseFigureHandler.errlim = errlim
             self.show_preview()
 
         return
@@ -440,6 +475,8 @@ class MainApplication(tk.Frame):
         self.filemenu.entryconfig(1, state=tk.DISABLED)
         self.filemenu.entryconfig(3, state=tk.NORMAL)
         self.filemenu.entryconfig(4, state=tk.NORMAL)
+        if len(self.filenames) > 2:
+            self.normmenu.entryconfig(11, state=tk.DISABLED)
         self.saved = False
 
         return
@@ -458,11 +495,16 @@ class MainApplication(tk.Frame):
         self.addmenu.entryconfig(1, state=tk.NORMAL)
         self.addmeasuremenu.entryconfig(0, state=tk.NORMAL)
         self.addmeasuremenu.entryconfig(1, state=tk.NORMAL)
+        self.normmenu.entryconfig(11, state=tk.DISABLED)
+        self.normmenu.entryconfig(12, state=tk.DISABLED)
         self.menubar.delete(3, 4)
         self.filenames = []
         self.canvas.itemconfig(self.image_on_canvas, image=None)
         self.DoseFigureHandler.flush()
         self.DoseFigureHandler.plots = []
+        self.diffplot.set(False)
+        self.DoseFigureHandler.diffplot = False
+        self.DoseFigureHandler.errlim = None
         self.saved = True
         self.menuflag = False
         self.DoseFigureHandler.caxcorrection = False
@@ -510,10 +552,7 @@ class MainApplication(tk.Frame):
         self.DoseFigureHandler.norm = self.norm.get()
 
         self.profile.set_attribute("normalize", int(self.norm.get()))
-        if self.filenames != []:
-            self.canvas.itemconfig(self.image_on_canvas, image=None)
-            self.DoseFigureHandler.flush()
-            self.show_preview()
+        self.refresh()
 
         return
 
@@ -524,10 +563,7 @@ class MainApplication(tk.Frame):
 
         self.DoseFigureHandler.errorbars = self.errorbars.get()
 
-        if self.filenames != []:
-            self.canvas.itemconfig(self.image_on_canvas, image=None)
-            self.DoseFigureHandler.flush()
-            self.show_preview()
+        self.refresh()
 
         return
 
@@ -539,10 +575,7 @@ class MainApplication(tk.Frame):
 
         self.DoseFigureHandler.caxcorrection = self.caxcorrection.get()
 
-        if self.filenames != []:
-            self.canvas.itemconfig(self.image_on_canvas, image=None)
-            self.DoseFigureHandler.flush()
-            self.show_preview()
+        self.refresh()
 
         return
 
@@ -561,10 +594,7 @@ class MainApplication(tk.Frame):
             self.normmenu.entryconfig(10, state=tk.DISABLED)
             self.caxcorrection.set(False)
 
-        if self.filenames != []:
-            self.canvas.itemconfig(self.image_on_canvas, image=None)
-            self.DoseFigureHandler.flush()
-            self.show_preview()
+        self.refresh()
 
         return
 
@@ -577,6 +607,11 @@ class MainApplication(tk.Frame):
         if len(self.filenames) == 1:
             self.close_file()
             return
+
+        if len(self.filenames) == 2:
+            self.diffplot.set(False)
+            self.DoseFigureHandler.diffplot = False
+            self.normmenu.entryconfig(11, state=tk.DISABLED)
 
         if self.filenames[-1][0].endswith(".mcc") == True:
             self.filenames.pop(-1)
@@ -609,12 +644,32 @@ class MainApplication(tk.Frame):
         else:
             self.DoseFigureHandler.normvalue = "center"
 
-        if self.filenames != []:
-            self.canvas.itemconfig(self.image_on_canvas, image=None)
-            self.DoseFigureHandler.flush()
-            self.show_preview()
+        self.refresh()
 
         return
+
+    def differenceplot(self):
+
+        self.DoseFigureHandler.diffplot = self.diffplot.get()
+        if self.diffplot.get() == True:
+            self.normmenu.entryconfig(12, state=tk.NORMAL)
+        else:
+            self.normmenu.entryconfig(12, state=tk.DISABLED)
+
+        self.refresh()
+
+        return
+
+    def change_errlims(self, boolean):
+        if boolean == True:
+            self.DoseFigureHandler.errlim += 2
+        else:
+            self.DoseFigureHandler.errlim -= 2
+
+        if self.DoseFigureHandler.errlim == 0:
+            self.DoseFigureHandler.errlim = 2
+
+        self.refresh()
 
     def zoomgraph(self):
 
@@ -626,10 +681,7 @@ class MainApplication(tk.Frame):
 
         self.profile.set_attribute("zoom", int(self.zoom.get()))
 
-        if self.filenames != []:
-            self.canvas.itemconfig(self.image_on_canvas, image=None)
-            self.DoseFigureHandler.flush()
-            self.show_preview()
+        self.refresh()
 
         return
 
@@ -659,10 +711,7 @@ class MainApplication(tk.Frame):
 
         self.profile.set_attribute("markersize", self.DoseFigureHandler.markersize)
 
-        if self.filenames != []:
-            self.canvas.itemconfig(self.image_on_canvas, image=None)
-            self.DoseFigureHandler.flush()
-            self.show_preview()
+        self.refresh()
 
         return
 
@@ -680,10 +729,7 @@ class MainApplication(tk.Frame):
 
         self.profile.set_attribute("linewidth", self.DoseFigureHandler.linewidth)
 
-        if self.filenames != []:
-            self.canvas.itemconfig(self.image_on_canvas, image=None)
-            self.DoseFigureHandler.flush()
-            self.show_preview()
+        self.refresh()
         return
 
     def reset_colors(self):
@@ -716,6 +762,10 @@ class MainApplication(tk.Frame):
 
         if len(self.DoseFigureHandler.plots) >= 2:
             self.addmenu.entryconfig(3, state=tk.NORMAL)
+            self.normmenu.entryconfig(11, state=tk.DISABLED)
+
+        if len(self.DoseFigureHandler.plots) == 2:
+            self.normmenu.entryconfig(11, state=tk.NORMAL)
 
         if len(self.DoseFigureHandler.plots) == 5:
             self.addmenu.entryconfig(0, state=tk.DISABLED)
@@ -850,6 +900,14 @@ class MainApplication(tk.Frame):
             self.show_preview()
             self.canvas.config(cursor="hand1")
             return
+
+    def refresh(self):
+
+        if self.filenames != []:
+            self.canvas.itemconfig(self.image_on_canvas, image=None)
+            self.DoseFigureHandler.flush()
+            self.show_preview()
+        return
 
     def handle_configure(self, event):
 
