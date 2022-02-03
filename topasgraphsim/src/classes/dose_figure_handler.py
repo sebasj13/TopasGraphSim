@@ -23,8 +23,10 @@ class DoseFigureHandler:
         self.norm = self.parent.norm.get()
         self.calcparams = self.parent.calcparams.get()
         self.normvalue = "max"
+        self.errlim = None
         self.errorbars = True
         self.caxcorrection = False
+        self.diffplot = False
         self.zoom = self.parent.zoom.get()
         self.half = self.parent.half.get()
         self.axlims = (self.parent.axlims.get(), self.parent.axlims.get())
@@ -137,17 +139,68 @@ class DoseFigureHandler:
                 ]
             ]
 
-        if self.plots[0].direction == "Z":
-            figsize = (10, 5)
-        else:
-            figsize = (10, 6)
+        return
 
-        # Initialize the figure and axes
-        self.fig = Figure(figsize, constrained_layout=True, dpi=600)
+    def difference_plot(self):
+
+        if self.plots[0].direction == "Z":
+            self.figsize = (10, 5)
+        else:
+            self.figsize = (10, 6)
+
+        if self.diffplot == True:
+
+            gs_kw = dict(height_ratios=[3, 1])
+            self.fig, axd = plt.subplot_mosaic(
+                [["top"], ["bottom"]],
+                gridspec_kw=gs_kw,
+                figsize=self.figsize,
+                constrained_layout=True,
+                sharex=True,
+                dpi=600,
+            )
+            self.ax = axd["top"]
+            self.diffax = axd["bottom"]
+            self.diffax.set_ylabel("%")
+
+        else:
+            self.fig = Figure(self.figsize, constrained_layout=True, dpi=600)
+            self.ax = self.fig.add_subplot(111)
+
         self.canvas = FigureCanvasAgg(self.fig)
         self.fig.set_canvas(self.canvas)
-        self.ax = self.fig.add_subplot(111)
 
+        if self.diffplot == True:
+
+            data = []
+            for index, plot_data in enumerate(self.data[:2]):
+
+                if self.calcparams == True:
+
+                    if self.caxcorrection == True:
+                        plot_data[0] = [x + self.plots[index].cax for x in plot_data[0]]
+
+                data += [[plot_data[0], plot_data[2]]]
+
+            if np.all(np.diff(data[1][0]) > 0) == False:
+                interpolated_data = np.flip(
+                    np.interp(
+                        np.flip(data[0][0]), np.flip(data[1][0]), np.flip(data[1][1])
+                    )
+                )
+            else:
+                interpolated_data = np.interp(
+                    data[0][0], data[1][0], data[1][1]
+                )  # Evaluate graph 2 at x-values of graph 1; graph 1 is reference
+            difference = [
+                100 * (interpolated_data[i] - data[0][1][i]) / (data[0][1][i])
+                for i in range(len(data[0][0]))
+            ]
+
+            self.diffax.plot(data[0][0], difference, color="black", linewidth=1)
+            if self.errlim == None:
+                self.errlim = max(difference) + 1
+            self.diffax.set_ylim(-self.errlim, self.errlim)
         return
 
     def set_style(self):
@@ -158,10 +211,14 @@ class DoseFigureHandler:
         if self.parent.dark.get() == True:
             self.ax.set_facecolor("#363636")
             self.fig.set_facecolor("#363636")
+            if self.diffplot == True:
+                self.diffax.set_facecolor("#363636")
         else:
 
             self.ax.set_facecolor("#ffffff")
             self.fig.set_facecolor("#ffffff")
+            if self.diffplot == True:
+                self.diffax.set_facecolor("#ffffff")
 
         return
 
@@ -201,6 +258,13 @@ class DoseFigureHandler:
         self.ax.yaxis.set_minor_locator(AutoMinorLocator())
         self.ax.tick_params(axis="both", which="minor", length=2)
 
+        if self.diffplot == True:
+            self.diffax.grid(True, which="major")
+            self.diffax.grid(True, which="minor", color="grey", linewidth=0.1)
+            self.diffax.xaxis.set_minor_locator(AutoMinorLocator())
+            self.diffax.yaxis.set_minor_locator(AutoMinorLocator())
+            self.diffax.tick_params(axis="both", which="minor", length=2)
+
         return
 
     def add_legend(self):
@@ -222,6 +286,10 @@ class DoseFigureHandler:
 
         """Adds the calculated parameters as descriptors
         """
+
+        if self.diffplot == True:
+            return
+
         temp = self.data
         new_data = []
         for index, data in enumerate(self.data):
@@ -346,7 +414,10 @@ class DoseFigureHandler:
         else:
             xlabel = f"X- {self.text.orr[self.lang]} Y-{self.text.axis[self.lang]}"
 
-        self.ax.set_xlabel(xlabel, size=12)
+        if self.diffplot == True:
+            self.diffax.set_xlabel(xlabel, size=12)
+        else:
+            self.ax.set_xlabel(xlabel, size=12)
         if self.norm == False:
             self.ax.set_ylabel(self.plots[0].unit, size=12)
 
@@ -524,9 +595,14 @@ class DoseFigureHandler:
 
         """Passes the image of the plot and the plot type to the MainApplication
         """
+        try:
+            plt.close(self.fig)
+        except AttributeError:
+            pass
 
         self.half = self.parent.half.get()
         self.add_plot_data(filenames)
+        self.difference_plot()
 
         self.set_axis()
         self.set_x_label()
