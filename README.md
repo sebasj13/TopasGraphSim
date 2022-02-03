@@ -29,7 +29,7 @@ This GUI can visualize and analyze percentage depth dose (pdd) and dose profiles
 
  ![dpp](https://user-images.githubusercontent.com/87897942/151981360-cf68656e-0e84-4f78-ad66-6d5c6dc93f36.png)
 
-![dp](https://user-images.githubusercontent.com/87897942/151981372-086df228-f8be-4b7c-9bae-58ce54321633.png)
+![dp](https://user-images.githubusercontent.com/87897942/152414690-c4adeb71-181e-4477-b74c-23dc25ccdd79.png)
 
  ## Manual
 
