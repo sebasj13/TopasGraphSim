@@ -129,9 +129,16 @@ class DoseFigureHandler:
 
             else:
                 plotdata.normpoint = 1
+
+            caxdev = 0
+            if self.caxcorrection == True:
+                caxdev = dp.calculate_parameters(
+                    plotdata.axis[False], plotdata.dose[False], True
+                )
+
             self.data += [
                 [
-                    plotdata.axis[self.half],
+                    np.array([x + caxdev for x in plotdata.axis[self.half]]),
                     plotdata.direction,
                     plotdata.dose[self.half] / plotdata.normpoint,
                     np.array(
@@ -438,13 +445,6 @@ class DoseFigureHandler:
         """
 
         for index, plot_data in enumerate(self.data):
-
-            if self.caxcorrection == True:
-
-                plot_data[0] = [
-                    x + dp.calculate_parameters(plot_data[0], plot_data[2], True)
-                    for x in plot_data[0]
-                ]
 
             if self.errorbars == True:
                 try:
