@@ -102,7 +102,7 @@ Depending on the imported measurement, the following parameters can be calculate
 
 - FWHM : Full-Width at Half-Maximum
 - CAX<sub>dev</sub> : Centre Axis Deviation
-- FLAT<sub>Krieger</sub> : Flatness of Dose Plateau (Definitionby Krieger)
+- FLAT<sub>Krieger</sub> : Flatness of Dose Plateau (Definition by Krieger)
 - FLAT<sub>stddev</sub> : Flatness of Dose Plateau (Standard Deviation)
 - Penumbra (L&R) : Width of Left and Right Penumbra
 - Integral (L&R) : Integral below Left and Right Penumbra
