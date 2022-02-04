@@ -212,7 +212,7 @@ class DoseFigureHandler:
                 label=self.text.error[self.lang],
             )
             if self.errlim == None:
-                self.errlim = [min(difference) - 1, max(difference) + 1]
+                self.errlim = [min(difference) - 0.01, max(difference) + 0.01]
             self.diffax.set_ylim(self.errlim)
             self.diffax.legend(
                 loc="upper right",
