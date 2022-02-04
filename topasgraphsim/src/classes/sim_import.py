@@ -25,14 +25,13 @@ class Simulation:
         self.direction = axdict[databin_index]
         self.axis = np.array(self.data.dimensions[databin_index].get_bin_centers())
         unit = self.data.dimensions[databin_index].unit
-        self.axis = np.flip(self.axis)
         self.axis = [self.convert_SI(x, unit) for x in self.axis]
         if "Mean" in self.data.statistics:
             scored_quantity = "Mean"
         if "Sum" in self.data.statistics:
             scored_quantity = "Sum"
         self.dose = self.data.data[scored_quantity]
-        self.dose = self.dose.flatten()
+        self.dose = np.flip(self.dose.flatten())
         self.unit = self.data.unit
 
         try:
