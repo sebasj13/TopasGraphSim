@@ -6,6 +6,7 @@ class Text:
 
     def __init__(self):
 
+        self.absolute = {"de": "Absolut", "en": "Absolute"}
         self.add = {"de": "Daten hinzufügen", "en": "Add Data"}
         self.axis = {"de": "Achse", "en": "Axis"}
         self.calcfail = {
@@ -19,6 +20,7 @@ class Text:
         }
         self.centeraxis = {"de": "Zentralstrahl", "en": "Center axis"}
         self.changefilename = {"de": "Neuer Name:", "en": "New Name:"}
+        self.changeerr = {"de": "Darstellung ändern", "en": "Switch view"}
         self.choosenormalization = {"de": "Normieren auf ...", "en": "Normalize to ..."}
         self.close = {
             "de": "Derzeitige Ansicht schließen",
@@ -82,6 +84,7 @@ class Text:
         self.normalization = {"de": "Normierung", "en": "Normalization"}
         self.options = {"de": "Optionen", "en": "Options"}
         self.orr = {"de": "oder", "en": "or"}
+        self.percentage = {"de": "Prozentual", "en": "Percentage"}
         self.pdd = {"de": "Tiefendosiskurve", "en": "Depth dose"}
         self.ptw = {"de": "PTW tbaScan", "en": "PTW tbaScan"}
         self.revert = {"de": "Rückgängig", "en": "Undo"}

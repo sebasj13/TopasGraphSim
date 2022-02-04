@@ -76,6 +76,9 @@ class MainApplication(tk.Frame):
         self.normvaluemenu = tk.StringVar()
         self.normvaluemenu.set("max")
 
+        self.errlimval = tk.StringVar()
+        self.errlimval.set("absolute")
+
         self.DoseFigureHandler = DoseFigureHandler(self)
 
         # Keybinding definitions
@@ -347,6 +350,24 @@ class MainApplication(tk.Frame):
             accelerator="Ctrl + -",
         )
 
+        self.errlimvalmenu = tk.Menu(self.menubar, tearoff=False)
+        self.errlimvalmenu.add_radiobutton(
+            label=self.text.percentage[self.lang],
+            variable=self.errlimval,
+            value="percentage",
+            command=self.changeerrdisplay,
+        )
+        self.errlimvalmenu.add_radiobutton(
+            label=self.text.absolute[self.lang],
+            variable=self.errlimval,
+            value="absolute",
+            command=self.changeerrdisplay,
+        )
+
+        self.errlimmenu.add_cascade(
+            label=self.text.changeerr[self.lang], menu=self.errlimvalmenu
+        )
+
         self.normmenu.add_cascade(
             label=Text().errlimmenu[self.lang], menu=self.errlimmenu
         )
@@ -454,7 +475,7 @@ class MainApplication(tk.Frame):
         if type == "simulation":
             filetypes = [(self.text.topas[self.lang], [".csv", ".bin"])]
         if type == "egs":
-            filetypes = [(self.text.egs[self.lang], [".csv", ".bin"])]
+            filetypes = [(self.text.egs[self.lang], [".3ddose"])]
         elif type == "pdd" or type == "dp":
             filetypes = [(self.text.measurementdata[self.lang], ["txt", ".csv"])]
         elif type == "ptw":
@@ -654,12 +675,32 @@ class MainApplication(tk.Frame):
 
     def change_errlims(self, boolean):
         if boolean == True:
-            self.DoseFigureHandler.errlim[0] -= 0.02
-            self.DoseFigureHandler.errlim[1] += 0.02
+            self.DoseFigureHandler.errlim[0] /= 1.05
+            self.DoseFigureHandler.errlim[1] *= 1.05
         else:
-            self.DoseFigureHandler.errlim[0] += 0.02
-            self.DoseFigureHandler.errlim[1] -= 0.02
+            self.DoseFigureHandler.errlim[0] *= 1.05
+            self.DoseFigureHandler.errlim[1] /= 1.05
 
+        self.refresh()
+
+    def changeerrdisplay(self):
+
+        self.prev_difference = self.DoseFigureHandler.difference
+
+        if self.errlimval.get() == "percentage":
+            self.DoseFigureHandler.errlimval = "percentage"
+            self.errlim = [
+                min(self.DoseFigureHandler.difference) * 1.1,
+                max(self.DoseFigureHandler.difference) * 1.1,
+            ]
+        else:
+            self.DoseFigureHandler.errlimval = "absolute"
+            self.errlim = [
+                min(self.DoseFigureHandler.difference) * 1.1,
+                max(self.DoseFigureHandler.difference) * 1.1,
+            ]
+
+        print(self.errlim)
         self.refresh()
 
     def zoomgraph(self):
