@@ -56,42 +56,35 @@ class DoseFigureHandler:
         """Adds data to the plot queue
         """
 
-        test = [plotdata.direction for plotdata in self.plots]
+        test = self.parent.direction
         for tuple in datanames:
             filename = tuple[0]
             type = tuple[1]
             if filename not in [plotdata.filepath for plotdata in self.plots]:
-                if type == "simulation":
-                    sim = Simulation(filename)
-                    if test == []:
-                        self.plots += [sim]
-                    elif sim.direction == "Z" and "Z" in test:
-                        self.plots += [sim]
-                    elif sim.direction == "X" and "X" in test or "Y" in test:
-                        self.plots += [sim]
-                    elif sim.direction == "Y" and "X" in test or "Y" in test:
-                        self.plots += [sim]
+                if type == "simulation" or type == "egs":
 
+                    if type == "simulation":
+                        sim = Simulation(filename)
+                    elif type == "egs":
+                        sim = EGSSimulation(filename)
+
+                    if test == None:
+                        self.plots += [sim]
+                    elif test == "Z" and sim.direction == "Z":
+                        self.plots += [sim]
+                    elif test == "X" and sim.direction == "X":
+                        self.plots += [sim]
+                    elif test == "Y" and sim.direction == "X":
+                        self.plots += [sim]
+                    elif test == "X" and sim.direction == "Y":
+                        self.plots += [sim]
+                    elif test == "Y" and sim.direction == "Y":
+                        self.plots += [sim]
                     else:
                         sd.messagebox.showinfo(
                             "", f"{sim.filename}" + self.text.incordata[self.lang][1]
                         )
-
-                elif type == "egs":
-                    sim = EGSSimulation(filename)
-                    if test == []:
-                        self.plots += [sim]
-                    elif sim.direction == "Z" and "Z" in test:
-                        self.plots += [sim]
-                    elif sim.direction == "X" and "X" in test or "Y" in test:
-                        self.plots += [sim]
-                    elif sim.direction == "Y" and "X" in test or "Y" in test:
-                        self.plots += [sim]
-
-                    else:
-                        sd.messagebox.showinfo(
-                            "", f"{sim.filename}" + self.text.incordata[self.lang][1]
-                        )
+                        self.parent.filenames.pop(-1)
 
                 elif type == "ptw":
                     importer = PTWMultimporter(filename, self.parent)
@@ -100,13 +93,17 @@ class DoseFigureHandler:
                     measurements = [plot for plot in importer.plots]
                     fails = []
                     for plot in measurements:
-                        if test == []:
+                        if test == None:
                             self.plots += [plot]
-                        elif plot.direction == "Z" and "Z" in test:
+                        elif test == "Z" and plot.direction == "Z":
                             self.plots += [plot]
-                        elif plot.direction == "X" and "X" in test or "Y" in test:
+                        elif test == "X" and plot.direction == "X":
                             self.plots += [plot]
-                        elif plot.direction == "Y" and "X" in test or "Y" in test:
+                        elif test == "Y" and plot.direction == "X":
+                            self.plots += [plot]
+                        elif test == "X" and plot.direction == "Y":
+                            self.plots += [plot]
+                        elif test == "Y" and plot.direction == "Y":
                             self.plots += [plot]
                         else:
                             fails += [plot]

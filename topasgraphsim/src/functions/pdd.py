@@ -11,6 +11,10 @@ def calculate_parameters(axis, dose, std_dev):
     descriptive parameters of depth doses.
     """
 
+    axis = np.flip(axis).tolist()
+    dose = np.flip(dose)
+    std_dev = np.flip(std_dev)
+
     if type(std_dev) != np.ndarray or std_dev == []:
         TD20 = dose[(np.abs(axis - 200)).argmin()]
         TD10 = dose[(np.abs(axis - 100)).argmin()]

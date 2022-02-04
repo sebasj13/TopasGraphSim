@@ -22,7 +22,7 @@ class MainApplication(tk.Frame):
         self.parent.protocol("WM_DELETE_WINDOW", lambda: self.save_graph(True))
 
         # Read settings from profile.json and initialize the necessary variables
-
+        self.direction = None
         self.saved = True
         self.menuflag = False
         self.canvas = tk.Canvas(self)
@@ -547,6 +547,7 @@ class MainApplication(tk.Frame):
         self.DoseFigureHandler.plots = []
         self.diffplot.set(False)
         self.DoseFigureHandler.diffplot = False
+        self.direction = None
         self.errlimmin = 1.1
         self.errlimmax = 1.1
         self.saved = True

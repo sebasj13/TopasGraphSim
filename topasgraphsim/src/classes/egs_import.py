@@ -1,7 +1,7 @@
 from tkinter import simpledialog as sd
 import numpy as np
 
-from ..functions import dp, pdd
+from ..functions import dp, egspdd
 
 
 class EGSSimulation:
@@ -56,7 +56,7 @@ class EGSSimulation:
 
     def params(self):
         if self.direction == "Z":
-            return pdd.calculate_parameters(
+            return egspdd.calculate_parameters(
                 self.axis[False],
                 self.dose[False] / max(self.dose[False]),
                 self.std_dev[False] / max(self.dose[False]),
