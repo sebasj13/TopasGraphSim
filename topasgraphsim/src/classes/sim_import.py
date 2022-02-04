@@ -25,8 +25,7 @@ class Simulation:
         self.direction = axdict[databin_index]
         self.axis = np.array(self.data.dimensions[databin_index].get_bin_centers())
         unit = self.data.dimensions[databin_index].unit
-        if self.direction == "Z":
-            self.axis = np.flip(self.axis)
+        self.axis = np.flip(self.axis)
         self.axis = [self.convert_SI(x, unit) for x in self.axis]
         if "Mean" in self.data.statistics:
             scored_quantity = "Mean"
