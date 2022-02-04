@@ -38,7 +38,7 @@ class Text:
         self.egs = {"de": "EGS Simulationsdateien", "en": "EGS Simulation Data"}
         self.end = {"de": "Beenden", "en": "Close"}
         self.english = {"de": "Englisch", "en": "English"}
-        self.error = {"de": "Abweichung [%]", "en": "Difference [%]"}
+        self.error = {"de": "Abweichung", "en": "Difference"}
         self.errorbars = {"de": "Fehlerbalken anzeigen", "en": "Show error bars"}
         self.errlimmenu = {"de": "Fehlergrenze einstellen", "en": "Change error limits"}
         self.file = {"de": "Datei", "en": "File"}
