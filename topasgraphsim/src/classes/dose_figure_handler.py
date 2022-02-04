@@ -25,7 +25,9 @@ class DoseFigureHandler:
         self.norm = self.parent.norm.get()
         self.calcparams = self.parent.calcparams.get()
         self.normvalue = "max"
-        self.errlim = None
+        self.errlimval = "absolute"
+        self.errlimmin = 1.1
+        self.errlimmax = 1.1
         self.errorbars = True
         self.caxcorrection = False
         self.diffplot = False
@@ -47,6 +49,7 @@ class DoseFigureHandler:
         self.props = dict(boxstyle="round", facecolor="wheat", alpha=0.6)
         self.plots = []
         self.data = []
+        self.difference = []
 
     def add_plot_data(self, datanames):
 
@@ -209,23 +212,37 @@ class DoseFigureHandler:
                 interpolated_data = np.interp(
                     data[0][0], data[1][0], data[1][1], left=0, right=0
                 )
-            difference = [
-                (interpolated_data[i] - data[0][1][i])  # / (data[0][1][i])
-                for i in range(len(data[0][0]))
-            ]
 
-            difference[:] = [x if round(x, 1) != -100 else 0 for x in difference]
-            difference[:] = [x if round(x, 1) != 100 else 0 for x in difference]
+            if self.errlimval == "absolute":
+                self.difference = [
+                    (interpolated_data[i] - data[0][1][i])  # / (data[0][1][i])
+                    for i in range(len(data[0][0]))
+                ]
+            else:
+                self.difference = [
+                    100 * (interpolated_data[i] - data[0][1][i]) / (data[0][1][i])
+                    for i in range(len(data[0][0]))
+                ]
+
+                self.difference[:] = [
+                    x if round(x, 1) != -100 else 0 for x in self.difference
+                ]
+                self.difference[:] = [
+                    x if round(x, 1) != 100 else 0 for x in self.difference
+                ]
 
             self.diffax.plot(
                 data[0][0],
-                difference,
+                self.difference,
                 color="black",
                 linewidth=0.6,
                 label=self.text.error[self.lang],
             )
-            if self.errlim == None:
-                self.errlim = [min(difference) - 0.01, max(difference) + 0.01]
+
+            self.errlim = [
+                min(self.difference) * self.errlimmin,
+                max(self.difference) * self.errlimmax,
+            ]
             self.diffax.set_ylim(self.errlim)
             self.diffax.legend(
                 loc="upper right",

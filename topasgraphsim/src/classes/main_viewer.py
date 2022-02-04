@@ -76,6 +76,9 @@ class MainApplication(tk.Frame):
         self.normvaluemenu = tk.StringVar()
         self.normvaluemenu.set("max")
 
+        self.errlimval = tk.StringVar()
+        self.errlimval.set("absolute")
+
         self.DoseFigureHandler = DoseFigureHandler(self)
 
         # Keybinding definitions
@@ -89,8 +92,18 @@ class MainApplication(tk.Frame):
         self.parent.bind("<Control-z>", self.remove_last_addition)
         self.parent.bind("<F11>", self.toggle_fullscreen)
         self.parent.bind("<MouseWheel>", self.change_x_limits)
-        self.parent.bind("<Control-plus>", lambda boolean: self.change_errlims(True))
-        self.parent.bind("<Control-minus>", lambda boolean: self.change_errlims(False))
+        self.parent.bind(
+            "<Control-Alt-Up>", lambda boolean1: self.change_errlims(True, True)
+        )
+        self.parent.bind(
+            "<Control-Alt-Down>", lambda boolean1: self.change_errlims(True, False),
+        )
+        self.parent.bind(
+            "<Control-Shift-Up>", lambda boolean1: self.change_errlims(False, True),
+        )
+        self.parent.bind(
+            "<Control-Shift-Down>", lambda boolean1: self.change_errlims(False, False),
+        )
         self.parent.bind("<Control-Up>", lambda boolean: self.change_marker_size(True))
         self.parent.bind(
             "<Control-Down>", lambda boolean: self.change_marker_size(False)
@@ -337,15 +350,43 @@ class MainApplication(tk.Frame):
 
         self.errlimmenu = tk.Menu(self.menubar, tearoff=False)
         self.errlimmenu.add_command(
-            label=Text().increase[self.lang],
-            command=lambda: self.change_errlims(True),
+            label=Text().increaseupper[self.lang],
+            command=lambda: self.change_errlims(True, True),
             accelerator="Ctrl + +",
         )
 
         self.errlimmenu.add_command(
-            label=Text().decrease[self.lang],
-            command=lambda: self.change_errlims(False),
+            label=Text().decreaseupper[self.lang],
+            command=lambda: self.change_errlims(True, False),
             accelerator="Ctrl + -",
+        )
+        self.errlimmenu.add_command(
+            label=Text().increselower[self.lang],
+            command=lambda: self.change_errlims(False, True),
+            accelerator="Ctrl + Alt + +",
+        )
+        self.errlimmenu.add_command(
+            label=Text().decreaselower[self.lang],
+            command=lambda: self.change_errlims(False, False),
+            accelerator="Ctrl + Alt + -",
+        )
+
+        self.errlimvalmenu = tk.Menu(self.menubar, tearoff=False)
+        self.errlimvalmenu.add_radiobutton(
+            label=self.text.percentage[self.lang],
+            variable=self.errlimval,
+            value="percentage",
+            command=self.changeerrdisplay,
+        )
+        self.errlimvalmenu.add_radiobutton(
+            label=self.text.absolute[self.lang],
+            variable=self.errlimval,
+            value="absolute",
+            command=self.changeerrdisplay,
+        )
+
+        self.errlimmenu.add_cascade(
+            label=self.text.changeerr[self.lang], menu=self.errlimvalmenu
         )
 
         self.normmenu.add_cascade(
@@ -426,7 +467,8 @@ class MainApplication(tk.Frame):
         normalize = self.norm.get()
         errorbars = self.errorbars.get()
         diffplot = self.diffplot.get()
-        errlim = self.DoseFigureHandler.errlim
+        errlimmin = self.DoseFigureHandler.errlimmin
+        errlimmax = self.DoseFigureHandler.errlimmax
         self.pack_forget()
         self.parent.config(menu=None)
         self.profile.set_attribute("language", language)
@@ -442,7 +484,8 @@ class MainApplication(tk.Frame):
             self.errorbars.set(errorbars)
             self.diffplot.set(diffplot)
             self.DoseFigureHandler.diffplot = diffplot
-            self.DoseFigureHandler.errlim = errlim
+            self.DoseFigureHandler.errlimmin = errlimmin
+            self.DoseFigureHandler.errlimmax = errlimmax
             self.show_preview()
 
         return
@@ -504,7 +547,8 @@ class MainApplication(tk.Frame):
         self.DoseFigureHandler.plots = []
         self.diffplot.set(False)
         self.DoseFigureHandler.diffplot = False
-        self.DoseFigureHandler.errlim = None
+        self.errlimmin = 1.1
+        self.errlimmax = 1.1
         self.saved = True
         self.menuflag = False
         self.DoseFigureHandler.caxcorrection = False
@@ -653,13 +697,29 @@ class MainApplication(tk.Frame):
 
         return
 
-    def change_errlims(self, boolean):
-        if boolean == True:
-            self.DoseFigureHandler.errlim[0] -= 0.02
-            self.DoseFigureHandler.errlim[1] += 0.02
+    def change_errlims(self, boolean1, boolean2):
+        if boolean1 == True:
+            if boolean2 == True:
+                self.DoseFigureHandler.errlimmax += 0.5
+            else:
+                self.DoseFigureHandler.errlimmax -= 0.5
         else:
-            self.DoseFigureHandler.errlim[0] += 0.02
-            self.DoseFigureHandler.errlim[1] -= 0.02
+            if boolean2 == True:
+                self.DoseFigureHandler.errlimmin -= 0.5
+            else:
+                self.DoseFigureHandler.errlimmin += 0.5
+
+        self.refresh()
+
+    def changeerrdisplay(self):
+
+        self.prev_difference = self.DoseFigureHandler.difference
+
+        if self.errlimval.get() == "percentage":
+            self.DoseFigureHandler.errlimval = "percentage"
+            self.DoseFigureHandler.errlimmax = 1.1
+        else:
+            self.DoseFigureHandler.errlimval = "absolute"
 
         self.refresh()
 

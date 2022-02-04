@@ -6,6 +6,7 @@ class Text:
 
     def __init__(self):
 
+        self.absolute = {"de": "Absolut", "en": "Absolute"}
         self.add = {"de": "Daten hinzufügen", "en": "Add Data"}
         self.axis = {"de": "Achse", "en": "Axis"}
         self.calcfail = {
@@ -19,6 +20,7 @@ class Text:
         }
         self.centeraxis = {"de": "Zentralstrahl", "en": "Center axis"}
         self.changefilename = {"de": "Neuer Name:", "en": "New Name:"}
+        self.changeerr = {"de": "Darstellung ändern", "en": "Switch view"}
         self.choosenormalization = {"de": "Normieren auf ...", "en": "Normalize to ..."}
         self.close = {
             "de": "Derzeitige Ansicht schließen",
@@ -30,6 +32,14 @@ class Text:
         }
         self.dark = {"de": "Dunkel", "en": "Dark"}
         self.decrease = {"de": "Verkleinern", "en": "Decrease"}
+        self.decreaseupper = {
+            "de": "Obere Grenze verkleinern",
+            "en": "Decrease upper limit",
+        }
+        self.decreaselower = {
+            "de": "Untere Grenze verkleinern",
+            "en": "Decrease lower limit",
+        }
         self.differenceplot = {
             "de": "Differenzgraph anzeigen",
             "en": "Show difference plot",
@@ -54,6 +64,14 @@ class Text:
         self.histories = {"de": "Historien", "en": "Histories"}
         self.image = {"de": "Bilder", "en": "Images"}
         self.increase = {"de": "Vergrößern", "en": "Increase"}
+        self.increaseupper = {
+            "de": "Obere Grenze vergrößern",
+            "en": "Increase upper limit",
+        }
+        self.increselower = {
+            "de": "Untere Grenze vergrößern",
+            "en": "Increase lower limit",
+        }
         self.incordata = {
             "de": {
                 1: " wurde nicht importiert - unpassender Messtyp!",
@@ -82,6 +100,7 @@ class Text:
         self.normalization = {"de": "Normierung", "en": "Normalization"}
         self.options = {"de": "Optionen", "en": "Options"}
         self.orr = {"de": "oder", "en": "or"}
+        self.percentage = {"de": "Prozentual", "en": "Percentage"}
         self.pdd = {"de": "Tiefendosiskurve", "en": "Depth dose"}
         self.ptw = {"de": "PTW tbaScan", "en": "PTW tbaScan"}
         self.revert = {"de": "Rückgängig", "en": "Undo"}
