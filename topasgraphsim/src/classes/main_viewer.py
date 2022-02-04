@@ -79,6 +79,7 @@ class MainApplication(tk.Frame):
         self.DoseFigureHandler = DoseFigureHandler(self)
 
         # Keybinding definitions
+        self.parent.bind("<Control-e>", lambda type: self.load_file("egs"))
         self.parent.bind("<Control-d>", lambda type: self.load_file("dp"))
         self.parent.bind("<Control-o>", lambda type: self.load_file("simulation"))
         self.parent.bind("<Control-s>", self.save_graph)
@@ -131,7 +132,7 @@ class MainApplication(tk.Frame):
             accelerator="Ctrl+O",
         )
         self.addsimmenu.add_command(
-            label="3Ddose", command=lambda: self.load_file("egs"),
+            label="3Ddose", command=lambda: self.load_file("egs"), accelerator="Ctrl+E",
         )
 
         self.filemenu.add_cascade(
@@ -454,7 +455,7 @@ class MainApplication(tk.Frame):
         if type == "simulation":
             filetypes = [(self.text.topas[self.lang], [".csv", ".bin"])]
         if type == "egs":
-            filetypes = [(self.text.egs[self.lang], [".csv", ".bin"])]
+            filetypes = [(self.text.egs[self.lang], [".3ddose"])]
         elif type == "pdd" or type == "dp":
             filetypes = [(self.text.measurementdata[self.lang], ["txt", ".csv"])]
         elif type == "ptw":

@@ -76,7 +76,19 @@ class DoseFigureHandler:
 
                 elif type == "egs":
                     sim = EGSSimulation(filename)
-                    ##!!!###
+                    if test == []:
+                        self.plots += [sim]
+                    elif sim.direction == "Z" and "Z" in test:
+                        self.plots += [sim]
+                    elif sim.direction == "X" and "X" in test or "Y" in test:
+                        self.plots += [sim]
+                    elif sim.direction == "Y" and "X" in test or "Y" in test:
+                        self.plots += [sim]
+
+                    else:
+                        sd.messagebox.showinfo(
+                            "", f"{sim.filename}" + self.text.incordata[self.lang][1]
+                        )
 
                 elif type == "ptw":
                     importer = PTWMultimporter(filename, self.parent)
