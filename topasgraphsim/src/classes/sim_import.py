@@ -83,23 +83,3 @@ class Simulation:
     def convert_SI(self, val, unit_in):
         SI = {"mm": 0.001, "cm": 0.01, "m": 1.0, "km": 1000.0}
         return val * SI[unit_in] / SI["mm"]
-
-
-class EGSSimulation:
-    def __init__(self, filepath):
-
-        self.filepath = filepath
-        self.filename = self.filepath.split("/")[-1][:-7]
-
-        self.direction = ""
-        self.unit = ""
-        self.dose = []
-        self.std_dev = []
-        self.axis = []
-
-        self.axis = {True: self.axis[len(self.axis) // 2 :], False: self.axis}
-        self.std_dev = {
-            True: self.std_dev[len(self.std_dev) // 2 :],
-            False: self.std_dev,
-        }
-        self.normpoint = max(self.dose)
