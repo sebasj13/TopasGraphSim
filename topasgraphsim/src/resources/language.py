@@ -32,6 +32,14 @@ class Text:
         }
         self.dark = {"de": "Dunkel", "en": "Dark"}
         self.decrease = {"de": "Verkleinern", "en": "Decrease"}
+        self.decreaseupper = {
+            "de": "Obere Grenze verkleinern",
+            "en": "Decrease upper limit",
+        }
+        self.decreaselower = {
+            "de": "Untere Grenze verkleinern",
+            "en": "Decrease lower limit",
+        }
         self.differenceplot = {
             "de": "Differenzgraph anzeigen",
             "en": "Show difference plot",
@@ -56,6 +64,14 @@ class Text:
         self.histories = {"de": "Historien", "en": "Histories"}
         self.image = {"de": "Bilder", "en": "Images"}
         self.increase = {"de": "Vergrößern", "en": "Increase"}
+        self.increaseupper = {
+            "de": "Obere Grenze vergrößern",
+            "en": "Increase upper limit",
+        }
+        self.increselower = {
+            "de": "Untere Grenze vergrößern",
+            "en": "Increase lower limit",
+        }
         self.incordata = {
             "de": {
                 1: " wurde nicht importiert - unpassender Messtyp!",

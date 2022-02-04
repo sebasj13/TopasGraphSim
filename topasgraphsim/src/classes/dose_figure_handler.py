@@ -25,8 +25,9 @@ class DoseFigureHandler:
         self.norm = self.parent.norm.get()
         self.calcparams = self.parent.calcparams.get()
         self.normvalue = "max"
-        self.errlim = None
         self.errlimval = "absolute"
+        self.errlimmin = 1.1
+        self.errlimmax = 1.1
         self.errorbars = True
         self.caxcorrection = False
         self.diffplot = False
@@ -225,8 +226,11 @@ class DoseFigureHandler:
                 linewidth=0.6,
                 label=self.text.error[self.lang],
             )
-            if self.errlim == None:
-                self.errlim = [min(self.difference) * 1.1, max(self.difference) * 1.1]
+
+            self.errlim = [
+                min(self.difference) * self.errlimmin,
+                max(self.difference) * self.errlimmax,
+            ]
             self.diffax.set_ylim(self.errlim)
             self.diffax.legend(
                 loc="upper right",
