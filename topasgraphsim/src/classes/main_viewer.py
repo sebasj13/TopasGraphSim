@@ -10,6 +10,7 @@ from PIL import Image, ImageTk
 from ..resources.language import Text
 from .dose_figure_handler import DoseFigureHandler
 from .profile import ProfileHandler
+from .xrangeslider import XRangeSlider
 
 
 class MainApplication(tk.Frame):
@@ -25,6 +26,7 @@ class MainApplication(tk.Frame):
         self.direction = None
         self.saved = True
         self.menuflag = False
+        self.xlimmenu = False
         self.canvas = tk.Canvas(self)
         self.photoimage = None
         self.image_on_canvas = None
@@ -32,6 +34,7 @@ class MainApplication(tk.Frame):
         self.current_file = None
         self.filenames = []
         self.rename_boxes = []
+        self.new_limits = []
 
         self.profile = ProfileHandler()
         self.lang = self.profile.get_attribute("language")
@@ -453,6 +456,14 @@ class MainApplication(tk.Frame):
 
         return
 
+    def change_xrange(self):
+
+        self.slider = None
+        self.slider = XRangeSlider(self)
+        self.xlimmenu = True
+
+        return
+
     def set_language(self, language):
 
         """Sets the desired language and reinitiates the program
@@ -547,14 +558,22 @@ class MainApplication(tk.Frame):
         self.DoseFigureHandler.plots = []
         self.diffplot.set(False)
         self.DoseFigureHandler.diffplot = False
+        self.DoseFigureHandler.xaxisname == None
         self.direction = None
         self.errlimmin = 1.1
         self.errlimmax = 1.1
         self.saved = True
         self.menuflag = False
+        self.new_limits = []
         self.DoseFigureHandler.caxcorrection = False
+        self.DoseFigureHandler.initial_limits = []
         self.caxcorrection.set(False)
         self.axlims.set(0)
+        try:
+            self.slider.window.destroy()
+            self.xlimmenu = False
+        except Exception as e:
+            print(e)
 
         return
 
@@ -883,6 +902,7 @@ class MainApplication(tk.Frame):
                 (0.065 + normdiff + 0.042 * i) * self.canvas.image.height() * factor,
                 fill="",
                 outline="",
+                tags="rename",
             )
             self.rename_boxes += [temp]
 
@@ -1010,12 +1030,15 @@ class MainApplication(tk.Frame):
         except AttributeError:
             pass
 
-        temp = self.rename_boxes
+        temp = self.rename_boxes[:-1]
+        if len(self.rename_boxes) == 1:
+            temp = self.rename_boxes
+
         self.rename_boxes = []
-        for i in range(len(self.DoseFigureHandler.plots)):
+        for i in range(len(temp)):
+            self.canvas.delete(temp[i])
             x = self.canvas.image.width()
             y = self.canvas.image.height()
-            self.canvas.delete(temp[i])
             normdiff = 0
             if self.norm.get() == False:
                 normdiff = 0.035
@@ -1057,6 +1080,18 @@ class MainApplication(tk.Frame):
                 outline="",
                 tags="token",
             )
+        self.canvas.delete("xaxis")
+        if len(self.DoseFigureHandler.plots) >= 1:
+            xbox = self.canvas.create_rectangle(
+                0.43 * self.canvas.image.width(),
+                0.95 * self.canvas.image.height(),
+                0.6 * self.canvas.image.width(),
+                self.canvas.image.height(),
+                tags="xaxis",
+                outline="",
+                fill=""
+            )
+            self.rename_boxes += [xbox]
 
     def check_hand(self, e):
 
@@ -1099,6 +1134,19 @@ class MainApplication(tk.Frame):
             if e != None:
                 bbox = self.canvas.bbox(box)
                 if bbox[0] < e.x and bbox[2] > e.x and bbox[1] < e.y and bbox[3] > e.y:
+                    if index == len(self.rename_boxes) - 1:
+                        if self.xlimmenu == False:
+                            self.change_xrange()
+                        else:
+                            newname = sd.askstring(
+                                "",
+                                self.text.changefilename[self.lang],
+                                initialvalue=self.DoseFigureHandler.xlabel,
+                            )
+                            if newname != None:
+                                self.DoseFigureHandler.xaxisname = newname
+                                self.show_preview()
+                        return
                     newname = sd.askstring(
                         "",
                         self.text.changefilename[self.lang],
@@ -1113,7 +1161,7 @@ class MainApplication(tk.Frame):
         """Reassigns a color to a plot when the associated box is right-clicked
         """
 
-        for index, box in enumerate(self.rename_boxes):
+        for index, box in enumerate(self.rename_boxes[:-1]):
             if e != None:
                 bbox = self.canvas.bbox(box)
                 if bbox != None:
