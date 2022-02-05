@@ -3,7 +3,7 @@ import tkinter.ttk as ttk
 from ..resources.language import Text
 from .profile import ProfileHandler
 import numpy as np
-from RangeSlider.RangeSlider import RangeSliderH
+from .RangeSlider import RangeSliderH
 
 
 class XRangeSlider:
@@ -13,6 +13,8 @@ class XRangeSlider:
         self.window = tk.Toplevel()
         self.window.resizable(False, False)
         self.window.wm_overrideredirect(True)
+        self.window.wm_attributes("-alpha", 0.6)
+        self.window.bind("<Return>", self.submit)
         self.geometry = [
             self.parent.parent.winfo_rootx(),
             self.parent.parent.winfo_rooty(),
@@ -21,7 +23,7 @@ class XRangeSlider:
         ]
         self.height = 80
         self.window.geometry(
-            f"{500}x{self.height}+{int(self.geometry[0]+self.geometry[2]//2) - 250}+{self.geometry[1]+ self.geometry[3]}"
+            f"{500}x{self.height}+{int(self.geometry[0]+self.geometry[2]//2) - 250}+{int(self.geometry[1]+0.8*self.geometry[1])}"
         )
 
         self.leftvar = tk.DoubleVar()
@@ -60,6 +62,7 @@ class XRangeSlider:
     def update(self, *args):
         self.current_limits = self.parent.DoseFigureHandler.ax.get_xlim()
         self.stretch = abs(self.current_limits[0]) + abs(self.current_limits[1])
+
         self.new_limits = [self.leftvar.get(), self.rightvar.get()]
         self.parent.new_limits = self.new_limits
 
@@ -70,7 +73,6 @@ class XRangeSlider:
             self.parent.refresh()
 
     def submit(self):
-        self.parent.refresh()
         self.parent.xlimmenu = False
         self.window.destroy()
 
@@ -82,6 +84,7 @@ class XRangeSlider:
             self.parent.winfo_width(),
             self.parent.winfo_height(),
         ]
+        self.window.lift()
         self.window.after(50, self.stay_on_top)
         if self.new_geometry == self.geometry:
             return
@@ -89,6 +92,5 @@ class XRangeSlider:
         self.geometry = self.new_geometry
         self.height = 80
         self.window.geometry(
-            f"{500}x{self.height}+{int(self.geometry[0]+self.geometry[2]//2) - 250}+{self.geometry[1]+ self.geometry[3]}"
+            f"{500}x{self.height}+{int(self.geometry[0]+self.geometry[2]//2) - 250}+{int(self.geometry[1]+0.8*self.geometry[1])}"
         )
-        self.window.lift()

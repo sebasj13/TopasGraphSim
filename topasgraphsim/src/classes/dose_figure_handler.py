@@ -514,24 +514,7 @@ class DoseFigureHandler:
         except:
             pass
 
-        if self.initial_limits == []:
-            self.initial_limits = self.ax.get_xlim()
-
-        self.axlims = (self.parent.axlims.get(), self.parent.axlims.get())
-        if self.plots[0].direction == "Z" or self.half == True:
-            self.axlims = (0, self.axlims[1])
-        self.ax.set_xlim(
-            left=self.ax.get_xlim()[0] - self.axlims[0],
-            right=self.ax.get_xlim()[1] + self.axlims[1],
-        )
-        self.ax.set_xbound(
-            lower=self.ax.get_xlim()[0] - self.axlims[0],
-            upper=self.ax.get_xlim()[1] + self.axlims[1],
-        )
-
-        if self.parent.new_limits != []:
-            self.ax.set_xlim(self.parent.new_limits)
-            self.ax.set_xbound(self.parent.new_limits)
+        self.set_xlims()
 
         if self.zoom == True:
 
@@ -646,6 +629,33 @@ class DoseFigureHandler:
             mark_inset(self.ax, self.axins, loc1=2, loc2=4, fc="none", ec="0.5")
 
         return
+
+    def set_xlims(self):
+
+        if self.initial_limits == []:
+            self.initial_limits = self.ax.get_xlim()
+
+        if self.parent.new_limits != []:
+            self.ax.set_xlim(self.parent.new_limits)
+            self.ax.set_xbound(self.parent.new_limits)
+
+        self.axlims = (self.parent.axlims.get(), self.parent.axlims.get())
+        if self.plots[0].direction == "Z" or self.half == True:
+            self.axlims = (0, self.axlims[1])
+        self.ax.set_xlim(
+            left=self.ax.get_xlim()[0] - self.axlims[0],
+            right=self.ax.get_xlim()[1] + self.axlims[1],
+        )
+        self.ax.set_xbound(
+            lower=self.ax.get_xlim()[0] - self.axlims[0],
+            upper=self.ax.get_xlim()[1] + self.axlims[1],
+        )
+        if self.half == False:
+            if (
+                self.ax.get_xlim()[0] < abs(self.initial_limits[0])
+                or self.ax.get_xlim()[1] > self.initial_limits[1]
+            ):
+                self.initial_limits = self.ax.get_xlim()
 
     def return_figure(self, filenames):
 

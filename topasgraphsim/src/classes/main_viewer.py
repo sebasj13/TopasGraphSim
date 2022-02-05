@@ -458,8 +458,10 @@ class MainApplication(tk.Frame):
 
     def change_xrange(self):
 
-        self.xlimmenu = True
+        self.slider = None
         self.slider = XRangeSlider(self)
+        self.xlimmenu = True
+
         return
 
     def set_language(self, language):
@@ -564,8 +566,14 @@ class MainApplication(tk.Frame):
         self.menuflag = False
         self.new_limits = []
         self.DoseFigureHandler.caxcorrection = False
+        self.DoseFigureHandler.initial_limits = []
         self.caxcorrection.set(False)
         self.axlims.set(0)
+        try:
+            self.slider.window.destroy()
+            self.xlimmenu = False
+        except Exception as e:
+            print(e)
 
         return
 
@@ -1080,6 +1088,8 @@ class MainApplication(tk.Frame):
                 0.6 * self.canvas.image.width(),
                 self.canvas.image.height(),
                 tags="xaxis",
+                outline="",
+                fill=""
             )
             self.rename_boxes += [xbox]
 
