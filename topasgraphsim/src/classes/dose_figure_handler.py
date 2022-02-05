@@ -685,7 +685,12 @@ class DoseFigureHandler:
         self.ax.set_aspect("auto")
         self.set_style()
         if self.half == True:
-            self.ax.set_xlim(0, np.max([plots.axis[self.half] for plots in self.plots]))
+            self.ax.set_xlim(
+                0,
+                np.max(
+                    np.max(np.array([plots.axis[self.half] for plots in self.plots]))
+                ),
+            )
 
         self.canvas.draw()
         buffer = self.canvas.buffer_rgba()
