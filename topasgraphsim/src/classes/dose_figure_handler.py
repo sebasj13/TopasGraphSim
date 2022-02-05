@@ -30,6 +30,8 @@ class DoseFigureHandler:
         self.errlimmax = 1.1
         self.errorbars = True
         self.caxcorrection = False
+        self.xaxisname = None
+        self.initial_limits = []
         self.diffplot = False
         self.zoom = self.parent.zoom.get()
         self.half = self.parent.half.get()
@@ -454,14 +456,22 @@ class DoseFigureHandler:
         directions = [plot.direction for plot in self.plots]
         if directions.count(directions[0]) == len(directions):
 
-            xlabel = f"{directions[0]}-{self.text.axis[self.lang]} [mm]"
+            self.xlabel = f"{directions[0]}-{self.text.axis[self.lang]} [mm]"
         else:
-            xlabel = f"X- {self.text.orr[self.lang]} Y-{self.text.axis[self.lang]}"
+            self.xlabel = (
+                f"X- {self.text.orr[self.lang]} Y-{self.text.axis[self.lang]} [mm]"
+            )
 
         if self.diffplot == True:
-            self.diffax.set_xlabel(xlabel, size=12)
+            if self.xaxisname != None:
+                self.diffax.set_xlabel(self.xaxisname, size=12)
+            else:
+                self.diffax.set_xlabel(self.xlabel, size=12)
         else:
-            self.ax.set_xlabel(xlabel, size=12)
+            if self.xaxisname != None:
+                self.ax.set_xlabel(self.xaxisname, size=12)
+            else:
+                self.ax.set_xlabel(self.xlabel, size=12)
         if self.norm == False:
             self.ax.set_ylabel(self.plots[0].unit, size=12)
 
@@ -504,6 +514,9 @@ class DoseFigureHandler:
         except:
             pass
 
+        if self.initial_limits == []:
+            self.initial_limits = self.ax.get_xlim()
+
         self.axlims = (self.parent.axlims.get(), self.parent.axlims.get())
         if self.plots[0].direction == "Z" or self.half == True:
             self.axlims = (0, self.axlims[1])
@@ -515,6 +528,10 @@ class DoseFigureHandler:
             lower=self.ax.get_xlim()[0] - self.axlims[0],
             upper=self.ax.get_xlim()[1] + self.axlims[1],
         )
+
+        if self.parent.new_limits != []:
+            self.ax.set_xlim(self.parent.new_limits)
+            self.ax.set_xbound(self.parent.new_limits)
 
         if self.zoom == True:
 

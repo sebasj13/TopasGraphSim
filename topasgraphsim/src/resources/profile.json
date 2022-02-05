@@ -1,10 +1,10 @@
 {
     "color_scheme": "light",
-    "language": "en",
+    "language": "de",
     "markersize": 1.0,
     "linewidth": 1.0,
     "normalize": 1,
-    "zoom": 1,
+    "zoom": 0,
     "fullscreen": false,
     "halfview": false,
     "default_colors": [
@@ -15,8 +15,8 @@
         "#654321"
     ],
     "colors": [
-        "#009F6B",
-        "#C40233",
+        "#a0e45c",
+        null,
         "#00008B",
         "#BCA136",
         "#654321"
