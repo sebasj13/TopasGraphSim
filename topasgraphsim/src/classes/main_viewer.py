@@ -597,13 +597,16 @@ class MainApplication(tk.Frame):
 
         file = fd.asksaveasfilename(
             defaultextension=".png",
-            filetypes=[(self.text.image[self.lang], [".png", ".jpg"])],
+            filetypes=[
+                (self.text.image[self.lang], [".png", ".jpg"]),
+                ("PDF", [".pdf"]),
+            ],
         )
 
         if file is None:
             return
 
-        ImageTk.getimage(self.photoimage).save(file)
+        ImageTk.getimage(self.photoimage).convert("RGB").save(file)
         self.saved = True
 
         return
@@ -1089,7 +1092,7 @@ class MainApplication(tk.Frame):
                 self.canvas.image.height(),
                 tags="xaxis",
                 outline="",
-                fill=""
+                fill="",
             )
             self.rename_boxes += [xbox]
 
