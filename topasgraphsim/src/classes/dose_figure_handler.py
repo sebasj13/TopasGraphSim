@@ -652,7 +652,7 @@ class DoseFigureHandler:
         )
         if self.half == False:
             if (
-                self.ax.get_xlim()[0] < abs(self.initial_limits[0])
+                self.ax.get_xlim()[0] < self.initial_limits[0]
                 or self.ax.get_xlim()[1] > self.initial_limits[1]
             ):
                 self.initial_limits = self.ax.get_xlim()
@@ -684,6 +684,8 @@ class DoseFigureHandler:
         self.add_legend()
         self.ax.set_aspect("auto")
         self.set_style()
+        if self.half == True:
+            self.ax.set_xlim(0, np.max([plots.axis[self.half] for plots in self.plots]))
 
         self.canvas.draw()
         buffer = self.canvas.buffer_rgba()

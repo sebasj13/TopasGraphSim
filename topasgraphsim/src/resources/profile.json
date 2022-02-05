@@ -1,6 +1,6 @@
 {
     "color_scheme": "light",
-    "language": "de",
+    "language": "en",
     "markersize": 1.0,
     "linewidth": 1.0,
     "normalize": 1,
@@ -15,8 +15,8 @@
         "#654321"
     ],
     "colors": [
-        "#a0e45c",
-        null,
+        "#009F6B",
+        "#C40233",
         "#00008B",
         "#BCA136",
         "#654321"
