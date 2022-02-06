@@ -57,6 +57,8 @@ This GUI can visualize and analyze percentage depth dose (pdd) and dose profiles
 | <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>+</kbd> <kbd>-</kbd> | Increase/decrease the error plot upper limits |
 | <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>+</kbd> <kbd>-</kbd> | Increase/decrease the error plot lower limits |
 | <kbd>Double Left Click</kbd> on <kbd>Graph</kbd>| Change zoom window location |
+| <kbd>Left Click</kbd> on <kbd>Bottom Axis</kbd>| Open axis range selector |
+| <kbd>Left Click</kbd> on <kbd>Bottom Axis</kbd>| Rename bottom axis |
 
 
 ### Adjusting the Graph Legend
