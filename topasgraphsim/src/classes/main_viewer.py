@@ -83,7 +83,8 @@ class MainApplication(tk.Frame):
         self.errlimval.set("absolute")
 
         self.slidervars = [tk.DoubleVar(), tk.DoubleVar()]
-        self.initial_values = []
+        self.current_limits = []
+        self.initial_limits = []
 
         self.DoseFigureHandler = DoseFigureHandler(self)
 
@@ -469,7 +470,7 @@ class MainApplication(tk.Frame):
         elif event.delta < 0:
 
             if self.DoseFigureHandler.plots[0].direction == "Z":
-                pass
+                self.slidervars[1].set(self.slidervars[1].get() + 5)
             else:
 
                 if self.slidervars[0].get() >= 0:
@@ -482,6 +483,8 @@ class MainApplication(tk.Frame):
                 else:
                     self.slidervars[1].set(self.slidervars[1].get() - 5)
 
+        self.current_limits = [self.slidervars[0].get(), self.slidervars[1].get()]
+
         self.show_preview()
 
         return
@@ -489,15 +492,15 @@ class MainApplication(tk.Frame):
     def change_xrange(self):
 
         self.parent.unbind("<MouseWheel>")
-        for i, var in enumerate(self.slidervars):
-            if var.get() < 0 and var.get() < self.initial_values[i]:
-                self.initial_values[i] = var.get()
+        for i, var in enumerate(self.initial_limits):
+            if var < 0 and var < self.current_limits[i]:
+                self.current_limits[i] = var
 
-            if var.get() >= 0 and var.get() > self.initial_values[i]:
-                self.initial_values[i] = var.get()
+            if var >= 0 and var > self.current_limits[i]:
+                self.current_limits[i] = var
 
         self.xlimmenu = True
-        self.slider = XRangeSlider(self, self.slidervars, self.initial_values)
+        self.slider = XRangeSlider(self, self.slidervars, self.current_limits)
 
         return
 
@@ -601,7 +604,8 @@ class MainApplication(tk.Frame):
         self.errlimmax = 1.1
         self.saved = True
         self.menuflag = False
-        self.initial_values = []
+        self.current_limits = []
+        self.initial_limits = []
         self.slidervars = [tk.DoubleVar(), tk.DoubleVar()]
         self.DoseFigureHandler.caxcorrection = False
         self.caxcorrection.set(False)

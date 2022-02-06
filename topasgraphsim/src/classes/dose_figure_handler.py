@@ -32,7 +32,6 @@ class DoseFigureHandler:
         self.errorbars = True
         self.caxcorrection = False
         self.xaxisname = None
-        self.initial_limits = []
         self.diffplot = False
         self.zoom = self.parent.zoom.get()
         self.half = self.parent.half.get()
@@ -633,18 +632,19 @@ class DoseFigureHandler:
 
     def set_xlims(self):
 
-        if self.parent.initial_values == []:
-            self.initial_values = [self.ax.get_xlim()[0], self.ax.get_xlim()[1]]
-            self.parent.initial_values = self.initial_values
-            self.parent.slidervars[0].set(self.initial_values[0])
-            self.parent.slidervars[1].set(self.initial_values[1])
+        if self.parent.current_limits == []:
+            self.current_limits = [self.ax.get_xlim()[0], self.ax.get_xlim()[1]]
+            self.parent.current_limits = self.current_limits
+            self.parent.initial_limits = self.current_limits
+            self.parent.slidervars[0].set(self.current_limits[0])
+            self.parent.slidervars[1].set(self.current_limits[1])
 
-        self.initial_values = [
+        self.current_limits = [
             self.parent.slidervars[0].get(),
             self.parent.slidervars[1].get(),
         ]
 
-        self.ax.set_xlim(self.initial_values)
+        self.ax.set_xlim(self.current_limits)
 
     def return_figure(self, filenames):
 
