@@ -16,6 +16,7 @@ from .ptw_import import PTWMultimporter
 from .sim_import import Simulation
 from .egs_import import EGSSimulation
 
+
 class DoseFigureHandler:
     def __init__(self, parent):
 
@@ -612,19 +613,32 @@ class DoseFigureHandler:
             x1, x2, y1, y2 = (
                 self.focuspoint - 6,
                 self.focuspoint + 6,
-                0.99 * min(yvalsat205),
-                1.01 * max(yvalsat195),
+                0.95 * min(yvalsat205),
+                1.05 * max(yvalsat195),
             )
+
+            loc1 = 2
+            loc2 = 4
+
+            if y2 < y1:
+                y1, y2 = y2, y1
+                loc1, loc2 = 1, 3
+
             if self.half == True:
                 x1, x2 = x1 + 3, x2 - 3
 
             self.axins.set_xlim(x1, x2)
             self.axins.set_ylim(y1, y2)
             self.axins.tick_params(
-                labelleft=False, labelbottom=False, bottom=False, left=False
+                labelleft=False,
+                labelright=True,
+                labelbottom=False,
+                labeltop=True,
+                bottom=False,
+                left=False,
             )
 
-            mark_inset(self.ax, self.axins, loc1=2, loc2=4, fc="none", ec="0.5")
+            mark_inset(self.ax, self.axins, loc1=loc1, loc2=loc2, fc="none", ec="0.5")
 
         return
 
