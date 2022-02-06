@@ -13,6 +13,7 @@ import tkinter.ttk as ttk
 from tkinter import PhotoImage
 
 from src.classes.main_viewer import MainApplication
+from src.classes.update import CheckForUpdates
 
 
 def topasgraphsim():
@@ -38,7 +39,9 @@ def topasgraphsim():
             )
         ),
     )
+
     MainApplication(root)
+    CheckForUpdates()
 
     root.after(
         50,
