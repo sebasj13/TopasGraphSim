@@ -476,7 +476,7 @@ class MainApplication(tk.Frame):
             
             self.parent.configure(background="#363636")
             self.logocanvas.place_forget()
-            self.logocanvas.configure(background="#363636")
+            self.logocanvas.configure(background="#333333")
             self.logocanvas.place(
             relx=0.41233, rely=0.3441, relheight=1, relwidth=1,
         )
