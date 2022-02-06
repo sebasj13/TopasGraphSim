@@ -7,6 +7,7 @@ class Text:
     def __init__(self):
 
         self.absolute = {"de": "Absolut", "en": "Absolute"}
+        self.about = {"de": "Über TGS", "en": "About"}
         self.add = {"de": "Daten hinzufügen", "en": "Add Data"}
         self.axis = {"de": "Achse", "en": "Axis"}
         self.calcfail = {

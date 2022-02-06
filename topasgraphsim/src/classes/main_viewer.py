@@ -8,6 +8,7 @@ import pynput
 from PIL import Image, ImageTk
 
 from ..resources.language import Text
+from ..resources.info import show_info
 from .dose_figure_handler import DoseFigureHandler
 from .profile import ProfileHandler
 from .xrangeslider import XRangeSlider
@@ -400,12 +401,18 @@ class MainApplication(tk.Frame):
             label=Text().errlimmenu[self.lang], menu=self.errlimmenu
         )
         self.normmenu.entryconfig(13, state=tk.DISABLED)
+
+        self.menubar.add_command(label=self.text.about[self.lang], command=self.about)
+
         self.parent.config(menu=self.menubar)
 
         self.parent.title(self.text.window_title[self.lang])
         self.pack(side="top", fill="both", expand=True)
         self.parent.attributes("-fullscreen", self.fullscreen.get())
         self.autostart()
+
+    def about(self):
+        show_info(self.parent, self.lang, self.dark.get())
 
     def autostart(self):
 
@@ -520,6 +527,14 @@ class MainApplication(tk.Frame):
         diffplot = self.diffplot.get()
         errlimmin = self.DoseFigureHandler.errlimmin
         errlimmax = self.DoseFigureHandler.errlimmax
+        initial_limits = self.initial_limits
+        current_limits = [self.slidervars[0].get(), self.slidervars[1].get()]
+        try:
+            self.slider.submit()
+            self.slider.window.destroy()
+            self.slider = None
+        except Exception:
+            pass
         self.pack_forget()
         self.parent.config(menu=None)
         self.profile.set_attribute("language", language)
@@ -534,6 +549,10 @@ class MainApplication(tk.Frame):
             self.norm.set(normalize)
             self.errorbars.set(errorbars)
             self.diffplot.set(diffplot)
+            self.current_limits = current_limits
+            self.initial_limits = initial_limits
+            self.slidervars[0].set(self.current_limits[0])
+            self.slidervars[1].set(self.current_limits[1])
             self.DoseFigureHandler.diffplot = diffplot
             self.DoseFigureHandler.errlimmin = errlimmin
             self.DoseFigureHandler.errlimmax = errlimmax
@@ -621,6 +640,13 @@ class MainApplication(tk.Frame):
 
         """Saves the current graph as an image
         """
+
+        try:
+            self.slider.submit()
+            self.slider.window.destroy()
+            self.slider = None
+        except Exception:
+            pass
 
         if exit == True:
             if self.saved == False:

@@ -15,8 +15,6 @@ from .measurement_import import Measurement
 from .ptw_import import PTWMultimporter
 from .sim_import import Simulation
 from .egs_import import EGSSimulation
-from .RangeSlider import RangeSliderH
-
 
 class DoseFigureHandler:
     def __init__(self, parent):

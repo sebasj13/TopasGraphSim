@@ -23,7 +23,7 @@ class XRangeSlider:
         ]
         self.height = 110
         self.window.geometry(
-            f"{500}x{self.height}+{int(self.geometry[0]+self.geometry[2]//2) - 250}+{int(self.geometry[1]+0.8*self.geometry[1])}"
+            f"{500}x{self.height}+{int(self.geometry[0]+self.geometry[2]//2) - 250}+{int(self.geometry[1]+self.geometry[3]//2)}"
         )
 
         self.slider = RangeSliderH(
@@ -50,9 +50,12 @@ class XRangeSlider:
             text=Text().reset[ProfileHandler().get_attribute("language")],
             command=self.reset,
         )
-        self.submitbutton.grid(sticky="N")
-        self.resetbutton.grid(sticky="N")
-        self.slider.grid(sticky="N")
+        self.spacer = tk.Label(self.window, text="")
+        self.submitbutton.grid(row=0, column=3, sticky="NW")
+        self.resetbutton.grid(row=0, column=1, sticky="NE")
+        self.spacer.grid(row=1, column=2)
+        self.slider.grid(row=2, column=0, columnspan=5, sticky="S")
+        
         self.a = slidervars[0].trace("w", self.update)
         self.b = slidervars[1].trace("w", self.update)
         self.stay_on_top()
@@ -78,7 +81,6 @@ class XRangeSlider:
         self.parent.current_limits = self.parent.initial_limits
         self.parent.slidervars[0].set(self.parent.initial_limits[0])
         self.parent.slidervars[1].set(self.parent.initial_limits[1])
-        self.slider.grid_remove()
         self.slider.destroy()
         self.slider = None
         self.slider = RangeSliderH(
@@ -94,7 +96,7 @@ class XRangeSlider:
             digit_precision=".0f",
             suffix=" mm",
         )
-        self.slider.grid(sticky="N")
+        self.slider.grid(row=1, column=0, columnspan=2, sticky="N")
         self.submit()
         return
 
@@ -113,5 +115,5 @@ class XRangeSlider:
 
         self.geometry = self.new_geometry
         self.window.geometry(
-            f"{500}x{self.height}+{int(self.geometry[0]+self.geometry[2]//2) - 250}+{int(self.geometry[1]+0.8*self.geometry[1])}"
+            f"{500}x{self.height}+{int(self.geometry[0]+self.geometry[2]//2) - 250}+{int(self.geometry[1]+self.geometry[3]//2)}"
         )

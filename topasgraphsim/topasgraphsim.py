@@ -25,7 +25,7 @@ def topasgraphsim():
     x = screen_width // 2 - width // 2
     y = screen_height // 2 - height // 2
     root.minsize(width + 50, height)
-    root.geometry("%dx%d+%d+%d" % (width + 50, height, x - 25, y))
+    root.geometry(f"{width+50}x{height}+{x-25}+{y}")
     ttk.Style(root)
     root.tk.call(
         "source",
