@@ -114,7 +114,7 @@ class Text:
         }
         self.simulation = {"de": "Simulation", "en": "Simulation"}
         self.startdark = {"de": "Im dunklen Modus starten", "en": "Start in dark mode"}
-        self.submit = {"de": "Fertig", "en": "Sumbit"}
+        self.submit = {"de": "Fertig", "en": "Submit"}
         self.symmetry = {"de": "Symmetrie", "en": "Symmetry"}
         self.topas = {"de": "TOPAS Simulationsdateien", "en": "TOPAS Simulation Data"}
         self.view = {"de": "Ansicht", "en": "View"}

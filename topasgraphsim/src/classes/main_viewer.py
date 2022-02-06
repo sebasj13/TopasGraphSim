@@ -408,7 +408,6 @@ class MainApplication(tk.Frame):
 
         self.parent.title(self.text.window_title[self.lang])
 
-
         self.logo = Image.open(
             os.path.join(
                 os.path.dirname(os.path.realpath(__file__)),
@@ -416,7 +415,10 @@ class MainApplication(tk.Frame):
                 "resources",
                 "icon.png",
             )
-        ).resize((self.parent.minsize()[0]//4,(self.parent.minsize()[0]//4)), Image.LANCZOS)
+        ).resize(
+            (self.parent.minsize()[0] // 4, (self.parent.minsize()[0] // 4)),
+            Image.LANCZOS,
+        )
         self.tklogo = ImageTk.PhotoImage(self.logo)
         self.logolabel = tk.Label(self, image=self.tklogo)
         self.logolabel.image = self.tklogo
@@ -598,6 +600,7 @@ class MainApplication(tk.Frame):
             self.filenames += [(file, type)]
 
         self.show_preview()
+        self.logolabel.pack_forget()
         self.filemenu.entryconfig(0, state=tk.DISABLED)
         self.filemenu.entryconfig(1, state=tk.DISABLED)
         self.filemenu.entryconfig(3, state=tk.NORMAL)
@@ -647,6 +650,7 @@ class MainApplication(tk.Frame):
             self.xlimmenu = False
         except AttributeError:
             pass
+        self.logolabel.pack(fill="both", expand=True)
 
         return
 
