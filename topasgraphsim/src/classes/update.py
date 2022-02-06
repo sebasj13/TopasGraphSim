@@ -7,10 +7,13 @@ from .profile import ProfileHandler
 class CheckForUpdates:
     def __init__(self):
 
-        currentVersion = "17.2.4"
-        newestVersion = requests.get(
-            "https://api.github.com/repos/sebasj13/topasgraphsim/releases/latest"
-        ).json()["name"][1:]
+        currentVersion = "17.2.5"
+        try:
+            newestVersion = requests.get(
+                "https://api.github.com/repos/sebasj13/topasgraphsim/releases/latest"
+            ).json()["name"][1:]
+        except Exception:
+            return
 
         self.update = {
             "de": f"Eine neue Version ({newestVersion}) von TopasGraphSim ist verfügbar.\nAnsehen?",
@@ -23,4 +26,7 @@ class CheckForUpdates:
             )
 
             if dialog == True:
-                webbrowser.open("https://pypi.org/project/topasgraphsim/")
+                try:
+                    webbrowser.open("https://pypi.org/project/topasgraphsim/")
+                except Exception:
+                    return
