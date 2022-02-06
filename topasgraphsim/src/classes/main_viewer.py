@@ -648,7 +648,7 @@ class MainApplication(tk.Frame):
         self.addmeasuremenu.entryconfig(1, state=tk.NORMAL)
         self.normmenu.entryconfig(12, state=tk.DISABLED)
         self.normmenu.entryconfig(13, state=tk.DISABLED)
-        self.menubar.delete(3, 4)
+        self.menubar.delete(4, 5)
         self.filenames = []
         self.canvas.itemconfig(self.image_on_canvas, image=None)
         self.DoseFigureHandler.flush()
