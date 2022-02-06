@@ -408,22 +408,31 @@ class MainApplication(tk.Frame):
 
         self.parent.title(self.text.window_title[self.lang])
 
-        self.logo = Image.open(
-            os.path.join(
-                os.path.dirname(os.path.realpath(__file__)),
-                "..",
-                "resources",
-                "icon.png",
+        self.logo = ImageTk.PhotoImage(
+            Image.open(
+                os.path.join(
+                    os.path.dirname(os.path.realpath(__file__)),
+                    "..",
+                    "resources",
+                    "icon.png",
+                )
+            ).resize(
+                (self.parent.minsize()[0] // 4, (self.parent.minsize()[0] // 4)),
+                Image.LANCZOS,
             )
-        ).resize(
-            (self.parent.minsize()[0] // 4, (self.parent.minsize()[0] // 4)),
-            Image.LANCZOS,
         )
-        self.tklogo = ImageTk.PhotoImage(self.logo)
-        self.logolabel = tk.Label(self, image=self.tklogo)
-        self.logolabel.image = self.tklogo
-        self.logolabel.pack(fill="both", expand=True)
+        self.logocanvas = tk.Canvas(self)
+        self.logo_on_canvas = self.logocanvas.create_image(
+            0, 0, anchor=tk.NW, image=self.logo
+        )
+        self.logocanvas.image = self.logo
+        self.canvas.itemconfig(self.logo_on_canvas, image=self.logocanvas.image)
+        self.logocanvas.place(
+            relx=0.41233, rely=0.3441, relheight=1, relwidth=1,
+        )
+
         self.pack(side="top", fill="both", expand=True)
+
         self.parent.attributes("-fullscreen", self.fullscreen.get())
         self.autostart()
 
@@ -448,18 +457,31 @@ class MainApplication(tk.Frame):
 
         """Switches between light and dark theme
         """
-
+        
         if theme == "light":
             self.parent.tk.call("set_theme", "light")
+            self.logocanvas.place_forget()
+            self.logocanvas.configure(background="#ffffff")
             self.parent.configure(background="#ffffff")
+            self.logocanvas.place(
+            relx=0.41233, rely=0.3441, relheight=1, relwidth=1,
+        )
+            
             if self.filenames != []:
                 self.show_preview()
 
         else:
             # Set dark theme
             self.parent.tk.call("set_theme", "dark")
+            
             self.parent.configure(background="#363636")
+            self.logocanvas.place_forget()
+            self.logocanvas.configure(background="#363636")
+            self.logocanvas.place(
+            relx=0.41233, rely=0.3441, relheight=1, relwidth=1,
+        )
             if self.filenames != []:
+                self.logocanvas.place_forget()
                 self.show_preview()
 
         return
@@ -598,9 +620,8 @@ class MainApplication(tk.Frame):
 
         for file in self.current_file:
             self.filenames += [(file, type)]
-
+        self.logocanvas.place_forget()
         self.show_preview()
-        self.logolabel.pack_forget()
         self.filemenu.entryconfig(0, state=tk.DISABLED)
         self.filemenu.entryconfig(1, state=tk.DISABLED)
         self.filemenu.entryconfig(3, state=tk.NORMAL)
@@ -650,8 +671,9 @@ class MainApplication(tk.Frame):
             self.xlimmenu = False
         except AttributeError:
             pass
-        self.logolabel.pack(fill="both", expand=True)
-
+        self.logocanvas.place(
+            relx=0.41233, rely=0.3441, relheight=1, relwidth=1,
+        )
         return
 
     def save_graph(self, exit=False):
