@@ -513,8 +513,6 @@ class DoseFigureHandler:
         except:
             pass
 
-        self.set_xlims()
-
         if self.zoom == True:
 
             self.canvas.draw()
@@ -639,6 +637,8 @@ class DoseFigureHandler:
             )
 
             mark_inset(self.ax, self.axins, loc1=loc1, loc2=loc2, fc="none", ec="0.5")
+
+        self.set_xlims()
 
         return
 
