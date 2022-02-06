@@ -82,6 +82,9 @@ class MainApplication(tk.Frame):
         self.errlimval = tk.StringVar()
         self.errlimval.set("absolute")
 
+        self.slidervars = [tk.DoubleVar(), tk.DoubleVar()]
+        self.initial_values = []
+
         self.DoseFigureHandler = DoseFigureHandler(self)
 
         # Keybinding definitions
@@ -449,18 +452,52 @@ class MainApplication(tk.Frame):
     def change_x_limits(self, event=None):
 
         if event.delta > 0:
-            self.axlims.set(self.axlims.get() - 5)
+
+            if self.DoseFigureHandler.plots[0].direction == "Z":
+                self.slidervars[1].set(self.slidervars[1].get() - 5)
+            else:
+
+                if self.slidervars[0].get() >= 0:
+                    self.slidervars[0].set(self.slidervars[0].get() - 5)
+                else:
+                    self.slidervars[0].set(self.slidervars[0].get() + 5)
+
+                if self.slidervars[1].get() >= 0:
+                    self.slidervars[1].set(self.slidervars[1].get() - 5)
+                else:
+                    self.slidervars[1].set(self.slidervars[1].get() + 5)
         elif event.delta < 0:
-            self.axlims.set(self.axlims.get() + 5)
+
+            if self.DoseFigureHandler.plots[0].direction == "Z":
+                pass
+            else:
+
+                if self.slidervars[0].get() >= 0:
+                    self.slidervars[0].set(self.slidervars[0].get() + 5)
+                else:
+                    self.slidervars[0].set(self.slidervars[0].get() - 5)
+
+                if self.slidervars[1].get() >= 0:
+                    self.slidervars[1].set(self.slidervars[1].get() + 5)
+                else:
+                    self.slidervars[1].set(self.slidervars[1].get() - 5)
+
         self.show_preview()
 
         return
 
     def change_xrange(self):
 
-        self.slider = None
-        self.slider = XRangeSlider(self)
+        self.parent.unbind("<MouseWheel>")
+        for i, var in enumerate(self.slidervars):
+            if var.get() < 0 and var.get() < self.initial_values[i]:
+                self.initial_values[i] = var.get()
+
+            if var.get() >= 0 and var.get() > self.initial_values[i]:
+                self.initial_values[i] = var.get()
+
         self.xlimmenu = True
+        self.slider = XRangeSlider(self, self.slidervars, self.initial_values)
 
         return
 
@@ -564,16 +601,15 @@ class MainApplication(tk.Frame):
         self.errlimmax = 1.1
         self.saved = True
         self.menuflag = False
-        self.new_limits = []
+        self.initial_values = []
+        self.slidervars = [tk.DoubleVar(), tk.DoubleVar()]
         self.DoseFigureHandler.caxcorrection = False
-        self.DoseFigureHandler.initial_limits = []
         self.caxcorrection.set(False)
-        self.axlims.set(0)
         try:
             self.slider.window.destroy()
             self.xlimmenu = False
-        except Exception as e:
-            print(e)
+        except AttributeError:
+            pass
 
         return
 
@@ -1033,13 +1069,13 @@ class MainApplication(tk.Frame):
         except AttributeError:
             pass
 
-        temp = self.rename_boxes[:-1]
+        temp = self.rename_boxes[: len(self.DoseFigureHandler.plots)]
         if len(self.rename_boxes) == 1:
             temp = self.rename_boxes
 
+        self.canvas.delete("rename")
         self.rename_boxes = []
         for i in range(len(temp)):
-            self.canvas.delete(temp[i])
             x = self.canvas.image.width()
             y = self.canvas.image.height()
             normdiff = 0

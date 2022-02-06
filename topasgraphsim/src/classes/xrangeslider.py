@@ -2,12 +2,12 @@ import tkinter as tk
 import tkinter.ttk as ttk
 from ..resources.language import Text
 from .profile import ProfileHandler
-import numpy as np
+import time
 from .RangeSlider import RangeSliderH
 
 
 class XRangeSlider:
-    def __init__(self, parent):
+    def __init__(self, parent, slidervars, initial_limits):
 
         self.parent = parent
         self.window = tk.Toplevel()
@@ -26,17 +26,9 @@ class XRangeSlider:
             f"{500}x{self.height}+{int(self.geometry[0]+self.geometry[2]//2) - 250}+{int(self.geometry[1]+0.8*self.geometry[1])}"
         )
 
-        self.leftvar = tk.DoubleVar()
-
-        self.rightvar = tk.DoubleVar()
-
-        initial_limits = self.parent.DoseFigureHandler.initial_limits
-        current_limits = self.parent.DoseFigureHandler.ax.get_xlim()
-        self.leftvar.set(round(current_limits[0], 1))
-        self.rightvar.set(round(current_limits[1], 1))
         self.slider = RangeSliderH(
             self.window,
-            variables=[self.leftvar, self.rightvar],
+            variables=slidervars,
             padX=100,
             valueSide="BOTTOM",
             Width=500,
@@ -55,26 +47,24 @@ class XRangeSlider:
         )
         self.submitbutton.grid(sticky="N")
         self.slider.grid(sticky="N")
-        self.leftvar.trace_add("write", self.update)
-        self.rightvar.trace_add("write", self.update)
+        slidervars[0].trace_add("write", self.update)
+        slidervars[1].trace_add("write", self.update)
         self.stay_on_top()
 
+        self.starttime = time.time()
+
     def update(self, *args):
-        self.current_limits = self.parent.DoseFigureHandler.ax.get_xlim()
-        self.stretch = abs(self.current_limits[0]) + abs(self.current_limits[1])
-
-        self.new_limits = [self.leftvar.get(), self.rightvar.get()]
-        self.parent.new_limits = self.new_limits
-
-        if (
-            abs(self.current_limits[0] - self.new_limits[0]) > 0.05 * self.stretch
-            or abs(self.current_limits[1] - self.new_limits[1]) > 0.05 * self.stretch
-        ):
+        if time.time() > self.starttime + 0.5:
             self.parent.refresh()
+            self.starttime = time.time()
+        return
 
     def submit(self):
         self.parent.xlimmenu = False
+        self.parent.parent.bind("<MouseWheel>", self.parent.change_x_limits)
         self.window.destroy()
+        self.parent.refresh()
+        return
 
     def stay_on_top(self):
 

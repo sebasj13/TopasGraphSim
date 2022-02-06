@@ -15,6 +15,7 @@ from .measurement_import import Measurement
 from .ptw_import import PTWMultimporter
 from .sim_import import Simulation
 from .egs_import import EGSSimulation
+from .RangeSlider import RangeSliderH
 
 
 class DoseFigureHandler:
@@ -632,30 +633,18 @@ class DoseFigureHandler:
 
     def set_xlims(self):
 
-        if self.initial_limits == []:
-            self.initial_limits = self.ax.get_xlim()
+        if self.parent.initial_values == []:
+            self.initial_values = [self.ax.get_xlim()[0], self.ax.get_xlim()[1]]
+            self.parent.initial_values = self.initial_values
+            self.parent.slidervars[0].set(self.initial_values[0])
+            self.parent.slidervars[1].set(self.initial_values[1])
 
-        if self.parent.new_limits != []:
-            self.ax.set_xlim(self.parent.new_limits)
-            self.ax.set_xbound(self.parent.new_limits)
+        self.initial_values = [
+            self.parent.slidervars[0].get(),
+            self.parent.slidervars[1].get(),
+        ]
 
-        self.axlims = (self.parent.axlims.get(), self.parent.axlims.get())
-        if self.plots[0].direction == "Z" or self.half == True:
-            self.axlims = (0, self.axlims[1])
-        self.ax.set_xlim(
-            left=self.ax.get_xlim()[0] - self.axlims[0],
-            right=self.ax.get_xlim()[1] + self.axlims[1],
-        )
-        self.ax.set_xbound(
-            lower=self.ax.get_xlim()[0] - self.axlims[0],
-            upper=self.ax.get_xlim()[1] + self.axlims[1],
-        )
-        if self.half == False:
-            if (
-                self.ax.get_xlim()[0] < self.initial_limits[0]
-                or self.ax.get_xlim()[1] > self.initial_limits[1]
-            ):
-                self.initial_limits = self.ax.get_xlim()
+        self.ax.set_xlim(self.initial_values)
 
     def return_figure(self, filenames):
 
