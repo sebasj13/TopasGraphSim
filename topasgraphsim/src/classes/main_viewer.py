@@ -407,6 +407,20 @@ class MainApplication(tk.Frame):
         self.parent.config(menu=self.menubar)
 
         self.parent.title(self.text.window_title[self.lang])
+
+
+        self.logo = Image.open(
+            os.path.join(
+                os.path.dirname(os.path.realpath(__file__)),
+                "..",
+                "resources",
+                "icon.png",
+            )
+        ).resize((self.parent.minsize()[0]//4,(self.parent.minsize()[0]//4)), Image.LANCZOS)
+        self.tklogo = ImageTk.PhotoImage(self.logo)
+        self.logolabel = tk.Label(self, image=self.tklogo)
+        self.logolabel.image = self.tklogo
+        self.logolabel.pack(fill="both", expand=True)
         self.pack(side="top", fill="both", expand=True)
         self.parent.attributes("-fullscreen", self.fullscreen.get())
         self.autostart()
