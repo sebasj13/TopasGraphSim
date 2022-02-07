@@ -35,7 +35,7 @@ class Simulation:
         self.unit = self.data.unit
 
         try:
-            self.std_dev = self.data.data["Standard_Deviation"].flatten()
+            self.std_dev = np.flip(self.data.data["Standard_Deviation"].flatten())
             self.histories = int(
                 self.data.data["Histories_with_Scorer_Active"].flatten()[0]
             )
