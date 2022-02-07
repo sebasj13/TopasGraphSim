@@ -15,6 +15,7 @@ class XRangeSlider:
         self.window.wm_overrideredirect(True)
         self.window.wm_attributes("-alpha", 0.6)
         self.window.bind("<Return>", self.submit)
+        self.dark = self.parent.dark.get()
         self.geometry = [
             self.parent.parent.winfo_rootx(),
             self.parent.parent.winfo_rooty(),
@@ -39,6 +40,10 @@ class XRangeSlider:
             digit_precision=".0f",
             suffix=" mm",
         )
+        if self.dark == True:
+            self.slider.canv.configure(bg="#363636")
+            self.slider.canv.itemconfigure(self.slider.bars[0]["Ids"][2], fill="white")
+            self.slider.canv.itemconfigure(self.slider.bars[1]["Ids"][2], fill="white")
 
         self.submitbutton = ttk.Button(
             self.window,
@@ -55,7 +60,7 @@ class XRangeSlider:
         self.resetbutton.grid(row=0, column=1, sticky="NE")
         self.spacer.grid(row=1, column=2)
         self.slider.grid(row=2, column=0, columnspan=5, sticky="S")
-        
+
         self.a = slidervars[0].trace("w", self.update)
         self.b = slidervars[1].trace("w", self.update)
         self.stay_on_top()
@@ -63,6 +68,7 @@ class XRangeSlider:
         self.starttime = time.time()
 
     def update(self, *args):
+
         if time.time() > self.starttime + 0.2:
             self.parent.refresh()
             self.starttime = time.time()
@@ -101,6 +107,25 @@ class XRangeSlider:
         return
 
     def stay_on_top(self):
+
+        if self.parent.dark.get() != self.dark:
+            self.dark = self.parent.dark.get()
+            if self.dark == True:
+                self.slider.canv.configure(bg="#363636")
+                self.slider.canv.itemconfigure(
+                    self.slider.bars[0]["Ids"][2], fill="white"
+                )
+                self.slider.canv.itemconfigure(
+                    self.slider.bars[1]["Ids"][2], fill="white"
+                )
+            else:
+                self.slider.canv.configure(bg="#ffffff")
+                self.slider.canv.itemconfigure(
+                    self.slider.bars[0]["Ids"][2], fill="black"
+                )
+                self.slider.canv.itemconfigure(
+                    self.slider.bars[1]["Ids"][2], fill="black"
+                )
 
         self.new_geometry = [
             self.parent.parent.winfo_rootx(),

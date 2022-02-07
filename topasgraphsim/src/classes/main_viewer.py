@@ -457,29 +457,29 @@ class MainApplication(tk.Frame):
 
         """Switches between light and dark theme
         """
-        
+
         if theme == "light":
             self.parent.tk.call("set_theme", "light")
             self.logocanvas.place_forget()
             self.logocanvas.configure(background="#ffffff")
             self.parent.configure(background="#ffffff")
             self.logocanvas.place(
-            relx=0.41233, rely=0.3441, relheight=1, relwidth=1,
-        )
-            
+                relx=0.41233, rely=0.3441, relheight=1, relwidth=1,
+            )
+
             if self.filenames != []:
                 self.show_preview()
 
         else:
             # Set dark theme
             self.parent.tk.call("set_theme", "dark")
-            
+
             self.parent.configure(background="#363636")
             self.logocanvas.place_forget()
             self.logocanvas.configure(background="#333333")
             self.logocanvas.place(
-            relx=0.41233, rely=0.3441, relheight=1, relwidth=1,
-        )
+                relx=0.41233, rely=0.3441, relheight=1, relwidth=1,
+            )
             if self.filenames != []:
                 self.logocanvas.place_forget()
                 self.show_preview()
@@ -567,6 +567,7 @@ class MainApplication(tk.Frame):
         errlimmax = self.DoseFigureHandler.errlimmax
         initial_limits = self.initial_limits
         current_limits = [self.slidervars[0].get(), self.slidervars[1].get()]
+        dark = self.dark.get()
         try:
             self.slider.submit()
             self.slider.window.destroy()
@@ -577,6 +578,9 @@ class MainApplication(tk.Frame):
         self.parent.config(menu=None)
         self.profile.set_attribute("language", language)
         self.__init__(self.parent)
+        if dark == True:
+            self.switchtheme("dark")
+            self.dark.set(True)
         if plots != []:
             self.filenames = filenames
             self.DoseFigureHandler.plots = plots

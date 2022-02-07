@@ -192,6 +192,7 @@ class DoseFigureHandler:
 
         self.canvas = FigureCanvasAgg(self.fig)
         self.fig.set_canvas(self.canvas)
+        self.set_style()
 
         if self.diffplot == True:
 
@@ -232,7 +233,7 @@ class DoseFigureHandler:
             self.diffax.plot(
                 data[0][0],
                 self.difference,
-                color="black",
+                color=self.textcolor,
                 linewidth=0.6,
                 label=self.text.error[self.lang],
             )
@@ -257,16 +258,40 @@ class DoseFigureHandler:
         """
 
         if self.parent.dark.get() == True:
+            self.textcolor = "white"
             self.ax.set_facecolor("#363636")
             self.fig.set_facecolor("#363636")
             if self.diffplot == True:
                 self.diffax.set_facecolor("#363636")
         else:
-
+            self.textcolor = "black"
             self.ax.set_facecolor("#ffffff")
             self.fig.set_facecolor("#ffffff")
             if self.diffplot == True:
                 self.diffax.set_facecolor("#ffffff")
+
+        self.ax.xaxis.label.set_color(self.textcolor)
+        self.ax.yaxis.label.set_color(self.textcolor)
+
+        self.ax.tick_params(axis="x", colors=self.textcolor)
+        self.ax.tick_params(axis="y", colors=self.textcolor)
+
+        self.ax.spines["left"].set_color(self.textcolor)
+        self.ax.spines["bottom"].set_color(self.textcolor)
+
+        plt.rcParams.update(
+            {"text.color": self.textcolor, "axes.labelcolor": self.textcolor}
+        )
+
+        if self.diffplot == True:
+            self.diffax.xaxis.label.set_color(self.textcolor)
+            self.diffax.yaxis.label.set_color(self.textcolor)
+
+            self.diffax.tick_params(axis="x", colors=self.textcolor)
+            self.diffax.tick_params(axis="y", colors=self.textcolor)
+
+            self.diffax.spines["left"].set_color(self.textcolor)
+            self.diffax.spines["bottom"].set_color(self.textcolor)
 
         return
 
@@ -559,6 +584,18 @@ class DoseFigureHandler:
                     loc = "lower center"
 
             self.axins = inset_axes(self.ax, "28%", "28%", loc=loc)
+            if self.parent.dark.get() == True:
+                self.axins.set_facecolor("#363636")
+
+            self.axins.xaxis.label.set_color(self.textcolor)
+            self.axins.yaxis.label.set_color(self.textcolor)
+
+            self.axins.tick_params(axis="x", colors=self.textcolor)
+            self.axins.tick_params(axis="y", colors=self.textcolor)
+
+            self.axins.spines["left"].set_color(self.textcolor)
+            self.axins.spines["bottom"].set_color(self.textcolor)
+
             yvalsat195 = []
             yvalsat205 = []
             for index, plot_data in enumerate(self.data):
@@ -684,7 +721,7 @@ class DoseFigureHandler:
 
         self.add_legend()
         self.ax.set_aspect("auto")
-        self.set_style()
+
         if self.half == True:
 
             xlim_r = [plots.axis[self.half] for plots in self.plots]
