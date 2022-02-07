@@ -230,12 +230,16 @@ class DoseFigureHandler:
                     x if round(x, 1) != 100 else 0 for x in self.difference
                 ]
 
+            label = self.text.error[self.lang] + " [abs]"
+            if self.errlimval != "absolute":
+                label = label[:-6] + " [%]"
+
             self.diffax.plot(
                 data[0][0],
                 self.difference,
                 color=self.textcolor,
                 linewidth=0.6,
-                label=self.text.error[self.lang],
+                label=label,
             )
 
             self.errlim = [

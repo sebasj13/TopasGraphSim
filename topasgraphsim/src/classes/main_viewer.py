@@ -640,7 +640,6 @@ class MainApplication(tk.Frame):
 
         """Closes the current project
         """
-
         self.canvas.place_forget()
         self.filemenu.entryconfig(0, state=tk.NORMAL)
         self.filemenu.entryconfig(1, state=tk.NORMAL)
@@ -654,7 +653,10 @@ class MainApplication(tk.Frame):
         self.normmenu.entryconfig(13, state=tk.DISABLED)
         self.menubar.delete(4, 5)
         self.filenames = []
-        self.canvas.itemconfig(self.image_on_canvas, image=None)
+        try:
+            self.canvas.itemconfig(self.image_on_canvas, image=None)
+        except Exception:
+            pass
         self.DoseFigureHandler.flush()
         self.DoseFigureHandler.plots = []
         self.diffplot.set(False)
@@ -1246,28 +1248,34 @@ class MainApplication(tk.Frame):
         for index, box in enumerate(self.rename_boxes):
             if e != None:
                 bbox = self.canvas.bbox(box)
-                if bbox[0] < e.x and bbox[2] > e.x and bbox[1] < e.y and bbox[3] > e.y:
-                    if index == len(self.rename_boxes) - 1:
-                        if self.xlimmenu == False:
-                            self.change_xrange()
-                        else:
-                            newname = sd.askstring(
-                                "",
-                                self.text.changefilename[self.lang],
-                                initialvalue=self.DoseFigureHandler.xlabel,
-                            )
-                            if newname != None:
-                                self.DoseFigureHandler.xaxisname = newname
-                                self.show_preview()
-                        return
-                    newname = sd.askstring(
-                        "",
-                        self.text.changefilename[self.lang],
-                        initialvalue=self.DoseFigureHandler.plots[index].filename,
-                    )
-                    if newname != None:
-                        self.DoseFigureHandler.plots[index].filename = newname
-                        self.show_preview()
+                if bbox != None:
+                    if (
+                        bbox[0] < e.x
+                        and bbox[2] > e.x
+                        and bbox[1] < e.y
+                        and bbox[3] > e.y
+                    ):
+                        if index == len(self.rename_boxes) - 1:
+                            if self.xlimmenu == False:
+                                self.change_xrange()
+                            else:
+                                newname = sd.askstring(
+                                    "",
+                                    self.text.changefilename[self.lang],
+                                    initialvalue=self.DoseFigureHandler.xlabel,
+                                )
+                                if newname != None:
+                                    self.DoseFigureHandler.xaxisname = newname
+                                    self.show_preview()
+                            return
+                        newname = sd.askstring(
+                            "",
+                            self.text.changefilename[self.lang],
+                            initialvalue=self.DoseFigureHandler.plots[index].filename,
+                        )
+                        if newname != None:
+                            self.DoseFigureHandler.plots[index].filename = newname
+                            self.show_preview()
 
     def check_right_click(self, e):
 
