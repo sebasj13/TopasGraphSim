@@ -935,7 +935,7 @@ class MainApplication(tk.Frame):
 
         self.logocanvas.pack_forget()
         self.canvas.pack_forget()
-        self.canvas = tk.Canvas(self, bg="red")
+        self.canvas = tk.Canvas(self, bg="")
         self.canvas.bind("<Button-1>", self.check_click)
         self.canvas.bind("<Button-3>", self.check_right_click)
         self.canvas.bind("<Motion>", self.check_hand)
@@ -1020,7 +1020,7 @@ class MainApplication(tk.Frame):
                 (0.023 + normdiff + 0.042 * i) * self.canvas.image.height() * factor,
                 0.988 * self.canvas.image.width(),
                 (0.065 + normdiff + 0.042 * i) * self.canvas.image.height() * factor,
-                fill="red",
+                fill="",
                 outline="",
                 tags="rename",
             )
@@ -1036,7 +1036,7 @@ class MainApplication(tk.Frame):
                 self.pixely * self.canvas.image.height() - 5,
                 self.pixelx * self.canvas.image.width() + 5,
                 self.pixely * self.canvas.image.height() + 5,
-                fill="blue",
+                fill="",
                 outline="",
                 tags="token",
             )
@@ -1204,7 +1204,7 @@ class MainApplication(tk.Frame):
                         (coords[1] - imdims[1] * (0.443 - i * 0.035 + normdiff))
                         * factor,
                         fill="",
-                        outline="black",
+                        outline="",
                         tags="rename",
                     )
                 ]
@@ -1225,7 +1225,7 @@ class MainApplication(tk.Frame):
                     self.pixely * (self.canvas.image.height())
                     + 5
                     + (canvdims[1] - imdims[1]) // 2,
-                    fill="blue",
+                    fill="",
                     outline="",
                     tags="token",
                 )
@@ -1233,7 +1233,6 @@ class MainApplication(tk.Frame):
             self.canvas.delete("xaxis")
             if len(self.DoseFigureHandler.plots) >= 1:
                 coords = self.canvas.coords(self.image_on_canvas)
-                print(coords[0])
                 xbox = self.canvas.create_rectangle(
                     coords[0] - imdims[0] * (0.035 + normdiff / 4),
                     imdims[1] * 0.95 + (canvdims[1] - imdims[1]) // 2,
@@ -1241,7 +1240,7 @@ class MainApplication(tk.Frame):
                     imdims[1] + (canvdims[1] - imdims[1]) // 2,
                     tags="xaxis",
                     outline="",
-                    fill="green",
+                    fill="",
                 )
                 self.rename_boxes += [xbox]
 
