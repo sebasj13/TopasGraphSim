@@ -1,4 +1,4 @@
-# TopasGraphSim
+# <p align="center">TopasGraphSim</p>
 
 <p align="center">
 <img src="https://user-images.githubusercontent.com/87897942/152699152-d4d39654-4449-4354-b899-4adc81eb25a7.png" width="320" height="160" />
