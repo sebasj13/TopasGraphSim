@@ -672,9 +672,11 @@ class MainApplication(tk.Frame):
             self.xlimmenu = False
         except AttributeError:
             pass
+        deltax = self.winfo_width() // 2 - self.center[0]
+        deltay = self.winfo_height() // 2 - self.center[1]
+        self.center = [self.winfo_width() // 2, self.winfo_height() // 2]
+        self.logocanvas.move(self.logo_on_canvas, deltax, deltay)
         self.logocanvas.pack(side=tk.TOP, fill="both", expand=True)
-        self.parent.update()
-        self.handle_configure()
         return
 
     def save_graph(self, exit=False):
