@@ -1,4 +1,5 @@
 import os
+import time
 import tkinter as tk
 from tkinter import filedialog as fd
 from tkinter import simpledialog as sd
@@ -18,8 +19,34 @@ class MainApplication(tk.Frame):
     def __init__(self, parent):
 
         tk.Frame.__init__(self, parent)
+        self.starttime = time.time()
 
         self.parent = parent
+
+        self.logo = ImageTk.PhotoImage(
+            Image.open(
+                os.path.join(
+                    os.path.dirname(os.path.realpath(__file__)),
+                    "..",
+                    "resources",
+                    "icon.png",
+                )
+            ).resize(
+                (self.parent.minsize()[0] // 4, (self.parent.minsize()[0] // 4)),
+                Image.LANCZOS,
+            )
+        )
+        self.logocanvas = tk.Canvas(self)
+        self.logocanvas.pack(side=tk.TOP, fill="both", expand=True)
+        self.center = [
+            (self.winfo_screenwidth() // 2 + 50) // 2,
+            (self.parent.winfo_screenheight() // 2) // 2,
+        ]
+        self.logo_on_canvas = self.logocanvas.create_image(
+            self.center[0], self.center[1], anchor=tk.CENTER, image=self.logo,
+        )
+        self.logocanvas.image = self.logo
+        self.logocanvas.itemconfig(self.logo_on_canvas, image=self.logocanvas.image)
 
         self.parent.protocol("WM_DELETE_WINDOW", lambda: self.save_graph(True))
 
@@ -90,6 +117,7 @@ class MainApplication(tk.Frame):
         self.DoseFigureHandler = DoseFigureHandler(self)
 
         # Keybinding definitions
+        self.parent.bind("<Configure>", self.handle_configure)
         self.parent.bind("<Control-e>", lambda type: self.load_file("egs"))
         self.parent.bind("<Control-d>", lambda type: self.load_file("dp"))
         self.parent.bind("<Control-o>", lambda type: self.load_file("simulation"))
@@ -408,29 +436,6 @@ class MainApplication(tk.Frame):
 
         self.parent.title(self.text.window_title[self.lang])
 
-        self.logo = ImageTk.PhotoImage(
-            Image.open(
-                os.path.join(
-                    os.path.dirname(os.path.realpath(__file__)),
-                    "..",
-                    "resources",
-                    "icon.png",
-                )
-            ).resize(
-                (self.parent.minsize()[0] // 4, (self.parent.minsize()[0] // 4)),
-                Image.LANCZOS,
-            )
-        )
-        self.logocanvas = tk.Canvas(self)
-        self.logo_on_canvas = self.logocanvas.create_image(
-            0, 0, anchor=tk.NW, image=self.logo
-        )
-        self.logocanvas.image = self.logo
-        self.canvas.itemconfig(self.logo_on_canvas, image=self.logocanvas.image)
-        self.logocanvas.place(
-            relx=0.41233, rely=0.3441, relheight=1, relwidth=1,
-        )
-
         self.pack(side="top", fill="both", expand=True)
 
         self.parent.attributes("-fullscreen", self.fullscreen.get())
@@ -460,29 +465,18 @@ class MainApplication(tk.Frame):
 
         if theme == "light":
             self.parent.tk.call("set_theme", "light")
-            self.logocanvas.place_forget()
             self.logocanvas.configure(background="#ffffff")
             self.parent.configure(background="#ffffff")
-            self.logocanvas.place(
-                relx=0.41233, rely=0.3441, relheight=1, relwidth=1,
-            )
-
-            if self.filenames != []:
-                self.show_preview()
 
         else:
             # Set dark theme
             self.parent.tk.call("set_theme", "dark")
-
             self.parent.configure(background="#363636")
-            self.logocanvas.place_forget()
             self.logocanvas.configure(background="#333333")
-            self.logocanvas.place(
-                relx=0.41233, rely=0.3441, relheight=1, relwidth=1,
-            )
-            if self.filenames != []:
-                self.logocanvas.place_forget()
-                self.show_preview()
+
+        if self.filenames != []:
+            self.logocanvas.pack_forget()
+            self.show_preview()
 
         return
 
@@ -624,7 +618,7 @@ class MainApplication(tk.Frame):
 
         for file in self.current_file:
             self.filenames += [(file, type)]
-        self.logocanvas.place_forget()
+        self.logocanvas.pack_forget()
         self.show_preview()
         self.filemenu.entryconfig(0, state=tk.DISABLED)
         self.filemenu.entryconfig(1, state=tk.DISABLED)
@@ -669,6 +663,7 @@ class MainApplication(tk.Frame):
         self.menuflag = False
         self.current_limits = []
         self.initial_limits = []
+        self.rename_boxes = []
         self.slidervars = [tk.DoubleVar(), tk.DoubleVar()]
         self.DoseFigureHandler.caxcorrection = False
         self.caxcorrection.set(False)
@@ -677,9 +672,9 @@ class MainApplication(tk.Frame):
             self.xlimmenu = False
         except AttributeError:
             pass
-        self.logocanvas.place(
-            relx=0.41233, rely=0.3441, relheight=1, relwidth=1,
-        )
+        self.logocanvas.pack(side=tk.TOP, fill="both", expand=True)
+        self.parent.update()
+        self.handle_configure()
         return
 
     def save_graph(self, exit=False):
@@ -936,9 +931,9 @@ class MainApplication(tk.Frame):
             self.filenames
         )
 
+        self.logocanvas.pack_forget()
         self.canvas.place_forget()
         self.canvas = tk.Canvas(self)
-        self.canvas.bind("<Configure>", self.handle_configure)
         self.canvas.bind("<Button-1>", self.check_click)
         self.canvas.bind("<Button-3>", self.check_right_click)
         self.canvas.bind("<Motion>", self.check_hand)
@@ -1114,99 +1109,116 @@ class MainApplication(tk.Frame):
             self.show_preview()
         return
 
-    def handle_configure(self, event):
+    def handle_configure(self, event=None):
 
         """
         Dynamically resizes the graph, rename boxes and zoom window selector
         according to the window size and name length
         """
 
-        try:
-            image_width = event.width
-            image_height = event.height
-            width_factor = image_width / self.photoimage.width()
-            height_factor = image_height / self.photoimage.height()
+        if time.time() > self.starttime + 0.001:
 
-            if width_factor <= height_factor:
-                scale_factor = width_factor
-            else:
-                scale_factor = height_factor
+            if self.logocanvas.winfo_ismapped():
 
-            self.resizable_image = ImageTk.getimage(self.photoimage)
-            self.resized_image = self.resizable_image.resize(
-                (
-                    int(self.photoimage.width() * scale_factor),
-                    int(self.photoimage.height() * scale_factor),
-                ),
-                Image.ANTIALIAS,
-            )
-            self.canvas.image = ImageTk.PhotoImage(self.resized_image)
-            self.canvas.itemconfig(self.image_on_canvas, image=self.canvas.image)
-        except AttributeError:
-            pass
+                deltax = self.winfo_width() // 2 - self.center[0]
+                deltay = self.winfo_height() // 2 - self.center[1]
+                self.center = [self.winfo_width() // 2, self.winfo_height() // 2]
+                self.logocanvas.move(self.logo_on_canvas, deltax, deltay)
 
-        temp = self.rename_boxes[: len(self.DoseFigureHandler.plots)]
-        if len(self.rename_boxes) == 1:
-            temp = self.rename_boxes
+            if len(self.rename_boxes) > 0:
 
-        self.canvas.delete("rename")
-        self.rename_boxes = []
-        for i in range(len(temp)):
-            x = self.canvas.image.width()
-            y = self.canvas.image.height()
-            normdiff = 0
-            if self.norm.get() == False:
-                normdiff = 0.035
-            factor = (self.canvas.image.width() / self.canvas.image.height()) / 2
-            self.rename_boxes += [
-                self.canvas.create_rectangle(
-                    (
-                        -0.00833
-                        * max(
-                            map(
-                                len,
-                                [
-                                    plot.filename
-                                    for plot in self.DoseFigureHandler.plots
-                                ],
-                            )
-                        )
-                        + 0.94633
+                try:
+                    image_width = event.width
+                    image_height = event.height
+                    width_factor = image_width / self.photoimage.width()
+                    height_factor = image_height / self.photoimage.height()
+
+                    if width_factor <= height_factor:
+                        scale_factor = width_factor
+                    else:
+                        scale_factor = height_factor
+
+                    self.resizable_image = ImageTk.getimage(self.photoimage)
+                    self.resized_image = self.resizable_image.resize(
+                        (
+                            int(self.photoimage.width() * scale_factor),
+                            int(self.photoimage.height() * scale_factor),
+                        ),
+                        Image.ANTIALIAS,
                     )
-                    * x,
-                    (0.023 + normdiff + 0.042 * i) * y * factor,
-                    0.988 * x,
-                    (0.065 + normdiff + 0.042 * i) * y * factor,
-                    fill="",
-                    outline="",
-                    tags="rename",
-                )
-            ]
+                    self.canvas.image = ImageTk.PhotoImage(self.resized_image)
+                    self.canvas.itemconfig(
+                        self.image_on_canvas, image=self.canvas.image
+                    )
+                except AttributeError:
+                    pass
 
-        self.canvas.delete("token")
+                temp = self.rename_boxes[: len(self.DoseFigureHandler.plots)]
+                if len(self.rename_boxes) == 1:
+                    temp = self.rename_boxes
 
-        if self.zoom.get() == True:
-            self.oval = self.canvas.create_oval(
-                self.pixelx * self.canvas.image.width() - 5,
-                self.pixely * self.canvas.image.height() - 5,
-                self.pixelx * self.canvas.image.width() + 5,
-                self.pixely * self.canvas.image.height() + 5,
-                fill="",
-                outline="",
-                tags="token",
-            )
-        self.canvas.delete("xaxis")
-        if len(self.DoseFigureHandler.plots) >= 1:
-            xbox = self.canvas.create_rectangle(
-                0.43 * self.canvas.image.width(),
-                0.95 * self.canvas.image.height(),
-                0.6 * self.canvas.image.width(),
-                self.canvas.image.height(),
-                tags="xaxis",
-                outline="",
-                fill="",
-            )
-            self.rename_boxes += [xbox]
+                self.canvas.delete("rename")
+                self.rename_boxes = []
+                for i in range(len(temp)):
+                    x = self.canvas.image.width()
+                    y = self.canvas.image.height()
+                    normdiff = 0
+                    if self.norm.get() == False:
+                        normdiff = 0.035
+                    factor = (
+                        self.canvas.image.width() / self.canvas.image.height()
+                    ) / 2
+                    self.rename_boxes += [
+                        self.canvas.create_rectangle(
+                            (
+                                -0.00833
+                                * max(
+                                    map(
+                                        len,
+                                        [
+                                            plot.filename
+                                            for plot in self.DoseFigureHandler.plots
+                                        ],
+                                    )
+                                )
+                                + 0.94633
+                            )
+                            * x,
+                            (0.023 + normdiff + 0.042 * i) * y * factor,
+                            0.988 * x,
+                            (0.065 + normdiff + 0.042 * i) * y * factor,
+                            fill="",
+                            outline="",
+                            tags="rename",
+                        )
+                    ]
+
+                self.canvas.delete("token")
+
+                if self.zoom.get() == True:
+                    self.oval = self.canvas.create_oval(
+                        self.pixelx * self.canvas.image.width() - 5,
+                        self.pixely * self.canvas.image.height() - 5,
+                        self.pixelx * self.canvas.image.width() + 5,
+                        self.pixely * self.canvas.image.height() + 5,
+                        fill="",
+                        outline="",
+                        tags="token",
+                    )
+                self.canvas.delete("xaxis")
+                if len(self.DoseFigureHandler.plots) >= 1:
+                    xbox = self.canvas.create_rectangle(
+                        0.43 * self.canvas.image.width(),
+                        0.95 * self.canvas.image.height(),
+                        0.6 * self.canvas.image.width(),
+                        self.canvas.image.height(),
+                        tags="xaxis",
+                        outline="",
+                        fill="",
+                    )
+                    self.rename_boxes += [xbox]
+
+        self.starttime = time.time()
 
     def check_hand(self, e):
 
