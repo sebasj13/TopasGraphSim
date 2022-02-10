@@ -935,7 +935,7 @@ class MainApplication(tk.Frame):
 
         self.logocanvas.pack_forget()
         self.canvas.pack_forget()
-        self.canvas = tk.Canvas(self, bg="")
+        self.canvas = tk.Canvas(self)
         self.canvas.bind("<Button-1>", self.check_click)
         self.canvas.bind("<Button-3>", self.check_right_click)
         self.canvas.bind("<Motion>", self.check_hand)
@@ -1130,9 +1130,7 @@ class MainApplication(tk.Frame):
         deltay = self.winfo_height() // 2 - self.center[1]
         self.center = [self.winfo_width() // 2, self.winfo_height() // 2]
 
-        if self.logocanvas.winfo_ismapped():
-
-            self.logocanvas.move(self.logo_on_canvas, deltax, deltay)
+        self.logocanvas.move(self.logo_on_canvas, deltax, deltay)
 
         if len(self.rename_boxes) > 0:
 
