@@ -1,7 +1,8 @@
+import os
 import tkinter as tk
 import tkinter.ttk as ttk
-import os
 import webbrowser
+
 from PIL import Image, ImageTk
 
 
@@ -12,7 +13,7 @@ class show_info:
             "de": "TopasGraphSim\n\nAutor: Sebastian Schäfer",
             "en": "TopasGraphSim\n\nAuthor: Sebastian Schäfer",
         }
-        version = {"de": "Version: 17.2.8\n ", "en": "Version: 17.2.8\n "}
+        version = {"de": "Version: 17.2.9\n ", "en": "Version: 17.2.9\n "}
 
         if mode == True:
             pic = "light"

@@ -1,13 +1,15 @@
-from tkinter import simpledialog as sd
-import requests
 import webbrowser
+from tkinter import simpledialog as sd
+
+import requests
+
 from .profile import ProfileHandler
 
 
 class CheckForUpdates:
     def __init__(self):
 
-        currentVersion = "17.2.8"
+        currentVersion = "17.2.9"
         try:
             newestVersion = requests.get(
                 "https://api.github.com/repos/sebasj13/topasgraphsim/releases/latest"

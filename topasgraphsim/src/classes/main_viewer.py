@@ -12,6 +12,7 @@ from ..resources.info import show_info
 from ..resources.language import Text
 from .dose_figure_handler import DoseFigureHandler
 from .profile import ProfileHandler
+from .update import CheckForUpdates
 from .xrangeslider import XRangeSlider
 
 
@@ -440,6 +441,7 @@ class MainApplication(tk.Frame):
 
         self.parent.attributes("-fullscreen", self.fullscreen.get())
         self.autostart()
+        CheckForUpdates()
 
     def about(self):
         show_info(self.parent, self.lang, self.dark.get())
