@@ -1,8 +1,9 @@
+import time
 import tkinter as tk
 import tkinter.ttk as ttk
+
 from ..resources.language import Text
 from .profile import ProfileHandler
-import time
 from .RangeSlider import RangeSliderH
 
 
@@ -69,7 +70,7 @@ class XRangeSlider:
 
     def update(self, *args):
 
-        if time.time() > self.starttime + 0.2:
+        if time.time() > self.starttime + 0.1:
             self.parent.refresh()
             self.starttime = time.time()
         return

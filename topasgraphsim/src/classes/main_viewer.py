@@ -7,8 +7,8 @@ from tkinter.colorchooser import askcolor
 import pynput
 from PIL import Image, ImageTk
 
-from ..resources.language import Text
 from ..resources.info import show_info
+from ..resources.language import Text
 from .dose_figure_handler import DoseFigureHandler
 from .profile import ProfileHandler
 from .xrangeslider import XRangeSlider

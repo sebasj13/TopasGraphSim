@@ -11,10 +11,10 @@ from PIL import Image, ImageTk
 
 from ..functions import dp
 from ..resources.language import Text
+from .egs_import import EGSSimulation
 from .measurement_import import Measurement
 from .ptw_import import PTWMultimporter
 from .sim_import import Simulation
-from .egs_import import EGSSimulation
 
 
 class DoseFigureHandler:
