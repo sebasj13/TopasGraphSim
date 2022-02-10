@@ -663,9 +663,6 @@ class DoseFigureHandler:
                 0.95 * min(min(yvalsat195), min(yvalsat205)),
                 1.05 * max(max(yvalsat195), max(yvalsat205)),
             )
-
-            print(x1, y1, x2, y2)
-
             loc1 = 2
             loc2 = 4
 
