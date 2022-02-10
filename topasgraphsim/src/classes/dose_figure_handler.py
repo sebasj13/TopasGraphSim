@@ -556,7 +556,15 @@ class DoseFigureHandler:
                 self.focuspoint = self.inverted_transform.transform(
                     (
                         width
-                        * (self.parent.canvas.coords(self.parent.oval)[0] + 5)
+                        * (
+                            -(
+                                self.parent.canvas.winfo_width()
+                                - self.parent.canvas.image.width()
+                            )
+                            // 2
+                            + self.parent.canvas.coords(self.parent.oval)[0]
+                            + 5
+                        )
                         / self.parent.canvas.image.width(),
                         1,
                     )
@@ -650,11 +658,13 @@ class DoseFigureHandler:
 
             # sub region of the original image
             x1, x2, y1, y2 = (
-                self.focuspoint - 6,
-                self.focuspoint + 6,
-                0.95 * min(yvalsat205),
-                1.05 * max(yvalsat195),
+                self.focuspoint - 5,
+                self.focuspoint + 5,
+                0.95 * min(min(yvalsat195), min(yvalsat205)),
+                1.05 * max(max(yvalsat195), max(yvalsat205)),
             )
+
+            print(x1, y1, x2, y2)
 
             loc1 = 2
             loc2 = 4

@@ -634,7 +634,7 @@ class MainApplication(tk.Frame):
 
         """Closes the current project
         """
-        self.canvas.place_forget()
+        self.canvas.pack_forget()
         self.filemenu.entryconfig(0, state=tk.NORMAL)
         self.filemenu.entryconfig(1, state=tk.NORMAL)
         self.filemenu.entryconfig(3, state=tk.DISABLED)
@@ -934,14 +934,17 @@ class MainApplication(tk.Frame):
         )
 
         self.logocanvas.pack_forget()
-        self.canvas.place_forget()
-        self.canvas = tk.Canvas(self)
+        self.canvas.pack_forget()
+        self.canvas = tk.Canvas(self, bg="red")
         self.canvas.bind("<Button-1>", self.check_click)
         self.canvas.bind("<Button-3>", self.check_right_click)
         self.canvas.bind("<Motion>", self.check_hand)
         self.canvas.bind("<Double-Button-1>", self.new_zoom)
         self.parent.bind("<Up>", lambda boolean: self.change_order(True))
         self.parent.bind("<Down>", lambda boolean: self.change_order(False))
+
+        self.canvas.pack(side=tk.TOP, fill="both", expand=True)
+        """
 
         if self.direction == "Z":
             if self.diffplot.get() == False:
@@ -961,6 +964,8 @@ class MainApplication(tk.Frame):
                 self.canvas.place(
                     relheight=1, relwidth=1, relx=0.65, rely=0.5, anchor=tk.CENTER
                 )
+
+        """
 
         if len(self.DoseFigureHandler.plots) >= 2:
             self.addmenu.entryconfig(3, state=tk.NORMAL)
@@ -986,7 +991,10 @@ class MainApplication(tk.Frame):
             self.menubar.add_cascade(label="Graph", menu=self.normmenu)
             self.menuflag = True
         self.image_on_canvas = self.canvas.create_image(
-            0, 0, anchor=tk.NW, image=self.photoimage
+            self.winfo_width() // 2,
+            self.winfo_height() // 2,
+            anchor=tk.CENTER,
+            image=self.photoimage,
         )
 
         self.canvas.image = self.photoimage
@@ -1012,7 +1020,7 @@ class MainApplication(tk.Frame):
                 (0.023 + normdiff + 0.042 * i) * self.canvas.image.height() * factor,
                 0.988 * self.canvas.image.width(),
                 (0.065 + normdiff + 0.042 * i) * self.canvas.image.height() * factor,
-                fill="",
+                fill="red",
                 outline="",
                 tags="rename",
             )
@@ -1028,7 +1036,7 @@ class MainApplication(tk.Frame):
                 self.pixely * self.canvas.image.height() - 5,
                 self.pixelx * self.canvas.image.width() + 5,
                 self.pixely * self.canvas.image.height() + 5,
-                fill="",
+                fill="blue",
                 outline="",
                 tags="token",
             )
@@ -1118,17 +1126,17 @@ class MainApplication(tk.Frame):
         according to the window size and name length
         """
 
-        if time.time() > self.starttime + 0.001:
+        deltax = self.winfo_width() // 2 - self.center[0]
+        deltay = self.winfo_height() // 2 - self.center[1]
+        self.center = [self.winfo_width() // 2, self.winfo_height() // 2]
 
-            if self.logocanvas.winfo_ismapped():
+        if self.logocanvas.winfo_ismapped():
 
-                deltax = self.winfo_width() // 2 - self.center[0]
-                deltay = self.winfo_height() // 2 - self.center[1]
-                self.center = [self.winfo_width() // 2, self.winfo_height() // 2]
-                self.logocanvas.move(self.logo_on_canvas, deltax, deltay)
+            self.logocanvas.move(self.logo_on_canvas, deltax, deltay)
 
-            if len(self.rename_boxes) > 0:
+        if len(self.rename_boxes) > 0:
 
+            if time.time() > self.starttime + 0.001:
                 try:
                     image_width = event.width
                     image_height = event.height
@@ -1155,70 +1163,89 @@ class MainApplication(tk.Frame):
                 except AttributeError:
                     pass
 
-                temp = self.rename_boxes[: len(self.DoseFigureHandler.plots)]
-                if len(self.rename_boxes) == 1:
-                    temp = self.rename_boxes
+            coords = self.canvas.coords(self.image_on_canvas)
+            imdims = [self.canvas.image.width(), self.canvas.image.height()]
+            canvdims = [self.canvas.winfo_width(), self.canvas.winfo_height()]
 
-                self.canvas.delete("rename")
-                self.rename_boxes = []
-                for i in range(len(temp)):
-                    x = self.canvas.image.width()
-                    y = self.canvas.image.height()
-                    normdiff = 0
-                    if self.norm.get() == False:
-                        normdiff = 0.035
-                    factor = (
-                        self.canvas.image.width() / self.canvas.image.height()
-                    ) / 2
-                    self.rename_boxes += [
-                        self.canvas.create_rectangle(
-                            (
-                                -0.00833
-                                * max(
-                                    map(
-                                        len,
-                                        [
-                                            plot.filename
-                                            for plot in self.DoseFigureHandler.plots
-                                        ],
-                                    )
+            temp = self.rename_boxes[: len(self.DoseFigureHandler.plots)]
+            if len(self.rename_boxes) == 1:
+                temp = self.rename_boxes
+
+            self.canvas.delete("rename")
+            self.rename_boxes = []
+            for i in range(len(temp)):
+                normdiff = 0
+                factor = 1
+                if self.norm.get() == False:
+                    normdiff = -0.025
+                if self.DoseFigureHandler.plots[0].direction == "Z":
+                    factor = 6 / 5
+
+                self.rename_boxes += [
+                    self.canvas.create_rectangle(
+                        coords[0]
+                        + imdims[0]
+                        * (
+                            0.44
+                            - 0.0085
+                            * max(
+                                map(
+                                    len,
+                                    [
+                                        plot.filename
+                                        for plot in self.DoseFigureHandler.plots
+                                    ],
                                 )
-                                + 0.94633
                             )
-                            * x,
-                            (0.023 + normdiff + 0.042 * i) * y * factor,
-                            0.988 * x,
-                            (0.065 + normdiff + 0.042 * i) * y * factor,
-                            fill="",
-                            outline="",
-                            tags="rename",
-                        )
-                    ]
-
-                self.canvas.delete("token")
-
-                if self.zoom.get() == True:
-                    self.oval = self.canvas.create_oval(
-                        self.pixelx * self.canvas.image.width() - 5,
-                        self.pixely * self.canvas.image.height() - 5,
-                        self.pixelx * self.canvas.image.width() + 5,
-                        self.pixely * self.canvas.image.height() + 5,
+                        ),
+                        (coords[1] - imdims[1] * (0.478 - i * 0.035 + normdiff))
+                        * factor,
+                        coords[0] + imdims[0] * 0.49,
+                        (coords[1] - imdims[1] * (0.443 - i * 0.035 + normdiff))
+                        * factor,
                         fill="",
-                        outline="",
-                        tags="token",
+                        outline="black",
+                        tags="rename",
                     )
-                self.canvas.delete("xaxis")
-                if len(self.DoseFigureHandler.plots) >= 1:
-                    xbox = self.canvas.create_rectangle(
-                        0.43 * self.canvas.image.width(),
-                        0.95 * self.canvas.image.height(),
-                        0.6 * self.canvas.image.width(),
-                        self.canvas.image.height(),
-                        tags="xaxis",
-                        outline="",
-                        fill="",
-                    )
-                    self.rename_boxes += [xbox]
+                ]
+
+            self.canvas.delete("token")
+
+            if self.zoom.get() == True:
+                self.oval = self.canvas.create_oval(
+                    self.pixelx * (self.canvas.image.width())
+                    - 5
+                    + (canvdims[0] - imdims[0]) // 2,
+                    self.pixely * (self.canvas.image.height())
+                    + (canvdims[1] - imdims[1]) // 2
+                    - 5,
+                    self.pixelx * (self.canvas.image.width())
+                    + 5
+                    + (canvdims[0] - imdims[0]) // 2,
+                    self.pixely * (self.canvas.image.height())
+                    + 5
+                    + (canvdims[1] - imdims[1]) // 2,
+                    fill="blue",
+                    outline="",
+                    tags="token",
+                )
+
+            self.canvas.delete("xaxis")
+            if len(self.DoseFigureHandler.plots) >= 1:
+                coords = self.canvas.coords(self.image_on_canvas)
+                print(coords[0])
+                xbox = self.canvas.create_rectangle(
+                    coords[0] - imdims[0] * (0.035 + normdiff / 4),
+                    imdims[1] * 0.95 + (canvdims[1] - imdims[1]) // 2,
+                    coords[0] + imdims[0] * (0.065 - normdiff / 4),
+                    imdims[1] + (canvdims[1] - imdims[1]) // 2,
+                    tags="xaxis",
+                    outline="",
+                    fill="green",
+                )
+                self.rename_boxes += [xbox]
+
+            self.canvas.move(self.image_on_canvas, deltax, deltay)
 
         self.starttime = time.time()
 
