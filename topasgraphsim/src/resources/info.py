@@ -5,6 +5,8 @@ import webbrowser
 
 from PIL import Image, ImageTk
 
+from ..classes.profile import ProfileHandler
+
 
 class show_info:
     def __init__(self, parent, lang, mode):
@@ -23,7 +25,7 @@ class show_info:
         window = tk.Toplevel()
         window.title("")
         window.resizable(False, False)
-        window.geometry(f"180x220+{parent.winfo_rootx()}+{parent.winfo_rooty()}")
+        window.geometry(f"180x240+{parent.winfo_rootx()}+{parent.winfo_rooty()}")
         window.wm_attributes("-toolwindow", True)
         im = Image.open(
             os.path.join(os.path.dirname(os.path.realpath(__file__)), "icon.png")
@@ -33,6 +35,11 @@ class show_info:
         imagelabel.image = ph
         authorlabel = tk.Label(window, text=author[lang])
         versionlabel = tk.Label(window, text=version[lang])
+        icon = {True: "✅", False: "❌"}
+        DnDlabel = tk.Label(
+            window,
+            text=f"Drag and Drop: {icon[ProfileHandler().get_attribute('draganddrop')]}",
+        )
         ghimage = Image.open(
             os.path.join(os.path.dirname(os.path.realpath(__file__)), f"gh_{pic}.png")
         )
@@ -40,6 +47,7 @@ class show_info:
         button = ttk.Button(window, image=self.ghimage, command=self.open_github)
         imagelabel.pack()
         authorlabel.pack()
+        DnDlabel.pack()
         versionlabel.pack()
         button.pack()
 

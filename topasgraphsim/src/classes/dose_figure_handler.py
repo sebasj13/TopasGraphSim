@@ -71,6 +71,8 @@ class DoseFigureHandler:
 
                     if test == None:
                         self.plots += [sim]
+                        self.parent.direction = sim.direction
+                        test = self.parent.direction
                     elif test == "Z" and sim.direction == "Z":
                         self.plots += [sim]
                     elif test == "X" and sim.direction == "X":
@@ -96,6 +98,8 @@ class DoseFigureHandler:
                     for plot in measurements:
                         if test == None:
                             self.plots += [plot]
+                            self.parent.direction = plot.direction
+                            test = self.parent.direction
                         elif test == "Z" and plot.direction == "Z":
                             self.plots += [plot]
                         elif test == "X" and plot.direction == "X":

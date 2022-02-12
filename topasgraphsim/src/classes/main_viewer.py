@@ -24,6 +24,12 @@ class MainApplication(tk.Frame):
 
         self.parent = parent
 
+        self.logocanvas = tk.Canvas(self)
+        self.logocanvas.pack(side=tk.TOP, fill="both", expand=True)
+        self.center = [
+            (self.winfo_screenwidth() // 2 + 50) // 2,
+            (self.parent.winfo_screenheight() // 2) // 2,
+        ]
         self.logo = ImageTk.PhotoImage(
             Image.open(
                 os.path.join(
@@ -35,14 +41,9 @@ class MainApplication(tk.Frame):
             ).resize(
                 (self.parent.minsize()[0] // 4, (self.parent.minsize()[0] // 4)),
                 Image.LANCZOS,
-            )
+            ),
+            master=self.logocanvas,
         )
-        self.logocanvas = tk.Canvas(self)
-        self.logocanvas.pack(side=tk.TOP, fill="both", expand=True)
-        self.center = [
-            (self.winfo_screenwidth() // 2 + 50) // 2,
-            (self.parent.winfo_screenheight() // 2) // 2,
-        ]
         self.logo_on_canvas = self.logocanvas.create_image(
             self.center[0], self.center[1], anchor=tk.CENTER, image=self.logo,
         )
@@ -631,6 +632,54 @@ class MainApplication(tk.Frame):
         self.saved = False
 
         return
+
+    def load_dropped_file(self, files):
+        """Loads measurement or simulation data to be displayed
+        """
+
+        for i, character in enumerate(files):
+            if character == " ":
+                if files[i + 1] == "{":
+                    files = files[:i] + ";" + files[i + 1 :]
+                else:
+                    if files[:i].count("{") == files[:i].count("}"):
+                        files = files[:i] + ";" + files[i + 1 :]
+
+        files = files.split(";")
+        for i, file in enumerate(files):
+            if "{" in file:
+                files[i] = file[1:-1]
+
+        types = {
+            "csv": "simulation",
+            "3ddose": "egs",
+            "bin": "simulation",
+            "mcc": "ptw",
+        }
+        extensions = []
+        for i, file in enumerate(files):
+            try:
+                extensions += [types[file.split(".")[-1]]]
+            except KeyError:
+                files.pop(i)
+
+        self.current_file = files
+
+        for i, file in enumerate(self.current_file):
+            self.filenames += [(file, extensions[i])]
+
+        if len(self.filenames) == 0:
+            return
+
+        self.logocanvas.pack_forget()
+        self.show_preview()
+        self.filemenu.entryconfig(0, state=tk.DISABLED)
+        self.filemenu.entryconfig(1, state=tk.DISABLED)
+        self.filemenu.entryconfig(3, state=tk.NORMAL)
+        self.filemenu.entryconfig(4, state=tk.NORMAL)
+        if len(self.filenames) > 2:
+            self.normmenu.entryconfig(12, state=tk.DISABLED)
+        self.saved = False
 
     def close_file(self, event=None):
 
