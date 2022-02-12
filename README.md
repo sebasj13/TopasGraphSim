@@ -122,6 +122,8 @@ Depending on the imported measurement, the following parameters can be calculate
 Built using the beautiful Azure-ttk theme by [@rdbende](https://github.com/rdbende).
 Requires python3, numpy, scipy, matplotlib, Pillow, python-opencv, pynput, topas2numpy and tkinter.
 
+The drag-and-drop functionality is powered by [TkinterDnD2](http://tkinterdnd.sourceforge.net) by Michael Lange and [tkdnd](https://github.com/petasis/tkdnd) by [@petassis](https://github.com/petasis).
+
 <b>Note:</b> Linux users need to have python3-tk installed. If it isnt installed yet, use:
 
 ```console
