@@ -13,7 +13,6 @@ from ..resources.info import show_info
 from ..resources.language import Text
 from .dose_figure_handler import DoseFigureHandler
 from .profile import ProfileHandler
-from .update import CheckForUpdates
 from .xrangeslider import XRangeSlider
 
 
@@ -443,7 +442,6 @@ class MainApplication(tk.Frame):
 
         self.parent.attributes("-fullscreen", self.fullscreen.get())
         self.autostart()
-        CheckForUpdates()
 
     def about(self):
         show_info(self.parent, self.lang, self.dark.get())
@@ -593,13 +591,13 @@ class MainApplication(tk.Frame):
             self.DoseFigureHandler.diffplot = diffplot
             self.DoseFigureHandler.errlimmin = errlimmin
             self.DoseFigureHandler.errlimmax = errlimmax
-            self.show_preview()
             if dark == True:
                 self.switchtheme("dark")
                 self.dark.set(True)
             else:
                 self.switchtheme("light")
                 self.dark.set(False)
+            self.show_preview()
 
         return
 
@@ -998,7 +996,6 @@ class MainApplication(tk.Frame):
         self.parent.bind("<Up>", lambda boolean: self.change_order(True))
         self.parent.bind("<Down>", lambda boolean: self.change_order(False))
 
-        self.canvas.pack(side=tk.TOP, fill="both", expand=True)
         """
 
         if self.direction == "Z":
@@ -1054,6 +1051,7 @@ class MainApplication(tk.Frame):
 
         self.canvas.image = self.photoimage
         self.canvas.itemconfig(self.image_on_canvas, image=self.canvas.image)
+        self.canvas.pack(side=tk.TOP, fill="both", expand=True)
 
         for i in range(len(self.DoseFigureHandler.plots)):
             normdiff = 0

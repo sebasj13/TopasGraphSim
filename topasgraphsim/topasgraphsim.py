@@ -15,6 +15,7 @@ import tkinter.ttk as ttk
 from src.classes.install_dnd import InstallDnD
 from src.classes.main_viewer import MainApplication
 from src.classes.profile import ProfileHandler
+from src.classes.update import CheckForUpdates
 
 
 def topasgraphsim():
@@ -104,13 +105,16 @@ def topasgraphsim():
                 app.load_dropped_file(event.data)
             return event.action
 
-        app.drop_target_register(dnd.DND_FILES)
-        app.dnd_bind("<<DropEnter>>", drop_enter)
-        app.dnd_bind("<<DropPosition>>", drop_position)
-        app.dnd_bind("<<DropLeave>>", drop_leave)
-        app.dnd_bind("<<Drop>>", drop)
+        root.drop_target_register(dnd.DND_FILES)
+        root.dnd_bind("<<DropEnter>>", drop_enter)
+        root.dnd_bind("<<DropPosition>>", drop_position)
+        root.dnd_bind("<<DropLeave>>", drop_leave)
+        root.dnd_bind("<<Drop>>", drop)
     except Exception:
         pass
+
+    CheckForUpdates()
+
     root.mainloop()
 
 
