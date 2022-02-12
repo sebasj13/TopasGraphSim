@@ -11,30 +11,43 @@ import os
 import sys
 import tkinter as tk
 import tkinter.ttk as ttk
-from tkinter import PhotoImage
 
 from src.classes.install_dnd import InstallDnD
 from src.classes.main_viewer import MainApplication
+from src.classes.profile import ProfileHandler
 
 
 def topasgraphsim():
 
-    try:
-        import TkinterDnD2 as dnd
-    except ImportError:
+    if ProfileHandler().get_attribute("draganddrop") == True:
 
-        drag = InstallDnD()
+        try:
+            import TkinterDnD2 as dnd
+        except ImportError:
 
-        if drag.install_success == True:
+            drag = InstallDnD()
+            print(drag.message)
+
+            if drag.install_success == True:
+                python = sys.executable
+                os.execl(python, python, *sys.argv)
+                return
+
+        if "TkinterDnD2" in sys.modules.keys():
+            try:
+                root = dnd.TkinterDnD.Tk()
+            except RuntimeError:
+                ProfileHandler().set_attribute("draganddrop", False)
+                python = sys.executable
+                os.execl(python, python, *sys.argv)
+                return
+        else:
+            ProfileHandler().set_attribute("draganddrop", False)
             python = sys.executable
             os.execl(python, python, *sys.argv)
             return
-
-    modulename = "TkDnD2"
-    if modulename not in sys.modules:
-        root = tk.Tk()
     else:
-        root = dnd.TkinterDnD.Tk()
+        root = tk.Tk()
 
     screen_width = root.winfo_screenwidth()
     screen_height = root.winfo_screenheight()
@@ -56,14 +69,11 @@ def topasgraphsim():
             )
         ),
     )
-
-    MainApplication(root)
-
     root.after(
         50,
         root.iconphoto(
             True,
-            PhotoImage(
+            tk.PhotoImage(
                 file=os.path.join(
                     os.path.dirname(os.path.realpath(__file__)),
                     "src",
@@ -74,6 +84,33 @@ def topasgraphsim():
             ),
         ),
     )
+
+    app = MainApplication(root)
+
+    try:
+
+        def drop_enter(event):
+            event.widget.focus_force()
+            return event.action
+
+        def drop_position(event):
+            return event.action
+
+        def drop_leave(event):
+            return event.action
+
+        def drop(event):
+            if event.data:
+                app.load_dropped_file(event.data)
+            return event.action
+
+        app.drop_target_register(dnd.DND_FILES)
+        app.dnd_bind("<<DropEnter>>", drop_enter)
+        app.dnd_bind("<<DropPosition>>", drop_position)
+        app.dnd_bind("<<DropLeave>>", drop_leave)
+        app.dnd_bind("<<Drop>>", drop)
+    except Exception:
+        pass
     root.mainloop()
 
 

@@ -10,6 +10,7 @@ class InstallDnD:
     def __init__(self):
 
         self.install_success = False
+        self.message = ""
 
         try:
             operating_system = sys.platform
@@ -75,4 +76,4 @@ class InstallDnD:
 
             self.install_success = True
         except Exception as e:
-            print(e)
+            self.message = e
