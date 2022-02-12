@@ -7,7 +7,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="topasgraphsim",
-    version="17.3.0",
+    version="17.3.1",
     author="Sebastian Schäfer",
     author_email="sebastian.schaefer@student.uni-halle.de",
     description="GUI to plot the results of a topas simulation",
@@ -38,6 +38,7 @@ setuptools.setup(
         "topasgraphsim.src.classes",
         "topasgraphsim.src.functions",
     ],
+    scripts=["topasgraphsim/topasgraphsim.py"],
     entry_points={
         "console_scripts": ["topasgraphsim=topasgraphsim.topasgraphsim:topasgraphsim"],
     },

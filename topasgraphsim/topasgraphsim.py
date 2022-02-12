@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Created on Thu Dec 16 12:47:50 2021
@@ -31,7 +32,8 @@ def topasgraphsim():
 
             if drag.install_success == True:
                 python = sys.executable
-                os.execl(python, python, *sys.argv)
+                args = "-m topasgraphsim"
+                os.execl(python, python, args)
                 return
 
         if "TkinterDnD2" in sys.modules.keys():
@@ -40,7 +42,8 @@ def topasgraphsim():
             except RuntimeError:
                 ProfileHandler().set_attribute("draganddrop", False)
                 python = sys.executable
-                os.execl(python, python, *sys.argv)
+                args = args = "-m topasgraphsim"
+                os.execl(python, python, args)
                 return
         else:
             ProfileHandler().set_attribute("draganddrop", False)
