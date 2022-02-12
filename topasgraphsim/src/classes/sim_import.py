@@ -32,7 +32,12 @@ class Simulation:
             scored_quantity = "Sum"
         self.dose = self.data.data[scored_quantity]
         self.dose = np.flip(self.dose.flatten())
-        self.unit = self.data.unit
+        self.unit = (
+            Text().topasunit[ProfileHandler().get_attribute("language")]
+            + " ["
+            + self.data.unit
+            + "]"
+        )
 
         try:
             self.std_dev = np.flip(self.data.data["Standard_Deviation"].flatten())

@@ -47,6 +47,7 @@ class Text:
         }
         self.dp = {"de": "Dosisquerverteilung", "en": "Dose profile"}
         self.egs = {"de": "EGS Simulationsdateien", "en": "EGS Simulation Data"}
+        self.egsunit = {"de": "Dosis [Gy/Historie]", "en": "Dose [Gy/History]"}
         self.end = {"de": "Beenden", "en": "Close"}
         self.english = {"de": "Englisch", "en": "English"}
         self.error = {"de": "Abweichung", "en": "Difference"}
@@ -98,6 +99,7 @@ class Text:
         self.measurementdata = {"de": "Messdaten", "en": "Measurement Data"}
         self.maximum = {"de": "Maximum", "en": "Maximum"}
         self.normalize = {"de": "Normieren", "en": "Normalize"}
+        self.normunit = {"de": "Relative Dosis", "en": "Relative Dose"}
         self.normalization = {"de": "Normierung", "en": "Normalization"}
         self.options = {"de": "Optionen", "en": "Options"}
         self.orr = {"de": "oder", "en": "or"}
@@ -117,6 +119,7 @@ class Text:
         self.submit = {"de": "Fertig", "en": "Submit"}
         self.symmetry = {"de": "Symmetrie", "en": "Symmetry"}
         self.topas = {"de": "TOPAS Simulationsdateien", "en": "TOPAS Simulation Data"}
+        self.topasunit = {"de": "Dosis", "en": "Dose"}
         self.view = {"de": "Ansicht", "en": "View"}
         self.window_title = {
             "de": "TopasMC Simulationsauswertung",

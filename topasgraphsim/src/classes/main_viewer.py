@@ -1,6 +1,7 @@
 import os
 import time
 import tkinter as tk
+from re import S
 from tkinter import filedialog as fd
 from tkinter import simpledialog as sd
 from tkinter.colorchooser import askcolor
@@ -575,9 +576,6 @@ class MainApplication(tk.Frame):
         self.parent.config(menu=None)
         self.profile.set_attribute("language", language)
         self.__init__(self.parent)
-        if dark == True:
-            self.switchtheme("dark")
-            self.dark.set(True)
         if plots != []:
             self.filenames = filenames
             self.DoseFigureHandler.plots = plots
@@ -596,6 +594,12 @@ class MainApplication(tk.Frame):
             self.DoseFigureHandler.errlimmin = errlimmin
             self.DoseFigureHandler.errlimmax = errlimmax
             self.show_preview()
+            if dark == True:
+                self.switchtheme("dark")
+                self.dark.set(True)
+            else:
+                self.switchtheme("light")
+                self.dark.set(False)
 
         return
 
@@ -1382,7 +1386,7 @@ class MainApplication(tk.Frame):
                         and bbox[3] > e.y
                     ):
                         newcolor = askcolor(color=self.DoseFigureHandler.colors[index])
-                        if newcolor != None:
+                        if newcolor != (None, None):
                             self.DoseFigureHandler.colors[index] = newcolor[1]
                             self.profile.set_attribute(
                                 "colors", self.DoseFigureHandler.colors

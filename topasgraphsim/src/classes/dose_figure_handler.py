@@ -504,6 +504,8 @@ class DoseFigureHandler:
                 self.ax.set_xlabel(self.xaxisname, size=12)
             else:
                 self.ax.set_xlabel(self.xlabel, size=12)
+
+        self.ax.set_ylabel(self.text.normunit[self.lang], size=12)
         if self.norm == False:
             self.ax.set_ylabel(self.plots[0].unit, size=12)
 

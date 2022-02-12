@@ -1,7 +1,10 @@
 from tkinter import simpledialog as sd
+
 import numpy as np
 
+from ..classes.profile import ProfileHandler
 from ..functions import dp, egspdd
+from ..resources.language import Text
 
 
 class EGSSimulation:
@@ -30,7 +33,7 @@ class EGSSimulation:
             pos = data[3]
             SSD = data[3][0] * 10
 
-        self.unit = "mm"
+        self.unit = Text().egsunit[ProfileHandler().get_attribute("language")]
         self.dose = data[4]
         self.std_dev = [data[4][i] * d for i, d in enumerate(data[5])]
         # pos-Werte = Voxelränder in mm, Umrechnen und mitteln
