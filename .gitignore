@@ -3,7 +3,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 .vscode/
-__init__.py
 
 # C extensions
 *.so
@@ -134,4 +133,3 @@ dmypy.json
 *.toml
 *.cfg
 *.token
-setup.py
