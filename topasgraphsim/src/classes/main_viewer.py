@@ -24,6 +24,12 @@ class MainApplication(tk.Frame):
 
         self.parent = parent
 
+        self.logocanvas = tk.Canvas(self)
+        self.logocanvas.pack(side=tk.TOP, fill="both", expand=True)
+        self.center = [
+            (self.winfo_screenwidth() // 2 + 50) // 2,
+            (self.parent.winfo_screenheight() // 2) // 2,
+        ]
         self.logo = ImageTk.PhotoImage(
             Image.open(
                 os.path.join(
@@ -35,14 +41,8 @@ class MainApplication(tk.Frame):
             ).resize(
                 (self.parent.minsize()[0] // 4, (self.parent.minsize()[0] // 4)),
                 Image.LANCZOS,
-            )
-        )
-        self.logocanvas = tk.Canvas(self)
-        self.logocanvas.pack(side=tk.TOP, fill="both", expand=True)
-        self.center = [
-            (self.winfo_screenwidth() // 2 + 50) // 2,
-            (self.parent.winfo_screenheight() // 2) // 2,
-        ]
+            ),
+        master = self.logocanvas)
         self.logo_on_canvas = self.logocanvas.create_image(
             self.center[0], self.center[1], anchor=tk.CENTER, image=self.logo,
         )

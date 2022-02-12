@@ -8,16 +8,34 @@ Created on Thu Dec 16 12:47:50 2021
 """
 
 import os
+import sys
 import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter import PhotoImage
 
+from src.classes.install_dnd import InstallDnD
 from src.classes.main_viewer import MainApplication
 
 
 def topasgraphsim():
 
-    root = tk.Tk()
+    try:
+        import TkinterDnD2 as dnd
+    except ImportError:
+
+        drag = InstallDnD()
+
+        if drag.install_success == True:
+            python = sys.executable
+            os.execl(python, python, *sys.argv)
+            return
+
+    modulename = "TkDnD2"
+    if modulename not in sys.modules:
+        root = tk.Tk()
+    else:
+        root = dnd.TkinterDnD.Tk()
+
     screen_width = root.winfo_screenwidth()
     screen_height = root.winfo_screenheight()
     width = screen_width // 2
@@ -51,7 +69,8 @@ def topasgraphsim():
                     "src",
                     "resources",
                     "icon.png",
-                )
+                ),
+                master=root,
             ),
         ),
     )
