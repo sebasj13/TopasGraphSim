@@ -4,7 +4,7 @@
     "markersize": 1.0,
     "linewidth": 1.0,
     "normalize": 1,
-    "zoom": 0,
+    "zoom": 1,
     "fullscreen": false,
     "halfview": false,
     "default_colors": [
@@ -12,14 +12,24 @@
         "#C40233",
         "#00008B",
         "#BCA136",
-        "#654321"
+        "#654321",
+        "#587D07",
+        "#1D162B",
+        "#98A876",
+        "#2A125E",
+        "#2E4008"
     ],
     "colors": [
         "#009F6B",
         "#C40233",
         "#00008B",
         "#BCA136",
-        "#654321"
+        "#654321",
+        "#587D07",
+        "#1D162B",
+        "#98A876",
+        "#2A125E",
+        "#2E4008"
     ],
     "draganddrop": true
 }

@@ -13,6 +13,7 @@ from ..resources.info import show_info
 from ..resources.language import Text
 from .dose_figure_handler import DoseFigureHandler
 from .profile import ProfileHandler
+from .table import SimpleTable
 from .xrangeslider import XRangeSlider
 
 
@@ -65,6 +66,8 @@ class MainApplication(tk.Frame):
         self.filenames = []
         self.rename_boxes = []
         self.new_limits = []
+        self.current_event_width = -1
+        self.current_event_height = -1
 
         self.profile = ProfileHandler()
         self.lang = self.profile.get_attribute("language")
@@ -99,6 +102,9 @@ class MainApplication(tk.Frame):
 
         self.calcparams = tk.BooleanVar()
         self.calcparams.set(False)
+
+        self.tablevar = tk.BooleanVar()
+        self.tablevar.set(False)
 
         self.fullscreen = tk.BooleanVar()
         self.fullscreen.set(bool(self.profile.get_attribute("fullscreen")))
@@ -366,10 +372,21 @@ class MainApplication(tk.Frame):
             label=self.text.half[self.lang], command=self.halfgraph, variable=self.half,
         )
         self.normmenu.add_separator()
-        self.normmenu.add_checkbutton(
-            label=self.text.calcparams[self.lang],
+
+        self.parammenu = tk.Menu(self.menubar, tearoff=False)
+        self.parammenu.add_checkbutton(
+            label=self.text.adddescriptors[self.lang],
             command=self.calculate_parameters,
             variable=self.calcparams,
+        )
+        self.parammenu.add_checkbutton(
+            label=self.text.showtable[self.lang],
+            command=self.show_table,
+            variable=self.tablevar,
+        )
+
+        self.normmenu.add_cascade(
+            label=self.text.calcparams[self.lang], menu=self.parammenu
         )
 
         self.normmenu.add_checkbutton(
@@ -439,6 +456,7 @@ class MainApplication(tk.Frame):
         self.parent.title(self.text.window_title[self.lang])
 
         self.pack(side="top", fill="both", expand=True)
+        self.frame2 = tk.Frame(self.parent, bg="red")
 
         self.parent.attributes("-fullscreen", self.fullscreen.get())
         self.autostart()
@@ -698,6 +716,7 @@ class MainApplication(tk.Frame):
         self.addmeasuremenu.entryconfig(1, state=tk.NORMAL)
         self.normmenu.entryconfig(12, state=tk.DISABLED)
         self.normmenu.entryconfig(13, state=tk.DISABLED)
+        self.parammenu.entryconfig(0, state=tk.NORMAL)
         self.menubar.delete(4, 5)
         self.filenames = []
         try:
@@ -723,6 +742,11 @@ class MainApplication(tk.Frame):
         try:
             self.slider.window.destroy()
             self.xlimmenu = False
+        except AttributeError:
+            pass
+        try:
+            self.table.pack_forget()
+            self.tablevar.set(False)
         except AttributeError:
             pass
         deltax = self.winfo_width() // 2 - self.center[0]
@@ -820,6 +844,14 @@ class MainApplication(tk.Frame):
 
         return
 
+    def show_table(self):
+
+        self.calcparams.set(False)
+
+        self.refresh()
+
+        return
+
     def remove_last_addition(self, event=None):
 
         """
@@ -847,6 +879,7 @@ class MainApplication(tk.Frame):
         if len(self.filenames) <= 4:
             self.addmenu.entryconfig(0, state=tk.NORMAL)
             self.addmenu.entryconfig(1, state=tk.NORMAL)
+            self.parammenu.entryconfig(0, state=tk.NORMAL)
 
         self.DoseFigureHandler.flush()
         self.canvas.itemconfig(self.image_on_canvas, image=None)
@@ -996,29 +1029,6 @@ class MainApplication(tk.Frame):
         self.parent.bind("<Up>", lambda boolean: self.change_order(True))
         self.parent.bind("<Down>", lambda boolean: self.change_order(False))
 
-        """
-
-        if self.direction == "Z":
-            if self.diffplot.get() == False:
-                self.canvas.place(
-                    relheight=1, relwidth=1, relx=0.5, rely=0.5, anchor=tk.CENTER
-                )
-            else:
-                self.canvas.place(
-                    relheight=1, relwidth=1, relx=0.59, rely=0.5, anchor=tk.CENTER
-                )
-        else:
-            if self.diffplot.get() == False:
-                self.canvas.place(
-                    relheight=1, relwidth=1, relx=0.55556, rely=0.5, anchor=tk.CENTER
-                )
-            else:
-                self.canvas.place(
-                    relheight=1, relwidth=1, relx=0.65, rely=0.5, anchor=tk.CENTER
-                )
-
-        """
-
         if len(self.DoseFigureHandler.plots) >= 2:
             self.addmenu.entryconfig(3, state=tk.NORMAL)
             self.normmenu.entryconfig(12, state=tk.DISABLED)
@@ -1026,7 +1036,10 @@ class MainApplication(tk.Frame):
         if len(self.DoseFigureHandler.plots) == 2:
             self.normmenu.entryconfig(12, state=tk.NORMAL)
 
-        if len(self.DoseFigureHandler.plots) == 5:
+        if len(self.DoseFigureHandler.plots) > 5:
+            self.parammenu.entryconfig(0, state=tk.DISABLED)
+
+        if len(self.DoseFigureHandler.plots) == 10:
             self.addmenu.entryconfig(0, state=tk.DISABLED)
             self.addmenu.entryconfig(1, state=tk.DISABLED)
         if self.direction == "Z":
@@ -1093,6 +1106,94 @@ class MainApplication(tk.Frame):
                 outline="",
                 tags="token",
             )
+
+        if self.tablevar.get() == True:
+            try:
+                print(len(self.table._widgets[0]) - 1)
+                if len(self.DoseFigureHandler.plots) == len(self.table._widgets[0]) - 1:
+                    return
+            except AttributeError:
+                pass
+            try:
+                self.table.pack_forget()
+            except AttributeError:
+                pass
+            try:
+
+                fontsize = int(
+                    round(
+                        9.333
+                        + 6.6667
+                        * (self.parent.winfo_width() / self.parent.winfo_screenwidth()),
+                        0,
+                    )
+                )
+
+                if self.direction == "Z":
+                    self.table = SimpleTable(
+                        self.parent, 4, len(self.DoseFigureHandler.plots) + 1
+                    )
+                    self.table.set(0, 0, "Metrik", fontsize)
+                    self.table.set(1, 0, "Q", fontsize)
+                    self.table.set(2, 0, "dQ", fontsize)
+                    self.table.set(3, 0, "z_max", fontsize)
+                    for i in range(1, len(self.DoseFigureHandler.plots) + 1):
+                        self.table.set(0, i, "⬤", fontsize)
+                        self.table._widgets[0][i].configure(
+                            fg=self.DoseFigureHandler.colors[i - 1]
+                        )
+                    for i in range(1, len(self.DoseFigureHandler.plots) + 1):
+                        for j in range(1, 4):
+                            self.table.set(
+                                j,
+                                i,
+                                self.DoseFigureHandler.plots[i - 1].params()[j - 1],
+                                fontsize,
+                            )
+                    self.table.pack(side="bottom", fill="y", pady=(10, 2))
+                else:
+                    self.table = SimpleTable(
+                        self.parent, len(self.DoseFigureHandler.plots) + 1, 10
+                    )
+                    self.table.set(0, 0, self.text.metric[self.lang], fontsize)
+                    self.table.set(0, 1, "HWB", fontsize)
+                    self.table.set(0, 2, "CAXdev", fontsize)
+                    self.table.set(0, 3, "flat_krieger", fontsize)
+                    self.table.set(0, 4, "flat_stddev", fontsize)
+                    self.table.set(0, 5, "S", fontsize)
+                    self.table.set(0, 6, "Lpenumbra", fontsize)
+                    self.table.set(0, 7, "Rpenumbra", fontsize)
+                    self.table.set(0, 8, "Lintegral", fontsize)
+                    self.table.set(0, 9, "Rintegral", fontsize)
+
+                    for i in range(1, len(self.DoseFigureHandler.plots) + 1):
+                        self.table.set(i, 0, "⬤", fontsize)
+                        self.table._widgets[i][0].configure(
+                            fg=self.DoseFigureHandler.colors[i - 1]
+                        )
+                    for i in range(1, len(self.DoseFigureHandler.plots) + 1):
+                        for j in range(1, 10):
+                            self.table.set(
+                                i,
+                                j,
+                                self.DoseFigureHandler.plots[i - 1].params()[j - 1],
+                                fontsize,
+                            )
+
+                    self.table.pack(side="bottom", fill="both", pady=(10, 2))
+                self.table.configure(bg="black")
+            except Exception as e:
+                print(e)
+                self.tablevar.set(False)
+                sd.messagebox.showwarning("", self.text.calcfail[self.lang])
+            self.parent.update()
+            self.table_width = self.table._widgets[0][0].winfo_width()
+            self.table_height = self.table._widgets[0][0].winfo_height()
+        else:
+            try:
+                self.table.pack_forget()
+            except AttributeError:
+                pass
 
     def new_zoom(self, event):
 
@@ -1189,8 +1290,8 @@ class MainApplication(tk.Frame):
 
             if time.time() > self.starttime + 0.001:
                 try:
-                    image_width = event.width
-                    image_height = event.height
+                    image_width = self.winfo_width()
+                    image_height = self.winfo_height()
                     width_factor = image_width / self.photoimage.width()
                     height_factor = image_height / self.photoimage.height()
 
@@ -1296,6 +1397,40 @@ class MainApplication(tk.Frame):
                 self.rename_boxes += [xbox]
 
             self.canvas.move(self.image_on_canvas, deltax, deltay)
+
+        if (
+            self.current_event_width == event.width
+            and self.current_event_height == event.height
+        ):
+            return
+
+        self.current_event_width = event.width
+        self.current_event_height = event.height
+
+        if self.tablevar.get() == True:
+
+            if self.table_width == event.width and self.table_height == event.height:
+
+                print(True)
+                return
+
+            fontsize = int(
+                round(
+                    9.333
+                    + 6.6667
+                    * (self.parent.winfo_width() / self.parent.winfo_screenwidth()),
+                    0,
+                )
+            )
+            if int(self.table._widgets[0][0].cget("font")[-2:]) == fontsize:
+                pass
+            else:
+
+                for i in range(len(self.table._widgets)):
+                    for j in range(len(self.table._widgets[0])):
+                        self.table.set(
+                            i, j, self.table._widgets[i][j].cget("text"), fontsize
+                        )
 
         self.starttime = time.time()
 
