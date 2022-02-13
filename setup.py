@@ -24,6 +24,7 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     install_requires=[
+        "requests",
         "numpy",
         "scipy",
         "pynput",
