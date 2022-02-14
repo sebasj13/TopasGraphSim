@@ -1,7 +1,6 @@
 import os
 import time
 import tkinter as tk
-from re import S
 from tkinter import filedialog as fd
 from tkinter import simpledialog as sd
 from tkinter.colorchooser import askcolor
@@ -847,6 +846,9 @@ class MainApplication(tk.Frame):
     def show_table(self):
 
         self.calcparams.set(False)
+        if self.tablevar.get() == False:
+            self.table.destroy()
+            del self.table
 
         self.refresh()
 
@@ -1021,6 +1023,10 @@ class MainApplication(tk.Frame):
 
         self.logocanvas.pack_forget()
         self.canvas.pack_forget()
+        try:
+            self.table.pack_forget()
+        except AttributeError:
+            pass
         self.canvas = tk.Canvas(self)
         self.canvas.bind("<Button-1>", self.check_click)
         self.canvas.bind("<Button-3>", self.check_right_click)
@@ -1109,91 +1115,97 @@ class MainApplication(tk.Frame):
 
         if self.tablevar.get() == True:
             try:
-                print(len(self.table._widgets[0]) - 1)
-                if len(self.DoseFigureHandler.plots) == len(self.table._widgets[0]) - 1:
-                    return
-            except AttributeError:
-                pass
-            try:
-                self.table.pack_forget()
-            except AttributeError:
-                pass
-            try:
+                a = self.slider.winfo_ismapped()
+            except Exception:
+                a = False
+            if a == False:
+                try:
+                    if (
+                        len(self.DoseFigureHandler.plots)
+                        == len(self.table._widgets[0]) - 1
+                    ):
+                        self.table.pack(side="bottom", fill="both", pady=(10, 2))
+                    else:
+                        self.table.destroy()
+                        del self.table
+                        self.add_table()
+                except AttributeError:
+                    self.add_table()
 
-                fontsize = int(
-                    round(
-                        9.333
-                        + 6.6667
-                        * (self.parent.winfo_width() / self.parent.winfo_screenwidth()),
-                        0,
-                    )
+    def add_table(self):
+        try:
+            if len(self.DoseFigureHandler.plots) == len(self.table._widgets[0]) - 1:
+                return
+        except AttributeError:
+            pass
+        try:
+
+            fontsize = int(
+                round(
+                    9.333
+                    + 6.6667
+                    * (self.parent.winfo_width() / self.parent.winfo_screenwidth()),
+                    0,
                 )
+            )
 
-                if self.direction == "Z":
-                    self.table = SimpleTable(
-                        self.parent, 4, len(self.DoseFigureHandler.plots) + 1
+            if self.direction == "Z":
+                self.table = SimpleTable(
+                    self.parent, 4, len(self.DoseFigureHandler.plots) + 1
+                )
+                self.table.set(0, 0, "Metrik", fontsize)
+                self.table.set(1, 0, "Q", fontsize)
+                self.table.set(2, 0, "dQ", fontsize)
+                self.table.set(3, 0, "z_max", fontsize)
+                for i in range(1, len(self.DoseFigureHandler.plots) + 1):
+                    self.table.set(0, i, "⬤", fontsize)
+                    self.table._widgets[0][i].configure(
+                        fg=self.DoseFigureHandler.colors[i - 1]
                     )
-                    self.table.set(0, 0, "Metrik", fontsize)
-                    self.table.set(1, 0, "Q", fontsize)
-                    self.table.set(2, 0, "dQ", fontsize)
-                    self.table.set(3, 0, "z_max", fontsize)
-                    for i in range(1, len(self.DoseFigureHandler.plots) + 1):
-                        self.table.set(0, i, "⬤", fontsize)
-                        self.table._widgets[0][i].configure(
-                            fg=self.DoseFigureHandler.colors[i - 1]
+                for i in range(1, len(self.DoseFigureHandler.plots) + 1):
+                    for j in range(1, 4):
+                        self.table.set(
+                            j,
+                            i,
+                            self.DoseFigureHandler.plots[i - 1].params()[j - 1],
+                            fontsize,
                         )
-                    for i in range(1, len(self.DoseFigureHandler.plots) + 1):
-                        for j in range(1, 4):
-                            self.table.set(
-                                j,
-                                i,
-                                self.DoseFigureHandler.plots[i - 1].params()[j - 1],
-                                fontsize,
-                            )
-                    self.table.pack(side="bottom", fill="y", pady=(10, 2))
-                else:
-                    self.table = SimpleTable(
-                        self.parent, len(self.DoseFigureHandler.plots) + 1, 10
+                self.table.pack(side="bottom", fill="y", pady=(10, 2))
+            else:
+                self.table = SimpleTable(
+                    self.parent, len(self.DoseFigureHandler.plots) + 1, 10
+                )
+                self.table.set(0, 0, self.text.metric[self.lang], fontsize)
+                self.table.set(0, 1, "HWB", fontsize)
+                self.table.set(0, 2, "CAXdev", fontsize)
+                self.table.set(0, 3, "flat_krieger", fontsize)
+                self.table.set(0, 4, "flat_stddev", fontsize)
+                self.table.set(0, 5, "S", fontsize)
+                self.table.set(0, 6, "Lpenumbra", fontsize)
+                self.table.set(0, 7, "Rpenumbra", fontsize)
+                self.table.set(0, 8, "Lintegral", fontsize)
+                self.table.set(0, 9, "Rintegral", fontsize)
+
+                for i in range(1, len(self.DoseFigureHandler.plots) + 1):
+                    self.table.set(i, 0, "⬤", fontsize)
+                    self.table._widgets[i][0].configure(
+                        fg=self.DoseFigureHandler.colors[i - 1]
                     )
-                    self.table.set(0, 0, self.text.metric[self.lang], fontsize)
-                    self.table.set(0, 1, "HWB", fontsize)
-                    self.table.set(0, 2, "CAXdev", fontsize)
-                    self.table.set(0, 3, "flat_krieger", fontsize)
-                    self.table.set(0, 4, "flat_stddev", fontsize)
-                    self.table.set(0, 5, "S", fontsize)
-                    self.table.set(0, 6, "Lpenumbra", fontsize)
-                    self.table.set(0, 7, "Rpenumbra", fontsize)
-                    self.table.set(0, 8, "Lintegral", fontsize)
-                    self.table.set(0, 9, "Rintegral", fontsize)
-
-                    for i in range(1, len(self.DoseFigureHandler.plots) + 1):
-                        self.table.set(i, 0, "⬤", fontsize)
-                        self.table._widgets[i][0].configure(
-                            fg=self.DoseFigureHandler.colors[i - 1]
+                for i in range(1, len(self.DoseFigureHandler.plots) + 1):
+                    for j in range(1, 10):
+                        self.table.set(
+                            i,
+                            j,
+                            self.DoseFigureHandler.plots[i - 1].params()[j - 1],
+                            fontsize,
                         )
-                    for i in range(1, len(self.DoseFigureHandler.plots) + 1):
-                        for j in range(1, 10):
-                            self.table.set(
-                                i,
-                                j,
-                                self.DoseFigureHandler.plots[i - 1].params()[j - 1],
-                                fontsize,
-                            )
 
-                    self.table.pack(side="bottom", fill="both", pady=(10, 2))
-                self.table.configure(bg="black")
-            except Exception as e:
-                print(e)
-                self.tablevar.set(False)
-                sd.messagebox.showwarning("", self.text.calcfail[self.lang])
-            self.parent.update()
-            self.table_width = self.table._widgets[0][0].winfo_width()
-            self.table_height = self.table._widgets[0][0].winfo_height()
-        else:
-            try:
-                self.table.pack_forget()
-            except AttributeError:
-                pass
+                self.table.pack(side="bottom", fill="both", pady=(10, 2))
+            self.table.configure(bg="black")
+        except Exception as e:
+            print(e)
+            self.tablevar.set(False)
+            sd.messagebox.showwarning("", self.text.calcfail[self.lang])
 
     def new_zoom(self, event):
 
@@ -1288,7 +1300,7 @@ class MainApplication(tk.Frame):
 
         if len(self.rename_boxes) > 0:
 
-            if time.time() > self.starttime + 0.001:
+            if time.time() > self.starttime:
                 try:
                     image_width = self.winfo_width()
                     image_height = self.winfo_height()
@@ -1308,10 +1320,12 @@ class MainApplication(tk.Frame):
                         ),
                         Image.ANTIALIAS,
                     )
+                    self.canvas.pack_forget()
                     self.canvas.image = ImageTk.PhotoImage(self.resized_image)
                     self.canvas.itemconfig(
                         self.image_on_canvas, image=self.canvas.image
                     )
+                    self.canvas.pack(side=tk.TOP, fill="both", expand=True)
                 except AttributeError:
                     pass
 
@@ -1397,40 +1411,6 @@ class MainApplication(tk.Frame):
                 self.rename_boxes += [xbox]
 
             self.canvas.move(self.image_on_canvas, deltax, deltay)
-
-        if (
-            self.current_event_width == event.width
-            and self.current_event_height == event.height
-        ):
-            return
-
-        self.current_event_width = event.width
-        self.current_event_height = event.height
-
-        if self.tablevar.get() == True:
-
-            if self.table_width == event.width and self.table_height == event.height:
-
-                print(True)
-                return
-
-            fontsize = int(
-                round(
-                    9.333
-                    + 6.6667
-                    * (self.parent.winfo_width() / self.parent.winfo_screenwidth()),
-                    0,
-                )
-            )
-            if int(self.table._widgets[0][0].cget("font")[-2:]) == fontsize:
-                pass
-            else:
-
-                for i in range(len(self.table._widgets)):
-                    for j in range(len(self.table._widgets[0])):
-                        self.table.set(
-                            i, j, self.table._widgets[i][j].cget("text"), fontsize
-                        )
 
         self.starttime = time.time()
 
