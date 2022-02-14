@@ -24,6 +24,7 @@ class Simulation:
         databin_index = bins.index(max(bins))
         self.direction = axdict[databin_index]
         self.axis = np.array(self.data.dimensions[databin_index].get_bin_centers())
+        # self.axis = self.axis - self.axis[0]#???
         unit = self.data.dimensions[databin_index].unit
         self.axis = [self.convert_SI(x, unit) for x in self.axis]
         if "Mean" in self.data.statistics:

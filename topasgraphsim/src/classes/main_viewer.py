@@ -1199,8 +1199,13 @@ class MainApplication(tk.Frame):
                             self.DoseFigureHandler.plots[i - 1].params()[j - 1],
                             fontsize,
                         )
+                        if self.caxcorrection.get() == True:
+                            if j == 2:
+                                self.table.set(
+                                    i, j, "0.00", fontsize,
+                                )
 
-                self.table.pack(side="bottom", fill="both", pady=(10, 2))
+                self.table.pack(side="bottom", fill="both", padx=(2, 2), pady=(10, 2))
             self.table.configure(bg="black")
         except Exception as e:
             print(e)
@@ -1223,23 +1228,28 @@ class MainApplication(tk.Frame):
             x = self.parent.winfo_pointerx()
             y = self.parent.winfo_pointery()
 
+            factor = 1
+            if self.DoseFigureHandler.plots[0].direction == "Z":
+                factor = 6 / 5
+
             if boolean == True:
 
                 new_index = self.index - 1
-                dy = -0.044
+                dy = -0.035 * factor
 
                 if self.index == 0:
-                    new_index = len(self.rename_boxes) - 1
-                    dy = 0.044 * (len(self.rename_boxes) - 1)
+                    new_index = len(self.rename_boxes) - 2
+                    dy = 0.035 * factor * (len(self.rename_boxes) - 2)
 
             else:
-                if self.index + 1 == len(self.rename_boxes):
+                if self.index + 1 == len(self.rename_boxes) - 1:
                     new_index = 0
-                    dy = -0.044 * (len(self.rename_boxes) - 1)
+                    dy = -0.035 * factor * (len(self.rename_boxes) - 2)
 
                 else:
                     new_index = self.index + 1
-                    dy = 0.044
+                    dy = 0.035 * factor
+
             (
                 self.DoseFigureHandler.plots[self.index],
                 self.DoseFigureHandler.plots[new_index],
