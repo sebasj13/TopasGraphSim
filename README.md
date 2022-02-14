@@ -12,7 +12,7 @@ This GUI can visualize and analyze percentage depth dose (pdd) and dose profiles
 ## Features
 
  - Reproducible graphing and analysis of TOPAS simulation for medical physics
- - Simultaneous plotting and parameter calculation for up to 5 datasets
+ - Simultaneous plotting and parameter calculation for up to 10 datasets
  - Graph adjustment options
      * Normalization (On/Off)
      * Error bars (On/Off)
