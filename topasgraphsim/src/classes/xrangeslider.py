@@ -28,6 +28,13 @@ class XRangeSlider:
             f"{500}x{self.height}+{int(self.geometry[0]+self.geometry[2]//2) - 250}+{int(self.geometry[1]+self.geometry[3]//2)}"
         )
 
+        try:
+            self.parent.table.pack_forget()
+        except AttributeError:
+            pass
+
+        self.parent.tablevar.set(False)
+
         self.slider = RangeSliderH(
             self.window,
             variables=slidervars,
@@ -71,7 +78,9 @@ class XRangeSlider:
     def update(self, *args):
 
         if time.time() > self.starttime + 0.1:
+            self.parent.canvas.pack_forget()
             self.parent.refresh()
+            self.parent.canvas.pack(side=tk.TOP, fill="both", expand=True)
             self.starttime = time.time()
         return
 

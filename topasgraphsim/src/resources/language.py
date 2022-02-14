@@ -9,6 +9,7 @@ class Text:
         self.absolute = {"de": "Absolut", "en": "Absolute"}
         self.about = {"de": "Über TGS", "en": "About"}
         self.add = {"de": "Daten hinzufügen", "en": "Add Data"}
+        self.adddescriptors = {"de":"Beschriftungen hinzufügen","en":"Add descriptors"}
         self.axis = {"de": "Achse", "en": "Axis"}
         self.calcfail = {
             "de": "Parameter konnten nicht berechnen werden!",
@@ -97,6 +98,7 @@ class Text:
         self.markerline = {"de": "Liniendicke", "en": "Line Width"}
         self.measurement = {"de": "Messung", "en": "Measurement"}
         self.measurementdata = {"de": "Messdaten", "en": "Measurement Data"}
+        self.metric = {"de": "Metrik", "en": "Metric"}
         self.maximum = {"de": "Maximum", "en": "Maximum"}
         self.normalize = {"de": "Normieren", "en": "Normalize"}
         self.normunit = {"de": "Relative Dosis", "en": "Relative Dose"}
@@ -114,6 +116,7 @@ class Text:
             "de": "Scanrichtung: [X = Ja | Y = Nein]",
             "en": "Scan axis: [X = Yes | Y = No]",
         }
+        self.showtable = {"de": "Wertetabelle anzeigen", "en": "Show parameter table"}
         self.simulation = {"de": "Simulation", "en": "Simulation"}
         self.startdark = {"de": "Im dunklen Modus starten", "en": "Start in dark mode"}
         self.submit = {"de": "Fertig", "en": "Submit"}
