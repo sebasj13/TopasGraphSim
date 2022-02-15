@@ -1,10 +1,10 @@
 # <p align="center">TopasGraphSim</p>
 
+## A GUI to simplify and streamline the plotting and analysis of medical physics simulations
+
 <p align="center">
 <img src="https://user-images.githubusercontent.com/87897942/152699152-d4d39654-4449-4354-b899-4adc81eb25a7.png" width="320" height="160" />
 </p>
-
-## A GUI to simplify and streamline the plotting and analysis of medical physics simulations
 
 This GUI can visualize and analyze percentage depth dose (pdd) and dose profiles (dp) simulations from [TOPAS](http://www.topasmc.org/). Depth dose measurements are assumed to be in the z-direction, dose profiles in the x- or y-directions. Data read-in is handled by [topas2numpy](https://github.com/davidchall/topas2numpy).
 
