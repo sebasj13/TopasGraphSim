@@ -13,10 +13,10 @@ import sys
 import tkinter as tk
 import tkinter.ttk as ttk
 
-from src.classes.install_dnd import InstallDnD
-from src.classes.main_viewer import MainApplication
-from src.classes.profile import ProfileHandler
-from src.classes.update import CheckForUpdates
+from .src.classes.install_dnd import InstallDnD
+from .src.classes.main_viewer import MainApplication
+from .src.classes.profile import ProfileHandler
+from .src.classes.update import CheckForUpdates
 
 
 def topasgraphsim():
