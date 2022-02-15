@@ -1,6 +1,6 @@
 # <p align="center">TopasGraphSim</p>
 
-## A GUI to simplify and streamline the plotting and analysis of medical physics simulations
+## <p align="center">A GUI to simplify and streamline the plotting and analysis of medical physics simulations</p>
 
 <p align="center">
 <img src="https://user-images.githubusercontent.com/87897942/152699152-d4d39654-4449-4354-b899-4adc81eb25a7.png" width="320" height="160" />
