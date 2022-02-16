@@ -1026,6 +1026,19 @@ class MainApplication(tk.Frame):
         )
 
         self.logocanvas.pack_forget()
+        if self.tablevar.get() == True:
+            if self.direction == "Z":
+                if len(self.DoseFigureHandler.plots) == len(self.table._widgets[0]) - 1:
+                    pass
+                else:
+                    self.table.destroy()
+                    self.show_table()
+            else:
+                if len(self.DoseFigureHandler.plots) == len(self.table._widgets) - 1:
+                    pass
+                else:
+                    self.table.destroy()
+                    self.add_table()
         self.canvas.pack_forget()
         self.canvas = tk.Canvas(self)
         self.canvas.bind("<Button-1>", self.check_click)
@@ -1321,6 +1334,9 @@ class MainApplication(tk.Frame):
                     width_factor = image_width / photoimage_width
                     height_factor = image_height / photoimage_height
 
+                    if abs(width_factor - 1) <= 0.01 and abs(height_factor - 1) < 0.01:
+                        return
+
                     if width_factor <= height_factor:
                         scale_factor = width_factor
                     else:
@@ -1428,19 +1444,6 @@ class MainApplication(tk.Frame):
             self.canvas.move(self.image_on_canvas, deltax, deltay)
 
         self.starttime = time.time()
-        try:
-            if (
-                width_factor != 1
-                and newimage.width() == photoimage_width
-                and photoimage_width > 0
-            ) or (
-                height_factor != 1
-                and photoimage_height > 0
-                and newimage.height() == photoimage_height
-            ):
-                self.after(10, lambda: self.handle_configure(event))
-        except UnboundLocalError:
-            pass
 
     def check_hand(self, e):
 
