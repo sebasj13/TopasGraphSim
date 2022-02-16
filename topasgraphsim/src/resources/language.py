@@ -9,7 +9,10 @@ class Text:
         self.absolute = {"de": "Absolut", "en": "Absolute"}
         self.about = {"de": "Über TGS", "en": "About"}
         self.add = {"de": "Daten hinzufügen", "en": "Add Data"}
-        self.adddescriptors = {"de":"Beschriftungen hinzufügen","en":"Add descriptors"}
+        self.adddescriptors = {
+            "de": "Beschriftungen hinzufügen",
+            "en": "Add descriptors",
+        }
         self.axis = {"de": "Achse", "en": "Axis"}
         self.calcfail = {
             "de": "Parameter konnten nicht berechnen werden!",

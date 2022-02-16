@@ -49,14 +49,14 @@ class DoseFigureHandler:
         # Initialize necessary variables
         self.props = dict(boxstyle="round", facecolor="wheat", alpha=0.6)
         self.plots = []
-        self.data = []
+        
         self.difference = []
 
     def add_plot_data(self, datanames):
 
         """Adds data to the plot queue
         """
-
+        self.data = []
         test = self.parent.direction
         for tuple in datanames:
             filename = tuple[0]

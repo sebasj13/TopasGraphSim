@@ -580,6 +580,7 @@ class MainApplication(tk.Frame):
         errlimmax = self.DoseFigureHandler.errlimmax
         initial_limits = self.initial_limits
         current_limits = [self.slidervars[0].get(), self.slidervars[1].get()]
+        table = self.tablevar.get()
         dark = self.dark.get()
         try:
             self.slider.submit()
@@ -595,6 +596,7 @@ class MainApplication(tk.Frame):
             self.filenames = filenames
             self.DoseFigureHandler.plots = plots
             self.dark.set(dark)
+            self.tablevar.set(table)
             self.axlims.set(axlims)
             self.calcparams.set(calcparams)
             self.caxcorrection.set(caxcorrection)
@@ -615,6 +617,9 @@ class MainApplication(tk.Frame):
                 self.switchtheme("light")
                 self.dark.set(False)
             self.show_preview()
+            if table == True:
+                if self.direction != "Z":
+                    self.table.set(0, 1, self.text.fwhm[self.lang], self.fontsize)
 
         return
 
@@ -722,7 +727,6 @@ class MainApplication(tk.Frame):
             self.canvas.itemconfig(self.image_on_canvas, image=None)
         except Exception:
             pass
-        self.DoseFigureHandler.flush()
         self.DoseFigureHandler.plots = []
         self.diffplot.set(False)
         self.DoseFigureHandler.diffplot = False
@@ -849,6 +853,8 @@ class MainApplication(tk.Frame):
         if self.tablevar.get() == False:
             self.table.destroy()
             del self.table
+        else:
+            self.add_table()
 
         self.refresh()
 
@@ -883,7 +889,6 @@ class MainApplication(tk.Frame):
             self.addmenu.entryconfig(1, state=tk.NORMAL)
             self.parammenu.entryconfig(0, state=tk.NORMAL)
 
-        self.DoseFigureHandler.flush()
         self.canvas.itemconfig(self.image_on_canvas, image=None)
         self.show_preview()
 
@@ -1016,17 +1021,12 @@ class MainApplication(tk.Frame):
         """
         Invokes DoseFigureHandler to create and display the graphs with the selected options
         """
-        self.DoseFigureHandler.flush()
         self.photoimage, self.direction = self.DoseFigureHandler.return_figure(
             self.filenames
         )
 
         self.logocanvas.pack_forget()
         self.canvas.pack_forget()
-        try:
-            self.table.pack_forget()
-        except AttributeError:
-            pass
         self.canvas = tk.Canvas(self)
         self.canvas.bind("<Button-1>", self.check_click)
         self.canvas.bind("<Button-3>", self.check_right_click)
@@ -1113,25 +1113,6 @@ class MainApplication(tk.Frame):
                 tags="token",
             )
 
-        if self.tablevar.get() == True:
-            try:
-                a = self.slider.winfo_ismapped()
-            except Exception:
-                a = False
-            if a == False:
-                try:
-                    if (
-                        len(self.DoseFigureHandler.plots)
-                        == len(self.table._widgets[0]) - 1
-                    ):
-                        self.table.pack(side="bottom", fill="both", pady=(10, 2))
-                    else:
-                        self.table.destroy()
-                        del self.table
-                        self.add_table()
-                except AttributeError:
-                    self.add_table()
-
     def add_table(self):
         try:
             if len(self.DoseFigureHandler.plots) == len(self.table._widgets[0]) - 1:
@@ -1140,7 +1121,7 @@ class MainApplication(tk.Frame):
             pass
         try:
 
-            fontsize = int(
+            self.fontsize = int(
                 round(
                     9.333
                     + 6.6667
@@ -1153,12 +1134,12 @@ class MainApplication(tk.Frame):
                 self.table = SimpleTable(
                     self.parent, 4, len(self.DoseFigureHandler.plots) + 1
                 )
-                self.table.set(0, 0, "Metrik", fontsize)
-                self.table.set(1, 0, "Q", fontsize)
-                self.table.set(2, 0, "dQ", fontsize)
-                self.table.set(3, 0, "z_max", fontsize)
+                self.table.set(0, 0, self.text.metric[self.lang], self.fontsize)
+                self.table.set(1, 0, "Q", self.fontsize)
+                self.table.set(2, 0, "dQ", self.fontsize)
+                self.table.set(3, 0, "z_max", self.fontsize)
                 for i in range(1, len(self.DoseFigureHandler.plots) + 1):
-                    self.table.set(0, i, "⬤", fontsize)
+                    self.table.set(0, i, "⬤", self.fontsize)
                     self.table._widgets[0][i].configure(
                         fg=self.DoseFigureHandler.colors[i - 1]
                     )
@@ -1168,26 +1149,26 @@ class MainApplication(tk.Frame):
                             j,
                             i,
                             self.DoseFigureHandler.plots[i - 1].params()[j - 1],
-                            fontsize,
+                            self.fontsize,
                         )
                 self.table.pack(side="bottom", fill="y", pady=(10, 2))
             else:
                 self.table = SimpleTable(
                     self.parent, len(self.DoseFigureHandler.plots) + 1, 10
                 )
-                self.table.set(0, 0, self.text.metric[self.lang], fontsize)
-                self.table.set(0, 1, "HWB", fontsize)
-                self.table.set(0, 2, "CAXdev", fontsize)
-                self.table.set(0, 3, "flat_krieger", fontsize)
-                self.table.set(0, 4, "flat_stddev", fontsize)
-                self.table.set(0, 5, "S", fontsize)
-                self.table.set(0, 6, "Lpenumbra", fontsize)
-                self.table.set(0, 7, "Rpenumbra", fontsize)
-                self.table.set(0, 8, "Lintegral", fontsize)
-                self.table.set(0, 9, "Rintegral", fontsize)
+                self.table.set(0, 0, self.text.metric[self.lang], self.fontsize)
+                self.table.set(0, 1, self.text.fwhm[self.lang], self.fontsize)
+                self.table.set(0, 2, "CAXdev", self.fontsize)
+                self.table.set(0, 3, "flat_krieger", self.fontsize)
+                self.table.set(0, 4, "flat_stddev", self.fontsize)
+                self.table.set(0, 5, "S", self.fontsize)
+                self.table.set(0, 6, "Lpenumbra", self.fontsize)
+                self.table.set(0, 7, "Rpenumbra", self.fontsize)
+                self.table.set(0, 8, "Lintegral", self.fontsize)
+                self.table.set(0, 9, "Rintegral", self.fontsize)
 
                 for i in range(1, len(self.DoseFigureHandler.plots) + 1):
-                    self.table.set(i, 0, "⬤", fontsize)
+                    self.table.set(i, 0, "⬤", self.fontsize)
                     self.table._widgets[i][0].configure(
                         fg=self.DoseFigureHandler.colors[i - 1]
                     )
@@ -1197,12 +1178,12 @@ class MainApplication(tk.Frame):
                             i,
                             j,
                             self.DoseFigureHandler.plots[i - 1].params()[j - 1],
-                            fontsize,
+                            self.fontsize,
                         )
                         if self.caxcorrection.get() == True:
                             if j == 2:
                                 self.table.set(
-                                    i, j, "0.00", fontsize,
+                                    i, j, "0.00", self.fontsize,
                                 )
 
                 self.table.pack(side="bottom", fill="both", padx=(2, 2), pady=(10, 2))
@@ -1290,8 +1271,7 @@ class MainApplication(tk.Frame):
     def refresh(self):
 
         if self.filenames != []:
-            self.canvas.itemconfig(self.image_on_canvas, image=None)
-            self.DoseFigureHandler.flush()
+            # self.canvas.itemconfig(self.image_on_canvas, image=None)
             self.show_preview()
         return
 
@@ -1302,11 +1282,33 @@ class MainApplication(tk.Frame):
         according to the window size and name length
         """
 
+        if type(event.widget) == tk.Label:
+
+            return
+
         deltax = self.winfo_width() // 2 - self.center[0]
         deltay = self.winfo_height() // 2 - self.center[1]
         self.center = [self.winfo_width() // 2, self.winfo_height() // 2]
 
         self.logocanvas.move(self.logo_on_canvas, deltax, deltay)
+
+        if self.tablevar.get() == True:
+
+            fontsize = int(
+                round(
+                    9.333
+                    + 6.6667
+                    * (self.parent.winfo_width() / self.parent.winfo_screenwidth()),
+                    0,
+                )
+            )
+            if fontsize != self.fontsize:
+                for label in self.table.winfo_children():
+                    self.fontsize = fontsize
+                    if isinstance(label, tk.Label):
+                        label.configure(
+                            text=label.cget("text"), font=("DejaVu Sans", fontsize)
+                        )
 
         if len(self.rename_boxes) > 0:
 
@@ -1314,8 +1316,10 @@ class MainApplication(tk.Frame):
                 try:
                     image_width = self.winfo_width()
                     image_height = self.winfo_height()
-                    width_factor = image_width / self.photoimage.width()
-                    height_factor = image_height / self.photoimage.height()
+                    photoimage_width = self.photoimage.width()
+                    photoimage_height = self.photoimage.height()
+                    width_factor = image_width / photoimage_width
+                    height_factor = image_height / photoimage_height
 
                     if width_factor <= height_factor:
                         scale_factor = width_factor
@@ -1331,7 +1335,8 @@ class MainApplication(tk.Frame):
                         Image.ANTIALIAS,
                     )
                     self.canvas.pack_forget()
-                    self.canvas.image = ImageTk.PhotoImage(self.resized_image)
+                    newimage = ImageTk.PhotoImage(self.resized_image)
+                    self.canvas.image = newimage
                     self.canvas.itemconfig(
                         self.image_on_canvas, image=self.canvas.image
                     )
@@ -1423,6 +1428,19 @@ class MainApplication(tk.Frame):
             self.canvas.move(self.image_on_canvas, deltax, deltay)
 
         self.starttime = time.time()
+        try:
+            if (
+                width_factor != 1
+                and newimage.width() == photoimage_width
+                and photoimage_width > 0
+            ) or (
+                height_factor != 1
+                and photoimage_height > 0
+                and newimage.height() == photoimage_height
+            ):
+                self.after(10, lambda: self.handle_configure(event))
+        except UnboundLocalError:
+            pass
 
     def check_hand(self, e):
 
