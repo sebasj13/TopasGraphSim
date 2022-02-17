@@ -111,6 +111,7 @@ class Text:
         self.percentage = {"de": "Prozentual", "en": "Percentage"}
         self.pdd = {"de": "Tiefendosiskurve", "en": "Depth dose"}
         self.ptw = {"de": "PTW tbaScan", "en": "PTW tbaScan"}
+        self.recent = {"de":"Zuletzt verwendet", "en":"Recent files"}
         self.revert = {"de": "Rückgängig", "en": "Undo"}
         self.reset = {"de": "Zurücksetzen", "en": "Reset"}
         self.resetcolors = {"de": "Farbschema zurücksetzen", "en": "Reset colorscheme"}

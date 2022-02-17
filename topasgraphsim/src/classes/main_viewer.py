@@ -12,6 +12,7 @@ from ..resources.info import show_info
 from ..resources.language import Text
 from .dose_figure_handler import DoseFigureHandler
 from .profile import ProfileHandler
+from .recent_files import RecentFileManager
 from .table import SimpleTable
 from .xrangeslider import XRangeSlider
 
@@ -123,6 +124,8 @@ class MainApplication(tk.Frame):
 
         self.DoseFigureHandler = DoseFigureHandler(self)
 
+        self.RecentFileManager = RecentFileManager(self)
+
         # Keybinding definitions
         self.parent.bind("<Configure>", self.handle_configure)
         self.parent.bind("<Control-e>", lambda type: self.load_file("egs"))
@@ -180,7 +183,7 @@ class MainApplication(tk.Frame):
             accelerator="Ctrl+P",
         )
 
-        self.addsimmenu = tk.Menu(self.menubar)
+        self.addsimmenu = tk.Menu(self.menubar, tearoff=False)
 
         self.addsimmenu.add_command(
             label="TOPAS",
@@ -197,6 +200,13 @@ class MainApplication(tk.Frame):
         self.filemenu.add_cascade(
             label=self.text.loadmeasurement[self.lang], menu=self.addmeasuremenu
         )
+
+        self.recentmenu = tk.Menu(self.menubar, tearoff=False)
+        self.filemenu.add_cascade(
+            label=self.text.recent[self.lang], menu=self.recentmenu
+        )
+        self.RecentFileManager.add_files_to_menu()
+
         self.filemenu.add_separator()
         self.filemenu.add_command(
             label=self.text.save[self.lang],
@@ -212,8 +222,8 @@ class MainApplication(tk.Frame):
         self.filemenu.add_command(
             label=self.text.end[self.lang], command=lambda: self.save_graph(True)
         )
-        self.filemenu.entryconfig(3, state=tk.DISABLED)
         self.filemenu.entryconfig(4, state=tk.DISABLED)
+        self.filemenu.entryconfig(5, state=tk.DISABLED)
         self.addmenu = tk.Menu(self.menubar, tearoff=False)
         self.addmenu.add_cascade(
             label=self.text.simulation[self.lang], menu=self.addsimmenu
@@ -644,13 +654,14 @@ class MainApplication(tk.Frame):
             return
 
         for file in self.current_file:
+            self.RecentFileManager.add_file((file, type))
+            self.RecentFileManager.add_files_to_menu()
             self.filenames += [(file, type)]
-        self.logocanvas.pack_forget()
         self.show_preview()
         self.filemenu.entryconfig(0, state=tk.DISABLED)
         self.filemenu.entryconfig(1, state=tk.DISABLED)
-        self.filemenu.entryconfig(3, state=tk.NORMAL)
         self.filemenu.entryconfig(4, state=tk.NORMAL)
+        self.filemenu.entryconfig(5, state=tk.NORMAL)
         if len(self.filenames) > 2:
             self.normmenu.entryconfig(12, state=tk.DISABLED)
         self.saved = False
@@ -690,17 +701,18 @@ class MainApplication(tk.Frame):
         self.current_file = files
 
         for i, file in enumerate(self.current_file):
+            self.RecentFileManager.add_file((file, extensions[i]))
+            self.RecentFileManager.add_files_to_menu()
             self.filenames += [(file, extensions[i])]
 
         if len(self.filenames) == 0:
             return
 
-        self.logocanvas.pack_forget()
         self.show_preview()
         self.filemenu.entryconfig(0, state=tk.DISABLED)
         self.filemenu.entryconfig(1, state=tk.DISABLED)
-        self.filemenu.entryconfig(3, state=tk.NORMAL)
         self.filemenu.entryconfig(4, state=tk.NORMAL)
+        self.filemenu.entryconfig(5, state=tk.NORMAL)
         if len(self.filenames) > 2:
             self.normmenu.entryconfig(12, state=tk.DISABLED)
         self.saved = False
@@ -712,8 +724,8 @@ class MainApplication(tk.Frame):
         self.canvas.pack_forget()
         self.filemenu.entryconfig(0, state=tk.NORMAL)
         self.filemenu.entryconfig(1, state=tk.NORMAL)
-        self.filemenu.entryconfig(3, state=tk.DISABLED)
         self.filemenu.entryconfig(4, state=tk.DISABLED)
+        self.filemenu.entryconfig(5, state=tk.DISABLED)
         self.addmenu.entryconfig(0, state=tk.NORMAL)
         self.addmenu.entryconfig(1, state=tk.NORMAL)
         self.addmeasuremenu.entryconfig(0, state=tk.NORMAL)
@@ -1027,9 +1039,12 @@ class MainApplication(tk.Frame):
         """
         Invokes DoseFigureHandler to create and display the graphs with the selected options
         """
-        self.photoimage, self.direction = self.DoseFigureHandler.return_figure(
-            self.filenames
-        )
+        try:
+            self.photoimage, self.direction = self.DoseFigureHandler.return_figure(
+                self.filenames
+            )
+        except Exception:
+            return
 
         self.logocanvas.pack_forget()
         if self.tablevar.get() == True:
@@ -1207,8 +1222,7 @@ class MainApplication(tk.Frame):
 
                 self.table.pack(side="bottom", fill="both", padx=(2, 2), pady=(10, 2))
             self.table.configure(bg="black")
-        except Exception as e:
-            print(e)
+        except Exception:
             self.tablevar.set(False)
             sd.messagebox.showwarning("", self.text.calcfail[self.lang])
 
@@ -1301,6 +1315,10 @@ class MainApplication(tk.Frame):
         according to the window size and name length
         """
 
+        state = self.profile.get_attribute("state")
+        if state != self.parent.state():
+            self.profile.set_attribute("state", self.parent.state())
+            self.starttime -= 0.1
         if type(event.widget) == tk.Label:
 
             return
@@ -1401,10 +1419,16 @@ class MainApplication(tk.Frame):
                                 )
                             )
                         ),
-                        (coords[1] - imdims[1] * (0.478 - i * 0.035 + normdiff))
+                        (
+                            (canvdims[1] - imdims[1]) // 2
+                            + imdims[1] * (0.01 + i * 0.035 + normdiff)
+                        )
                         * factor,
                         coords[0] + imdims[0] * 0.49,
-                        (coords[1] - imdims[1] * (0.443 - i * 0.035 + normdiff))
+                        (
+                            (canvdims[1] - imdims[1]) // 2
+                            + imdims[1] * (0.06 + i * 0.035 + normdiff)
+                        )
                         * factor,
                         fill="",
                         outline="",
