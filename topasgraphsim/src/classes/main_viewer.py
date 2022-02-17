@@ -772,6 +772,12 @@ class MainApplication(tk.Frame):
             pass
 
         if exit == True:
+            self.profile.set_attribute("state", self.parent.state())
+            if self.parent.state() == "zoomed":
+                self.profile.set_attribute("geometry", " ")
+            else:
+                self.profile.set_attribute("geometry", self.parent.geometry())
+
             if self.saved == False:
 
                 prompt = sd.messagebox.askyesno("", self.text.closeprompt[self.lang])

@@ -57,10 +57,19 @@ def topasgraphsim():
     screen_height = root.winfo_screenheight()
     width = screen_width // 2
     height = screen_height // 2
-    x = screen_width // 2 - width // 2
-    y = screen_height // 2 - height // 2
     root.minsize(width, height - 100)
-    root.geometry(f"{width}x{height}+{x-25}+{y}")
+
+    try:
+        root.geometry(ProfileHandler().get_attribute("geometry"))
+    except Exception:
+        x = screen_width // 2 - width // 2
+        y = screen_height // 2 - height // 2
+        root.geometry(f"{width}x{height}+{x-25}+{y}")
+    try:
+        root.state(ProfileHandler().get_attribute("state"))
+    except Exception:
+        root.state("normal")
+
     ttk.Style(root)
     root.tk.call(
         "source",

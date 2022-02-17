@@ -1,4 +1,7 @@
 {
+    "geometry": " ",
+    "state": "normal",
+    "draganddrop": true,
     "color_scheme": "light",
     "language": "en",
     "markersize": 1.0,
@@ -30,6 +33,5 @@
         "#98A876",
         "#2A125E",
         "#2E4008"
-    ],
-    "draganddrop": true
+    ]
 }
