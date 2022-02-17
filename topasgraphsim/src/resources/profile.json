@@ -1,9 +1,9 @@
 {
-    "geometry": " ",
+    "geometry": "960x540+772+139",
     "state": "normal",
     "draganddrop": true,
     "color_scheme": "light",
-    "language": "en",
+    "language": "de",
     "markersize": 1.0,
     "linewidth": 1.0,
     "normalize": 1,
@@ -33,5 +33,6 @@
         "#98A876",
         "#2A125E",
         "#2E4008"
-    ]
+    ],
+    "recent_files": []
 }

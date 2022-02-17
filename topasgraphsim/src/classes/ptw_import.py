@@ -111,7 +111,8 @@ class PTWMultimporter:
 
         self.plots = []
         self.window = tk.Toplevel()
-        self.window.wm_attributes("-toolwindow", True)
+        # self.window.wm_attributes("-toolwindow", True)
+        self.window.overrideredirect(1)
         self.window.title("PTW tbaScan")
         self.window.resizable(False, False)
         self.window.bind("<Return>", self.submit)
@@ -120,9 +121,12 @@ class PTWMultimporter:
             geometry.winfo_rooty(),
             geometry.winfo_height(),
         ]
-        self.height = 29 * (len(self.alldata) + 1)
+        self.height = 10 + 29 * (len(self.alldata) + 1)
+        # self.window.geometry(
+        #    f"240x{self.height}+{self.geometry[0]}+{25+(self.geometry[0]+self.geometry[2])//2-self.height//2}"
+        # )
         self.window.geometry(
-            f"240x{self.height}+{self.geometry[0]}+{25+(self.geometry[0]+self.geometry[2])//2-self.height//2}"
+            f"240x{self.height}+{self.geometry[0]}+{geometry.parent.winfo_rooty()}"
         )
         self.window.iconbitmap(
             str(

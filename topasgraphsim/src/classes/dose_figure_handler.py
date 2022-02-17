@@ -49,7 +49,7 @@ class DoseFigureHandler:
         # Initialize necessary variables
         self.props = dict(boxstyle="round", facecolor="wheat", alpha=0.6)
         self.plots = []
-        
+
         self.difference = []
 
     def add_plot_data(self, datanames):
@@ -722,9 +722,12 @@ class DoseFigureHandler:
             pass
 
         self.half = self.parent.half.get()
-        self.add_plot_data(filenames)
-        self.difference_plot()
-
+        try:
+            self.add_plot_data(filenames)
+            self.difference_plot()
+        except IndexError:
+            self.parent.filenames.pop(-1)
+            return
         self.set_axis()
         self.set_x_label()
         self.create_plots_from_data()
