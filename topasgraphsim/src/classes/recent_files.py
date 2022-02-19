@@ -20,8 +20,10 @@ class RecentFileManager:
             if os.path.exists(x) != True:
                 pop.append(i)
 
-        for i in pop:
+        for index, i in enumerate(pop):
             self.recent_files.pop(i)
+            if index < len(pop) - 1:
+                pop[index + 1] -= 1
 
         self.lambdas = [
             lambda: self.add_recent_file_to_data(0),
