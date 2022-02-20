@@ -129,10 +129,9 @@ class MainApplication(tk.Frame):
         # Keybinding definitions
         self.parent.bind("<Configure>", self.handle_configure)
         self.parent.bind("<Control-e>", lambda type: self.load_file("egs"))
-        self.parent.bind("<Control-d>", lambda type: self.load_file("dp"))
+        self.parent.bind("<Control-m>", lambda type: self.load_file("measurement"))
         self.parent.bind("<Control-o>", lambda type: self.load_file("simulation"))
         self.parent.bind("<Control-s>", self.save_graph)
-        self.parent.bind("<Control-t>", lambda type: self.load_file("pdd"))
         self.parent.bind("<Control-p>", lambda type: self.load_file("ptw"))
         self.parent.bind("<Escape>", self.close_file)
         self.parent.bind("<Control-z>", self.remove_last_addition)
@@ -168,19 +167,14 @@ class MainApplication(tk.Frame):
         self.filemenu = tk.Menu(self.menubar, tearoff=False)
         self.addmeasuremenu = tk.Menu(self.menubar, tearoff=False)
         self.addmeasuremenu.add_command(
-            label=self.text.pdd[self.lang],
-            command=lambda: self.load_file("pdd"),
-            accelerator="Ctrl+T",
-        )
-        self.addmeasuremenu.add_command(
-            label=self.text.dp[self.lang],
-            command=lambda: self.load_file("dp"),
-            accelerator="Ctrl+D",
-        )
-        self.addmeasuremenu.add_command(
             label=self.text.ptw[self.lang],
             command=lambda: self.load_file("ptw"),
             accelerator="Ctrl+P",
+        )
+        self.addmeasuremenu.add_command(
+            label=self.text.measurement[self.lang],
+            command=lambda: self.load_file("measurement"),
+            accelerator="Ctrl+M",
         )
 
         self.addsimmenu = tk.Menu(self.menubar, tearoff=False)
@@ -642,7 +636,7 @@ class MainApplication(tk.Frame):
             filetypes = [(self.text.topas[self.lang], [".csv", ".bin"])]
         if type == "egs":
             filetypes = [(self.text.egs[self.lang], [".3ddose"])]
-        elif type == "pdd" or type == "dp":
+        elif type == "measurement":
             filetypes = [(self.text.measurementdata[self.lang], ["txt", ".csv"])]
         elif type == "ptw":
             filetypes = [(self.text.ptw[self.lang], ".mcc")]
@@ -690,6 +684,7 @@ class MainApplication(tk.Frame):
             "3ddose": "egs",
             "bin": "simulation",
             "mcc": "ptw",
+            "txt": "measurement",
         }
         extensions = []
         for i, file in enumerate(files):

@@ -129,7 +129,7 @@ class DoseFigureHandler:
                     del importer
 
                 else:
-                    self.plots += [Measurement(filename, type)]
+                    self.plots += [Measurement(filename, self.parent)]
 
         if self.plots[0].direction == "Z":
             self.half = False

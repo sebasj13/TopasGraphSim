@@ -1,6 +1,6 @@
 {
-    "geometry": "960x540+772+139",
-    "state": "normal",
+    "geometry": " ",
+    "state": "zoomed",
     "draganddrop": true,
     "color_scheme": "light",
     "language": "en",
@@ -34,5 +34,14 @@
         "#2A125E",
         "#2E4008"
     ],
-    "recent_files": []
+    "recent_files": [
+        [
+            "C:/Users/sebas/Dropbox/Medizinische Physik/II. Master/4. Masterarbeit (StrThr - UKH)/TOPAS/Messdaten/TDK+QV 6 MV 28_29_082018_SSD90/X06_10x10_xyz_offen_W.mcc",
+            "ptw"
+        ],
+        [
+            "C:/Users/sebas/Dropbox/Medizinische Physik/II. Master/4. Masterarbeit (StrThr - UKH)/TOPAS/Ergebnisse/6 MV, 0.0769% Spread/1. TDKs Verschiedene Energien SSD90 10x10 --- 6 MV nehmen/EGS TDK 6MV 10x10 SSD90.txt",
+            "measurement"
+        ]
+    ]
 }
