@@ -126,8 +126,11 @@ class PTWMultimporter:
         # self.window.geometry(
         #    f"240x{self.height}+{self.geometry[0]}+{25+(self.geometry[0]+self.geometry[2])//2-self.height//2}"
         # )
+        self.width = 220
+        if self.lang == "en":
+            self.width = 180
         self.window.geometry(
-            f"240x{self.height}+{self.main_viewer.winfo_rootx()}+{self.main_viewer.parent.winfo_rooty()}"
+            f"{self.width}x{self.height}+{self.main_viewer.winfo_rootx()}+{self.main_viewer.parent.winfo_rooty()}"
         )
         self.window.iconbitmap(
             str(
@@ -182,7 +185,7 @@ class PTWMultimporter:
 
         self.geometry = self.new_geometry
         self.window.geometry(
-            f"240x{self.height}+{self.main_viewer.winfo_rootx()}+{self.main_viewer.parent.winfo_rooty()}"
+            f"{self.width}x{self.height}+{self.main_viewer.winfo_rootx()}+{self.main_viewer.parent.winfo_rooty()}"
         )
 
     def close(self):

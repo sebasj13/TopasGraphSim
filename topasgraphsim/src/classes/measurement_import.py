@@ -1,12 +1,10 @@
 import tkinter as tk
 import tkinter.ttk as ttk
-from tkinter import simpledialog as sd
 
 import numpy as np
 
 from ..functions import dp, pdd
 from ..resources.language import Text
-from .profile import ProfileHandler
 
 
 class Measurement:
@@ -15,12 +13,6 @@ class Measurement:
         self.filepath = filepath
         self.parent = parent
         self.filename = self.filepath.split("/")[-1][:-4]
-
-        self.direction = self.parent.direction
-
-        if self.parent.direction == None:
-            dialog = GetType(self, self.parent)
-            self.parent.parent.wait_window(dialog.top)
 
         if filepath.endswith(".txt"):
             data = np.loadtxt(self.filepath, unpack=True)
@@ -51,6 +43,27 @@ class Measurement:
                 False: self.std_dev,
             }
 
+        try:
+            self.direction = "Z"
+            pdd.calculate_parameters(
+                np.array(self.axis[False]),
+                self.dose[False] / max(self.dose[False]),
+                [],
+            )
+        except Exception:
+            try:
+                self.direction = "X"
+                dp.calculate_parameters(
+                    np.array(self.axis[False]),
+                    self.dose[False] / max(self.dose[False]),
+                    [],
+                )
+                dialog = GetType(self, self.parent, "NoPDD")
+                self.parent.parent.wait_window(dialog.top)
+            except Exception:
+                dialog = GetType(self, self.parent, "")
+                self.parent.parent.wait_window(dialog.top)
+
     def params(self):
         if self.direction == "Z":
             return pdd.calculate_parameters(
@@ -67,7 +80,7 @@ class Measurement:
 
 
 class GetType:
-    def __init__(self, measurement, parent):
+    def __init__(self, measurement, parent, opt: str):
 
         self.measurement = measurement
         self.parent = parent
@@ -78,18 +91,26 @@ class GetType:
             self.parent.winfo_width(),
             self.parent.winfo_height(),
         ]
+        self.width = 300
+        if opt == "NoPDD":
+            self.width = 200
         self.top.geometry(
-            f"300x35+{self.parent.winfo_rootx()}+{self.parent.parent.winfo_rooty()}"
+            f"{self.width}x60+{self.parent.winfo_rootx()}+{self.parent.parent.winfo_rooty()}"
         )
         self.top.overrideredirect(1)
 
         self.xbutton = ttk.Button(self.top, text="X", command=self.x)
         self.ybutton = ttk.Button(self.top, text="Y", command=self.y)
         self.zbutton = ttk.Button(self.top, text="Z", command=self.z)
+        self.dplabel = ttk.Label(self.top, text=Text().dp[self.parent.lang])
+        self.pddlabel = ttk.Label(self.top, text=Text().pdd[self.parent.lang])
 
-        self.xbutton.grid(column=0, row=0, padx=(5, 0))
-        self.ybutton.grid(column=1, row=0, padx=(5, 5))
-        self.zbutton.grid(column=2, row=0, padx=(0, 5))
+        self.dplabel.grid(row=0, column=0, columnspan=2, padx=(5, 5))
+        self.xbutton.grid(column=0, row=1, padx=(5, 0))
+        self.ybutton.grid(column=1, row=1, padx=(5, 5))
+        if opt != "NoPDD":
+            self.pddlabel.grid(row=0, column=2, padx=(0, 5))
+            self.zbutton.grid(column=2, row=1, padx=(0, 5))
         self.lift()
 
     def lift(self):
@@ -107,7 +128,7 @@ class GetType:
 
         self.geometry = self.new_geometry
         self.top.geometry(
-            f"300x35+{self.parent.winfo_rootx()}+{self.parent.parent.winfo_rooty()}"
+            f"{self.width}x60+{self.parent.winfo_rootx()}+{self.parent.parent.winfo_rooty()}"
         )
 
     def x(self):

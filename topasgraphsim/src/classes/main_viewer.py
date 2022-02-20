@@ -11,6 +11,7 @@ from PIL import Image, ImageTk
 from ..resources.info import show_info
 from ..resources.language import Text
 from .dose_figure_handler import DoseFigureHandler
+from .nameandstyle import GraphNameAndStyle
 from .profile import ProfileHandler
 from .recent_files import RecentFileManager
 from .table import SimpleTable
@@ -328,6 +329,10 @@ class MainApplication(tk.Frame):
             label=self.text.resetcolors[self.lang], command=self.reset_colors
         )
 
+        self.normmenu.add_command(
+            label=self.text.resetmarkers[self.lang], command=self.reset_markers
+        )
+
         self.normmenu.add_separator()
 
         self.normalizemenu = tk.Menu(self.menubar, tearoff=False)
@@ -404,7 +409,7 @@ class MainApplication(tk.Frame):
             variable=self.diffplot,
         )
 
-        self.normmenu.entryconfig(12, state=tk.DISABLED)
+        self.normmenu.entryconfig(13, state=tk.DISABLED)
 
         self.errlimmenu = tk.Menu(self.menubar, tearoff=False)
         self.errlimmenu.add_command(
@@ -450,7 +455,7 @@ class MainApplication(tk.Frame):
         self.normmenu.add_cascade(
             label=Text().errlimmenu[self.lang], menu=self.errlimmenu
         )
-        self.normmenu.entryconfig(13, state=tk.DISABLED)
+        self.normmenu.entryconfig(14, state=tk.DISABLED)
 
         self.menubar.add_command(label=self.text.about[self.lang], command=self.about)
 
@@ -657,7 +662,7 @@ class MainApplication(tk.Frame):
         self.filemenu.entryconfig(4, state=tk.NORMAL)
         self.filemenu.entryconfig(5, state=tk.NORMAL)
         if len(self.filenames) > 2:
-            self.normmenu.entryconfig(12, state=tk.DISABLED)
+            self.normmenu.entryconfig(13, state=tk.DISABLED)
         self.saved = False
 
         return
@@ -709,7 +714,7 @@ class MainApplication(tk.Frame):
         self.filemenu.entryconfig(4, state=tk.NORMAL)
         self.filemenu.entryconfig(5, state=tk.NORMAL)
         if len(self.filenames) > 2:
-            self.normmenu.entryconfig(12, state=tk.DISABLED)
+            self.normmenu.entryconfig(13, state=tk.DISABLED)
         self.saved = False
 
     def close_file(self, event=None):
@@ -725,8 +730,8 @@ class MainApplication(tk.Frame):
         self.addmenu.entryconfig(1, state=tk.NORMAL)
         self.addmeasuremenu.entryconfig(0, state=tk.NORMAL)
         self.addmeasuremenu.entryconfig(1, state=tk.NORMAL)
-        self.normmenu.entryconfig(12, state=tk.DISABLED)
         self.normmenu.entryconfig(13, state=tk.DISABLED)
+        self.normmenu.entryconfig(14, state=tk.DISABLED)
         self.parammenu.entryconfig(0, state=tk.NORMAL)
         self.menubar.delete(4, 5)
         self.filenames = []
@@ -886,7 +891,7 @@ class MainApplication(tk.Frame):
         if len(self.filenames) == 2:
             self.diffplot.set(False)
             self.DoseFigureHandler.diffplot = False
-            self.normmenu.entryconfig(12, state=tk.DISABLED)
+            self.normmenu.entryconfig(13, state=tk.DISABLED)
 
         if self.filenames[-1][0].endswith(".mcc") == True:
             self.filenames.pop(-1)
@@ -927,9 +932,9 @@ class MainApplication(tk.Frame):
 
         self.DoseFigureHandler.diffplot = self.diffplot.get()
         if self.diffplot.get() == True:
-            self.normmenu.entryconfig(13, state=tk.NORMAL)
+            self.normmenu.entryconfig(14, state=tk.NORMAL)
         else:
-            self.normmenu.entryconfig(13, state=tk.DISABLED)
+            self.normmenu.entryconfig(14, state=tk.DISABLED)
 
         self.refresh()
 
@@ -1029,6 +1034,13 @@ class MainApplication(tk.Frame):
         self.DoseFigureHandler.colors = self.profile.get_attribute("default_colors")
         self.show_preview()
 
+    def reset_markers(self):
+        self.profile.set_attribute(
+            "markers", self.profile.get_attribute("default_markers")
+        )
+        self.DoseFigureHandler.colors = self.profile.get_attribute("default_markers")
+        self.show_preview()
+
     def show_preview(self):
 
         """
@@ -1066,10 +1078,10 @@ class MainApplication(tk.Frame):
 
         if len(self.DoseFigureHandler.plots) >= 2:
             self.addmenu.entryconfig(3, state=tk.NORMAL)
-            self.normmenu.entryconfig(12, state=tk.DISABLED)
+            self.normmenu.entryconfig(14, state=tk.DISABLED)
 
         if len(self.DoseFigureHandler.plots) == 2:
-            self.normmenu.entryconfig(12, state=tk.NORMAL)
+            self.normmenu.entryconfig(14, state=tk.NORMAL)
 
         if len(self.DoseFigureHandler.plots) > 5:
             self.parammenu.entryconfig(0, state=tk.DISABLED)
@@ -1079,12 +1091,12 @@ class MainApplication(tk.Frame):
             self.addmenu.entryconfig(1, state=tk.DISABLED)
         if self.direction == "Z":
             self.addmeasuremenu.entryconfig(1, state=tk.DISABLED)
-            self.normmenu.entryconfig(7, state=tk.DISABLED)
-            self.normmenu.entryconfig(10, state=tk.DISABLED)
+            self.normmenu.entryconfig(8, state=tk.DISABLED)
+            self.normmenu.entryconfig(11, state=tk.DISABLED)
         else:
             self.addmeasuremenu.entryconfig(0, state=tk.DISABLED)
-            self.normmenu.entryconfig(7, state=tk.NORMAL)
-            self.normmenu.entryconfig(10, state=tk.NORMAL)
+            self.normmenu.entryconfig(8, state=tk.NORMAL)
+            self.normmenu.entryconfig(11, state=tk.NORMAL)
 
         if self.menuflag == False:
             self.menubar.add_cascade(label=self.text.add[self.lang], menu=self.addmenu)
@@ -1521,23 +1533,16 @@ class MainApplication(tk.Frame):
                             if self.xlimmenu == False:
                                 self.change_xrange()
                             else:
-                                newname = sd.askstring(
-                                    "",
-                                    self.text.changefilename[self.lang],
-                                    initialvalue=self.DoseFigureHandler.xlabel,
-                                )
-                                if newname != None:
-                                    self.DoseFigureHandler.xaxisname = newname
-                                    self.show_preview()
+                                dialog = GraphNameAndStyle(self, "X")
+                                self.parent.wait_window(dialog.top)
+
+                                self.show_preview()
                             return
-                        newname = sd.askstring(
-                            "",
-                            self.text.changefilename[self.lang],
-                            initialvalue=self.DoseFigureHandler.plots[index].filename,
-                        )
-                        if newname != None:
-                            self.DoseFigureHandler.plots[index].filename = newname
-                            self.show_preview()
+
+                        dialog = GraphNameAndStyle(self, index)
+                        self.parent.wait_window(dialog.top)
+
+                        self.show_preview()
 
     def check_right_click(self, e):
 

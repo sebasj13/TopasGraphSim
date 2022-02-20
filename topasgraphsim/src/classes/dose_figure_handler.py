@@ -42,7 +42,7 @@ class DoseFigureHandler:
         self.text = Text()
         self.style = plt.style.use("default")
         self.colors = self.parent.profile.get_attribute("colors")
-        self.marker = "o--"
+        self.marker = self.parent.profile.get_attribute("markers")
         self.markersize = self.parent.profile.get_attribute("markersize")
         self.linewidth = self.parent.profile.get_attribute("linewidth")
 
@@ -129,7 +129,28 @@ class DoseFigureHandler:
                     del importer
 
                 else:
-                    self.plots += [Measurement(filename, self.parent)]
+                    measurement = Measurement(filename, self.parent)
+                    if test == None:
+                        self.plots += [measurement]
+                        self.parent.direction = measurement.direction
+                        test = self.parent.direction
+                    elif test == "Z" and measurement.direction == "Z":
+                        self.plots += [measurement]
+                    elif test == "X" and measurement.direction == "X":
+                        self.plots += [measurement]
+                    elif test == "Y" and measurement.direction == "X":
+                        self.plots += [measurement]
+                    elif test == "X" and measurement.direction == "Y":
+                        self.plots += [measurement]
+                    elif test == "Y" and measurement.direction == "Y":
+                        self.plots += [measurement]
+                    else:
+                        sd.messagebox.showinfo(
+                            "",
+                            f"{measurement.filename}"
+                            + self.text.incordata[self.lang][1],
+                        )
+                        self.parent.filenames.pop(-1)
 
         if self.plots[0].direction == "Z":
             self.half = False
@@ -536,7 +557,7 @@ class DoseFigureHandler:
             self.ax.plot(
                 plot_data[0],
                 plot_data[2],
-                self.marker,
+                self.marker[index],
                 markersize=self.markersize,
                 color=self.colors[index],
                 linewidth=self.linewidth,
@@ -635,7 +656,7 @@ class DoseFigureHandler:
                 self.axins.plot(
                     plot_data[0],
                     plot_data[2],
-                    self.marker,
+                    self.marker[index],
                     markersize=self.markersize,
                     color=self.colors[index],
                     linewidth=self.linewidth,
