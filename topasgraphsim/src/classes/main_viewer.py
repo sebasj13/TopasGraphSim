@@ -232,7 +232,6 @@ class MainApplication(tk.Frame):
             command=self.remove_last_addition,
             accelerator="Ctrl+Z",
         )
-        self.addmenu.entryconfig(3, state=tk.DISABLED)
         self.menubar.add_cascade(label=self.text.file[self.lang], menu=self.filemenu)
         self.viewmenu = tk.Menu(self.menubar, tearoff=False)
         self.viewmenu.add_checkbutton(
@@ -694,7 +693,15 @@ class MainApplication(tk.Frame):
         extensions = []
         for i, file in enumerate(files):
             try:
-                extensions += [types[file.split(".")[-1]]]
+                if file.split(".")[-1] == "csv":
+                    with open(file) as testfile:
+                        content = testfile.readlines()[0]
+                        if "TOPAS" in content:
+                            extensions += ["simulation"]
+                        else:
+                            extensions += ["measurement"]
+                else:
+                    extensions += [types[file.split(".")[-1]]]
             except KeyError:
                 files.pop(i)
 
@@ -726,8 +733,6 @@ class MainApplication(tk.Frame):
         self.filemenu.entryconfig(1, state=tk.NORMAL)
         self.filemenu.entryconfig(4, state=tk.DISABLED)
         self.filemenu.entryconfig(5, state=tk.DISABLED)
-        self.addmenu.entryconfig(0, state=tk.NORMAL)
-        self.addmenu.entryconfig(1, state=tk.NORMAL)
         self.addmeasuremenu.entryconfig(0, state=tk.NORMAL)
         self.addmeasuremenu.entryconfig(1, state=tk.NORMAL)
         self.normmenu.entryconfig(13, state=tk.DISABLED)
@@ -903,8 +908,6 @@ class MainApplication(tk.Frame):
             self.DoseFigureHandler.plots.pop(-1)
 
         if len(self.filenames) <= 4:
-            self.addmenu.entryconfig(0, state=tk.NORMAL)
-            self.addmenu.entryconfig(1, state=tk.NORMAL)
             self.parammenu.entryconfig(0, state=tk.NORMAL)
 
         self.canvas.itemconfig(self.image_on_canvas, image=None)
@@ -1046,12 +1049,12 @@ class MainApplication(tk.Frame):
         """
         Invokes DoseFigureHandler to create and display the graphs with the selected options
         """
-        try:
-            self.photoimage, self.direction = self.DoseFigureHandler.return_figure(
-                self.filenames
-            )
-        except Exception:
-            return
+        # try:
+        self.photoimage, self.direction = self.DoseFigureHandler.return_figure(
+            self.filenames
+        )
+        # except Exception:
+        #    return
 
         self.logocanvas.pack_forget()
         if self.tablevar.get() == True:
@@ -1077,7 +1080,6 @@ class MainApplication(tk.Frame):
         self.parent.bind("<Down>", lambda boolean: self.change_order(False))
 
         if len(self.DoseFigureHandler.plots) >= 2:
-            self.addmenu.entryconfig(3, state=tk.NORMAL)
             self.normmenu.entryconfig(14, state=tk.DISABLED)
 
         if len(self.DoseFigureHandler.plots) == 2:
@@ -1086,9 +1088,6 @@ class MainApplication(tk.Frame):
         if len(self.DoseFigureHandler.plots) > 5:
             self.parammenu.entryconfig(0, state=tk.DISABLED)
 
-        if len(self.DoseFigureHandler.plots) == 10:
-            self.addmenu.entryconfig(0, state=tk.DISABLED)
-            self.addmenu.entryconfig(1, state=tk.DISABLED)
         if self.direction == "Z":
             self.addmeasuremenu.entryconfig(1, state=tk.DISABLED)
             self.normmenu.entryconfig(8, state=tk.DISABLED)

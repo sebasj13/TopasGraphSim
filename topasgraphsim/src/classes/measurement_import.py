@@ -14,10 +14,7 @@ class Measurement:
         self.parent = parent
         self.filename = self.filepath.split("/")[-1][:-4]
 
-        if filepath.endswith(".txt"):
-            data = np.loadtxt(self.filepath, unpack=True)
-        else:
-            data = np.genfromtxt(self.filepath, delimiter=",", unpack=True)
+        data = np.loadtxt(self.filepath, unpack=True)
 
         self.axis, self.dose = data[0], data[1]
         self.normpoint = max(self.dose)
