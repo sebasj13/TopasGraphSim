@@ -1,5 +1,5 @@
 {
-    "geometry": "960x980+630+25",
+    "geometry": "960x540+455+270",
     "state": "normal",
     "draganddrop": true,
     "color_scheme": "light",
@@ -58,22 +58,5 @@
         "o--",
         "o--"
     ],
-    "recent_files": [
-        [
-            "C:/Users/sebas/Desktop/EGS TDK 6MV 10x10 SSD90.txt",
-            "measurement"
-        ],
-        [
-            "C:/Users/sebas/Desktop/EGS TDK 6MV 10x10 SSD90.csv",
-            "measurement"
-        ],
-        [
-            "C:/Users/sebas/Dropbox/Medizinische Physik/II. Master/4. Masterarbeit (StrThr - UKH)/TOPAS/Ergebnisse/6 MV, 0.0769% Spread/1. TDKs Verschiedene Energien SSD90 10x10 --- 6 MV nehmen/EGS TDK 6MV 10x10 SSD90.txt",
-            "measurement"
-        ],
-        [
-            "C:/Users/sebas/Desktop/Ergebnis Feldgr\u00f6\u00dfentest 2/20X20_QV_X.csv",
-            "simulation"
-        ]
-    ]
+    "recent_files": []
 }
