@@ -49,7 +49,10 @@ class Text:
             "de": "Differenzgraph anzeigen",
             "en": "Show difference plot",
         }
-        self.dp = {"de": "Dosisquerverteilung", "en": "Dose profile"}
+        self.dp = {"de": "Dosisquerverteilungen", "en": "Dose profiles"}
+        self.dash = {"de": "Linie", "en": "Line"}
+        self.dashdot = {"de": "Punkt-Linie", "en": "Dash-Dot"}
+        self.dot = {"de": "Punkt", "en": "Dot"}
         self.egs = {"de": "EGS Simulationsdateien", "en": "EGS Simulation Data"}
         self.egsunit = {"de": "Dosis [Gy/Historie]", "en": "Dose [Gy/History]"}
         self.end = {"de": "Beenden", "en": "Close"}
@@ -109,12 +112,16 @@ class Text:
         self.options = {"de": "Optionen", "en": "Options"}
         self.orr = {"de": "oder", "en": "or"}
         self.percentage = {"de": "Prozentual", "en": "Percentage"}
-        self.pdd = {"de": "Tiefendosiskurve", "en": "Depth dose"}
+        self.pdd = {"de": "TDK", "en": "PDD"}
         self.ptw = {"de": "PTW tbaScan", "en": "PTW tbaScan"}
-        self.recent = {"de":"Zuletzt verwendet", "en":"Recent files"}
+        self.recent = {"de": "Zuletzt verwendet", "en": "Recent files"}
         self.revert = {"de": "Rückgängig", "en": "Undo"}
         self.reset = {"de": "Zurücksetzen", "en": "Reset"}
         self.resetcolors = {"de": "Farbschema zurücksetzen", "en": "Reset colorscheme"}
+        self.resetmarkers = {
+            "de": "Markerstil zurücksetzen",
+            "en": "Reset marker styles",
+        }
         self.save = {"de": "Graph abspeichern", "en": "Save graph"}
         self.scanaxis = {
             "de": "Scanrichtung: [X = Ja | Y = Nein]",

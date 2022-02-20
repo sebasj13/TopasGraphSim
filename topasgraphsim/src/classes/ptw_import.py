@@ -117,16 +117,20 @@ class PTWMultimporter:
         self.window.resizable(False, False)
         self.window.bind("<Return>", self.submit)
         self.geometry = [
-            geometry.winfo_rootx(),
-            geometry.winfo_rooty(),
-            geometry.winfo_height(),
+            self.main_viewer.parent.winfo_rootx(),
+            self.main_viewer.parent.winfo_rooty(),
+            self.main_viewer.winfo_width(),
+            self.main_viewer.winfo_height(),
         ]
         self.height = 10 + 29 * (len(self.alldata) + 1)
         # self.window.geometry(
         #    f"240x{self.height}+{self.geometry[0]}+{25+(self.geometry[0]+self.geometry[2])//2-self.height//2}"
         # )
+        self.width = 220
+        if self.lang == "en":
+            self.width = 180
         self.window.geometry(
-            f"240x{self.height}+{self.geometry[0]}+{geometry.parent.winfo_rooty()}"
+            f"{self.width}x{self.height}+{self.main_viewer.winfo_rootx()}+{self.main_viewer.parent.winfo_rooty()}"
         )
         self.window.iconbitmap(
             str(
@@ -163,6 +167,26 @@ class PTWMultimporter:
         )
         self.submitbutton.grid(sticky="S")
         self.window.protocol("WM_DELETE_WINDOW", self.close)
+
+        self.lift()
+
+    def lift(self):
+        self.new_geometry = [
+            self.main_viewer.parent.winfo_rootx(),
+            self.main_viewer.parent.winfo_rooty(),
+            self.main_viewer.winfo_width(),
+            self.main_viewer.winfo_height(),
+        ]
+
+        self.window.lift()
+        self.window.after(100, self.lift)
+        if self.new_geometry == self.geometry:
+            return
+
+        self.geometry = self.new_geometry
+        self.window.geometry(
+            f"{self.width}x{self.height}+{self.main_viewer.winfo_rootx()}+{self.main_viewer.parent.winfo_rooty()}"
+        )
 
     def close(self):
         self.plots = []

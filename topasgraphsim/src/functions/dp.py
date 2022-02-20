@@ -123,6 +123,9 @@ def calculate_parameters(axis, dose, cax=False):
         3,
     )
 
+    if CAXdev > 150:
+        raise Exception
+
     return [
         HWB,
         CAXdev,

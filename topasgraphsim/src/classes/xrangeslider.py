@@ -71,13 +71,14 @@ class XRangeSlider:
     def update(self, *args):
 
         if time.time() > self.starttime + 0.1:
-            #self.parent.canvas.pack_forget()
+            # self.parent.canvas.pack_forget()
             self.parent.refresh()
-            #self.parent.canvas.pack(side=tk.TOP, fill="both", expand=True)
+            # self.parent.canvas.pack(side=tk.TOP, fill="both", expand=True)
             self.starttime = time.time()
         return
 
-    def submit(self):
+    def submit(self, event=None):
+        self.window.unbind("<Return>")
         self.parent.slidervars[0].trace_vdelete("w", self.a)
         self.parent.slidervars[1].trace_vdelete("w", self.b)
         self.parent.xlimmenu = False

@@ -1,6 +1,6 @@
 {
-    "geometry": "960x540+772+139",
-    "state": "normal",
+    "geometry": " ",
+    "state": "zoomed",
     "draganddrop": true,
     "color_scheme": "light",
     "language": "en",
@@ -33,6 +33,30 @@
         "#98A876",
         "#2A125E",
         "#2E4008"
+    ],
+    "markers": [
+        "o--",
+        "o--",
+        "o--",
+        "o--",
+        "o--",
+        "o--",
+        "o--",
+        "o--",
+        "o--",
+        "o--"
+    ],
+    "default_markers": [
+        "o--",
+        "o--",
+        "o--",
+        "o--",
+        "o--",
+        "o--",
+        "o--",
+        "o--",
+        "o--",
+        "o--"
     ],
     "recent_files": []
 }
