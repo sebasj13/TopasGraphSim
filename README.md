@@ -18,7 +18,7 @@ This GUI can visualize and analyze percentage depth dose (pdd) and dose profiles
      * Error bars (On/Off)
      * Difference plot between two datasets
      * Graph order and colors
-     * Marker size
+     * Marker size and style
      * Line width
      * Zoom-in window
      * Half view of dose profiles

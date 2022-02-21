@@ -1132,7 +1132,7 @@ class MainApplication(tk.Frame):
                 (0.023 + normdiff + 0.042 * i) * self.canvas.image.height() * factor,
                 0.988 * self.canvas.image.width(),
                 (0.065 + normdiff + 0.042 * i) * self.canvas.image.height() * factor,
-                fill="",
+                fill="red",
                 outline="",
                 tags="rename",
             )
@@ -1404,9 +1404,12 @@ class MainApplication(tk.Frame):
                 normdiff = 0
                 factor = 1
                 if self.norm.get() == False:
-                    normdiff = -0.025
+                    normdiff = 0.025
                 if self.DoseFigureHandler.plots[0].direction == "Z":
                     factor = 6 / 5
+
+                if self.DoseFigureHandler.diffplot == True:
+                    factor *= 0.75
 
                 self.rename_boxes += [
                     self.canvas.create_rectangle(
@@ -1427,17 +1430,17 @@ class MainApplication(tk.Frame):
                         ),
                         (
                             (canvdims[1] - imdims[1]) // 2
-                            + imdims[1] * (0.01 + i * 0.035 + normdiff)
+                            + imdims[1] * (0.015 + i * 0.04 + normdiff)
                         )
                         * factor,
                         coords[0] + imdims[0] * 0.49,
                         (
                             (canvdims[1] - imdims[1]) // 2
-                            + imdims[1] * (0.06 + i * 0.035 + normdiff)
+                            + imdims[1] * (0.055 + i * 0.04 + normdiff)
                         )
                         * factor,
                         fill="",
-                        outline="",
+                        outline="black",
                         tags="rename",
                     )
                 ]

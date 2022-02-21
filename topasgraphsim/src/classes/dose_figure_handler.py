@@ -155,8 +155,6 @@ class DoseFigureHandler:
         if self.plots[0].direction == "Z":
             self.half = False
 
-        print(self.normvalue)
-
         for plotdata in self.plots:
             if self.norm == True:
                 if self.normvalue == "max":
