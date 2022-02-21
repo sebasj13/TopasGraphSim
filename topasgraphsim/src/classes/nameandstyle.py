@@ -29,6 +29,7 @@ class GraphNameAndStyle:
         self.top.overrideredirect(1)
 
         self.top.bind("<Return>", self.submit)
+        self.top.bind("<Escape>", self.top.destroy)
         self.enterlabel = ttk.Label(
             self.top, text=Text().changefilename[self.parent.lang]
         )

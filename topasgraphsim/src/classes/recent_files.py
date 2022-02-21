@@ -17,13 +17,10 @@ class RecentFileManager:
 
         pop = []
         for i, x in enumerate([file[0] for file in self.recent_files]):
-            if os.path.exists(x) != True:
+            if os.path.exists(x) == True:
                 pop.append(i)
 
-        for index, i in enumerate(pop):
-            self.recent_files.pop(i)
-            if index < len(pop) - 1:
-                pop[index + 1] -= 1
+        self.recent_files = [self.recent_files[i] for i in pop]
 
         self.lambdas = [
             lambda: self.add_recent_file_to_data(0),

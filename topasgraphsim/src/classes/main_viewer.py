@@ -348,9 +348,9 @@ class MainApplication(tk.Frame):
             command=self.change_normalization,
         )
         self.normalize_cascade.add_radiobutton(
-            label=self.text.flank[self.lang],
+            label=self.text.plateau[self.lang],
             variable=self.normvaluemenu,
-            value="flank",
+            value="plateau",
             command=self.change_normalization,
         )
         self.normalize_cascade.add_radiobutton(
@@ -922,8 +922,8 @@ class MainApplication(tk.Frame):
 
         if self.normvaluemenu.get() == "max":
             self.DoseFigureHandler.normvalue = "max"
-        elif self.normvaluemenu.get() == "flank":
-            self.DoseFigureHandler.normvalue = "flank"
+        elif self.normvaluemenu.get() == "plateau":
+            self.DoseFigureHandler.normvalue = "plateau"
         else:
             self.DoseFigureHandler.normvalue = "center"
 
@@ -1080,10 +1080,10 @@ class MainApplication(tk.Frame):
         self.parent.bind("<Down>", lambda boolean: self.change_order(False))
 
         if len(self.DoseFigureHandler.plots) >= 2:
-            self.normmenu.entryconfig(14, state=tk.DISABLED)
+            self.normmenu.entryconfig(13, state=tk.DISABLED)
 
         if len(self.DoseFigureHandler.plots) == 2:
-            self.normmenu.entryconfig(14, state=tk.NORMAL)
+            self.normmenu.entryconfig(13, state=tk.NORMAL)
 
         if len(self.DoseFigureHandler.plots) > 5:
             self.parammenu.entryconfig(0, state=tk.DISABLED)

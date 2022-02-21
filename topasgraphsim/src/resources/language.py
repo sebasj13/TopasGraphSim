@@ -61,7 +61,7 @@ class Text:
         self.errorbars = {"de": "Fehlerbalken anzeigen", "en": "Show error bars"}
         self.errlimmenu = {"de": "Fehlergrenze einstellen", "en": "Change error limits"}
         self.file = {"de": "Datei", "en": "File"}
-        self.flank = {"de": "Flanke", "en": "Flank"}
+        self.plateau = {"de": "Plateau", "en": "Plateau"}
         self.fullscreen = {"de": "Vollbild", "en": "Fullscreen"}
         self.fwhm = {"de": "HWB", "en": "FWHM"}
         self.german = {"de": "Deutsch", "en": "German"}

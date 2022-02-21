@@ -14,8 +14,6 @@ def calculate_parameters(axis, dose, cax=False):
     akima_dose_interpolator = interpolate.Akima1DInterpolator(axis, dose)
     interpolated_dose = np.flip(akima_dose_interpolator.__call__(interpolated_axis))
 
-    Dose80 = [value for value in dose if value >= 0.8 * max(dose)]
-
     D0 = (
         interpolated_dose[int(len(interpolated_dose) / 2)]
         + interpolated_dose[int(len(interpolated_dose) / 2) - 1]
@@ -74,6 +72,11 @@ def calculate_parameters(axis, dose, cax=False):
 
     HWB = round(abs(XR50 - XL50), 3)
     CAXdev = round(XL50 + 0.5 * HWB, 3)
+
+    dose = [value + CAXdev for value in dose]
+
+    Dose80 = [value for value in dose if value >= 0.8 * max(dose)]
+
     if cax == True:
         return CAXdev
 
@@ -97,8 +100,8 @@ def calculate_parameters(axis, dose, cax=False):
         3,
     )
 
-    Lpenumbra = round(abs(XL80 - XL20), 3)
-    Rpenumbra = round(abs(XR80 - XR20), 3)
+    Lpenumbra = round(abs(XL80 - XL20 + CAXdev), 3)
+    Rpenumbra = round(abs(XR80 - XR20 + CAXdev), 3)
 
     XL20index = np.where(interpolated_axis == XL20)[0][0]
     XL80index = np.where(interpolated_axis == XL80)[0][0]

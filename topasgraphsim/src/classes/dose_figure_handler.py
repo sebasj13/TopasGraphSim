@@ -155,12 +155,23 @@ class DoseFigureHandler:
         if self.plots[0].direction == "Z":
             self.half = False
 
+        print(self.normvalue)
+
         for plotdata in self.plots:
             if self.norm == True:
                 if self.normvalue == "max":
                     plotdata.normpoint = max(plotdata.dose[self.half])
-                elif self.normvalue == "flank":
-                    plotdata.normpoint = max(plotdata.dose[self.half]) * 0.5
+                elif self.normvalue == "plateau":
+                    plotdata.normpoint = np.average(
+                        [
+                            plotdata.dose[self.half][
+                                len(plotdata.dose[self.half]) // 2
+                                - 5 : len(plotdata.dose[self.half]) // 2
+                                + 5
+                            ]
+                        ]
+                    )
+
                 else:
                     plotdata.normpoint = plotdata.dose[self.half][
                         len(plotdata.dose) // 2
