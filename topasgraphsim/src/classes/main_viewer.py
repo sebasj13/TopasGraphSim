@@ -1440,7 +1440,7 @@ class MainApplication(tk.Frame):
                         )
                         * factor,
                         fill="",
-                        outline="black",
+                        outline="",
                         tags="rename",
                     )
                 ]
