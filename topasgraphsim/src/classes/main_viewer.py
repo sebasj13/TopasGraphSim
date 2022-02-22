@@ -1416,8 +1416,8 @@ class MainApplication(tk.Frame):
                         coords[0]
                         + imdims[0]
                         * (
-                            0.44
-                            - 0.0085
+                            0.438
+                            - 0.0082
                             * max(
                                 map(
                                     len,
@@ -1430,13 +1430,13 @@ class MainApplication(tk.Frame):
                         ),
                         (
                             (canvdims[1] - imdims[1]) // 2
-                            + imdims[1] * (0.015 + i * 0.04 + normdiff)
+                            + imdims[1] * (0.02 + i * 0.0347 + normdiff)
                         )
                         * factor,
-                        coords[0] + imdims[0] * 0.49,
+                        coords[0] + imdims[0] * 0.488,
                         (
                             (canvdims[1] - imdims[1]) // 2
-                            + imdims[1] * (0.055 + i * 0.04 + normdiff)
+                            + imdims[1] * (0.0547 + i * 0.0347 + normdiff)
                         )
                         * factor,
                         fill="",
@@ -1540,7 +1540,6 @@ class MainApplication(tk.Frame):
 
                                 self.show_preview()
                             return
-
                         dialog = GraphNameAndStyle(self, index)
                         self.parent.wait_window(dialog.top)
 

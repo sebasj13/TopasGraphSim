@@ -1,4 +1,5 @@
 import tkinter.simpledialog as sd
+from tkinter import E
 
 import cv2
 import matplotlib.pyplot as plt
@@ -578,6 +579,8 @@ class DoseFigureHandler:
         except:
             pass
 
+        self.set_xlims()
+
         if self.zoom == True:
 
             self.canvas.draw()
@@ -585,9 +588,11 @@ class DoseFigureHandler:
             self.inverted_transform = self.ax.transData.inverted()
             width, height = self.fig.canvas.get_width_height()
 
-            self.focuspoint = self.plots[-1].axis[self.half][
-                len(self.plots[-1].axis[self.half]) // 2
-            ]
+            extent = max([max(plot.axis[self.half]) for plot in self.plots])
+            reference = [
+                plot for plot in self.plots if max(plot.axis[self.half]) == extent
+            ][-1]
+
             try:
                 self.focuspoint = self.inverted_transform.transform(
                     (
@@ -605,26 +610,26 @@ class DoseFigureHandler:
                         1,
                     )
                 )
-                self.focuspoint = self.plots[-1].axis[self.half][
+                self.focuspoint = reference.axis[self.half][
                     np.abs(
-                        np.asarray(self.plots[-1].axis[self.half] - self.focuspoint[0])
+                        np.asarray(reference.axis[self.half] - self.focuspoint[0])
                     ).argmin()
                 ]
             except AttributeError:
-                pass
+                self.focuspoint = reference.axis[self.half][
+                    len(reference.axis[self.half]) // 2
+                ]
             except IndexError:
-                pass
+                self.focuspoint = reference.axis[self.half][
+                    len(reference.axis[self.half]) // 2
+                ]
 
             pixels = self.transform.transform(np.vstack([plot_data[0], plot_data[2]]).T)
             x, y = pixels.T
             y = height - y
 
-            self.pixelx = (
-                x[self.plots[-1].axis[self.half].index(self.focuspoint)] / width
-            )
-            self.pixely = (
-                y[self.plots[-1].axis[self.half].index(self.focuspoint)] / height
-            )
+            self.pixelx = x[reference.axis[self.half].index(self.focuspoint)] / width
+            self.pixely = y[reference.axis[self.half].index(self.focuspoint)] / height
 
             loc = "lower left"
             if self.half == False and self.plots[0].direction != "Z":
@@ -721,8 +726,6 @@ class DoseFigureHandler:
             )
 
             mark_inset(self.ax, self.axins, loc1=loc1, loc2=loc2, fc="none", ec="0.5")
-
-        self.set_xlims()
 
         return
 

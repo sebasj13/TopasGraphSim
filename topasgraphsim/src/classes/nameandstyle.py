@@ -10,8 +10,11 @@ class GraphNameAndStyle:
 
         self.parent = parent
         self.index = index
+        
 
         self.top = tk.Toplevel()
+        if self.index >= len(self.parent.DoseFigureHandler.plots):
+            self.top.destroy()
         self.geometry = [
             self.parent.parent.winfo_rootx(),
             self.parent.parent.winfo_rooty(),
@@ -72,6 +75,7 @@ class GraphNameAndStyle:
                 xlabel = self.parent.DoseFigureHandler.xlabel
             self.enterbox.insert(tk.END, string=xlabel)
 
+        self.enterbox.focus()
         self.lift()
 
     def lift(self):
