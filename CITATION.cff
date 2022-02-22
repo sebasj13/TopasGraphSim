@@ -11,15 +11,13 @@ authors:
 repository-code: 'https://pypi.org/project/topasgraphsim/'
 url: 'https://github.com/sebasj13/TopasGraphSim'
 abstract: >-
-  Python GUI to automate and standardize the plotting
-  and analysis of percentage depth dose and dose
-  profile simulations of TOPAS
-  Monte-Carlo-Simulations for medical physics 
+  A GUI to simplify and streamline the plotting
+  and analysis of medical physics simulations
 keywords:
   - TOPAS
   - Monte-Carlo Simulations
   - GUI
   - Python
 license: MIT
-version: 19.1.0
+version: 19.1.1
 date-released: '2022-02-20'

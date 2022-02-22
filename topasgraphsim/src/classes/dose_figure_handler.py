@@ -624,7 +624,9 @@ class DoseFigureHandler:
                     len(reference.axis[self.half]) // 2
                 ]
 
-            pixels = self.transform.transform(np.vstack([plot_data[0], plot_data[2]]).T)
+            pixels = self.transform.transform(
+                np.vstack([reference.axis[self.half], reference.dose[self.half]]).T
+            )
             x, y = pixels.T
             y = height - y
 

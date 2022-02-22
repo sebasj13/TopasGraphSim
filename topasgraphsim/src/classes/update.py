@@ -9,7 +9,7 @@ from .profile import ProfileHandler
 class CheckForUpdates:
     def __init__(self):
 
-        currentVersion = "19.1.0"
+        currentVersion = "19.1.1"
         try:
             newestVersion = requests.get(
                 "https://api.github.com/repos/sebasj13/topasgraphsim/releases/latest"
