@@ -19,6 +19,7 @@ class Text:
             "en": "Parameters could not be calculated!",
         }
         self.calcparams = {"de": "Parameter berechnen", "en": "Calculate parameters"}
+        self.calculate = {"de":"Berechnen", "en":"Calculate"}
         self.caxcorrection = {
             "de": "Zentralstrahlkorrektur",
             "en": "Center axis correction",
@@ -64,6 +65,8 @@ class Text:
         self.plateau = {"de": "Plateau", "en": "Plateau"}
         self.fullscreen = {"de": "Vollbild", "en": "Fullscreen"}
         self.fwhm = {"de": "HWB", "en": "FWHM"}
+        self.gamma = {"de": "Ändern", "en": "Change"}
+        self.gammamenu = {"de": "Gamma-Index", "en": "Gamma-Index"}
         self.german = {"de": "Deutsch", "en": "German"}
         self.half = {"de": "Halbe Querverteilung anzeigen", "en": "Show half profile"}
         self.histnum = {

@@ -1,6 +1,5 @@
 import tkinter as tk
 import tkinter.ttk as ttk
-from tkinter import ttk
 
 from ..resources.language import Text
 
@@ -10,7 +9,6 @@ class GraphNameAndStyle:
 
         self.parent = parent
         self.index = index
-        
 
         self.top = tk.Toplevel()
         if self.index >= len(self.parent.DoseFigureHandler.plots):
