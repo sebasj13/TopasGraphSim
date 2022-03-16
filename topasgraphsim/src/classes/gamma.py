@@ -83,4 +83,3 @@ class ChangeGamma:
             self.parent.gammamenu.entryconfig(1, accelerator=self.parent.gammaacc.get())
 
         self.top.destroy()
-
