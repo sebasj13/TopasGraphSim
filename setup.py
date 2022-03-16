@@ -30,6 +30,7 @@ setuptools.setup(
         "Pillow",
         "matplotlib",
         "topas2numpy",
+        "pymedphys",
     ],
     packages=[
         "topasgraphsim",

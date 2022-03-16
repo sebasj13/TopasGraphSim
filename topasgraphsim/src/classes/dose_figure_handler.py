@@ -1,9 +1,12 @@
+import os
+import sys
+import tkinter.messagebox as mb
 import tkinter.simpledialog as sd
-from tkinter import E
 
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
+import pymedphys
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from matplotlib.figure import Figure
 from matplotlib.ticker import AutoMinorLocator
@@ -746,6 +749,26 @@ class DoseFigureHandler:
         ]
 
         self.ax.set_xlim(self.current_limits)
+
+    def gamma(self):
+
+        sys.stdout = open(os.devnull, "w")
+        gamma = pymedphys.gamma(
+            (self.data[0][0],),
+            self.data[0][2],
+            (self.data[1][0],),
+            self.data[1][2],
+            self.parent.gammathreshold,
+            self.parent.gammadist,
+        )
+        sys.stdout = sys.__stdout__
+
+        valid_gamma = gamma[~np.isnan(gamma)]
+        pass_ratio = np.sum(valid_gamma <= 1) / len(valid_gamma)
+
+        mb.showinfo(
+            "Gamma-Index", f"ɣ ({self.parent.gammaacc.get()}) = {round(pass_ratio,4)}"
+        )
 
     def return_figure(self, filenames):
 

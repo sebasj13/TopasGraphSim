@@ -11,6 +11,7 @@ from PIL import Image, ImageTk
 from ..resources.info import show_info
 from ..resources.language import Text
 from .dose_figure_handler import DoseFigureHandler
+from .gamma import ChangeGamma
 from .nameandstyle import GraphNameAndStyle
 from .profile import ProfileHandler
 from .recent_files import RecentFileManager
@@ -408,7 +409,23 @@ class MainApplication(tk.Frame):
             variable=self.diffplot,
         )
 
-        self.normmenu.entryconfig(13, state=tk.DISABLED)
+        self.gammamenu = tk.Menu(self.menubar, tearoff=False)
+        self.gammaacc = tk.StringVar()
+        self.gammadist = 2
+        self.gammathreshold = 2
+        self.gammaacc.set(f"{self.gammathreshold}%/{self.gammadist}mm")
+        self.gammamenu.add_command(
+            label=self.text.calculate[self.lang], command=self.gamma
+        )
+        self.gammamenu.add_command(
+            label=self.text.gamma[self.lang],
+            accelerator=self.gammaacc.get(),
+            command=self.changegamma,
+        )
+
+        self.normmenu.add_cascade(
+            label=self.text.gammamenu[self.lang], menu=self.gammamenu
+        )
 
         self.errlimmenu = tk.Menu(self.menubar, tearoff=False)
         self.errlimmenu.add_command(
@@ -454,7 +471,10 @@ class MainApplication(tk.Frame):
         self.normmenu.add_cascade(
             label=Text().errlimmenu[self.lang], menu=self.errlimmenu
         )
+
+        self.normmenu.entryconfig(13, state=tk.DISABLED)
         self.normmenu.entryconfig(14, state=tk.DISABLED)
+        self.normmenu.entryconfig(15, state=tk.DISABLED)
 
         self.menubar.add_command(label=self.text.about[self.lang], command=self.about)
 
@@ -662,6 +682,8 @@ class MainApplication(tk.Frame):
         self.filemenu.entryconfig(5, state=tk.NORMAL)
         if len(self.filenames) > 2:
             self.normmenu.entryconfig(13, state=tk.DISABLED)
+            self.normmenu.entryconfig(14, state=tk.DISABLED)
+            self.normmenu.entryconfig(15, state=tk.DISABLED)
         self.saved = False
 
         return
@@ -722,6 +744,8 @@ class MainApplication(tk.Frame):
         self.filemenu.entryconfig(5, state=tk.NORMAL)
         if len(self.filenames) > 2:
             self.normmenu.entryconfig(13, state=tk.DISABLED)
+            self.normmenu.entryconfig(14, state=tk.DISABLED)
+            self.normmenu.entryconfig(15, state=tk.DISABLED)
         self.saved = False
 
     def close_file(self, event=None):
@@ -737,6 +761,7 @@ class MainApplication(tk.Frame):
         self.addmeasuremenu.entryconfig(1, state=tk.NORMAL)
         self.normmenu.entryconfig(13, state=tk.DISABLED)
         self.normmenu.entryconfig(14, state=tk.DISABLED)
+        self.normmenu.entryconfig(15, state=tk.DISABLED)
         self.parammenu.entryconfig(0, state=tk.NORMAL)
         self.menubar.delete(4, 5)
         self.filenames = []
@@ -897,6 +922,8 @@ class MainApplication(tk.Frame):
             self.diffplot.set(False)
             self.DoseFigureHandler.diffplot = False
             self.normmenu.entryconfig(13, state=tk.DISABLED)
+            self.normmenu.entryconfig(14, state=tk.DISABLED)
+            self.normmenu.entryconfig(15, state=tk.DISABLED)
 
         if self.filenames[-1][0].endswith(".mcc") == True:
             self.filenames.pop(-1)
@@ -1081,9 +1108,13 @@ class MainApplication(tk.Frame):
 
         if len(self.DoseFigureHandler.plots) >= 2:
             self.normmenu.entryconfig(13, state=tk.DISABLED)
+            self.normmenu.entryconfig(14, state=tk.DISABLED)
+            self.normmenu.entryconfig(15, state=tk.DISABLED)
 
         if len(self.DoseFigureHandler.plots) == 2:
             self.normmenu.entryconfig(13, state=tk.NORMAL)
+            self.normmenu.entryconfig(14, state=tk.NORMAL)
+            self.normmenu.entryconfig(15, state=tk.NORMAL)
 
         if len(self.DoseFigureHandler.plots) > 5:
             self.parammenu.entryconfig(0, state=tk.DISABLED)
@@ -1231,6 +1262,14 @@ class MainApplication(tk.Frame):
         except Exception:
             self.tablevar.set(False)
             sd.messagebox.showwarning("", self.text.calcfail[self.lang])
+
+    def gamma(self):
+
+        self.DoseFigureHandler.gamma()
+
+    def changegamma(self):
+
+        Gamma = ChangeGamma(self)
 
     def new_zoom(self, event):
 
