@@ -767,7 +767,8 @@ class DoseFigureHandler:
         pass_ratio = np.sum(valid_gamma <= 1) / len(valid_gamma)
 
         mb.showinfo(
-            "Gamma-Index", f"ɣ ({self.parent.gammaacc.get()}) = {round(pass_ratio,4)}"
+            "Gamma-Index",
+            f"ɣ ({self.parent.gammaacc.get()}) = {round(pass_ratio,4)}\n∅ = {round(np.average(valid_gamma),4)}",
         )
 
     def return_figure(self, filenames):
