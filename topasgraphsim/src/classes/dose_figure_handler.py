@@ -1,5 +1,3 @@
-import os
-import sys
 import tkinter.messagebox as mb
 import tkinter.simpledialog as sd
 
@@ -752,7 +750,6 @@ class DoseFigureHandler:
 
     def gamma(self):
 
-        sys.stdout = open(os.devnull, "w")
         gamma = pymedphys.gamma(
             (self.data[0][0],),
             self.data[0][2],
@@ -760,8 +757,8 @@ class DoseFigureHandler:
             self.data[1][2],
             self.parent.gammathreshold,
             self.parent.gammadist,
+            quiet=True,
         )
-        sys.stdout = sys.__stdout__
 
         valid_gamma = gamma[~np.isnan(gamma)]
         pass_ratio = np.sum(valid_gamma <= 1) / len(valid_gamma)

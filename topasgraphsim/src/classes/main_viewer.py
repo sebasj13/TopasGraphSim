@@ -1,6 +1,7 @@
 import os
 import time
 import tkinter as tk
+from pathlib import Path
 from tkinter import filedialog as fd
 from tkinter import simpledialog as sd
 from tkinter.colorchooser import askcolor
@@ -664,8 +665,17 @@ class MainApplication(tk.Frame):
             filetypes = [(self.text.measurementdata[self.lang], ["txt", ".csv"])]
         elif type == "ptw":
             filetypes = [(self.text.ptw[self.lang], ".mcc")]
+
+        try:
+            initialdir = os.path.dirname(
+                self.profile.get_attribute("recent_files")[0][0]
+            )
+            print(initialdir)
+        except IndexError:
+            initialdir = Path.home()
+
         self.current_file = fd.askopenfilenames(
-            initialdir=os.getcwd(), filetypes=filetypes
+            initialdir=initialdir, filetypes=filetypes
         )
 
         if self.current_file == "" or self.current_file == ():
