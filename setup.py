@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="topasgraphsim",
-    version="20.0.0",
+    version="20.0.1",
     author="Sebastian Schäfer",
     author_email="sebastian.schaefer@student.uni-halle.de",
     description="GUI to plot the results of a topas simulation",
