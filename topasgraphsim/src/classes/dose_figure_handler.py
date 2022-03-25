@@ -750,6 +750,20 @@ class DoseFigureHandler:
 
     def gamma(self):
 
+        min_dose_percent = (
+            int(
+                min(self.data[1][2][int(len(self.data[1][2]) // 2) :])
+                / max(self.data[1][2])
+                * 100
+            )
+            + 1
+        )
+
+        if min_dose_percent < 20:
+            min_dose_percent = 20
+
+        print(min_dose_percent)
+
         gamma = pymedphys.gamma(
             (self.data[0][0],),
             self.data[0][2],
@@ -758,6 +772,7 @@ class DoseFigureHandler:
             self.parent.gammathreshold,
             self.parent.gammadist,
             quiet=True,
+            lower_percent_dose_cutoff=min_dose_percent,
         )
 
         valid_gamma = gamma[~np.isnan(gamma)]
