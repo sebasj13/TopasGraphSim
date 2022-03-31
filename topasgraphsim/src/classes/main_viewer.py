@@ -670,7 +670,6 @@ class MainApplication(tk.Frame):
             initialdir = os.path.dirname(
                 self.profile.get_attribute("recent_files")[0][0]
             )
-            print(initialdir)
         except IndexError:
             initialdir = Path.home()
 

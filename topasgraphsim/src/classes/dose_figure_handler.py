@@ -762,25 +762,50 @@ class DoseFigureHandler:
         if min_dose_percent < 20:
             min_dose_percent = 20
 
-        print(min_dose_percent)
+        min_dose_percent = 0
 
-        gamma = pymedphys.gamma(
-            (self.data[0][0],),
-            self.data[0][2],
-            (self.data[1][0],),
-            self.data[1][2],
-            self.parent.gammathreshold,
-            self.parent.gammadist,
-            quiet=True,
-            lower_percent_dose_cutoff=min_dose_percent,
-        )
+        if self.plots[0].direction != "Z":
 
-        valid_gamma = gamma[~np.isnan(gamma)]
-        pass_ratio = np.sum(valid_gamma <= 1) / len(valid_gamma)
+            hwb = self.plots[0].params()[0]
+
+            right_R = int(np.abs(self.data[0][0] - hwb / 2).argmin())
+            left_R = int(np.abs(self.data[0][0] + hwb / 2).argmin())
+            right_P = int(np.abs(self.data[1][0] - hwb / 2).argmin())
+            left_P = int(np.abs(self.data[1][0] + hwb / 2).argmin())
+
+        else:
+
+            maxdepth = max(self.data[0][0])
+
+            if maxdepth > 250:
+                maxdepth = 250
+
+            left_R = int(np.abs(np.array(self.data[0][0]) - 1).argmin())
+            right_R = int(np.abs(np.array(self.data[0][0]) - maxdepth).argmin())
+            left_P = int(np.abs(np.array(self.data[1][0]) - 1).argmin())
+            right_P = int(np.abs(np.array(self.data[1][0]) - 250).argmin())
+
+        pass_ratios = []
+
+        for i in range(1, 4):
+
+            gamma = pymedphys.gamma(
+                (self.data[0][0][left_R:right_R],),
+                self.data[0][2][left_R:right_R],
+                (self.data[1][0][left_P:right_P],),
+                self.data[1][2][left_P:right_P],
+                i,
+                i,
+                quiet=True,
+                lower_percent_dose_cutoff=min_dose_percent,
+            )
+
+            valid_gamma = gamma[~np.isnan(gamma)]
+            pass_ratios += [np.sum(valid_gamma <= 1) / len(valid_gamma)]
 
         mb.showinfo(
             "Gamma-Index",
-            f"ɣ ({self.parent.gammaacc.get()}) = {round(pass_ratio,4)}\n∅ = {round(np.average(valid_gamma),4)}",
+            f"ɣ (1%/1mm) = {round(pass_ratios[0],4)}\nɣ (2%/2mm) = {round(pass_ratios[1],4)}\nɣ (3%/3mm) = {round(pass_ratios[2],4)}\n",
         )
 
     def return_figure(self, filenames):
