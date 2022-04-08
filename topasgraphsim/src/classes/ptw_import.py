@@ -94,6 +94,12 @@ class PTWMultimporter:
 
                 elif "SCAN_CURVETYPE" in line:
                     direction = axes[line.split("=")[-1][:-1]]
+                    if direction == "x":
+                        direction = "X"
+                    elif direction == "y":
+                        direction = "Y"
+                    elif direction == "z":
+                        direction = "Z"
 
                 if "BEGIN_DATA" in line:
                     xdata, ydata = [], []
