@@ -148,8 +148,11 @@ class PTWMultimporter:
         [var.set(False) for var in self.variables]
         textdict = {
             "X": f"{self.text.dp[self.lang]}" + " X",
+            "x": f"{self.text.dp[self.lang]}" + " X",
             "Y": f"{self.text.dp[self.lang]}" + " Y",
+            "y": f"{self.text.dp[self.lang]}" + " Y",
             "Z": f"{self.text.pdd[self.lang]}",
+            "z": f"{self.text.pdd[self.lang]}",
         }
         self.buttons = [
             ttk.Checkbutton(
