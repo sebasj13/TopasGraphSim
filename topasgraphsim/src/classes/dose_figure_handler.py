@@ -16,6 +16,7 @@ from ..resources.language import Text
 from .egs_import import EGSSimulation
 from .measurement_import import Measurement
 from .ptw_import import PTWMultimporter
+from .radcalc_import import RadCalc
 from .sim_import import Simulation
 
 
@@ -130,7 +131,7 @@ class DoseFigureHandler:
 
                     del importer
 
-                else:
+                elif type == "measurement":
                     measurement = Measurement(filename, self.parent)
                     if test == None:
                         self.plots += [measurement]
@@ -151,6 +152,29 @@ class DoseFigureHandler:
                             "",
                             f"{measurement.filename}"
                             + self.text.incordata[self.lang][1],
+                        )
+                        self.parent.filenames.pop(-1)
+
+                elif type == "radcalc":
+                    radcalc = RadCalc(filename, self.parent)
+                    if test == None:
+                        self.plots += [radcalc]
+                        self.parent.direction = radcalc.direction
+                        test = self.parent.direction
+                    elif test == "Z" and radcalc.direction == "Z":
+                        self.plots += [radcalc]
+                    elif test == "X" and radcalc.direction == "X":
+                        self.plots += [radcalc]
+                    elif test == "Y" and radcalc.direction == "X":
+                        self.plots += [radcalc]
+                    elif test == "X" and radcalc.direction == "Y":
+                        self.plots += [radcalc]
+                    elif test == "Y" and radcalc.direction == "Y":
+                        self.plots += [radcalc]
+                    else:
+                        sd.messagebox.showinfo(
+                            "",
+                            f"{radcalc.filename}" + self.text.incordata[self.lang][1],
                         )
                         self.parent.filenames.pop(-1)
 

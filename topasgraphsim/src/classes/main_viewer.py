@@ -134,6 +134,7 @@ class MainApplication(tk.Frame):
         self.parent.bind("<Control-e>", lambda type: self.load_file("egs"))
         self.parent.bind("<Control-m>", lambda type: self.load_file("measurement"))
         self.parent.bind("<Control-o>", lambda type: self.load_file("simulation"))
+        self.parent.bind("<Control-r>", lambda type: self.load_file("radcalc"))
         self.parent.bind("<Control-s>", self.save_graph)
         self.parent.bind("<Control-p>", lambda type: self.load_file("ptw"))
         self.parent.bind("<Escape>", self.close_file)
@@ -179,6 +180,11 @@ class MainApplication(tk.Frame):
             command=lambda: self.load_file("measurement"),
             accelerator="Ctrl+M",
         )
+        self.addmeasuremenu.add_command(
+            label=self.text.radcalc[self.lang],
+            command=lambda: self.load_file("radcalc"),
+            accelerator="Ctrl+R",
+        )
 
         self.addsimmenu = tk.Menu(self.menubar, tearoff=False)
 
@@ -189,6 +195,11 @@ class MainApplication(tk.Frame):
         )
         self.addsimmenu.add_command(
             label="3Ddose", command=lambda: self.load_file("egs"), accelerator="Ctrl+E",
+        )
+        self.addsimmenu.add_command(
+            label=self.text.radcalc[self.lang],
+            command=lambda: self.load_file("radcalc"),
+            accelerator="Ctrl+R",
         )
 
         self.filemenu.add_cascade(
@@ -665,12 +676,13 @@ class MainApplication(tk.Frame):
             filetypes = [(self.text.measurementdata[self.lang], ["txt", ".csv"])]
         elif type == "ptw":
             filetypes = [(self.text.ptw[self.lang], ".mcc")]
+        elif type == "radcalc":
+            filetypes = [(self.text.radcalc[self.lang], [".csv"])]
 
         try:
             initialdir = os.path.dirname(
                 self.profile.get_attribute("recent_files")[0][0]
             )
-            print(initialdir)
         except IndexError:
             initialdir = Path.home()
 
@@ -730,6 +742,8 @@ class MainApplication(tk.Frame):
                         content = testfile.readlines()[0]
                         if "TOPAS" in content:
                             extensions += ["simulation"]
+                        elif "Machine" in content:
+                            extensions += ["radcalc"]
                         else:
                             extensions += ["measurement"]
                 else:

@@ -19,7 +19,7 @@ class Text:
             "en": "Parameters could not be calculated!",
         }
         self.calcparams = {"de": "Parameter berechnen", "en": "Calculate parameters"}
-        self.calculate = {"de":"Berechnen", "en":"Calculate"}
+        self.calculate = {"de": "Berechnen", "en": "Calculate"}
         self.caxcorrection = {
             "de": "Zentralstrahlkorrektur",
             "en": "Center axis correction",
@@ -117,6 +117,7 @@ class Text:
         self.percentage = {"de": "Prozentual", "en": "Percentage"}
         self.pdd = {"de": "TDK", "en": "PDD"}
         self.ptw = {"de": "PTW tbaScan", "en": "PTW tbaScan"}
+        self.radcalc = {"de": "RadCalc", "en": "RadCalc"}
         self.recent = {"de": "Zuletzt verwendet", "en": "Recent files"}
         self.revert = {"de": "Rückgängig", "en": "Undo"}
         self.reset = {"de": "Zurücksetzen", "en": "Reset"}
