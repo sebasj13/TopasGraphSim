@@ -76,12 +76,12 @@ class Simulation:
         if self.direction == "Z":
             return pdd.calculate_parameters(
                 self.axis[False],
-                self.dose[False] / max(self.dose[False]),
-                self.std_dev[False] / max(self.dose[False]),
+                self.dose[False],  # / max(self.dose[False]),
+                self.std_dev[False],  # / max(self.dose[False]),
             )
         else:
             params = dp.calculate_parameters(
-                self.axis[False], self.dose[False] / max(self.dose[False])
+                self.axis[False], self.dose[False]#, / max(self.dose[False])
             )
             self.cax = params[1]
             return params

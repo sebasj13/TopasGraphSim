@@ -18,6 +18,8 @@ def calculate_parameters(axis, dose, cax=False):
         interpolated_dose[int(len(interpolated_dose) / 2)]
         + interpolated_dose[int(len(interpolated_dose) / 2) - 1]
     ) / 2
+    print(D0)
+    """
     XL20 = interpolated_axis[: int(len(interpolated_axis) / 2)][
         (
             np.abs(
@@ -140,3 +142,4 @@ def calculate_parameters(axis, dose, cax=False):
         Lintegral,
         Rintegral,
     ]
+    """

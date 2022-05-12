@@ -786,6 +786,7 @@ class DoseFigureHandler:
             right_P = int(np.abs(np.array(self.data[1][0]) - 250).argmin())
 
         pass_ratios = []
+        avg = []
 
         for i in range(1, 4):
 
@@ -802,10 +803,11 @@ class DoseFigureHandler:
 
             valid_gamma = gamma[~np.isnan(gamma)]
             pass_ratios += [np.sum(valid_gamma <= 1) / len(valid_gamma)]
+            avg += [np.round(np.average(valid_gamma), 4)]
 
         mb.showinfo(
             "Gamma-Index",
-            f"ɣ (1%/1mm) = {round(pass_ratios[0],4)}\nɣ (2%/2mm) = {round(pass_ratios[1],4)}\nɣ (3%/3mm) = {round(pass_ratios[2],4)}\n",
+            f"ɣ (1%/1mm) = {round(pass_ratios[0],4)}\nɣ (2%/2mm) = {round(pass_ratios[1],4)}\nɣ (3%/3mm) = {round(pass_ratios[2],4)}\nAvergage 1% = {np.average(avg[0])}",
         )
 
     def return_figure(self, filenames):
@@ -828,12 +830,12 @@ class DoseFigureHandler:
         self.set_x_label()
         self.create_plots_from_data()
         if self.calcparams == True:
-            try:
-                self.add_descriptors()
-            except Exception as e:
-                self.parent.calcparams.set(False)
-                self.calcparams = False
-                sd.messagebox.showwarning("", self.text.calcfail[self.lang])
+            # try:
+            self.add_descriptors()
+        # except Exception as e:
+        #    self.parent.calcparams.set(False)
+        #    self.calcparams = False
+        #    sd.messagebox.showwarning("", self.text.calcfail[self.lang])
 
         self.add_legend()
         self.ax.set_aspect("auto")

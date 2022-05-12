@@ -4,9 +4,9 @@
     "draganddrop": true,
     "color_scheme": "light",
     "language": "en",
-    "markersize": 1.0,
-    "linewidth": 1.0,
-    "normalize": 1,
+    "markersize": 0.8,
+    "linewidth": 0.4000000000000001,
+    "normalize": 0,
     "zoom": 0,
     "fullscreen": false,
     "halfview": false,
@@ -23,21 +23,21 @@
         "#2E4008"
     ],
     "colors": [
-        "#009F6B",
-        "#C40233",
-        "#654321",
-        "#00008B",
-        "#BCA136",
         "#587D07",
+        "#ff0000",
+        "#BCA136",
+        "#C40233",
+        "#00008B",
+        "#009F6B",
         "#1D162B",
         "#98A876",
         "#2A125E",
         "#2E4008"
     ],
     "markers": [
-        "o--",
-        "o--",
-        "o--",
+        "-",
+        "-",
+        "-",
         "o--",
         "o--",
         "o--",
@@ -58,5 +58,18 @@
         "o--",
         "o--"
     ],
-    "recent_files": []
+    "recent_files": [
+        [
+            "C:/Users/sebas/Desktop/ArrayJobOutputs/TDK_7x7.csv",
+            "simulation"
+        ],
+        [
+            "C:/Users/sebas/Dropbox/Medizinische Physik/II. Master/4. Masterarbeit (StrThr - UKH)/TOPAS/Ergebnisse/IANVS Ergebnisse/FF_Fertig_(DGMP)/TDK_10x10_LBROT_HighRes.csv",
+            "simulation"
+        ],
+        [
+            "C:/Users/sebas/Dropbox/Medizinische Physik/II. Master/4. Masterarbeit (StrThr - UKH)/TOPAS/Messdaten/TDK+QV 6 MV 28_29_082018_SSD90/X06_10x10_xyz_offen_W.mcc",
+            "ptw"
+        ]
+    ]
 }

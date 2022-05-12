@@ -36,7 +36,7 @@ class PTWMeasurement:
         if self.direction == "Z":
             return pdd.calculate_parameters(
                 np.array(self.axis[False]),
-                self.dose[False] / max(self.dose[False]),
+                self.dose[False],  # / max(self.dose[False]),
                 [],
             )
         else:
