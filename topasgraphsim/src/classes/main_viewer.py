@@ -180,11 +180,6 @@ class MainApplication(tk.Frame):
             command=lambda: self.load_file("measurement"),
             accelerator="Ctrl+M",
         )
-        self.addmeasuremenu.add_command(
-            label=self.text.radcalc[self.lang],
-            command=lambda: self.load_file("radcalc"),
-            accelerator="Ctrl+R",
-        )
 
         self.addsimmenu = tk.Menu(self.menubar, tearoff=False)
 
@@ -485,7 +480,7 @@ class MainApplication(tk.Frame):
         )
 
         self.normmenu.entryconfig(13, state=tk.DISABLED)
-        self.normmenu.entryconfig(14, state=tk.DISABLED)
+        #self.normmenu.entryconfig(14, state=tk.DISABLED)
         self.normmenu.entryconfig(15, state=tk.DISABLED)
 
         self.menubar.add_command(label=self.text.about[self.lang], command=self.about)
@@ -704,7 +699,7 @@ class MainApplication(tk.Frame):
         self.filemenu.entryconfig(5, state=tk.NORMAL)
         if len(self.filenames) > 2:
             self.normmenu.entryconfig(13, state=tk.DISABLED)
-            self.normmenu.entryconfig(14, state=tk.DISABLED)
+            #self.normmenu.entryconfig(14, state=tk.DISABLED)
             self.normmenu.entryconfig(15, state=tk.DISABLED)
         self.saved = False
 
@@ -768,7 +763,7 @@ class MainApplication(tk.Frame):
         self.filemenu.entryconfig(5, state=tk.NORMAL)
         if len(self.filenames) > 2:
             self.normmenu.entryconfig(13, state=tk.DISABLED)
-            self.normmenu.entryconfig(14, state=tk.DISABLED)
+            #self.normmenu.entryconfig(14, state=tk.DISABLED)
             self.normmenu.entryconfig(15, state=tk.DISABLED)
         self.saved = False
 
@@ -784,7 +779,7 @@ class MainApplication(tk.Frame):
         self.addmeasuremenu.entryconfig(0, state=tk.NORMAL)
         self.addmeasuremenu.entryconfig(1, state=tk.NORMAL)
         self.normmenu.entryconfig(13, state=tk.DISABLED)
-        self.normmenu.entryconfig(14, state=tk.DISABLED)
+        #self.normmenu.entryconfig(14, state=tk.DISABLED)
         self.normmenu.entryconfig(15, state=tk.DISABLED)
         self.parammenu.entryconfig(0, state=tk.NORMAL)
         self.menubar.delete(4, 5)
@@ -946,7 +941,7 @@ class MainApplication(tk.Frame):
             self.diffplot.set(False)
             self.DoseFigureHandler.diffplot = False
             self.normmenu.entryconfig(13, state=tk.DISABLED)
-            self.normmenu.entryconfig(14, state=tk.DISABLED)
+            #self.normmenu.entryconfig(14, state=tk.DISABLED)
             self.normmenu.entryconfig(15, state=tk.DISABLED)
 
         if self.filenames[-1][0].endswith(".mcc") == True:
@@ -988,8 +983,8 @@ class MainApplication(tk.Frame):
         if self.diffplot.get() == True:
             self.normmenu.entryconfig(14, state=tk.NORMAL)
         else:
-            self.normmenu.entryconfig(14, state=tk.DISABLED)
-
+            #self.normmenu.entryconfig(14, state=tk.DISABLED)
+            pass
         self.refresh()
 
         return
@@ -1132,7 +1127,7 @@ class MainApplication(tk.Frame):
 
         if len(self.DoseFigureHandler.plots) >= 2:
             self.normmenu.entryconfig(13, state=tk.DISABLED)
-            self.normmenu.entryconfig(14, state=tk.DISABLED)
+            #self.normmenu.entryconfig(14, state=tk.DISABLED)
             self.normmenu.entryconfig(15, state=tk.DISABLED)
 
         if len(self.DoseFigureHandler.plots) == 2:

@@ -27,7 +27,7 @@ class RadCalc:
             elif "PDD" in line:
                 self.direction = "Z"
 
-        self.axis, self.dose = np.array([i * 10 for i in data[0]]), data[1]  # cm to mm
+        self.axis, self.dose = np.array([i * 10 for i in data[0]]), data[2]  # cm to mm
         self.normpoint = max(self.dose)
         self.std_dev = []
 

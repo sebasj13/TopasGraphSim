@@ -73,8 +73,6 @@ def calculate_parameters(axis, dose, cax=False):
     HWB = round(abs(XR50 - XL50), 3)
     CAXdev = round(XL50 + 0.5 * HWB, 3)
 
-    dose = [value + CAXdev for value in dose]
-
     Dose80 = [value for value in dose if value >= 0.8 * max(dose)]
 
     if cax == True:
