@@ -130,3 +130,9 @@ The drag-and-drop functionality is powered by [TkinterDnD2](http://tkinterdnd.so
 ```console
 sudo apt-get install python3-tk
 ```
+
+## Contact me!
+
+Thank you for using TopasGraphSim! Please let me know about any issues you encounter, or suggestions/wishes you might have! 
+<br></br>
+[![Downloads](https://static.pepy.tech/personalized-badge/topasgraphsim?period=total&units=international_system&left_color=black&right_color=blue&left_text=Downloads)](https://pepy.tech/project/topasgraphsim)
