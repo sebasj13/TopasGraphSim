@@ -23,7 +23,8 @@ This GUI can visualize and analyze percentage depth dose (pdd) and dose profiles
      * Line width
      * Zoom-in window
      * Half view of dose profiles
-     * Drag and drop of files
+ - Drag and drop of files
+ - Value indication on hover
  - Center axis deviation correction
  - Import of EGS and RadCalc simulation results
  - Import of custom measurements (as numpy .txt files)
