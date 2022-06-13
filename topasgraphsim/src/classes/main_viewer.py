@@ -345,8 +345,6 @@ class MainApplication(tk.Frame):
             label=self.text.resetmarkers[self.lang], command=self.reset_markers
         )
 
-        self.normmenu.add_separator()
-
         self.normalizemenu = tk.Menu(self.menubar, tearoff=False)
         self.normalizemenu.add_checkbutton(
             label=self.text.normalize[self.lang],
@@ -376,22 +374,7 @@ class MainApplication(tk.Frame):
             label=self.text.choosenormalization[self.lang], menu=self.normalize_cascade
         )
 
-        self.normmenu.add_cascade(
-            label=self.text.normalization[self.lang], menu=self.normalizemenu
-        )
-        self.normmenu.add_checkbutton(
-            label=self.text.errorbars[self.lang],
-            command=self.show_errorbars,
-            variable=self.errorbars,
-        )
-        self.normmenu.add_checkbutton(
-            label=self.text.zoom[self.lang], command=self.zoomgraph, variable=self.zoom,
-        )
-
-        self.normmenu.add_checkbutton(
-            label=self.text.half[self.lang], command=self.halfgraph, variable=self.half,
-        )
-        self.normmenu.add_separator()
+        self.calcparammenu = tk.Menu(self.menubar, tearoff=False)
 
         self.parammenu = tk.Menu(self.menubar, tearoff=False)
         self.parammenu.add_checkbutton(
@@ -405,17 +388,17 @@ class MainApplication(tk.Frame):
             variable=self.tablevar,
         )
 
-        self.normmenu.add_cascade(
+        self.calcparammenu.add_cascade(
             label=self.text.calcparams[self.lang], menu=self.parammenu
         )
 
-        self.normmenu.add_checkbutton(
+        self.calcparammenu.add_checkbutton(
             label=self.text.caxcorrection[self.lang],
             command=self.correct_caxdev,
             variable=self.caxcorrection,
         )
-        self.normmenu.add_separator()
-        self.normmenu.add_checkbutton(
+        self.calcparammenu.add_separator()
+        self.calcparammenu.add_checkbutton(
             label=self.text.differenceplot[self.lang],
             command=self.differenceplot,
             variable=self.diffplot,
@@ -435,7 +418,7 @@ class MainApplication(tk.Frame):
             command=self.changegamma,
         )
 
-        self.normmenu.add_cascade(
+        self.calcparammenu.add_cascade(
             label=self.text.gammamenu[self.lang], menu=self.gammamenu
         )
 
@@ -480,15 +463,13 @@ class MainApplication(tk.Frame):
             label=self.text.changeerr[self.lang], menu=self.errlimvalmenu
         )
 
-        self.normmenu.add_cascade(
+        self.calcparammenu.add_cascade(
             label=Text().errlimmenu[self.lang], menu=self.errlimmenu
         )
 
-        self.normmenu.add_checkbutton(label="Show Graph Info", variable=self.info)
-
-        self.normmenu.entryconfig(13, state=tk.DISABLED)
-        self.normmenu.entryconfig(14, state=tk.DISABLED)
-        self.normmenu.entryconfig(15, state=tk.DISABLED)
+        self.calcparammenu.entryconfig(3, state=tk.DISABLED)
+        self.calcparammenu.entryconfig(4, state=tk.DISABLED)
+        self.calcparammenu.entryconfig(5, state=tk.DISABLED)
 
         self.menubar.add_command(label=self.text.about[self.lang], command=self.about)
 
@@ -705,9 +686,9 @@ class MainApplication(tk.Frame):
         self.filemenu.entryconfig(4, state=tk.NORMAL)
         self.filemenu.entryconfig(5, state=tk.NORMAL)
         if len(self.filenames) > 2:
-            self.normmenu.entryconfig(13, state=tk.DISABLED)
-            self.normmenu.entryconfig(14, state=tk.DISABLED)
-            self.normmenu.entryconfig(15, state=tk.DISABLED)
+            self.calcparammenu.entryconfig(3, state=tk.DISABLED)
+            self.calcparammenu.entryconfig(4, state=tk.DISABLED)
+            self.calcparammenu.entryconfig(5, state=tk.DISABLED)
         self.saved = False
 
         return
@@ -769,9 +750,9 @@ class MainApplication(tk.Frame):
         self.filemenu.entryconfig(4, state=tk.NORMAL)
         self.filemenu.entryconfig(5, state=tk.NORMAL)
         if len(self.filenames) > 2:
-            self.normmenu.entryconfig(13, state=tk.DISABLED)
-            self.normmenu.entryconfig(14, state=tk.DISABLED)
-            self.normmenu.entryconfig(15, state=tk.DISABLED)
+            self.calcparammenu.entryconfig(3, state=tk.DISABLED)
+            self.calcparammenu.entryconfig(4, state=tk.DISABLED)
+            self.calcparammenu.entryconfig(5, state=tk.DISABLED)
         self.saved = False
 
     def close_file(self, event=None):
@@ -785,11 +766,14 @@ class MainApplication(tk.Frame):
         self.filemenu.entryconfig(5, state=tk.DISABLED)
         self.addmeasuremenu.entryconfig(0, state=tk.NORMAL)
         self.addmeasuremenu.entryconfig(1, state=tk.NORMAL)
-        self.normmenu.entryconfig(13, state=tk.DISABLED)
-        self.normmenu.entryconfig(14, state=tk.DISABLED)
-        self.normmenu.entryconfig(15, state=tk.DISABLED)
+        self.calcparammenu.entryconfig(3, state=tk.DISABLED)
+        self.calcparammenu.entryconfig(4, state=tk.DISABLED)
+        self.calcparammenu.entryconfig(5, state=tk.DISABLED)
         self.parammenu.entryconfig(0, state=tk.NORMAL)
-        self.menubar.delete(4, 5)
+        [self.menubar.delete(4) for i in range(3)]
+        [self.viewmenu.delete(3) for i in range(6)]
+        self.menubar.add_command(label=self.text.about[self.lang], command=self.about)
+
         self.filenames = []
         try:
             self.canvas.itemconfig(self.image_on_canvas, image=None)
@@ -947,9 +931,9 @@ class MainApplication(tk.Frame):
         if len(self.filenames) == 2:
             self.diffplot.set(False)
             self.DoseFigureHandler.diffplot = False
-            self.normmenu.entryconfig(13, state=tk.DISABLED)
-            self.normmenu.entryconfig(14, state=tk.DISABLED)
-            self.normmenu.entryconfig(15, state=tk.DISABLED)
+            self.calcparammenu.entryconfig(3, state=tk.DISABLED)
+            self.calcparammenu.entryconfig(4, state=tk.DISABLED)
+            self.calcparammenu.entryconfig(5, state=tk.DISABLED)
 
         if self.filenames[-1][0].endswith(".mcc") == True:
             self.filenames.pop(-1)
@@ -988,9 +972,9 @@ class MainApplication(tk.Frame):
 
         self.DoseFigureHandler.diffplot = self.diffplot.get()
         if self.diffplot.get() == True:
-            self.normmenu.entryconfig(14, state=tk.NORMAL)
+            self.calcparammenu.entryconfig(4, state=tk.NORMAL)
         else:
-            self.normmenu.entryconfig(14, state=tk.DISABLED)
+            self.calcparammenu.entryconfig(4, state=tk.DISABLED)
             pass
         self.refresh()
 
@@ -1133,30 +1117,64 @@ class MainApplication(tk.Frame):
         self.parent.bind("<Down>", lambda boolean: self.change_order(False))
 
         if len(self.DoseFigureHandler.plots) >= 2:
-            self.normmenu.entryconfig(13, state=tk.DISABLED)
-            self.normmenu.entryconfig(14, state=tk.DISABLED)
-            self.normmenu.entryconfig(15, state=tk.DISABLED)
+            self.calcparammenu.entryconfig(3, state=tk.DISABLED)
+            self.calcparammenu.entryconfig(4, state=tk.DISABLED)
+            self.calcparammenu.entryconfig(5, state=tk.DISABLED)
 
         if len(self.DoseFigureHandler.plots) == 2:
-            self.normmenu.entryconfig(13, state=tk.NORMAL)
-            self.normmenu.entryconfig(14, state=tk.NORMAL)
-            self.normmenu.entryconfig(15, state=tk.NORMAL)
+            self.calcparammenu.entryconfig(3, state=tk.NORMAL)
+            self.calcparammenu.entryconfig(4, state=tk.NORMAL)
+            self.calcparammenu.entryconfig(5, state=tk.NORMAL)
 
         if len(self.DoseFigureHandler.plots) > 5:
             self.parammenu.entryconfig(0, state=tk.DISABLED)
 
         if self.direction == "Z":
             self.addmeasuremenu.entryconfig(1, state=tk.DISABLED)
-            self.normmenu.entryconfig(8, state=tk.DISABLED)
-            self.normmenu.entryconfig(11, state=tk.DISABLED)
+            self.viewmenu.entryconfig(7, state=tk.DISABLED)
+            self.calcparammenu.entryconfig(1, state=tk.DISABLED)
         else:
             self.addmeasuremenu.entryconfig(0, state=tk.DISABLED)
-            self.normmenu.entryconfig(8, state=tk.NORMAL)
-            self.normmenu.entryconfig(11, state=tk.NORMAL)
+            self.viewmenu.entryconfig(7, state=tk.NORMAL)
+            self.calcparammenu.entryconfig(1, state=tk.NORMAL)
 
         if self.menuflag == False:
+
+            self.menubar.delete(3)
             self.menubar.add_cascade(label=self.text.add[self.lang], menu=self.addmenu)
-            self.menubar.add_cascade(label="Graph", menu=self.normmenu)
+            self.menubar.add_cascade(label="Layout", menu=self.normmenu)
+
+            self.viewmenu.add_separator()
+            self.viewmenu.add_cascade(
+                label=self.text.normalization[self.lang], menu=self.normalizemenu
+            )
+            self.viewmenu.add_checkbutton(
+                label=self.text.errorbars[self.lang],
+                command=self.show_errorbars,
+                variable=self.errorbars,
+            )
+            self.viewmenu.add_checkbutton(
+                label=self.text.zoom[self.lang],
+                command=self.zoomgraph,
+                variable=self.zoom,
+            )
+
+            self.viewmenu.add_checkbutton(
+                label=self.text.half[self.lang],
+                command=self.halfgraph,
+                variable=self.half,
+            )
+            self.viewmenu.add_checkbutton(
+                label=self.text.graphinfo[self.lang], variable=self.info
+            )
+
+            self.menubar.add_cascade(
+                label=self.text.parameters[self.lang], menu=self.calcparammenu
+            )
+            self.menubar.add_command(
+                label=self.text.about[self.lang], command=self.about
+            )
+
             self.menuflag = True
         self.image_on_canvas = self.canvas.create_image(
             self.winfo_width() // 2,

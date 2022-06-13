@@ -69,6 +69,7 @@ class Text:
         self.gammamenu = {"de": "Gamma-Index", "en": "Gamma-Index"}
         self.german = {"de": "Deutsch", "en": "German"}
         self.half = {"de": "Halbe Querverteilung anzeigen", "en": "Show half profile"}
+        self.graphinfo = {"de": "Werte über Maus anzeigen", "en": "Show value on hover"}
         self.histnum = {
             "de": "Anzahl der Historien in der Simulation:",
             "en": "Histories in Simulation:",
@@ -114,6 +115,7 @@ class Text:
         self.normalization = {"de": "Normierung", "en": "Normalization"}
         self.options = {"de": "Optionen", "en": "Options"}
         self.orr = {"de": "oder", "en": "or"}
+        self.parameters = {"de": "Parameter", "en": "Parameters"}
         self.percentage = {"de": "Prozentual", "en": "Percentage"}
         self.pdd = {"de": "TDK", "en": "PDD"}
         self.ptw = {"de": "PTW tbaScan", "en": "PTW tbaScan"}
@@ -121,7 +123,7 @@ class Text:
         self.recent = {"de": "Zuletzt verwendet", "en": "Recent files"}
         self.revert = {"de": "Rückgängig", "en": "Undo"}
         self.reset = {"de": "Zurücksetzen", "en": "Reset"}
-        self.resetcolors = {"de": "Farbschema zurücksetzen", "en": "Reset colorscheme"}
+        self.resetcolors = {"de": "Farbschema zurücksetzen", "en": "Reset color scheme"}
         self.resetmarkers = {
             "de": "Markerstil zurücksetzen",
             "en": "Reset marker styles",
