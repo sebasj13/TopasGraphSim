@@ -1,11 +1,13 @@
 import os
 import time
 import tkinter as tk
+from decimal import Decimal
 from pathlib import Path
 from tkinter import filedialog as fd
 from tkinter import simpledialog as sd
 from tkinter.colorchooser import askcolor
 
+import numpy as np
 import pynput
 from PIL import Image, ImageTk
 
@@ -117,6 +119,9 @@ class MainApplication(tk.Frame):
 
         self.normvaluemenu = tk.StringVar()
         self.normvaluemenu.set("max")
+
+        self.info = tk.BooleanVar()
+        self.info.set(False)
 
         self.errlimval = tk.StringVar()
         self.errlimval.set("absolute")
@@ -479,8 +484,10 @@ class MainApplication(tk.Frame):
             label=Text().errlimmenu[self.lang], menu=self.errlimmenu
         )
 
+        self.normmenu.add_checkbutton(label="Show Graph Info", variable=self.info)
+
         self.normmenu.entryconfig(13, state=tk.DISABLED)
-        #self.normmenu.entryconfig(14, state=tk.DISABLED)
+        self.normmenu.entryconfig(14, state=tk.DISABLED)
         self.normmenu.entryconfig(15, state=tk.DISABLED)
 
         self.menubar.add_command(label=self.text.about[self.lang], command=self.about)
@@ -699,7 +706,7 @@ class MainApplication(tk.Frame):
         self.filemenu.entryconfig(5, state=tk.NORMAL)
         if len(self.filenames) > 2:
             self.normmenu.entryconfig(13, state=tk.DISABLED)
-            #self.normmenu.entryconfig(14, state=tk.DISABLED)
+            self.normmenu.entryconfig(14, state=tk.DISABLED)
             self.normmenu.entryconfig(15, state=tk.DISABLED)
         self.saved = False
 
@@ -763,7 +770,7 @@ class MainApplication(tk.Frame):
         self.filemenu.entryconfig(5, state=tk.NORMAL)
         if len(self.filenames) > 2:
             self.normmenu.entryconfig(13, state=tk.DISABLED)
-            #self.normmenu.entryconfig(14, state=tk.DISABLED)
+            self.normmenu.entryconfig(14, state=tk.DISABLED)
             self.normmenu.entryconfig(15, state=tk.DISABLED)
         self.saved = False
 
@@ -779,7 +786,7 @@ class MainApplication(tk.Frame):
         self.addmeasuremenu.entryconfig(0, state=tk.NORMAL)
         self.addmeasuremenu.entryconfig(1, state=tk.NORMAL)
         self.normmenu.entryconfig(13, state=tk.DISABLED)
-        #self.normmenu.entryconfig(14, state=tk.DISABLED)
+        self.normmenu.entryconfig(14, state=tk.DISABLED)
         self.normmenu.entryconfig(15, state=tk.DISABLED)
         self.parammenu.entryconfig(0, state=tk.NORMAL)
         self.menubar.delete(4, 5)
@@ -941,7 +948,7 @@ class MainApplication(tk.Frame):
             self.diffplot.set(False)
             self.DoseFigureHandler.diffplot = False
             self.normmenu.entryconfig(13, state=tk.DISABLED)
-            #self.normmenu.entryconfig(14, state=tk.DISABLED)
+            self.normmenu.entryconfig(14, state=tk.DISABLED)
             self.normmenu.entryconfig(15, state=tk.DISABLED)
 
         if self.filenames[-1][0].endswith(".mcc") == True:
@@ -983,7 +990,7 @@ class MainApplication(tk.Frame):
         if self.diffplot.get() == True:
             self.normmenu.entryconfig(14, state=tk.NORMAL)
         else:
-            #self.normmenu.entryconfig(14, state=tk.DISABLED)
+            self.normmenu.entryconfig(14, state=tk.DISABLED)
             pass
         self.refresh()
 
@@ -1127,7 +1134,7 @@ class MainApplication(tk.Frame):
 
         if len(self.DoseFigureHandler.plots) >= 2:
             self.normmenu.entryconfig(13, state=tk.DISABLED)
-            #self.normmenu.entryconfig(14, state=tk.DISABLED)
+            self.normmenu.entryconfig(14, state=tk.DISABLED)
             self.normmenu.entryconfig(15, state=tk.DISABLED)
 
         if len(self.DoseFigureHandler.plots) == 2:
@@ -1182,7 +1189,7 @@ class MainApplication(tk.Frame):
                 (0.023 + normdiff + 0.042 * i) * self.canvas.image.height() * factor,
                 0.988 * self.canvas.image.width(),
                 (0.065 + normdiff + 0.042 * i) * self.canvas.image.height() * factor,
-                fill="red",
+                fill="",
                 outline="",
                 tags="rename",
             )
@@ -1372,6 +1379,79 @@ class MainApplication(tk.Frame):
             self.show_preview()
         return
 
+    def show_info(self, x, y):
+
+        try:
+            self.canvas.delete(self.infobox)
+            self.canvas.delete(self.infobox_border)
+        except Exception:
+            pass
+
+        self.DoseFigureHandler.canvas.draw()
+        plot = self.DoseFigureHandler.plots[0]
+        half = self.DoseFigureHandler.half
+        transform = self.DoseFigureHandler.ax.transData
+        inverted_transform = self.DoseFigureHandler.ax.transData.inverted()
+        width, height = self.DoseFigureHandler.fig.canvas.get_width_height()
+        clickpoint = inverted_transform.transform(
+            (
+                width
+                * (-(self.canvas.winfo_width() - self.canvas.image.width()) // 2 + x)
+                / self.canvas.image.width(),
+                abs(
+                    height
+                    * (
+                        -(self.canvas.winfo_height() - self.canvas.image.height()) // 2
+                        + y
+                    )
+                    / self.canvas.image.height()
+                    - height
+                ),
+            )
+        )
+
+        if self.norm.get() == False:
+
+            dist = [
+                np.sqrt(
+                    ((plot.axis[half][i] - clickpoint[0]) / max(plot.axis[half])) ** 2
+                    + ((plot.dose[half][i] - clickpoint[1]) / max(plot.dose[half])) ** 2
+                )
+                for i in range(len(plot.axis[half]))
+            ]
+
+        else:
+            dist = [
+                np.sqrt(
+                    ((plot.axis[half][i] - clickpoint[0]) / max(plot.axis[half])) ** 2
+                    + (
+                        ((plot.dose[half][i] / max(plot.dose[half])) - clickpoint[1])
+                        / (max(plot.dose[half]) / plot.normpoint)
+                    )
+                    ** 2
+                )
+                for i in range(len(plot.axis[half]))
+            ]
+
+        minimum_dist, index = np.min(dist), np.argmin(dist)
+        focuspoint = [
+            plot.axis[half][index],
+            plot.dose[half][index],
+        ]
+        if minimum_dist < 0.05:
+
+            self.infobox = self.canvas.create_text(
+                x,
+                y - 30,
+                text=f"{focuspoint[0]:3.2f} mm\n{Decimal(focuspoint[1]):.3e} Gy",
+                justify=tk.CENTER,
+            )
+
+            self.infobox_border = self.canvas.create_rectangle(
+                self.canvas.bbox(self.infobox), fill="white"
+            )
+            self.canvas.lower(self.infobox_border, self.infobox)
+
     def handle_configure(self, event=None):
 
         """
@@ -1548,6 +1628,17 @@ class MainApplication(tk.Frame):
         """
 
         if e != None:
+
+            if self.info.get() == True:
+
+                self.show_info(e.x, e.y)
+            else:
+                try:
+                    self.canvas.delete(self.infobox)
+                    self.canvas.delete(self.infobox_border)
+                except Exception:
+                    pass
+
             try:
                 hoverlist = []
                 for box in self.rename_boxes:
