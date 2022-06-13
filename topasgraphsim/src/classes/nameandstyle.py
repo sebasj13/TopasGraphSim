@@ -11,8 +11,11 @@ class GraphNameAndStyle:
         self.index = index
 
         self.top = tk.Toplevel()
-        if self.index >= len(self.parent.DoseFigureHandler.plots):
-            self.top.destroy()
+        try:
+            if self.index >= len(self.parent.DoseFigureHandler.plots):
+                self.top.destroy()
+        except TypeError:
+            pass
         self.geometry = [
             self.parent.parent.winfo_rootx(),
             self.parent.parent.winfo_rooty(),

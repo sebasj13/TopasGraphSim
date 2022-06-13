@@ -632,21 +632,45 @@ class DoseFigureHandler:
                             + 5
                         )
                         / self.parent.canvas.image.width(),
-                        1,
+                        abs(
+                            height
+                            * (
+                                -(
+                                    self.parent.canvas.winfo_height()
+                                    - self.parent.canvas.image.height()
+                                )
+                                // 2
+                                + self.parent.canvas.coords(self.parent.oval)[1]
+                                + 5
+                            )
+                            / self.parent.canvas.image.height()
+                            - height
+                        ),
                     )
                 )
-                self.focuspoint = reference.axis[self.half][
-                    np.abs(
-                        np.asarray(reference.axis[self.half] - self.focuspoint[0])
-                    ).argmin()
+
+                self.focuspoint = [
+                    reference.axis[self.half][
+                        np.abs(
+                            np.asarray(reference.axis[self.half] - self.focuspoint[0])
+                        ).argmin()
+                    ],
+                    reference.dose[self.half][
+                        np.abs(
+                            np.asarray(reference.dose[self.half] - self.focuspoint[1])
+                        ).argmin()
+                    ],
                 ]
+
             except AttributeError:
-                self.focuspoint = reference.axis[self.half][
-                    len(reference.axis[self.half]) // 2
+                self.focuspoint = [
+                    reference.axis[self.half][len(reference.axis[self.half]) // 2],
+                    reference.dose[self.half][len(reference.dose[self.half]) // 2],
                 ]
             except IndexError:
-                self.focuspoint = reference.axis[self.half][
-                    len(reference.axis[self.half]) // 2
+                self.focuspoint = [
+                    reference.axis[self.half][len(reference.axis[self.half]) // 2],
+                    reference.dose[self.half][len(reference.dose[self.half]) // 2],
                 ]
 
             pixels = self.transform.transform(
@@ -655,8 +679,54 @@ class DoseFigureHandler:
             x, y = pixels.T
             y = height - y
 
-            self.pixelx = x[reference.axis[self.half].index(self.focuspoint)] / width
-            self.pixely = y[reference.axis[self.half].index(self.focuspoint)] / height
+            # Index of point closest to the double clicked point on the screen
+            if self.norm == False:
+                dist = np.argmin(
+                    [
+                        np.sqrt(
+                            (
+                                (reference.axis[self.half][i] - self.focuspoint[0])
+                                / max(reference.axis[self.half])
+                            )
+                            ** 2
+                            + (
+                                (reference.dose[self.half][i] - self.focuspoint[1])
+                                / max(reference.dose[self.half])
+                            )
+                            ** 2
+                        )
+                        for i in range(len(reference.axis[self.half]))
+                    ]
+                )
+            else:
+                dist = np.argmin(
+                    [
+                        np.sqrt(
+                            (
+                                (reference.axis[self.half][i] - self.focuspoint[0])
+                                / max(reference.axis[self.half])
+                            )
+                            ** 2
+                            + (
+                                (
+                                    reference.dose[self.half][i]
+                                    * reference.normpoint
+                                    / max(reference.dose[self.half])
+                                    - self.focuspoint[1]
+                                )
+                                / (max(reference.dose[self.half]) / reference.normpoint)
+                            )
+                            ** 2
+                        )
+                        for i in range(len(reference.axis[self.half]))
+                    ]
+                )
+            self.focuspoint = [
+                reference.axis[self.half][dist],
+                reference.dose[self.half][dist],
+            ]
+            self.pixelx = x[dist] / width
+            self.pixely = y[dist] / height
 
             loc = "lower left"
             if self.half == False and self.plots[0].direction != "Z":
@@ -708,7 +778,7 @@ class DoseFigureHandler:
                         plot_data[0].index(
                             min(
                                 plot_data[0],
-                                key=lambda x: abs(x - (self.focuspoint - 5)),
+                                key=lambda x: abs(x - (self.focuspoint[0] - 5)),
                             )
                         )
                     ]
@@ -718,7 +788,7 @@ class DoseFigureHandler:
                         plot_data[0].index(
                             min(
                                 plot_data[0],
-                                key=lambda x: abs(x - (self.focuspoint + 5)),
+                                key=lambda x: abs(x - (self.focuspoint[0] + 5)),
                             )
                         )
                     ]
@@ -726,8 +796,8 @@ class DoseFigureHandler:
 
             # sub region of the original image
             x1, x2, y1, y2 = (
-                self.focuspoint - 5,
-                self.focuspoint + 5,
+                self.focuspoint[0] - 5,
+                self.focuspoint[0] + 5,
                 0.95 * min(min(yvalsat195), min(yvalsat205)),
                 1.05 * max(max(yvalsat195), max(yvalsat205)),
             )
@@ -785,8 +855,6 @@ class DoseFigureHandler:
 
         if min_dose_percent < 20:
             min_dose_percent = 20
-
-        print(min_dose_percent)
 
         gamma = pymedphys.gamma(
             (self.data[0][0],),
