@@ -1397,7 +1397,7 @@ class MainApplication(tk.Frame):
             self.show_preview()
         return
 
-    def show_info(self, x, y):
+    def show_graph_info(self, x, y):
 
         try:
             self.canvas.delete(self.infobox)
@@ -1406,55 +1406,81 @@ class MainApplication(tk.Frame):
             pass
 
         self.DoseFigureHandler.canvas.draw()
-        plot = self.DoseFigureHandler.plots[0]
-        half = self.DoseFigureHandler.half
-        transform = self.DoseFigureHandler.ax.transData
-        inverted_transform = self.DoseFigureHandler.ax.transData.inverted()
-        width, height = self.DoseFigureHandler.fig.canvas.get_width_height()
-        clickpoint = inverted_transform.transform(
-            (
-                width
-                * (-(self.canvas.winfo_width() - self.canvas.image.width()) // 2 + x)
-                / self.canvas.image.width(),
-                abs(
-                    height
+        dist = []
+        for plot in self.DoseFigureHandler.plots:
+
+            half = self.DoseFigureHandler.half
+            inverted_transform = self.DoseFigureHandler.ax.transData.inverted()
+            width, height = self.DoseFigureHandler.fig.canvas.get_width_height()
+            clickpoint = inverted_transform.transform(
+                (
+                    width
                     * (
-                        -(self.canvas.winfo_height() - self.canvas.image.height()) // 2
-                        + y
+                        -(self.canvas.winfo_width() - self.canvas.image.width()) // 2
+                        + x
                     )
-                    / self.canvas.image.height()
-                    - height
-                ),
+                    / self.canvas.image.width(),
+                    abs(
+                        height
+                        * (
+                            -(self.canvas.winfo_height() - self.canvas.image.height())
+                            // 2
+                            + y
+                        )
+                        / self.canvas.image.height()
+                        - height
+                    ),
+                )
             )
-        )
 
-        if self.norm.get() == False:
+            if self.norm.get() == False:
 
-            dist = [
-                np.sqrt(
-                    ((plot.axis[half][i] - clickpoint[0]) / max(plot.axis[half])) ** 2
-                    + ((plot.dose[half][i] - clickpoint[1]) / max(plot.dose[half])) ** 2
-                )
-                for i in range(len(plot.axis[half]))
-            ]
+                dist += [
+                    [
+                        np.sqrt(
+                            (
+                                (plot.axis[half][i] - clickpoint[0])
+                                / max(plot.axis[half])
+                            )
+                            ** 2
+                            + (
+                                (plot.dose[half][i] - clickpoint[1])
+                                / max(plot.dose[half])
+                            )
+                            ** 2
+                        )
+                        for i in range(len(plot.axis[half]))
+                    ]
+                ]
 
-        else:
-            dist = [
-                np.sqrt(
-                    ((plot.axis[half][i] - clickpoint[0]) / max(plot.axis[half])) ** 2
-                    + (
-                        ((plot.dose[half][i] / max(plot.dose[half])) - clickpoint[1])
-                        / (max(plot.dose[half]) / plot.normpoint)
-                    )
-                    ** 2
-                )
-                for i in range(len(plot.axis[half]))
-            ]
+            else:
+                dist += [
+                    [
+                        np.sqrt(
+                            (
+                                (plot.axis[half][i] - clickpoint[0])
+                                / max(plot.axis[half])
+                            )
+                            ** 2
+                            + (
+                                (
+                                    (plot.dose[half][i] / max(plot.dose[half]))
+                                    - clickpoint[1]
+                                )
+                                / (max(plot.dose[half]) / plot.normpoint)
+                            )
+                            ** 2
+                        )
+                        for i in range(len(plot.axis[half]))
+                    ]
+                ]
+        mins = [np.min(dist[i]) for i in range(len(dist))]
+        mins_indices = [np.argmin(dist[i]) for i in range(len(dist))]
 
-        minimum_dist, index = np.min(dist), np.argmin(dist)
+        minimum_dist, index = np.min(mins), np.argmin(mins)
         focuspoint = [
-            plot.axis[half][index],
-            plot.dose[half][index],
+            self.DoseFigureHandler.plots[index].axis[half][mins_indices[index]],
+            self.DoseFigureHandler.plots[index].dose[half][mins_indices[index]],
         ]
         if minimum_dist < 0.05:
 
@@ -1463,6 +1489,8 @@ class MainApplication(tk.Frame):
                 y - 30,
                 text=f"{focuspoint[0]:3.2f} mm\n{Decimal(focuspoint[1]):.3e} Gy",
                 justify=tk.CENTER,
+                font=("Helvetica", "16", "bold"),
+                fill=self.DoseFigureHandler.colors[index],
             )
 
             self.infobox_border = self.canvas.create_rectangle(
@@ -1649,7 +1677,7 @@ class MainApplication(tk.Frame):
 
             if self.info.get() == True:
 
-                self.show_info(e.x, e.y)
+                self.show_graph_info(e.x, e.y)
             else:
                 try:
                     self.canvas.delete(self.infobox)

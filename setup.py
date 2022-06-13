@@ -5,16 +5,14 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="topasgraphsim",
-    version="20.1.1",
+    version="21.0.0",
     author="Sebastian Schäfer",
     author_email="sebastian.schaefer@student.uni-halle.de",
-    description="GUI to plot the results of a topas simulation",
+    description="GUI to analyze the results of a Monte-Carlo radiation simulation",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/sebasj13/topas-create-graphs",
-    project_urls={
-        "Bug Tracker": "https://github.com/sebasj13/topas-create-graphs/issues",
-    },
+    url="https://github.com/sebasj13/TopasGraphSim",
+    project_urls={"Bug Tracker": "https://github.com/sebasj13/TopasGraphSim/issues",},
     include_package_data=True,
     classifiers=[
         "Programming Language :: Python :: 3",

@@ -15,7 +15,7 @@ class show_info:
             "de": "TopasGraphSim\n\nAutor: Sebastian Schäfer",
             "en": "TopasGraphSim\n\nAuthor: Sebastian Schäfer",
         }
-        version = {"de": "Version: 20.1.1\n ", "en": "Version: 20.1.1\n "}
+        version = {"de": "Version: 21.0.0\n ", "en": "Version: 21.0.0\n "}
 
         if mode == True:
             pic = "light"
