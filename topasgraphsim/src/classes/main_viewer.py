@@ -9,7 +9,7 @@ from tkinter.colorchooser import askcolor
 
 import numpy as np
 import pynput
-from PIL import Image, ImageTk
+from PIL import Image, ImageGrab, ImageTk
 
 from ..resources.info import show_info
 from ..resources.language import Text
@@ -867,8 +867,16 @@ class MainApplication(tk.Frame):
         if file is None:
             return
 
-        ImageTk.getimage(self.photoimage).convert("RGB").save(file)
-        self.saved = True
+        try:
+            x = self.parent.winfo_rootx() + self.table.winfo_x()
+            y = self.parent.winfo_rooty() + self.canvas.winfo_y()
+            x1 = x + self.table.winfo_width()
+            y1 = y + self.table.winfo_y() + self.table.winfo_height()
+            ImageGrab.grab().crop((x, y, x1, y1)).save(file)
+        except AttributeError:
+            ImageTk.getimage(self.photoimage).convert("RGB").save(file)
+        finally:
+            self.saved = True
 
         return
 
