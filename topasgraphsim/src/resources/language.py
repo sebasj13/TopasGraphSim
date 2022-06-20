@@ -121,6 +121,9 @@ class Text:
         self.ptw = {"de": "PTW tbaScan", "en": "PTW tbaScan"}
         self.radcalc = {"de": "RadCalc", "en": "RadCalc"}
         self.recent = {"de": "Zuletzt verwendet", "en": "Recent files"}
+        self.renamet = {"de": "Titel ändern", "en": "Change Title"}
+        self.renamex = {"de": "X-Achse umbenennen", "en": "Rename X-axis"}
+        self.renamey = {"de": "Y-Achse umbenennen", "en": "Rename Y-axis"}
         self.revert = {"de": "Rückgängig", "en": "Undo"}
         self.reset = {"de": "Zurücksetzen", "en": "Reset"}
         self.resetcolors = {"de": "Farbschema zurücksetzen", "en": "Reset color scheme"}

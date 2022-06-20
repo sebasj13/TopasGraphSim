@@ -24,7 +24,7 @@ class GraphNameAndStyle:
         ]
         self.width = 225
         self.height = 110
-        if self.index == "X":
+        if self.index in ["X", "Y", "T"]:
             self.width = 130
 
         self.top.geometry(
@@ -46,7 +46,7 @@ class GraphNameAndStyle:
         )
         self.submitbutton.grid(row=2, column=0, padx=(5, 5), pady=(2, 2))
 
-        if index != "X":
+        if index not in ["X", "Y", "T"]:
             self.enterbox.insert(
                 tk.END, string=self.parent.DoseFigureHandler.plots[index].filename
             )
@@ -70,11 +70,23 @@ class GraphNameAndStyle:
 
             for i, button in enumerate(self.radiobuttons):
                 button.grid(row=i, column=1, padx=(0, 5), sticky=tk.W, pady=(2, 2))
-        else:
+        elif index == "X":
             xlabel = self.parent.DoseFigureHandler.xaxisname
             if xlabel == None:
                 xlabel = self.parent.DoseFigureHandler.xlabel
             self.enterbox.insert(tk.END, string=xlabel)
+
+        elif index == "Y":
+            ylabel = self.parent.DoseFigureHandler.yaxisname
+            if ylabel == None:
+                ylabel = self.parent.DoseFigureHandler.ax.yaxis.get_label().get_text()
+            self.enterbox.insert(tk.END, string=ylabel)
+
+        elif index == "T":
+            title = self.parent.DoseFigureHandler.title
+            if title == None:
+                title = self.parent.DoseFigureHandler.fig._suptitle.get_text()
+            self.enterbox.insert(tk.END, string=title)
 
         self.enterbox.focus()
         self.lift()
@@ -103,6 +115,12 @@ class GraphNameAndStyle:
 
         if self.index == "X":
             self.parent.DoseFigureHandler.xaxisname = self.enterbox.get()
+
+        elif self.index == "Y":
+            self.parent.DoseFigureHandler.yaxisname = self.enterbox.get()
+
+        elif self.index == "T":
+            self.parent.DoseFigureHandler.title = self.enterbox.get()
 
         else:
             self.parent.DoseFigureHandler.plots[

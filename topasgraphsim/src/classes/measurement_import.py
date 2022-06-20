@@ -15,7 +15,7 @@ class Measurement:
         self.filename = self.filepath.split("/")[-1][:-4]
 
         data = np.loadtxt(self.filepath, unpack=True)
-
+        self.unit = ""
         self.axis, self.dose = data[0], data[1]
         self.normpoint = max(self.dose)
 

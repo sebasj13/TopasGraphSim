@@ -33,7 +33,9 @@ class DoseFigureHandler:
         self.errlimmax = 1.1
         self.errorbars = True
         self.caxcorrection = False
+        self.title = None
         self.xaxisname = None
+        self.yaxisname = None
         self.diffplot = False
         self.zoom = self.parent.zoom.get()
         self.half = self.parent.half.get()
@@ -561,9 +563,12 @@ class DoseFigureHandler:
             else:
                 self.ax.set_xlabel(self.xlabel, size=12)
 
-        self.ax.set_ylabel(self.text.normunit[self.lang], size=12)
-        if self.norm == False:
-            self.ax.set_ylabel(self.plots[0].unit, size=12)
+        if self.yaxisname == None:
+            self.ax.set_ylabel(self.text.normunit[self.lang], size=12)
+            if self.norm == False:
+                self.ax.set_ylabel(self.plots[0].unit, size=12)
+        else:
+            self.ax.set_ylabel(self.yaxisname, size=12)
 
         return
 
@@ -893,6 +898,7 @@ class DoseFigureHandler:
             return
         self.set_axis()
         self.set_x_label()
+        self.fig.suptitle(self.title, fontsize=16)
         self.create_plots_from_data()
         if self.calcparams == True:
             try:

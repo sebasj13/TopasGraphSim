@@ -330,12 +330,26 @@ class MainApplication(tk.Frame):
             accelerator="Ctrl + ←",
         )
 
+        self.normmenu.add_command(
+            label=self.text.renamet[self.lang], command=lambda: self.rename("T")
+        )
+        self.normmenu.add_command(
+            label=self.text.renamex[self.lang], command=lambda: self.rename("X")
+        )
+        self.normmenu.add_command(
+            label=self.text.renamey[self.lang], command=lambda: self.rename("Y")
+        )
+
+        self.normmenu.add_separator()
+
         self.normmenu.add_cascade(
             label=Text().markerline[self.lang], menu=self.markerlinemenu
         )
         self.normmenu.add_cascade(
             label=Text().marker[self.lang], menu=self.markersizemenu
         )
+
+        self.normmenu.add_separator()
 
         self.normmenu.add_command(
             label=self.text.resetcolors[self.lang], command=self.reset_colors
@@ -1664,9 +1678,43 @@ class MainApplication(tk.Frame):
                 )
                 self.rename_boxes += [xbox]
 
+            self.canvas.delete("yaxis")
+            if len(self.DoseFigureHandler.plots) >= 1:
+                coords = self.canvas.coords(self.image_on_canvas)
+                ybox = self.canvas.create_rectangle(
+                    (canvdims[0] - imdims[0]) // 2,
+                    imdims[1] * 0.25 + (canvdims[1] - imdims[1]) // 2,
+                    coords[0] * 0.05 + (canvdims[0] - imdims[0]) // 2,
+                    imdims[1] * 0.75 + (canvdims[1] - imdims[1]) // 2,
+                    tags="yaxis",
+                    outline="",
+                    fill="",
+                )
+                self.rename_boxes += [ybox]
+
+            self.canvas.delete("title")
+            if len(self.DoseFigureHandler.plots) >= 1:
+                coords = self.canvas.coords(self.image_on_canvas)
+                title = self.canvas.create_rectangle(
+                    coords[0] - imdims[0] * (0.035 + normdiff / 4),
+                    (canvdims[1] - imdims[1]) // 2,
+                    coords[0] + imdims[0] * (0.065 - normdiff / 4),
+                    imdims[1] * 0.05 + (canvdims[1] - imdims[1]) // 2,
+                    tags="title",
+                    outline="",
+                    fill="",
+                )
+                self.rename_boxes += [title]
+
             self.canvas.move(self.image_on_canvas, deltax, deltay)
 
         self.starttime = time.time()
+
+    def rename(self, axis):
+        dialog = GraphNameAndStyle(self, axis)
+        self.parent.wait_window(dialog.top)
+        self.show_preview()
+        return
 
     def check_hand(self, e):
 
@@ -1726,14 +1774,18 @@ class MainApplication(tk.Frame):
                         and bbox[1] < e.y
                         and bbox[3] > e.y
                     ):
-                        if index == len(self.rename_boxes) - 1:
+                        if index == len(self.rename_boxes) - 3:
                             if self.xlimmenu == False:
                                 self.change_xrange()
                             else:
-                                dialog = GraphNameAndStyle(self, "X")
-                                self.parent.wait_window(dialog.top)
+                                self.rename("X")
+                                return
+                        elif index == len(self.rename_boxes) - 2:
+                            self.rename("Y")
+                            return
 
-                                self.show_preview()
+                        elif index == len(self.rename_boxes) - 1:
+                            self.rename("T")
                             return
                         dialog = GraphNameAndStyle(self, index)
                         self.parent.wait_window(dialog.top)
