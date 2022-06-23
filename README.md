@@ -8,10 +8,44 @@
 
 This GUI can visualize and analyze percentage depth dose (pdd) and dose profiles (dp) simulations from [TOPAS](http://www.topasmc.org/). Depth dose measurements are assumed to be in the z-direction, dose profiles in the x- or y-directions. Data read-in is handled by [topas2numpy](https://github.com/davidchall/topas2numpy).
 
+## Installation
+
+Install using pip:
+
+```console
+$ pip install topasgraphsim     
+```
+     
+Then, start the GUI by running:
+     
+```console
+$ python -m topasgraphsim
+```
+
+Or, if your Python is added to $PATH, simply run:
+
+```console
+$ topasgraphsim
+```
+
+<b>Note:</b> Linux users need to have python3-tk installed. If it isnt installed yet, use:
+
+```console
+$ sudo apt-get install python3-tk
+```
+
+Also, you may need python-dev. Install if for your python version using:
+
+```console
+$ sudo apt-get install python<your main version>-dev
+```
+
+Since all my testing in done on Windows 11, I cannot guarantee this will work on any other plattform. I'm open to suggestions or PRs making the software work better cross-plattfrom!
+
 
 ## Features
 
- - Reproducible graphing and analysis of TOPAS simulation for medical physics
+ - Reproducible graphing and analysis of 1D TOPAS simulation for medical physics
  - Simultaneous plotting and parameter calculation for up to 10 datasets
  - Calculation of the Gamma Index
  - Graph adjustment options
@@ -81,26 +115,6 @@ This GUI can visualize and analyze percentage depth dose (pdd) and dose profiles
 | <kbd>Right Click</kbd> on <kbd>Graph Name</kbd>| Change color of the selected graph |
 
 
-## Installation
-
-Install using pip:
-
-```console
-$ pip install topasgraphsim     
-```
-     
-Then, start the GUI by running:
-     
-```console
-$ python -m topasgraphsim
-```
-
-Or, if your Python is added to $PATH, simply run:
-
-```console
-$ topasgraphsim
-```
-
 ## Parameters
 
 Depending on the imported measurement, the following parameters can be calculated:
@@ -129,11 +143,6 @@ Requires python3, numpy, scipy, matplotlib, Pillow, python-opencv, pynput, reque
 
 The drag-and-drop functionality is powered by [TkinterDnD2](http://tkinterdnd.sourceforge.net) by Michael Lange and [tkdnd](https://github.com/petasis/tkdnd) by [@petassis](https://github.com/petasis).
 
-<b>Note:</b> Linux users need to have python3-tk installed. If it isnt installed yet, use:
-
-```console
-sudo apt-get install python3-tk
-```
 
 ## Contact me!
 
