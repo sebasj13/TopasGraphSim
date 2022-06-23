@@ -56,7 +56,7 @@ class Simulation:
                 else:
                     self.std_dev = self.std_dev / np.sqrt(self.histories)
             else:
-                std_dev = np.array([])
+                self.std_dev = np.array([])
 
         if self.direction != "Z":
             self.axis = np.array(
