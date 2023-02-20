@@ -98,8 +98,6 @@ def topasgraphsim():
         ),
     )
     
-    print(sys.argv)
-
     app = MainApplication(root, file=sys.argv[1] if len(sys.argv) > 1 else None)
 
     try:
