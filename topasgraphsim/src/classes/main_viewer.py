@@ -6,6 +6,7 @@ from pathlib import Path
 from tkinter import filedialog as fd
 from tkinter import simpledialog as sd
 from tkinter.colorchooser import askcolor
+import matplotlib.pyplot as plt
 
 import numpy as np
 import pynput
@@ -23,7 +24,7 @@ from .xrangeslider import XRangeSlider
 
 
 class MainApplication(tk.Frame):
-    def __init__(self, parent):
+    def __init__(self, parent, file=None):
 
         tk.Frame.__init__(self, parent)
         self.starttime = time.time()
@@ -420,8 +421,8 @@ class MainApplication(tk.Frame):
 
         self.gammamenu = tk.Menu(self.menubar, tearoff=False)
         self.gammaacc = tk.StringVar()
-        self.gammadist = 2
-        self.gammathreshold = 2
+        self.gammadist = 1
+        self.gammathreshold = 1
         self.gammaacc.set(f"{self.gammathreshold}%/{self.gammadist}mm")
         self.gammamenu.add_command(
             label=self.text.calculate[self.lang], command=self.gamma
@@ -496,6 +497,9 @@ class MainApplication(tk.Frame):
 
         self.parent.attributes("-fullscreen", self.fullscreen.get())
         self.autostart()
+        
+        if file != None:
+            self.load_arg_file(file)
 
     def about(self):
         show_info(self.parent, self.lang, self.dark.get())
@@ -657,6 +661,39 @@ class MainApplication(tk.Frame):
             if table == True:
                 if self.direction != "Z":
                     self.table.set(0, 1, self.text.fwhm[self.lang], self.fontsize)
+
+        return
+    
+    def load_arg_file(self, filename):
+        try:
+            if filename.endswith(".csv") or filename.endswith(".bin"):
+                self.RecentFileManager.add_file((filename, "simulation"))
+                self.RecentFileManager.add_files_to_menu()
+                self.filenames += [(filename, "simulation")]
+            elif filename.endswith(".3ddose"):
+                self.RecentFileManager.add_file((filename, "egs"))
+                self.RecentFileManager.add_files_to_menu()
+                self.filenames += [(filename, "egs")]
+            elif filename.endswith(".txt"):
+                self.RecentFileManager.add_file((filename, "measurement"))
+                self.RecentFileManager.add_files_to_menu()
+                self.filenames += [(filename, "measurement")]
+            elif filename.endswith(".mcc"):
+                self.RecentFileManager.add_file((filename, "ptw"))
+                self.RecentFileManager.add_files_to_menu()
+                self.filenames += [(filename, "ptw")]
+                    
+            self.show_preview()
+            self.filemenu.entryconfig(0, state=tk.DISABLED)
+            self.filemenu.entryconfig(1, state=tk.DISABLED)
+            self.filemenu.entryconfig(4, state=tk.NORMAL)
+            self.filemenu.entryconfig(5, state=tk.NORMAL)
+            self.saved = False
+        
+        except Exception:
+            tk.messagebox.showerror(
+                "Error", self.text.fileerror[self.lang], parent=self.parent
+            )	
 
         return
 
@@ -1563,38 +1600,42 @@ class MainApplication(tk.Frame):
 
             if time.time() > self.starttime:
                 try:
-                    image_width = self.winfo_width()
-                    image_height = self.winfo_height()
-                    photoimage_width = self.photoimage.width()
-                    photoimage_height = self.photoimage.height()
-                    width_factor = image_width / photoimage_width
-                    height_factor = image_height / photoimage_height
+                    try:
+                        image_width = self.winfo_width()
+                        image_height = self.winfo_height()
+                        photoimage_width = self.photoimage.width()
+                        photoimage_height = self.photoimage.height()
+                        
+                        width_factor = image_width / photoimage_width
+                        height_factor = image_height / photoimage_height
 
-                    if abs(width_factor - 1) <= 0.01 and abs(height_factor - 1) < 0.01:
-                        return
+                        if abs(width_factor - 1) <= 0.01 and abs(height_factor - 1) < 0.01:
+                            return
 
-                    if width_factor <= height_factor:
-                        scale_factor = width_factor
-                    else:
-                        scale_factor = height_factor
+                        if width_factor <= height_factor:
+                            scale_factor = width_factor
+                        else:
+                            scale_factor = height_factor
 
-                    self.resizable_image = ImageTk.getimage(self.photoimage)
-                    self.resized_image = self.resizable_image.resize(
-                        (
-                            int(self.photoimage.width() * scale_factor),
-                            int(self.photoimage.height() * scale_factor),
-                        ),
-                        Image.ANTIALIAS,
-                    )
-                    self.canvas.pack_forget()
-                    newimage = ImageTk.PhotoImage(self.resized_image)
-                    self.canvas.image = newimage
-                    self.canvas.itemconfig(
-                        self.image_on_canvas, image=self.canvas.image
-                    )
-                    self.canvas.pack(side=tk.TOP, fill="both", expand=True)
-                except AttributeError:
-                    pass
+                        self.resizable_image = ImageTk.getimage(self.photoimage)
+                        self.resized_image = self.resizable_image.resize(
+                            (
+                                int(self.photoimage.width() * scale_factor),
+                                int(self.photoimage.height() * scale_factor),
+                            ),
+                            Image.ANTIALIAS,
+                        )
+                        self.canvas.pack_forget()
+                        newimage = ImageTk.PhotoImage(self.resized_image)
+                        self.canvas.image = newimage
+                        self.canvas.itemconfig(
+                            self.image_on_canvas, image=self.canvas.image
+                        )
+                        self.canvas.pack(side=tk.TOP, fill="both", expand=True)
+                    except AttributeError:
+                        pass
+                except ValueError:
+                    return
 
             coords = self.canvas.coords(self.image_on_canvas)
             imdims = [self.canvas.image.width(), self.canvas.image.height()]
