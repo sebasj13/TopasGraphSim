@@ -28,6 +28,12 @@ Or, if your Python is added to $PATH, simply run:
 $ topasgraphsim
 ```
 
+Open compatible files from the command line:
+
+```console
+$ topasgraphsim "path_to_your_file"
+```
+
 <b>Note:</b> Linux users need to have python3-tk installed. If it isnt installed yet, use:
 
 ```console
