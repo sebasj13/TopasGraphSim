@@ -22,7 +22,13 @@ class PTWMeasurement:
 
         self.axis = self.axis.tolist()
         self.filepath = list[2]
-        self.filename = self.filepath.split("/")[-1][:-4] + f" - Scan {index}"
+        
+        if "/" in self.filepath:
+            self.filename = self.filepath.split("/")[-1][:-4] + f" - Scan {index}"
+        else:
+            self.filename = self.filepath.split("\\")[-1][:-4] + f" - Scan {index}"
+        
+
         self.unit = list[3]
 
         self.axis = {True: self.axis[len(self.axis) // 2 :], False: self.axis}

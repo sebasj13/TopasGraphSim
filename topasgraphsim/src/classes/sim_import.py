@@ -12,7 +12,10 @@ class Simulation:
     def __init__(self, filepath):
 
         self.filepath = filepath
-        self.filename = self.filepath.split("/")[-1][:-4]
+        if "/" in self.filepath:
+            self.filename = self.filepath.split("/")[-1][:-4]
+        else:
+            self.filename = self.filepath.split("\\")[-1][:-4]
 
         self.data = topas2numpy.BinnedResult(self.filepath)
         bins = [dim.n_bins for dim in self.data.dimensions]
@@ -24,7 +27,6 @@ class Simulation:
         databin_index = bins.index(max(bins))
         self.direction = axdict[databin_index]
         self.axis = np.array(self.data.dimensions[databin_index].get_bin_centers())
-        # self.axis = self.axis - self.axis[0]#???
         unit = self.data.dimensions[databin_index].unit
         self.axis = [self.convert_SI(x, unit) for x in self.axis]
         if "Mean" in self.data.statistics:

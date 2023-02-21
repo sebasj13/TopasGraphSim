@@ -12,7 +12,11 @@ class Measurement:
 
         self.filepath = filepath
         self.parent = parent
-        self.filename = self.filepath.split("/")[-1][:-4]
+    
+        if "/" in self.filepath:
+            self.filename = self.filepath.split("/")[-1][:-4]
+        else:
+            self.filename = self.filepath.split("\\")[-1][:-4]
 
         data = np.loadtxt(self.filepath, unpack=True)
         self.unit = ""

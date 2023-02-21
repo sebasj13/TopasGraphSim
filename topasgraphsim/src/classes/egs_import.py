@@ -11,7 +11,11 @@ class EGSSimulation:
     def __init__(self, filepath):
 
         self.filepath = filepath
-        self.filename = self.filepath.split("/")[-1][:-7]
+        if "/" in self.filepath:
+            self.filename = self.filepath.split("/")[-1][:-7]
+        else:
+            self.filename = self.filepath.split("\\")[-1][:-7]
+
         # Import
         with open(self.filepath, "r") as f:
             data = [row.split() for row in f]
