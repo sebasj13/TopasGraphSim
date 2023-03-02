@@ -19,12 +19,20 @@ class MenuBar(tk.Menu):
         super().__init__(self.parent)
         
         self.filemenu = tk.Menu(self, tearoff=False)
+        
+        self.languagemenu = tk.Menu(self, tearoff=False)
+        self.languagemenu.add_radiobutton(label=text.english[l], command=self.set_language, variable=self.parent.lang, value="en")
+        self.languagemenu.add_radiobutton(label=text.german[l], command=self.set_language, variable=self.parent.lang, value="de")
+        self.filemenu.add_cascade(label=text.language[l], menu=self.languagemenu)
+        
+        
         self.viewmenu = tk.Menu(self, tearoff=False)
         
         self.tabmenu = tk.Menu(self, tearoff=False)
         self.tabmenu.add_command(label=text.newtab[l], command=lambda: self.parent.frame.tabview.add_tab(), accelerator="Ctrl+N")
         self.parent.bind("<Control-n>", lambda e: self.parent.frame.tabview.add_tab())
-        self.viewmenu.add_cascade(label=text.tabs[l], menu=self.tabmenu)
+        self.tabmenu.add_separator()
+        self.viewmenu.add_cascade(label=text.tabnames[l], menu=self.tabmenu)
         
         self.viewmenu.add_separator()
         self.thememenu = tk.Menu(self, tearoff=False)
@@ -35,12 +43,6 @@ class MenuBar(tk.Menu):
         self.fullscreen = tk.BooleanVar(value=ProfileHandler().get_attribute("fullscreen"))
         self.viewmenu.add_checkbutton(label=text.fullscreen[l], command=self.toggle_fullscreen, variable=self.fullscreen, accelerator="F11")
         self.parent.bind("<F11>", lambda e: self.toggle_fullscreen(e))
-        
-        self.viewmenu.add_separator()
-        self.languagemenu = tk.Menu(self, tearoff=False)
-        self.languagemenu.add_radiobutton(label=text.english[l], command=self.set_language, variable=self.parent.lang, value="en")
-        self.languagemenu.add_radiobutton(label=text.german[l], command=self.set_language, variable=self.parent.lang, value="de")
-        self.viewmenu.add_cascade(label=text.language[l], menu=self.languagemenu)
         
         self.add_cascade(label=text.file[l], menu = self.filemenu)
         self.add_cascade(label=text.view[l], menu=self.viewmenu)

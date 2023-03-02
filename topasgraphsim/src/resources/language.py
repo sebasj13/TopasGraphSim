@@ -32,7 +32,7 @@ class Text:
             "de": "Derzeitige Ansicht schließen",
             "en": "Close current project",
         }
-        self.closetab = {"de": "Reiter schließen", "en": "Close tab"}
+        self.closetab = {"de": "Tab '{}' schließen", "en": "Close tab '{}'"}
         self.closeprompt = {
             "de": "Graph wurde noch nicht gespeichert. Trotzdem Schließen?",
             "en": "Graph was not saved. Close anyways?",
@@ -72,6 +72,7 @@ class Text:
         self.german = {"de": "Deutsch", "en": "German"}
         self.half = {"de": "Halbe Querverteilung anzeigen", "en": "Show half profile"}
         self.graphinfo = {"de": "Werte über Maus anzeigen", "en": "Show value on hover"}
+        self.help = {"de": "Füge einen neuen Tab hinzu, um anzufangen [Ctrl + N]", "en": "Add new tab to begin [Ctrl + N]"}
         self.histnum = {
             "de": "Anzahl der Historien in der Simulation:",
             "en": "Histories in Simulation:",
@@ -112,8 +113,8 @@ class Text:
         self.measurementdata = {"de": "Messdaten", "en": "Measurement Data"}
         self.metric = {"de": "Metrik", "en": "Metric"}
         self.maximum = {"de": "Maximum", "en": "Maximum"}
-        self.newtab = {"de": "Neuer Reiter", "en": "New Tab"}
-        self.newtabname = {"de": "Name des neuen Reiters:", "en": "Name of new tab:"}
+        self.newtab = {"de": "Neuer Tab", "en": "New Tab"}
+        self.newtabname = {"de": "Name des neuen Tabs:", "en": "Name of new tab:"}
         self.normalize = {"de": "Normieren", "en": "Normalize"}
         self.normunit = {"de": "Relative Dosis", "en": "Relative Dose"}
         self.normalization = {"de": "Normierung", "en": "Normalization"}
@@ -146,7 +147,7 @@ class Text:
         self.startdark = {"de": "Im dunklen Modus starten", "en": "Start in dark mode"}
         self.submit = {"de": "Fertig", "en": "Submit"}
         self.symmetry = {"de": "Symmetrie", "en": "Symmetry"}
-        self.tabs = {"de": "Reiter", "en": "Tabs"}
+        self.tabnames = {"de": "Tabs", "en": "Tabs"}
         self.topas = {"de": "TOPAS Simulationsdateien", "en": "TOPAS Simulation Data"}
         self.topasunit = {"de": "Dosis", "en": "Dose"}
         self.themeselection = {"de": "Farbschema", "en": "Color Scheme"}

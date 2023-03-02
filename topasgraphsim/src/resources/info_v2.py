@@ -13,9 +13,7 @@ class show_info(ctk.CTkToplevel):
         self.parent = parent
         super().__init__(self.parent)
         
-        self.title("")
-        self.resizable(False, False)
-                        
+        self.title("TopasGraphSim")
         self.geometry(f"180x240+{parent.winfo_rootx()+parent.winfo_width()//2-90}+{parent.winfo_rooty()+parent.winfo_height()//2-120}")
         self.wm_attributes("-toolwindow", True)
         

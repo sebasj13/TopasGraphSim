@@ -12,10 +12,11 @@ class Tab(ctk.CTkFrame):
     """A tab of the TGS application.
     """
     
-    def __init__(self, parent, name):
+    def __init__(self, parent, name, index, lang):
         
         self.parent = parent
         self.name = name
+        self.lang = lang
         
         super().__init__(self.parent, border_color="black", border_width=1)
         
@@ -26,7 +27,7 @@ class Tab(ctk.CTkFrame):
         self.figure, self.ax = plt.subplots()
         self.canvas = FigureCanvasTkAgg(self.figure, master=self)
         self.navbar = NavigationToolbar2Tk(self.canvas, self, pack_toolbar=False)
-        self.options = Options(self)
+        self.options = Options(self, index, self.lang)
         
         self.canvas.get_tk_widget().grid(row=0, column=0, sticky="nsew")
         self.navbar.grid(row=1, column=0, sticky="nsew")

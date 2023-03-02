@@ -19,7 +19,7 @@ class TopasGraphSim(ctk.CTk):
         self.appname = "TopasGraphSim"
         self.version = "23.0.0"
         self.author = "Sebastian Schäfer"
-        self.title(f"{self.appname} v{self.version} - by {self.author}")
+        self.title(f"{self.appname} - v.{self.version}")
         self.lang = StringVar()
         self.lang.set(ProfileHandler().get_attribute("language"))
         self.iconpath = os.path.join(os.path.dirname(__file__), "src", "resources","icon.ico")
@@ -62,6 +62,7 @@ class TopasGraphSim(ctk.CTk):
         self.bell()
         window = ctk.CTkToplevel(self)
         window.wm_attributes("-toolwindow", True)
+        window.geometry(f"260x60+{self.winfo_rootx()+self.winfo_width()//2-130}+{self.winfo_rooty()+self.winfo_height()//2-30}")
         window.title("")
         
         def move(event):
@@ -86,7 +87,7 @@ class TopasGraphSim(ctk.CTk):
         fontcolors = {"light": "black", "dark":"white"}
         color = colors[ProfileHandler().get_attribute("color_scheme")]
         fontcolor = fontcolors[ProfileHandler().get_attribute("color_scheme")]
-        for tab in self.frame.tabview.tabs:
+        for tab in self.frame.tabview.tabnames:
             for w in self.frame.tabview.tab(tab).winfo_children():
                 if hasattr(w, "figure"):
                     w.figure.patch.set_facecolor(color)
