@@ -32,6 +32,7 @@ class Text:
             "de": "Derzeitige Ansicht schließen",
             "en": "Close current project",
         }
+        self.closetab = {"de": "Reiter schließen", "en": "Close tab"}
         self.closeprompt = {
             "de": "Graph wurde noch nicht gespeichert. Trotzdem Schließen?",
             "en": "Graph was not saved. Close anyways?",
@@ -111,6 +112,8 @@ class Text:
         self.measurementdata = {"de": "Messdaten", "en": "Measurement Data"}
         self.metric = {"de": "Metrik", "en": "Metric"}
         self.maximum = {"de": "Maximum", "en": "Maximum"}
+        self.newtab = {"de": "Neuer Reiter", "en": "New Tab"}
+        self.newtabname = {"de": "Name des neuen Reiters:", "en": "Name of new tab:"}
         self.normalize = {"de": "Normieren", "en": "Normalize"}
         self.normunit = {"de": "Relative Dosis", "en": "Relative Dose"}
         self.normalization = {"de": "Normierung", "en": "Normalization"}
@@ -120,6 +123,7 @@ class Text:
         self.percentage = {"de": "Prozentual", "en": "Percentage"}
         self.pdd = {"de": "TDK", "en": "PDD"}
         self.ptw = {"de": "PTW tbaScan", "en": "PTW tbaScan"}
+        self.restart = {"de": "Neu starten um Änderungen zu übernehmen!", "en":"Restart the application to apply the changes!"}
         self.radcalc = {"de": "RadCalc", "en": "RadCalc"}
         self.recent = {"de": "Zuletzt verwendet", "en": "Recent files"}
         self.renamet = {"de": "Titel ändern", "en": "Change Title"}
@@ -142,8 +146,10 @@ class Text:
         self.startdark = {"de": "Im dunklen Modus starten", "en": "Start in dark mode"}
         self.submit = {"de": "Fertig", "en": "Submit"}
         self.symmetry = {"de": "Symmetrie", "en": "Symmetry"}
+        self.tabs = {"de": "Reiter", "en": "Tabs"}
         self.topas = {"de": "TOPAS Simulationsdateien", "en": "TOPAS Simulation Data"}
         self.topasunit = {"de": "Dosis", "en": "Dose"}
+        self.themeselection = {"de": "Farbschema", "en": "Color Scheme"}
         self.view = {"de": "Ansicht", "en": "View"}
         self.window_title = {
             "de": "TopasMC Simulationsauswertung",
