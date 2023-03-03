@@ -16,8 +16,12 @@ class Options(ctk.CTkFrame):
         
         self.newtabname = ""
         
-        self.change_name_button = ctk.CTkButton(self, text="Edit tab name", command = self.change_name)
-        self.change_name_button.pack(pady=5, padx=5, fill="x")
+        self.change_name_button = ctk.CTkButton(self, text="Edit tab name", command = self.change_name, width=20)
+
+        
+        self.close_tab_button = ctk.CTkButton(self, text="Close tab", command = lambda: self.parent.master.master.remove_tab(self.parent.master.master.tabnames.index(self.parent.name)), fg_color="red")
+        self.close_tab_button.pack(side="bottom", pady=5, padx=5, fill="x")
+        self.change_name_button.pack(side="bottom", pady=5, padx=5)
         
     def change_name(self):
         
@@ -58,6 +62,7 @@ class Options(ctk.CTkFrame):
             self.parent.master.master._segmented_button._buttons_dict.pop(self.parent.master.master.tabnames[self.index])
             self.parent.master.master._segmented_button._buttons_dict[tab] = button
             self.parent.master.master.tabnames[self.index] = tab
+            self.parent.name = tab
             values = self.parent.master.master._segmented_button.cget("values")
             values[self.index] = tab
             self.parent.master.master._segmented_button.configure(values=values)

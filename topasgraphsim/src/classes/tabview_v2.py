@@ -82,6 +82,7 @@ class TabView(ctk.CTkTabview):
     def remove_tab(self, index):
         """Remove a tab from the tabview.
         """
+        
         self.delete(self.tabnames[index])
         self.tabnames.pop(index)
         if len(self.tabnames) == 0:

@@ -13,7 +13,7 @@ class show_info(ctk.CTkToplevel):
         self.parent = parent
         super().__init__(self.parent)
         
-        self.title("TopasGraphSim")
+        self.title("")
         self.geometry(f"180x240+{parent.winfo_rootx()+parent.winfo_width()//2-90}+{parent.winfo_rooty()+parent.winfo_height()//2-120}")
         self.wm_attributes("-toolwindow", True)
         
@@ -21,9 +21,9 @@ class show_info(ctk.CTkToplevel):
             os.path.join(os.path.dirname(os.path.realpath(__file__)), "icon.png")
         )
         ph = ctk.CTkImage(im, size=(64,64))
-        self.imagelabel = ctk.CTkLabel(self, image=ph, text="\n\n\n\n\n\n\nTopasGraphSim")
-        self.authorlabel = ctk.CTkLabel(self, text=self.parent.author)
-        self.versionlabel = ctk.CTkLabel(self, text=f"v. {self.parent.version}")
+        self.imagelabel = ctk.CTkLabel(self, image=ph, text="TopasGraphSim", compound="top", font=("Bahnschrift", 16))
+        self.authorlabel = ctk.CTkLabel(self, text=self.parent.author+"\n\n"+self.parent.affiliation, font=("Bahnschrift", 12))
+        self.versionlabel = ctk.CTkLabel(self, text=f"v. {self.parent.version}", font=("Bahnschrift", 12))
         ghimage_light = Image.open(
             os.path.join(os.path.dirname(os.path.realpath(__file__)), f"gh_light.png")
         )

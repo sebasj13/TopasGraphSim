@@ -19,6 +19,7 @@ class TopasGraphSim(ctk.CTk):
         self.appname = "TopasGraphSim"
         self.version = "23.0.0"
         self.author = "Sebastian Schäfer"
+        self.affiliation = "UK Halle\nMLU Halle-Wittenberg\nUK Hamburg-Eppendorf"
         self.title(f"{self.appname} - v.{self.version}")
         self.lang = StringVar()
         self.lang.set(ProfileHandler().get_attribute("language"))
