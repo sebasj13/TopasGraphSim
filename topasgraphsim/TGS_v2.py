@@ -63,16 +63,16 @@ class TopasGraphSim(ctk.CTk):
         self.bell()
         window = ctk.CTkToplevel(self)
         window.wm_attributes("-toolwindow", True)
-        window.geometry(f"260x60+{self.winfo_rootx()+self.winfo_width()//2-130}+{self.winfo_rooty()+self.winfo_height()//2-30}")
+        window.geometry(f"220x80+{self.winfo_rootx()+self.winfo_width()//2-110}+{self.winfo_rooty()+self.winfo_height()//2-40}")
         window.title("")
         
         def move(event):
             window.lift()
-            window.geometry(f"260x60+{self.winfo_rootx()+self.winfo_width()//2-130}+{self.winfo_rooty()+self.winfo_height()//2-30}")
+            window.geometry(f"220x80+{self.winfo_rootx()+self.winfo_width()//2-110}+{self.winfo_rooty()+self.winfo_height()//2-40}")
         
         def submit():
             window.destroy()
-        label = ctk.CTkLabel(window, text=Text().restart[self.lang.get()])
+        label = ctk.CTkLabel(window, text=Text().restart[self.lang.get()], font=("Bahnschrift", 16))
         okbutton = ctk.CTkButton(window, text="OK", command=submit, width=30)
         label.pack()
         okbutton.pack(padx=5, pady=5)

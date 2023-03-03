@@ -126,7 +126,7 @@ class Text:
         self.percentage = {"de": "Prozentual", "en": "Percentage"}
         self.pdd = {"de": "TDK", "en": "PDD"}
         self.ptw = {"de": "PTW tbaScan", "en": "PTW tbaScan"}
-        self.restart = {"de": "Neu starten um Änderungen zu übernehmen!", "en":"Restart the application to apply the changes!"}
+        self.restart = {"de": "Neu starten, um Änderungen\nzu übernehmen!", "en":"Restart the application to\napply the changes!"}
         self.radcalc = {"de": "RadCalc", "en": "RadCalc"}
         self.recent = {"de": "Zuletzt verwendet", "en": "Recent files"}
         self.renamet = {"de": "Titel ändern", "en": "Change Title"}
@@ -158,7 +158,7 @@ class Text:
             "de": "TopasMC Simulationsauswertung",
             "en": "TopasMC Simulation Analysis",
         }
-        self.unsavedchanges = {"de": "Ungespeicherte Daten.\nTrotzdem schließen?", "en": "Unsaved changes!\nClose anyway?"}
+        self.unsavedchanges = {"de": "Ungespeicherte Daten!\nTab trotzdem schließen?", "en": "Unsaved changes!\nClose tab anyway?"}
         self.zoom = {"de": "Zoomfenster anzeigen", "en": "Show zoom view"}
         self.yes = {"de": "Ja", "en": "Yes"}
         self.no = {"de": "Nein", "en": "No"}

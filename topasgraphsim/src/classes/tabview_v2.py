@@ -43,12 +43,12 @@ class TabView(ctk.CTkTabview):
                 
         window = ctk.CTkToplevel(self.parent.parent)
         window.wm_attributes("-toolwindow", True)
-        window.title(Text().newtabname[self.lang])
+        window.title("")
         
         def move(event):
             window.lift()
             entry.focus()
-            window.geometry(f"180x90+{self.parent.parent.winfo_rootx()+self.parent.parent.winfo_width()//2-90}+{self.parent.parent.winfo_rooty()+self.parent.parent.winfo_height()//2-45}")
+            window.geometry(f"180x120+{self.parent.parent.winfo_rootx()+self.parent.parent.winfo_width()//2-90}+{self.parent.parent.winfo_rooty()+self.parent.parent.winfo_height()//2-60}")
         
         def submit():
             self.newtabname = entry.get()
@@ -71,8 +71,10 @@ class TabView(ctk.CTkTabview):
             if len (self.tabnames) == 1:
                 self.logolabel.place_forget()
         
+        textlabel = ctk.CTkLabel(window, text=Text().newtabname[self.lang], font=("Bahnschrift", 16))
+        textlabel.pack(padx=5, pady=5, fill="x", expand=True)
         entry = ctk.CTkEntry(window, takefocus=True)
-        submitbutton = ctk.CTkButton(window, text="OK", command=submit)
+        submitbutton = ctk.CTkButton(window, text="OK", command=submit, font=("Bahnschrift", 12), width=30)
         entry.pack(fill="x", expand=True, padx=5, pady=5)
         submitbutton.pack(padx=5, pady=5)
         entry.focus()
@@ -94,7 +96,7 @@ class TabView(ctk.CTkTabview):
             
             def move(event):
                 window.lift()
-                window.geometry(f"180x100+{self.parent.parent.winfo_rootx()+self.parent.parent.winfo_width()//2-90}+{self.parent.parent.winfo_rooty()+self.parent.parent.winfo_height()//2-50}")
+                window.geometry(f"200x100+{self.parent.parent.winfo_rootx()+self.parent.parent.winfo_width()//2-100}+{self.parent.parent.winfo_rooty()+self.parent.parent.winfo_height()//2-50}")
             
             def submit():
                 window.destroy()

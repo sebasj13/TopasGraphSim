@@ -31,13 +31,13 @@ class Options(ctk.CTkFrame):
         root = self.parent.master.master.parent        
         window = ctk.CTkToplevel(root)
         window.wm_attributes("-toolwindow", True)
-        window.geometry(f"180x90+{root.winfo_rootx()+root.winfo_width()//2-90}+{root.winfo_rooty()+root.winfo_height()//2-45}")
-        window.title(Text().newtabname[self.lang])
+        window.geometry(f"180x120+{root.winfo_rootx()+root.winfo_width()//2-90}+{root.winfo_rooty()+root.winfo_height()//2-60}")
+        window.title("")
         
         def move(event):
             window.lift()
             entry.focus()
-            window.geometry(f"180x90+{root.winfo_rootx()+root.winfo_width()//2-90}+{root.winfo_rooty()+root.winfo_height()//2-45}")
+            window.geometry(f"180x120+{root.winfo_rootx()+root.winfo_width()//2-90}+{root.winfo_rooty()+root.winfo_height()//2-60}")
         
         def submit():
             self.newtabname = entry.get()
@@ -70,9 +70,11 @@ class Options(ctk.CTkFrame):
             self.parent.master.master._segmented_button.set(tab)
             self.parent.master.master._draw()
             return
-            
+        
+        textlabel = ctk.CTkLabel(window, text=Text().newtabname[self.lang], font=("Bahnschrift", 16))
+        textlabel.pack(padx=5, pady=5, fill="x", expand=True)
         entry = ctk.CTkEntry(window, takefocus=True)
-        submitbutton = ctk.CTkButton(window, text="OK", command=submit)
+        submitbutton = ctk.CTkButton(window, text="OK", command=submit, width=30, font=("Bahnschrift", 12))
         entry.pack(fill="x", expand=True, padx=5, pady=5)
         submitbutton.pack(padx=5, pady=5)
         entry.focus()
