@@ -61,6 +61,7 @@ class TabView(ctk.CTkTabview):
             self.add(tab)
             self.tabnames.append(tab)
             tab = Tab(self.tab(tab), tab, len(self.tabnames)-1, self.lang)
+            setattr(self.tab(tab.name), "tab", tab)
             self.parent.parent.set_theme()
             tab.pack(fill="both", expand=True)
 
@@ -83,8 +84,45 @@ class TabView(ctk.CTkTabview):
         """Remove a tab from the tabview.
         """
         
-        self.delete(self.tabnames[index])
-        self.tabnames.pop(index)
-        if len(self.tabnames) == 0:
-            self.logolabel.place(relx=0.5, rely=0.5, anchor="center")
-        self.parent.parent.menubar.tabmenu.delete(index+2)
+        
+        if self.tab(self.tabnames[index]).tab.saved == False:
+            
+            self.parent.parent.bell()
+            window = ctk.CTkToplevel(self.parent.parent)
+            window.wm_attributes("-toolwindow", True)
+            window.title("")
+            
+            def move(event):
+                window.lift()
+                window.geometry(f"180x100+{self.parent.parent.winfo_rootx()+self.parent.parent.winfo_width()//2-90}+{self.parent.parent.winfo_rooty()+self.parent.parent.winfo_height()//2-50}")
+            
+            def submit():
+                window.destroy()
+                self.delete(self.tabnames[index])
+                self.tabnames.pop(index)
+                if len(self.tabnames) == 0:
+                    self.logolabel.place(relx=0.5, rely=0.5, anchor="center")
+                self.parent.parent.menubar.tabmenu.delete(index+2)
+            
+            def cancel():
+                window.destroy()
+            
+            window.rowconfigure(0, weight=1)
+            window.columnconfigure(0, weight=1)
+            window.columnconfigure(1, weight=1)
+            textlabel = ctk.CTkLabel(window, text=Text().unsavedchanges[self.lang], font=("Bahnschrift", 16))
+            submitbutton = ctk.CTkButton(window, text=Text().yes[self.lang], command=submit, width=40, font=("Bahnschrift", 12))
+            cancelbutton = ctk.CTkButton(window, text=Text().no[self.lang], command=cancel, width = 40, font=("Bahnschrift", 12))
+            textlabel.grid(row=0, columnspan=2, padx=5, pady=5, sticky="nsew")
+            submitbutton.grid(row=1, column=0, padx=5, pady=5, sticky="nsew")
+            cancelbutton.grid(row=1, column=1, padx=5, pady=5, sticky="nsew")
+            window.bind("<Configure>", move)
+            window.bind("<Escape>", lambda event: window.destroy())
+            window.bind("<Return>", lambda event: submit())
+        
+        else:
+            self.delete(self.tabnames[index])
+            self.tabnames.pop(index)
+            if len(self.tabnames) == 0:
+                self.logolabel.place(relx=0.5, rely=0.5, anchor="center")
+            self.parent.parent.menubar.tabmenu.delete(index+2)

@@ -18,6 +18,8 @@ class Tab(ctk.CTkFrame):
         self.name = name
         self.lang = lang
         
+        self.saved = False
+        
         super().__init__(self.parent, border_color="black", border_width=1)
         
         self.columnconfigure(0, weight=1)

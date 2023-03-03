@@ -16,10 +16,10 @@ class Options(ctk.CTkFrame):
         
         self.newtabname = ""
         
-        self.change_name_button = ctk.CTkButton(self, text="Edit tab name", command = self.change_name, width=20)
+        self.change_name_button = ctk.CTkButton(self, text=Text().edittabname[self.lang], command = self.change_name, width=20)
 
         
-        self.close_tab_button = ctk.CTkButton(self, text="Close tab", command = lambda: self.parent.master.master.remove_tab(self.parent.master.master.tabnames.index(self.parent.name)), fg_color="red")
+        self.close_tab_button = ctk.CTkButton(self, text=Text().closetab1[self.lang], command = lambda: self.parent.master.master.remove_tab(self.parent.master.master.tabnames.index(self.parent.name)), fg_color="red")
         self.close_tab_button.pack(side="bottom", pady=5, padx=5, fill="x")
         self.change_name_button.pack(side="bottom", pady=5, padx=5)
         

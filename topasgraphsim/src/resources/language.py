@@ -33,6 +33,7 @@ class Text:
             "en": "Close current project",
         }
         self.closetab = {"de": "Tab '{}' schließen", "en": "Close tab '{}'"}
+        self.closetab1 = {"de": "Tab schließen", "en": "Close tab"}
         self.closeprompt = {
             "de": "Graph wurde noch nicht gespeichert. Trotzdem Schließen?",
             "en": "Graph was not saved. Close anyways?",
@@ -58,6 +59,7 @@ class Text:
         self.egs = {"de": "EGS Simulationsdateien", "en": "EGS Simulation Data"}
         self.egsunit = {"de": "Dosis [Gy/Historie]", "en": "Dose [Gy/History]"}
         self.end = {"de": "Beenden", "en": "Close"}
+        self.edittabname = {"de": "Tab umbenennen", "en": "Rename tab"}
         self.english = {"de": "Englisch", "en": "English"}
         self.error = {"de": "Abweichung", "en": "Difference"}
         self.errorbars = {"de": "Fehlerbalken anzeigen", "en": "Show error bars"}
@@ -156,4 +158,7 @@ class Text:
             "de": "TopasMC Simulationsauswertung",
             "en": "TopasMC Simulation Analysis",
         }
+        self.unsavedchanges = {"de": "Ungespeicherte Daten.\nTrotzdem schließen?", "en": "Unsaved changes!\nClose anyway?"}
         self.zoom = {"de": "Zoomfenster anzeigen", "en": "Show zoom view"}
+        self.yes = {"de": "Ja", "en": "Yes"}
+        self.no = {"de": "Nein", "en": "No"}
