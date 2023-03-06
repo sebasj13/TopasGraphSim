@@ -10,7 +10,7 @@ from src.classes.main_viewer_v2 import MainViewer
 
 
 class Tk(ctk.CTk, dnd.TkinterDnD.DnDWrapper):
-    '''Creates a new instance of a tkinter.Tk() window; all methods of the
+    '''Creates a new instance of a customtkinter.CTk() window; all methods of the
     DnDWrapper class apply to this window and all its descendants.'''
     def __init__(self, *args, **kw):
         ctk.CTk.__init__(self, *args, **kw)
