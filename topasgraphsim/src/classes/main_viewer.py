@@ -746,7 +746,7 @@ class MainApplication(tk.Frame):
 
     def load_dropped_file(self, files):
         """Loads measurement or simulation data to be displayed
-        """
+        """        
 
         for i, character in enumerate(files):
             if character == " ":
@@ -784,7 +784,7 @@ class MainApplication(tk.Frame):
                     extensions += [types[file.split(".")[-1]]]
             except KeyError:
                 files.pop(i)
-
+                
         self.current_file = files
 
         for i, file in enumerate(self.current_file):

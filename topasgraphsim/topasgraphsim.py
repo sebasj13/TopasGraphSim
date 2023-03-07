@@ -13,7 +13,6 @@ import sys
 import tkinter as tk
 import tkinter.ttk as ttk
 
-from .src.classes.install_dnd import InstallDnD
 from .src.classes.main_viewer import MainApplication
 from .src.classes.profile import ProfileHandler
 from .src.classes.update import CheckForUpdates
@@ -21,37 +20,12 @@ from .src.classes.update import CheckForUpdates
 
 def topasgraphsim():
 
-    if ProfileHandler().get_attribute("draganddrop") == True:
-
-        try:
-            import TkinterDnD2 as dnd
-        except ImportError:
-
-            drag = InstallDnD()
-            print(drag.message)
-
-            if drag.install_success == True:
-                python = sys.executable
-                args = "-m topasgraphsim"
-                os.execl(python, python, args)
-                return
-
-        if "TkinterDnD2" in sys.modules.keys():
-            try:
-                root = dnd.TkinterDnD.Tk()
-            except RuntimeError:
-                ProfileHandler().set_attribute("draganddrop", False)
-                python = sys.executable
-                args = args = "-m topasgraphsim"
-                os.execl(python, python, args)
-                return
-        else:
-            ProfileHandler().set_attribute("draganddrop", False)
-            python = sys.executable
-            os.execl(python, python, *sys.argv)
-            return
-    else:
+    try: 
+        import tkinterDnD as dnd
+        root = dnd.Tk()
+    except ImportError:
         root = tk.Tk()
+        ProfileHandler().set_attribute("draganddrop", False)
 
     screen_width = root.winfo_screenwidth()
     screen_height = root.winfo_screenheight()
@@ -99,32 +73,21 @@ def topasgraphsim():
     )
     
     app = MainApplication(root, file=sys.argv[1] if len(sys.argv) > 1 else None)
-
-    try:
-
-        def drop_enter(event):
-            event.widget.focus_force()
-            return event.action
-
-        def drop_position(event):
-            return event.action
-
-        def drop_leave(event):
-            return event.action
-
+    
+    if ProfileHandler().get_attribute("draganddrop"):
         def drop(event):
             if event.data:
                 app.load_dropped_file(event.data)
             return event.action
-
-        root.drop_target_register(dnd.DND_FILES)
-        root.dnd_bind("<<DropEnter>>", drop_enter)
-        root.dnd_bind("<<DropPosition>>", drop_position)
-        root.dnd_bind("<<DropLeave>>", drop_leave)
-        root.dnd_bind("<<Drop>>", drop)
-    except Exception:
-        pass
-
+        
+        def drag_command(event):
+            return (dnd.COPY, "DND_Text", "")
+        
+        app.register_drop_target("*")
+        app.bind("<<Drop>>", drop)
+        app.register_drag_source("*")
+        app.bind("<<DragInitCmd>>", drag_command)
+    
     CheckForUpdates()
 
     root.mainloop()

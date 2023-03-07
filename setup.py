@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="topasgraphsim",
-    version="22.0.1",
+    version="22.1.0",
     author="Sebastian Schäfer",
     author_email="sebastian.schaefer@student.uni-halle.de",
     description="GUI to analyze the results of a Monte-Carlo radiation simulation",
@@ -29,6 +29,7 @@ setuptools.setup(
         "matplotlib",
         "topas2numpy",
         "pymedphys",
+        "python-tkdnd"
     ],
     packages=[
         "topasgraphsim",
