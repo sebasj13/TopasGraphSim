@@ -1,6 +1,10 @@
 import customtkinter as ctk
-
+import tkinterDnD as tkdnd
+import tkinter.ttk as ttk
+import tkinter.filedialog as fd
 from ..resources.language import Text
+
+from ..classes.sim_import import Simulation
 
 class Options(ctk.CTkFrame):
     
@@ -16,12 +20,39 @@ class Options(ctk.CTkFrame):
         
         self.newtabname = ""
         
+        self.load_topas_button = ctk.CTkButton(self, text = Text().loadsim[self.lang], command = self.load_topas, width=20)
+        self.load_topas_button.pack(side="top", pady=5, padx=5, fill="x")
         self.change_name_button = ctk.CTkButton(self, text=Text().edittabname[self.lang], command = self.change_name, width=20)
-
-        
         self.close_tab_button = ctk.CTkButton(self, text=Text().closetab1[self.lang], command = lambda: self.parent.master.master.remove_tab(self.parent.master.master.tabnames.index(self.parent.name)), fg_color="red")
         self.close_tab_button.pack(side="bottom", pady=5, padx=5, fill="x")
         self.change_name_button.pack(side="bottom", pady=5, padx=5)
+        
+        
+        self.label = ttk.Label(self, text="\n\n", width=10, ondrop=self.drop, ondragstart=self.drag, borderwidth=2)
+        self.label.pack(side="top", pady=5, padx=30)
+        self.label.register_drop_target("*")
+        self.label.bind("<<Drop>>", self.drop)
+        self.label.register_drag_source("*")
+        self.label.bind("<<DragInitCmd>>", self.drag)
+
+    def drop(self, event):
+    # This function is called, when stuff is dropped into a widget
+        print(event.data)
+    
+    def drag(self, event):
+        # This function is called at the start of the drag,
+        # it returns the drag type, the content type, and the actual content
+        return (tkdnd.COPY, "DND_Text", "Some nice dropped text!")
+        
+    def load_topas(self):
+        path = fd.askopenfilename(filetypes=[("TOPAS files", "*.csv")])
+        
+        if path != "":
+            sim = Simulation(path)
+            
+            self.parent.ax.plot(sim.axis, sim.dose)
+            self.parent.canvas.draw()
+            
         
     def change_name(self):
         

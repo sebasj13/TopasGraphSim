@@ -67,23 +67,17 @@ class Simulation:
             self.axis = self.axis.tolist()
 
         self.normpoint = max(self.dose)
-        self.axis = {True: self.axis[len(self.axis) // 2 :], False: self.axis}
-        self.dose = {True: self.dose[len(self.dose) // 2 :], False: self.dose}
-        self.std_dev = {
-            True: self.std_dev[len(self.std_dev) // 2 :],
-            False: self.std_dev,
-        }
 
     def params(self):
         if self.direction == "Z":
             return pdd.calculate_parameters(
-                self.axis[False],
-                self.dose[False] / max(self.dose[False]),
-                self.std_dev[False] / max(self.dose[False]),
+                self.axis,
+                self.dose / max(self.dose),
+                self.std_dev / max(self.dose),
             )
         else:
             params = dp.calculate_parameters(
-                self.axis[False], self.dose[False] / max(self.dose[False])
+                self.axis, self.dose / max(self.dose)
             )
             self.cax = params[1]
             return params

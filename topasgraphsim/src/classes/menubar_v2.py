@@ -1,10 +1,8 @@
 import tkinter as tk
-import customtkinter as ctk
 
-from src.classes.profile import ProfileHandler
-from src.resources.language import Text
-from src.resources.info_v2 import show_info
-
+from .profile import ProfileHandler
+from ..resources.language import Text
+from ..resources.info_v2 import show_info
 
 class MenuBar(tk.Menu):
     

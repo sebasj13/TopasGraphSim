@@ -1,28 +1,26 @@
 import os
-from src.classes.install_dnd import InstallDnD
-import TkinterDnD2 as dnd
+import tkinterDnD as tkdnd
 import customtkinter as ctk
 from tkinter import StringVar
-from src.resources.language import Text
-from src.classes.menubar_v2 import MenuBar
-from src.classes.profile import ProfileHandler
-from src.classes.main_viewer_v2 import MainViewer
 
+from .src.resources.language import Text
+from .src.classes.menubar_v2 import MenuBar
+from .src.classes.install_dnd import InstallDnD
+from .src.classes.profile import ProfileHandler
+from .src.classes.main_viewer_v2 import MainViewer
 
-class Tk(ctk.CTk, dnd.TkinterDnD.DnDWrapper):
-    '''Creates a new instance of a customtkinter.CTk() window; all methods of the
-    DnDWrapper class apply to this window and all its descendants.'''
-    def __init__(self, *args, **kw):
-        ctk.CTk.__init__(self, *args, **kw)
-        self.TkdndVersion = dnd.TkinterDnD._require(self)
+class Tk(ctk.CTk, tkdnd.dnd.DnDWrapper):
+    def __init__(self, *args, **kwargs):
+        ctk.CTk.__init__(self, *args, **kwargs)
+        self.TkDnDVersion = tkdnd.tk._init_tkdnd(self)
+
 
 class TopasGraphSim(Tk):
     
     """GUI to visualize and analyse the results of TOPASMC simulations.
     """
     
-    def __init__(self):
-        
+    def __init__(self):      
         
         super().__init__()
         
@@ -63,37 +61,7 @@ class TopasGraphSim(Tk):
             y = screen_height // 2 - height // 2
             self.geometry(f"{width}x{height}+{x-25}+{y}")
             
-        try:
-            def drop_enter(event):
-                event.widget.focus_force()
-                return event.action
-
-            def drop_position(event):
-                return event.action
-
-            def drop_leave(event):
-                return event.action
-
-            def drop(event):
-                if event.data:
-                    current_tab = self.frame.tabview.get()
-                    if current_tab == "":
-                        self.frame.tabview.add_tab()
-                        print(self.frame.tabview.get())
-                        print(event.data)
-                    else:
-                        print(self.frame.tabview.get())
-                        print(event.data)
-                return event.action
-
-            self.drop_target_register(dnd.DND_FILES)
-            self.dnd_bind("<<DropEnter>>", drop_enter)
-            self.dnd_bind("<<DropPosition>>", drop_position)
-            self.dnd_bind("<<DropLeave>>", drop_leave)
-            self.dnd_bind("<<Drop>>", drop)
-        except Exception:
-            pass
-            
+           
         self.protocol("WM_DELETE_WINDOW", self.quit)
                 
         self.mainloop()
