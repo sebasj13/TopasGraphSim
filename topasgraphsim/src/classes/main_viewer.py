@@ -821,7 +821,7 @@ class MainApplication(tk.Frame):
         self.calcparammenu.entryconfig(4, state=tk.DISABLED)
         self.calcparammenu.entryconfig(5, state=tk.DISABLED)
         self.parammenu.entryconfig(0, state=tk.NORMAL)
-        [self.menubar.delete(4) for i in range(3)]
+        [self.menubar.delete(3) for i in range(4)]
         [self.viewmenu.delete(3) for i in range(6)]
         self.menubar.add_command(label=self.text.about[self.lang], command=self.about)
 
