@@ -7,6 +7,7 @@ class Text:
     def __init__(self):
 
         self.absolute = {"de": "Absolut", "en": "Absolute"}
+        self.analysis = {"de": "Analyse", "en": "Analysis"}
         self.about = {"de": "Über TGS", "en": "About"}
         self.add = {"de": "Daten hinzufügen", "en": "Add Data"}
         self.adddescriptors = {
