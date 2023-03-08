@@ -27,23 +27,6 @@ class Options(ctk.CTkFrame):
         self.close_tab_button.pack(side="bottom", pady=5, padx=5, fill="x")
         self.change_name_button.pack(side="bottom", pady=5, padx=5)
         
-        
-        self.label = ttk.Label(self, text="\n\n", width=10, ondrop=self.drop, ondragstart=self.drag, borderwidth=2)
-        self.label.pack(side="top", pady=5, padx=30)
-        self.label.register_drop_target("*")
-        self.label.bind("<<Drop>>", self.drop)
-        self.label.register_drag_source("*")
-        self.label.bind("<<DragInitCmd>>", self.drag)
-
-    def drop(self, event):
-    # This function is called, when stuff is dropped into a widget
-        print(event.data)
-    
-    def drag(self, event):
-        # This function is called at the start of the drag,
-        # it returns the drag type, the content type, and the actual content
-        return (tkdnd.COPY, "DND_Text", "Some nice dropped text!")
-        
     def load_topas(self):
         path = fd.askopenfilename(filetypes=[("TOPAS files", "*.csv")])
         
@@ -53,7 +36,6 @@ class Options(ctk.CTkFrame):
             self.parent.ax.plot(sim.axis, sim.dose)
             self.parent.canvas.draw()
             
-        
     def change_name(self):
         
         
