@@ -21,9 +21,10 @@ class MenuBar(tk.Menu):
         self.languagemenu = tk.Menu(self, tearoff=False)
         self.languagemenu.add_radiobutton(label=text.english[l], command=self.set_language, variable=self.parent.lang, value="en")
         self.languagemenu.add_radiobutton(label=text.german[l], command=self.set_language, variable=self.parent.lang, value="de")
+        self.filemenu.add_command(command=self.load_topas, label=text.loadsim[l], accelerator="Ctrl+O")
+        self.filemenu.add_separator()
         self.filemenu.add_cascade(label=text.language[l], menu=self.languagemenu)
-        
-        
+    
         self.viewmenu = tk.Menu(self, tearoff=False)
         
         self.tabmenu = tk.Menu(self, tearoff=False)
@@ -68,3 +69,10 @@ class MenuBar(tk.Menu):
         else:
             ProfileHandler().set_attribute("fullscreen", self.fullscreen.get())
             self.parent.attributes("-fullscreen", self.fullscreen.get())
+            
+    def load_topas(self):
+        current_tab = self.parent.frame.tabview.get()
+        if current_tab == "":
+            self.parent.frame.tabview.add_tab(name = True)
+            current_tab = self.parent.frame.tabview.get()
+        self.parent.frame.tabview.tab(current_tab).tab.options.load_topas()

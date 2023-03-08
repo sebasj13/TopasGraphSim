@@ -93,14 +93,18 @@ class TopasGraphSim(Tk):
         self.frame.pack_forget()
         ProfileHandler().set_attribute("color_scheme", self.colorscheme.get())
         ctk.set_appearance_mode(ProfileHandler().get_attribute("color_scheme"))
-        colors = {"light": "#D9D9D9", "dark":"#292929"}
+        colors = {"light": "#D9D9D9", "dark":"#1C1C1C"}
+        colors2 = {"light": "#E5E5E5", "dark":"#212121"}
         fontcolors = {"light": "black", "dark":"white"}
         color = colors[ProfileHandler().get_attribute("color_scheme")]
+        color2 = colors2[ProfileHandler().get_attribute("color_scheme")]
         fontcolor = fontcolors[ProfileHandler().get_attribute("color_scheme")]
+        self.frame.configure(bg=color2)
         for tab in self.frame.tabview.tabnames:
             for w in self.frame.tabview.tab(tab).winfo_children():
+                self.frame.tabview.tab(tab).tab.options.configure(bg_color=color2)
                 if hasattr(w, "figure"):
-                    w.figure.patch.set_facecolor(color)
+                    w.figure.patch.set_facecolor(color2)
                     w.ax.set_facecolor(color)
                     w.ax.spines["bottom"].set_color(fontcolor)
                     w.ax.spines["top"].set_color(fontcolor)
@@ -108,10 +112,10 @@ class TopasGraphSim(Tk):
                     w.ax.spines["left"].set_color(fontcolor)
                     w.ax.tick_params(axis="x", colors=fontcolor)
                     w.ax.tick_params(axis="y", colors=fontcolor)
-                    w.plot.navbar.config(background=color)
+                    w.plot.navbar.config(background=color2)
                     w.plot.navbar._message_label.config(background=color)
                     for t in w.plot.navbar.winfo_children():
-                        t.config(background=color)
+                        t.config(background=color2)
                         if t.winfo_class() != "Frame":
                             t.config(foreground=fontcolor)
                     w.plot.navbar.update()
@@ -126,7 +130,7 @@ class TopasGraphSim(Tk):
             ProfileHandler().set_attribute("geometry", self.geometry())
 
         saved = [self.frame.tabview.tab(w).tab.saved for w in self.frame.tabview.tabnames]
-        if saved == [] or False in saved:
+        if saved != [] or False in saved:
 
             self.bell()
             window = ctk.CTkToplevel(self)

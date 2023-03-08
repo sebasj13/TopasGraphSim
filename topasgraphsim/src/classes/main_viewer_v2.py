@@ -1,8 +1,5 @@
-from tkinter.ttk import Frame
+from tkinter import Frame
 from .tabview_v2 import TabView
-
-from ..resources.language import Text
-
 
 class MainViewer(Frame):
     
@@ -12,7 +9,7 @@ class MainViewer(Frame):
     def __init__(self, parent):
         
         self.parent = parent
-        super().__init__(self.parent)
+        super().__init__(self.parent, border=1, bg="#E5E5E5")
         self.tabview = TabView(self)
         self.tabview.pack(fill="both", expand=True)
         self.pack(fill="both", expand=True, padx=5, pady=5)

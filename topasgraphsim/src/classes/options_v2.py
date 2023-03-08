@@ -1,12 +1,10 @@
 import customtkinter as ctk
-import tkinterDnD as tkdnd
-import tkinter.ttk as ttk
 import tkinter.filedialog as fd
 from ..resources.language import Text
 
 from ..classes.sim_import import Simulation
 
-class Options(ctk.CTkFrame):
+class Options(ctk.CTkTabview):
     
     """The options frame of the TGS application.
     """
@@ -16,14 +14,17 @@ class Options(ctk.CTkFrame):
         self.parent = parent      
         self.index = index
         self.lang = lang  
-        super().__init__(self.parent, border_color="black", border_width=1)
+        super().__init__(self.parent, width=200, border_color="black", border_width=1)
         
         self.newtabname = ""
         
-        self.load_topas_button = ctk.CTkButton(self, text = Text().loadsim[self.lang], command = self.load_topas, width=20)
+        self.add("Data")
+        self.add("Legend")
+        
+        self.load_topas_button = ctk.CTkButton(self.tab("Data"), text = Text().loadsim[self.lang], command = self.load_topas, width=20)
         self.load_topas_button.pack(side="top", pady=5, padx=5, fill="x")
-        self.change_name_button = ctk.CTkButton(self, text=Text().edittabname[self.lang], command = self.change_name, width=20)
-        self.close_tab_button = ctk.CTkButton(self, text=Text().closetab1[self.lang], command = lambda: self.parent.master.master.remove_tab(self.parent.master.master.tabnames.index(self.parent.name)), fg_color="red")
+        self.change_name_button = ctk.CTkButton(self.tab("Data"), text=Text().edittabname[self.lang], command = self.change_name, width=20)
+        self.close_tab_button = ctk.CTkButton(self.tab("Data"), text=Text().closetab1[self.lang], command = lambda: self.parent.master.master.remove_tab(self.parent.master.master.tabnames.index(self.parent.name)), fg_color="red")
         self.close_tab_button.pack(side="bottom", pady=5, padx=5, fill="x")
         self.change_name_button.pack(side="bottom", pady=5, padx=5)
         

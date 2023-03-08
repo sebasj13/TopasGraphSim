@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from tkinter.ttk import Frame
+from tkinter import Frame
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.backends._backend_tk import NavigationToolbar2Tk
@@ -32,7 +32,7 @@ class Tab(ctk.CTkFrame):
             def __init__(self, parent):
                 
                 self.parent = parent
-                super().__init__(self.parent)
+                super().__init__(self.parent, bg="red")
                 
                 self.rowconfigure(0, weight=1)
                 self.columnconfigure(0, weight=1)
