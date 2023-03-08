@@ -62,7 +62,7 @@ class TopasGraphSim(Tk):
             self.geometry(f"{width}x{height}+{x-25}+{y}")
             
            
-        self.protocol("WM_DELETE_WINDOW", self.quit)
+        self.protocol("WM_DELETE_WINDOW", self.exit)
                 
         self.mainloop()
         
@@ -118,17 +118,46 @@ class TopasGraphSim(Tk):
                     w.canvas.draw()
         self.frame.pack(fill="both", expand=True)
 
-    def quit(self):
+    def exit(self):
         ProfileHandler().set_attribute("state", self.state())
         if self.state() == "zoomed":
             ProfileHandler().set_attribute("geometry", " ")
         else:
             ProfileHandler().set_attribute("geometry", self.geometry())
+
+        saved = [self.frame.tabview.tab(w).tab.saved for w in self.frame.tabview.tabnames]
+        if saved == [] or False in saved:
+
+            self.bell()
+            window = ctk.CTkToplevel(self)
+            window.wm_attributes("-toolwindow", True)
+            window.title("")
             
-        for i in range(len((self.frame.tabview.tabnames))):
-            self.frame.tabview.set(self.frame.tabview.tabnames[-1])
-            self.frame.tabview.remove_tab(-1)
-        super().quit()
+            def move(event):
+                window.lift()
+                window.geometry(f"200x100+{self.winfo_rootx()+self.winfo_width()//2-100}+{self.winfo_rooty()+self.winfo_height()//2-50}")
+            
+            def submit():
+                window.destroy()
+                self.quit()
+            
+            def cancel():
+                window.destroy()
+            
+            window.rowconfigure(0, weight=1)
+            window.columnconfigure(0, weight=1)
+            window.columnconfigure(1, weight=1)
+            textlabel = ctk.CTkLabel(window, text=Text().unsavedchanges1[self.lang.get()], font=("Bahnschrift", 16))
+            submitbutton = ctk.CTkButton(window, text=Text().yes[self.lang.get()], command=submit, width=40, font=("Bahnschrift", 12))
+            cancelbutton = ctk.CTkButton(window, text=Text().no[self.lang.get()], command=cancel, width = 40, font=("Bahnschrift", 12))
+            textlabel.grid(row=0, columnspan=2, padx=5, pady=5, sticky="nsew")
+            submitbutton.grid(row=1, column=0, padx=5, pady=5, sticky="nsew")
+            cancelbutton.grid(row=1, column=1, padx=5, pady=5, sticky="nsew")
+            window.bind("<Configure>", move)
+            window.bind("<Escape>", lambda event: window.destroy())
+            window.bind("<Return>", lambda event: submit())
+        else:
+            self.quit()
                 
 if __name__ == "__main__":
     TopasGraphSim()
