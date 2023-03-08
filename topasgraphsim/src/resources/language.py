@@ -77,7 +77,7 @@ class Text:
         self.german = {"de": "Deutsch", "en": "German"}
         self.half = {"de": "Halbe Querverteilung anzeigen", "en": "Show half profile"}
         self.graphinfo = {"de": "Werte über Maus anzeigen", "en": "Show value on hover"}
-        self.help = {"de": "Füge einen neuen Tab hinzu, um anzufangen [Ctrl + N]", "en": "Add new tab to begin [Ctrl + N]"}
+        self.help = {"de": "Füge einen neuen Tab hinzu [Ctrl+N],\noder ziehe eine Datei in das Fenster, um anzufangen!", "en": "Add a new tab [Ctrl+N],\nor drag and drop a file to begin!"}
         self.histnum = {
             "de": "Anzahl der Historien in der Simulation:",
             "en": "Histories in Simulation:",
