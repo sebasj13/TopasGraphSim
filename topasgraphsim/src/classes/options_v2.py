@@ -18,8 +18,8 @@ class Options(ctk.CTkTabview):
         
         self.newtabname = ""
         
-        self.add("Data")
-        self.add("Legend")
+        self.add(Text().data[self.lang])
+        self.add(Text().settings[self.lang])
         
         self.load_topas_button = ctk.CTkButton(self.tab("Data"), text = Text().loadsim[self.lang], command = self.load_topas, width=20)
         self.load_topas_button.pack(side="top", pady=5, padx=5, fill="x")

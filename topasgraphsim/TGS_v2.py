@@ -112,13 +112,13 @@ class TopasGraphSim(Tk):
                     w.ax.spines["left"].set_color(fontcolor)
                     w.ax.tick_params(axis="x", colors=fontcolor)
                     w.ax.tick_params(axis="y", colors=fontcolor)
-                    w.plot.navbar.config(background=color2)
-                    w.plot.navbar._message_label.config(background=color)
-                    for t in w.plot.navbar.winfo_children():
+                    w.navbar.config(background=color2)
+                    w.navbar._message_label.config(background=color)
+                    for t in w.navbar.winfo_children():
                         t.config(background=color2)
                         if t.winfo_class() != "Frame":
                             t.config(foreground=fontcolor)
-                    w.plot.navbar.update()
+                    w.navbar.update()
                     w.canvas.draw()
         self.frame.pack(fill="both", expand=True)
 

@@ -27,34 +27,14 @@ class Tab(ctk.CTkFrame):
         self.rowconfigure(0, weight=1)
         self.figure, self.ax = plt.subplots()
         
-        class DnDPlot(Frame):
-            
-            def __init__(self, parent):
-                
-                self.parent = parent
-                super().__init__(self.parent, bg="red")
-                
-                self.rowconfigure(0, weight=1)
-                self.columnconfigure(0, weight=1)
-                
-                self.canvas = FigureCanvasTkAgg(self.parent.figure, master=self)
-                self.navbar = NavigationToolbar2Tk(self.canvas, self, pack_toolbar=False)   
-                
-                self.canvas.get_tk_widget().grid(row=0, column=0, sticky="nsew")
-                self.navbar.grid(row=1, column=0, sticky="nsew")
-                
-                self.register_drop_target("*")
-                self.bind("<<Drop>>", self.drop)
-
-            def drop(self, event):
-                print(self.parent.name)
-                
-        self.plot = DnDPlot(self)
-        self.canvas = self.plot.canvas
-        self.options = Options(self, index, self.lang)
+        self.canvas = FigureCanvasTkAgg(self.figure, master=self)
+        self.navbar = NavigationToolbar2Tk(self.canvas, self, pack_toolbar=False)   
         
-        self.plot.grid(row=0, column=0, sticky="nsew")
-        self.options.grid(row=0, column=1, sticky="nsew")
+        self.canvas.get_tk_widget().grid(row=0, column=0, sticky="nsew")
+        self.navbar.grid(row=1, column=0, sticky="nsew")
+
+        self.options = Options(self, index, self.lang)
+        self.options.grid(row=0, rowspan=2, column=1, sticky="nsew")
         
         self.bind("<Configure>", lambda event: self.config(event))
         

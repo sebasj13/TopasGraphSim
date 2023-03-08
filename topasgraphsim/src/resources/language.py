@@ -52,6 +52,8 @@ class Text:
             "de": "Differenzgraph anzeigen",
             "en": "Show difference plot",
         }
+        self.data = {"de": "Daten", "en": "Data"}
+        
         self.dp = {"de": "Dosisquerverteilungen", "en": "Dose profiles"}
         self.dash = {"de": "Linie", "en": "Line"}
         self.dashdot = {"de": "Punkt-Linie", "en": "Dash-Dot"}
@@ -101,6 +103,7 @@ class Text:
             },
         }
         self.language = {"de": "Sprache", "en": "Language"}
+        self.settings = {"de": "Einstellungen", "en": "Settings"}
         self.languageset = {
             "en": "Das geöffnete Projekt wird geschlossen. Fortfahren?",
             "de": "The current project will be closed. Continue?",
