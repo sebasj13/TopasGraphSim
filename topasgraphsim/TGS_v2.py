@@ -124,6 +124,10 @@ class TopasGraphSim(Tk):
             ProfileHandler().set_attribute("geometry", " ")
         else:
             ProfileHandler().set_attribute("geometry", self.geometry())
+            
+        for i in range(len((self.frame.tabview.tabnames))):
+            self.frame.tabview.set(self.frame.tabview.tabnames[-1])
+            self.frame.tabview.remove_tab(-1)
         super().quit()
                 
 if __name__ == "__main__":

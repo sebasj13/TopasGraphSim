@@ -1,9 +1,10 @@
-import customtkinter as ctk
-
+from tkinter.ttk import Frame
 from .tabview_v2 import TabView
 
+from ..resources.language import Text
 
-class MainViewer(ctk.CTkFrame):
+
+class MainViewer(Frame):
     
     """The main viewer of the TGS application.
     """
@@ -11,7 +12,17 @@ class MainViewer(ctk.CTkFrame):
     def __init__(self, parent):
         
         self.parent = parent
-        super().__init__(self.parent, border_color="black", border_width=1)
+        super().__init__(self.parent)
         self.tabview = TabView(self)
         self.tabview.pack(fill="both", expand=True)
         self.pack(fill="both", expand=True, padx=5, pady=5)
+        
+        self.register_drop_target("*")
+        self.bind("<<Drop>>", self.drop)
+
+    def drop(self, event):
+        if len(self.tabview.tabnames) == 0:
+            self.tabview.add_tab(name = True)
+
+        else:
+            print(self.tabview.tabnames[self.tabview.tabnames.index(self.tabview.get())])

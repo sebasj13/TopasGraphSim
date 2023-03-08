@@ -159,6 +159,7 @@ class Text:
             "en": "TopasMC Simulation Analysis",
         }
         self.unsavedchanges = {"de": "Ungespeicherte Daten!\nTab trotzdem schließen?", "en": "Unsaved changes!\nClose tab anyway?"}
+        self.untitled = {"de": "Unbenannt", "en": "Untitled"}
         self.zoom = {"de": "Zoomfenster anzeigen", "en": "Show zoom view"}
         self.yes = {"de": "Ja", "en": "Yes"}
         self.no = {"de": "Nein", "en": "No"}

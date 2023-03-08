@@ -1,6 +1,5 @@
 import customtkinter as ctk
-import tkinter.ttk as ttk
-import tkinterDnD as tkdnd
+from tkinter.ttk import Frame
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.backends._backend_tk import NavigationToolbar2Tk
@@ -28,7 +27,7 @@ class Tab(ctk.CTkFrame):
         self.rowconfigure(0, weight=1)
         self.figure, self.ax = plt.subplots()
         
-        class DnDPlot(ttk.Frame):
+        class DnDPlot(Frame):
             
             def __init__(self, parent):
                 

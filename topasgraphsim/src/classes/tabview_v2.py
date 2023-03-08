@@ -37,26 +37,12 @@ class TabView(ctk.CTkTabview):
         self.logolabel = ctk.CTkLabel(self, text=Text().help[self.lang], image = self.logo, font=("Bahnschrift", 30), compound="top")
         self.logolabel.place(relx=0.5, rely=0.5, anchor="center")
         
-    def add_tab(self):
+    def add_tab(self, name = None):
         """Add a tab to the tabview.
         """
-                
-        window = ctk.CTkToplevel(self.parent.parent)
-        window.wm_attributes("-toolwindow", True)
-        window.title("")
         
-        def move(event):
-            window.lift()
-            entry.focus()
-            window.geometry(f"180x120+{self.parent.parent.winfo_rootx()+self.parent.parent.winfo_width()//2-90}+{self.parent.parent.winfo_rooty()+self.parent.parent.winfo_height()//2-60}")
-        
-        def submit():
-            self.newtabname = entry.get()
-            window.destroy()
-            if self.newtabname == "" or self.newtabname in self.tabnames:
-                return
-
-            tab = self.newtabname
+        if name != None:
+            tab = Text().untitled[self.lang]
             self.newtabname = ""
             self.add(tab)
             self.tabnames.append(tab)
@@ -70,17 +56,49 @@ class TabView(ctk.CTkTabview):
             
             if len (self.tabnames) == 1:
                 self.logolabel.place_forget()
-        
-        textlabel = ctk.CTkLabel(window, text=Text().newtabname[self.lang], font=("Bahnschrift", 16))
-        textlabel.pack(padx=5, pady=5, fill="x", expand=True)
-        entry = ctk.CTkEntry(window, takefocus=True)
-        submitbutton = ctk.CTkButton(window, text="OK", command=submit, font=("Bahnschrift", 12), width=30)
-        entry.pack(fill="x", expand=True, padx=5, pady=5)
-        submitbutton.pack(padx=5, pady=5)
-        entry.focus()
-        window.bind("<Configure>", move)
-        window.bind("<Escape>", lambda event: window.destroy())
-        window.bind("<Return>", lambda event: submit())
+                
+            print(self.tabnames[0])
+        else:        
+            window = ctk.CTkToplevel(self.parent.parent)
+            window.wm_attributes("-toolwindow", True)
+            window.title("")
+            
+            def move(event):
+                window.lift()
+                entry.focus()
+                window.geometry(f"180x120+{self.parent.parent.winfo_rootx()+self.parent.parent.winfo_width()//2-90}+{self.parent.parent.winfo_rooty()+self.parent.parent.winfo_height()//2-60}")
+            
+            def submit():
+                self.newtabname = entry.get()
+                window.destroy()
+                if self.newtabname == "" or self.newtabname in self.tabnames:
+                    return
+
+                tab = self.newtabname
+                self.newtabname = ""
+                self.add(tab)
+                self.tabnames.append(tab)
+                tab = Tab(self.tab(tab), tab, len(self.tabnames)-1, self.lang)
+                setattr(self.tab(tab.name), "tab", tab)
+                self.parent.parent.set_theme()
+                tab.pack(fill="both", expand=True)
+
+                self.parent.parent.menubar.tabmenu.add_command(label=Text().closetab[self.lang].format(tab.name), command=lambda: self.remove_tab(self.tabnames.index(tab.name)))
+                self.set(self.tabnames[-1])
+                
+                if len (self.tabnames) == 1:
+                    self.logolabel.place_forget()
+            
+            textlabel = ctk.CTkLabel(window, text=Text().newtabname[self.lang], font=("Bahnschrift", 16))
+            textlabel.pack(padx=5, pady=5, fill="x", expand=True)
+            entry = ctk.CTkEntry(window, takefocus=True)
+            submitbutton = ctk.CTkButton(window, text="OK", command=submit, font=("Bahnschrift", 12), width=30)
+            entry.pack(fill="x", expand=True, padx=5, pady=5)
+            submitbutton.pack(padx=5, pady=5)
+            entry.focus()
+            window.bind("<Configure>", move)
+            window.bind("<Escape>", lambda event: window.destroy())
+            window.bind("<Return>", lambda event: submit())
     
     def remove_tab(self, index):
         """Remove a tab from the tabview.
