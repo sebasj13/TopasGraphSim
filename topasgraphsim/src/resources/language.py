@@ -149,6 +149,15 @@ class Text:
             "en": "Scan axis: [X = Yes | Y = No]",
         }
         self.showtable = {"de": "Wertetabelle anzeigen", "en": "Show parameter table"}
+        self.showgrid = {"de": "Raster anzeigen", "en": "Show grid"}
+        self.gridoptions1 = {"de": "Große Gitterlinien", "en": "Large gridlines"}
+        self.gridoptions2 = {"de":"Alle Gitterlinien", "en":"All gridlines"}
+        self.showlegend = {"de": "Legende anzeigen", "en": "Show legend"}
+        self.legendoptions1 = {"de": "Auto", "en": "Auto"}
+        self.legendoptions2 = {"de": "Oben Links", "en": "Top left"}
+        self.legendoptions3 = {"de": "Oben Rechts", "en": "Top right"}
+        self.legendoptions4 = {"de": "Unten Links", "en": "Bottom left"}
+        self.legendoptions5 = {"de": "Unten Rechts", "en": "Bottom right"}
         self.simulation = {"de": "Simulation", "en": "Simulation"}
         self.startdark = {"de": "Im dunklen Modus starten", "en": "Start in dark mode"}
         self.submit = {"de": "Fertig", "en": "Submit"}

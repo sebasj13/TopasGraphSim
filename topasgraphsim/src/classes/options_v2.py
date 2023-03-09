@@ -1,7 +1,6 @@
 import customtkinter as ctk
 import tkinter.filedialog as fd
 from ..resources.language import Text
-#from ...test import ScrollFrame
 from ..classes.scrollframe_v2 import ScrollFrame
 
 from ..classes.sim_import import Simulation
@@ -28,7 +27,10 @@ class Options(ctk.CTkTabview):
         self.tab(Text().data[self.lang]).rowconfigure(1, weight=1)  
         self.tab(Text().data[self.lang]).columnconfigure(0, weight=1)     
         self.tab(Text().data[self.lang]).grid_propagate(False)
-        self.tab(Text().settings[self.lang]).pack_propagate(False)
+        
+        self.tab(Text().settings[self.lang]).columnconfigure(0, weight=1)
+        self.tab(Text().settings[self.lang]).columnconfigure(1, weight=1)
+        self.tab(Text().settings[self.lang]).grid_propagate(False)
         
         self.dataframe1 = ctk.CTkFrame(self.tab(Text().data[self.lang]))
         self.dataframe2 = ctk.CTkFrame(self.tab(Text().data[self.lang]), border_color="black", border_width=1)
@@ -36,8 +38,8 @@ class Options(ctk.CTkTabview):
         self.dataframe1.pack_propagate(False)
         self.dataframe2.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
         self.dataframe2.grid_propagate(False)
-        self.dataframe2.columnconfigure(0, minsize=115)
-        self.dataframe2.columnconfigure(1, minsize=115)
+        self.dataframe2.columnconfigure(0, weight=1)
+        self.dataframe2.columnconfigure(1, weight=1)
         
         self.graphlist = ScrollFrame(self.dataframe1)
         self.graphlist.pack(fill="both", expand=True)
@@ -48,6 +50,98 @@ class Options(ctk.CTkTabview):
         self.close_tab_button.grid(row=1, column=1, sticky="nsew", pady=5, padx=5)
         self.change_name_button.grid(row=1, column=0, sticky="nsew", pady=5, padx=5)
         
+        
+        #######################################################################################################################
+               
+        self.title = ctk.StringVar()
+        self.titleentry = ctk.CTkEntry(self.tab(Text().settings[self.lang]), textvariable=self.title, width=130)
+        self.titlebutton = ctk.CTkButton(self.tab(Text().settings[self.lang]), text=Text().renamet[self.lang], command = self.rename_title)
+        self.titleentry.grid(column=0, row=0, padx=5, pady=5)
+        self.titlebutton.grid(column=1, row=0, padx=5, pady=5)
+        
+        self.xtitle = ctk.StringVar()
+        self.xentry = ctk.CTkEntry(self.tab(Text().settings[self.lang]), textvariable=self.xtitle, width=130)
+        self.xbutton = ctk.CTkButton(self.tab(Text().settings[self.lang]), text=Text().renamex[self.lang], command = self.rename_x)
+        self.xentry.grid(column=0, row=1, padx=5, pady=5)
+        self.xbutton.grid(column=1, row=1, padx=5, pady=5)
+        
+        self.ytitle = ctk.StringVar()
+        self.yentry = ctk.CTkEntry(self.tab(Text().settings[self.lang]), textvariable=self.ytitle, width=130)
+        self.ybutton = ctk.CTkButton(self.tab(Text().settings[self.lang]), text=Text().renamey[self.lang], command = self.rename_y)
+        self.yentry.grid(column=0, row=2, padx=5, pady=5)
+        self.ybutton.grid(column=1, row=2, padx=5, pady=5)
+        
+        self.showgrid = ctk.BooleanVar(value=False)
+        self.gridoptions = ctk.StringVar(value=Text().gridoptions1[self.lang])
+        
+        self.showgrid_button = ctk.CTkCheckBox(self.tab(Text().settings[self.lang]), text=Text().showgrid[self.lang], variable=self.showgrid, onvalue=True, offvalue=False, command = self.toggle_grid_options)
+        self.showgrid_options = ctk.CTkOptionMenu(self.tab(Text().settings[self.lang]), variable=self.gridoptions, values=[Text().gridoptions1[self.lang], Text().gridoptions2[self.lang]], state="disabled", command = lambda x: self.toggle_grid_options())
+        
+        self.showgrid_button.grid(column=0, row=3, padx=5, pady=5, sticky = "w")
+        self.showgrid_options.grid(column=1, row=3, padx=5, pady=5, sticky = "w")   
+        
+        self.showlegend = ctk.BooleanVar()
+        self.legendoptions = ctk.StringVar(value=Text().legendoptions1[self.lang])
+        
+        self.showlegend_button = ctk.CTkCheckBox(self.tab(Text().settings[self.lang]), text=Text().showlegend[self.lang], variable=self.showlegend, onvalue=True, offvalue=False, command = self.toggle_legend_options)
+        self.showlegend_options = ctk.CTkOptionMenu(self.tab(Text().settings[self.lang]), 
+                                                    variable=self.legendoptions, 
+                                                    values=[Text().legendoptions1[self.lang], 
+                                                            Text().legendoptions2[self.lang], 
+                                                            Text().legendoptions3[self.lang],
+                                                            Text().legendoptions4[self.lang],
+                                                            Text().legendoptions5[self.lang]],
+                                                    state="disabled", command = lambda x: self.toggle_legend_options())
+        
+        self.showlegend_button.grid(column=0, row=4, padx=5, pady=5, sticky="w")
+        self.showlegend_options.grid(column=1, row=4, padx=5, pady=5, sticky="w")
+        
+        
+        
+    def rename_title(self):
+        self.parent.ax.set_title(self.title.get())
+        self.parent.update()
+        
+    def rename_x(self):
+        self.parent.ax.set_xlabel(self.xtitle.get())
+        self.parent.update()
+        
+    def rename_y(self):
+        self.parent.ax.set_ylabel(self.ytitle.get())
+        self.parent.update()
+        
+    def toggle_legend_options(self):
+        if self.showlegend.get():
+            self.showlegend_options.configure(state="normal")
+            which = {Text().legendoptions1[self.lang]:"best", 
+                     Text().legendoptions2[self.lang]:"upper left",
+                     Text().legendoptions3[self.lang]:"upper right",
+                     Text().legendoptions4[self.lang]:"lower left",
+                     Text().legendoptions5[self.lang]:"lower right"}.get(self.legendoptions.get())
+            self.parent.ax.legend(loc=which)
+            self.parent.update()
+        else:
+            self.showlegend_options.configure(state="disabled")
+            try: self.parent.ax.get_legend().remove()
+            except AttributeError: pass
+            self.parent.update()
+            
+        
+        
+        
+    def toggle_grid_options(self):
+        if self.showgrid.get():
+            self.showgrid_options.configure(state="normal")
+            which = {Text().gridoptions1[self.lang]:"major", Text().gridoptions2[self.lang]:"both"}.get(self.gridoptions.get())
+            self.parent.ax.grid(False, which = "both", axis="both")
+            self.parent.ax.grid(which="major", visible=True, axis="both", lw=1)
+            if which == "both":
+                self.parent.ax.grid(which="minor", visible=True, axis="both", lw=0.5)
+            self.parent.update()
+        else:
+            self.showgrid_options.configure(state="disabled")
+            self.parent.ax.grid(False, which = "both", axis="both")
+            self.parent.update()
         
     def load_topas(self):
         path = fd.askopenfilename(filetypes=[("TOPAS files", "*.csv")])

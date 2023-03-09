@@ -3,7 +3,7 @@ from tkinter import Frame
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.backends._backend_tk import NavigationToolbar2Tk
-
+from matplotlib.ticker import AutoLocator, AutoMinorLocator
 from .options_v2 import Options
   
        
@@ -23,7 +23,7 @@ class Tab(ctk.CTkFrame):
         super().__init__(self.parent, border_color="black", border_width=1)
         
         self.columnconfigure(0, weight=1)
-        self.columnconfigure(1, minsize=250)
+        self.columnconfigure(1, minsize=300)
         self.rowconfigure(0, weight=1)
         self.figure, self.ax = plt.subplots()
         
@@ -39,7 +39,14 @@ class Tab(ctk.CTkFrame):
         self.bind("<Configure>", lambda event: self.config(event))
         
     def config(self, event=None): 
-        self.figure.subplots_adjust(left=0.08, right=0.92, top=0.92, bottom=0.08, wspace=0.2, hspace=0.2)
+        self.figure.subplots_adjust(left=0.08, right=0.92, top=0.92, bottom=0.09, wspace=0.2, hspace=0.2)
+        
+    def update(self) -> None:
+        self.ax.xaxis.set_major_locator(AutoLocator())
+        self.ax.xaxis.set_minor_locator(AutoMinorLocator())
+        self.ax.yaxis.set_major_locator(AutoLocator())
+        self.ax.yaxis.set_minor_locator(AutoMinorLocator())
+        self.canvas.draw()
             
 
         
