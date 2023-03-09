@@ -36,7 +36,7 @@ class TopasGraphSim(Tk):
         
         self.colorscheme = StringVar(value=ProfileHandler().get_attribute("color_scheme"))
         ctk.set_appearance_mode(self.colorscheme.get())
-        ctk.set_default_color_theme("dark-blue")
+        ctk.set_default_color_theme("blue")
         
         self.menubar = MenuBar(self)
         self.config(menu=self.menubar)
@@ -95,14 +95,19 @@ class TopasGraphSim(Tk):
         ctk.set_appearance_mode(ProfileHandler().get_attribute("color_scheme"))
         colors = {"light": "#D9D9D9", "dark":"#1C1C1C"}
         colors2 = {"light": "#E5E5E5", "dark":"#212121"}
+        colors3 = {"light": "#DBDBDB", "dark":"#2B2B2B"}
         fontcolors = {"light": "black", "dark":"white"}
         color = colors[ProfileHandler().get_attribute("color_scheme")]
         color2 = colors2[ProfileHandler().get_attribute("color_scheme")]
+        color3 = colors3[ProfileHandler().get_attribute("color_scheme")]
         fontcolor = fontcolors[ProfileHandler().get_attribute("color_scheme")]
         self.frame.configure(bg=color2)
         for tab in self.frame.tabview.tabnames:
             for w in self.frame.tabview.tab(tab).winfo_children():
                 self.frame.tabview.tab(tab).tab.options.configure(bg_color=color2)
+                self.frame.tabview.tab(tab).tab.options.graphlist.configure(fg_color=color2)
+                self.frame.tabview.tab(tab).tab.options.graphlist.canvas.configure(bg=color3, highlightbackground=color3)
+                self.frame.tabview.tab(tab).tab.options.graphlist.scrollbar.configure(fg_color=color3)
                 if hasattr(w, "figure"):
                     w.figure.patch.set_facecolor(color2)
                     w.ax.set_facecolor(color)

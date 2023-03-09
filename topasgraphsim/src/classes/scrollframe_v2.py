@@ -4,29 +4,36 @@ import tkinter as tk
 # Adapted from https://gist.github.com/mp035/9f2027c3ef9172264532fcd6262f3b01
 
 
-class ScrollFrame(tk.Frame):
+class ScrollFrame(ctk.CTkFrame):
     def __init__(self, parent):
-        super().__init__(parent)
+        super().__init__(parent, border_color="black", border_width=1)
 
         self.canvas = tk.Canvas(
             self,
-            borderwidth=0,
+            
         )
-        self.viewPort = tk.Frame(
+        self.viewPort = ctk.CTkFrame(
             self.canvas,
+            corner_radius=0
         )
-        self.vsb = tk.Scrollbar(
-            self, orient="vertical", command=self.canvas.yview
-        )
-        self.canvas.configure(yscrollcommand=self.vsb.set)
+        self.scrollbar = ctk.CTkScrollbar(self, orientation="vertical",
+                                    command=self.canvas.yview,
+                                    width=15, corner_radius=10)
+        self.canvas.configure(yscrollcommand=self.scrollbar.set)
 
-        self.vsb.pack(side="right", fill="y")
-        self.canvas.pack(side="left", fill="both", expand=True)
+        self.columnconfigure(0, weight=1)
+        self.columnconfigure(1, minsize=15)
+        self.rowconfigure(0, weight=1)
+        self.canvas.grid(row=0, column=0, sticky="nsew", padx=(2,0), pady=2)
+        self.scrollbar.grid(row=0, column=1, sticky="ns", padx=(0,2), pady=2)
+
+        
         self.canvas_window = self.canvas.create_window(
-            (4, 4),
+            (0, 0),
             window=self.viewPort,
             anchor="nw",
             tags="self.viewPort",
+            
         )
 
         self.viewPort.bind("<Configure>", self.onFrameConfigure)

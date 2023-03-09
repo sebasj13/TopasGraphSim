@@ -1,6 +1,8 @@
 import customtkinter as ctk
 import tkinter.filedialog as fd
 from ..resources.language import Text
+#from ...test import ScrollFrame
+from ..classes.scrollframe_v2 import ScrollFrame
 
 from ..classes.sim_import import Simulation
 
@@ -21,13 +23,31 @@ class Options(ctk.CTkTabview):
         self.add(Text().data[self.lang])
         self.add(Text().settings[self.lang])
         self.add(Text().analysis[self.lang])
+
+        self.tab(Text().data[self.lang]).rowconfigure(0, weight=1)
+        self.tab(Text().data[self.lang]).rowconfigure(1, weight=1)  
+        self.tab(Text().data[self.lang]).columnconfigure(0, weight=1)     
+        self.tab(Text().data[self.lang]).grid_propagate(False)
+        self.tab(Text().settings[self.lang]).pack_propagate(False)
         
-        self.load_topas_button = ctk.CTkButton(self.tab(Text().data[self.lang]), text = Text().loadsim[self.lang], command = self.load_topas, width=20)
-        self.load_topas_button.pack(side="top", pady=5, padx=5, fill="x")
-        self.change_name_button = ctk.CTkButton(self.tab(Text().data[self.lang]), text=Text().edittabname[self.lang], command = self.change_name, width=20)
-        self.close_tab_button = ctk.CTkButton(self.tab(Text().data[self.lang]), text=Text().closetab1[self.lang], command = lambda: self.parent.master.master.remove_tab(self.parent.master.master.tabnames.index(self.parent.name)), fg_color="red")
-        self.close_tab_button.pack(side="bottom", pady=5, padx=5, fill="x")
-        self.change_name_button.pack(side="bottom", pady=5, padx=5)
+        self.dataframe1 = ctk.CTkFrame(self.tab(Text().data[self.lang]))
+        self.dataframe2 = ctk.CTkFrame(self.tab(Text().data[self.lang]), border_color="black", border_width=1)
+        self.dataframe1.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
+        self.dataframe1.pack_propagate(False)
+        self.dataframe2.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
+        self.dataframe2.grid_propagate(False)
+        self.dataframe2.columnconfigure(0, minsize=115)
+        self.dataframe2.columnconfigure(1, minsize=115)
+        
+        self.graphlist = ScrollFrame(self.dataframe1)
+        self.graphlist.pack(fill="both", expand=True)
+        self.load_topas_button = ctk.CTkButton(self.dataframe2, text = Text().loadsim[self.lang], command = self.load_topas, width=20)
+        self.load_topas_button.grid(row=0, column=0, sticky="nsew", pady=5, padx=5)
+        self.change_name_button = ctk.CTkButton(self.dataframe2, text=Text().edittabname[self.lang], command = self.change_name, width=20)
+        self.close_tab_button = ctk.CTkButton(self.dataframe2, text=Text().closetab1[self.lang], command = lambda: self.parent.master.master.remove_tab(self.parent.master.master.tabnames.index(self.parent.name)), width=20, fg_color="red")
+        self.close_tab_button.grid(row=1, column=1, sticky="nsew", pady=5, padx=5)
+        self.change_name_button.grid(row=1, column=0, sticky="nsew", pady=5, padx=5)
+        
         
     def load_topas(self):
         path = fd.askopenfilename(filetypes=[("TOPAS files", "*.csv")])
