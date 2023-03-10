@@ -21,8 +21,10 @@ class Options(ctk.CTkTabview):
         self.newtabname = ""
         
         self.add(Text().data[self.lang])
-        self.add(Text().settings[self.lang])
         self.add(Text().analysis[self.lang])
+        self.add(Text().parameters[self.lang])
+        self.add(Text().settings[self.lang])
+        
 
         self.tab(Text().data[self.lang]).rowconfigure(0, weight=1)
         self.tab(Text().data[self.lang]).rowconfigure(1, weight=1)  
@@ -40,12 +42,22 @@ class Options(ctk.CTkTabview):
         
         self.graphlist = ScrollFrame(self.dataframe1)
         self.graphlist.pack(fill="both", expand=True)
+    
+    
         self.load_topas_button = ctk.CTkButton(self.dataframe2, text = Text().loadsim[self.lang], command = self.load_topas, width=20)
         self.load_topas_button.grid(row=0, column=0, sticky="nsew", pady=5, padx=5)
+
+        self.normalize=ctk.BooleanVar(value=True)
+        self.normalization = ctk.StringVar(value=Text().maximum[self.lang])
+        self.normalize_button = ctk.CTkCheckBox(self.dataframe2, text=Text().normalize[self.lang], variable=self.normalize, command=self.parent.update, font=("Bahnschrift", 12, "bold"))
+        self.normalize_options = ctk.CTkOptionMenu(self.dataframe2, values=[Text().maximum[self.lang], Text().plateau[self.lang], Text().centeraxis[self.lang]], variable=self.normalization, command=self.parent.update)
+        self.normalize_button.grid(row=2, column=0, sticky="nsew", pady=5, padx=5)
+        self.normalize_options.grid(row=2, column=1, sticky="nsew", pady=5, padx=5)
+        
         self.change_name_button = ctk.CTkButton(self.dataframe2, text=Text().edittabname[self.lang], command = self.change_name, width=20)
         self.close_tab_button = ctk.CTkButton(self.dataframe2, text=Text().closetab1[self.lang], command = lambda: self.parent.master.master.remove_tab(self.parent.master.master.tabnames.index(self.parent.name)), width=20, fg_color="red")
-        self.close_tab_button.grid(row=1, column=1, sticky="nsew", pady=5, padx=5)
-        self.change_name_button.grid(row=1, column=0, sticky="nsew", pady=5, padx=5)
+        self.close_tab_button.grid(row=4, column=1, sticky="nsew", pady=5, padx=5)
+        self.change_name_button.grid(row=4, column=0, sticky="nsew", pady=5, padx=5)
         
         #######################################################################################################################
                
@@ -166,7 +178,28 @@ class Options(ctk.CTkTabview):
         self.plotselector2 = ctk.CTkOptionMenu(self.shiftframe, variable=self.current_plot, values=[])
         self.plotselector2.grid(column=1, row=1, padx=5, pady=(3,5), sticky="nsew")
 
-        self.shiftframe.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
+
+        self.doseshift = ctk.DoubleVar(value=0.0)
+        self.axshift = ctk.DoubleVar(value= 0.0)
+        self.dosescale = ctk.DoubleVar(value=1.0)
+        
+        self.doseshiftlabel = ctk.CTkLabel(self.shiftframe, text=Text().doseshift[self.lang], font=("Bahnschrift",12, "bold"))
+        self. axshiftlabel = ctk.CTkLabel(self.shiftframe, text=Text().axshift[self.lang], font=("Bahnschrift",12, "bold"))
+        self.doseshiftentry = ctk.CTkEntry(self.shiftframe, textvariable=self.doseshift, width=130)
+        self. axshiftentry = ctk.CTkEntry(self.shiftframe, textvariable=self.axshift, width=130)
+        self.dosescalelabel = ctk.CTkLabel(self.shiftframe, text=Text().dosescale[self.lang], font=("Bahnschrift",12, "bold"))
+        self.dosescaleentry = ctk.CTkEntry(self.shiftframe, textvariable=self.dosescale, width=130)
+        
+        self.dosescalelabel.grid(column=0, row=2, padx=5, pady=3, sticky="w")
+        self.dosescaleentry.grid(column=1, row=2, padx=5, pady=3, sticky="nsew")
+        self.doseshiftlabel.grid(column=0, row=3, padx=5, pady=3, sticky="w")
+        self.doseshiftentry.grid(column=1, row=3, padx=5, pady=3, sticky="nsew")
+        self.axshiftlabel.grid(column=0, row=4, padx=5, pady=3, sticky="w")
+        self.axshiftentry.grid(column=1, row=4, padx=5, pady=3, sticky="nsew")
+        
+        
+
+        self.shiftframe.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
         
         
         self.gammaframe = ctk.CTkFrame(self.tab(Text().analysis[self.lang]), border_color="black", border_width=1)
@@ -220,7 +253,7 @@ class Options(ctk.CTkTabview):
         self.resultcanvas.grid(column=1, columnspan=4, row=5, padx=5, pady=(3,5), sticky="nsew")
         
         
-        self.gammaframe.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
+        self.gammaframe.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
         
     
     ######################################################################################################################################################################

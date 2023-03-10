@@ -57,6 +57,10 @@ class Text:
         }
         self.data = {"de": "Daten", "en": "Data"}
         
+        self.axshift = {"de": "Achsenoffset", "en": "Axis shift"}
+        self.doseshift = {"de":"Dosisoffset", "en": "Dose offset"}
+        self.dosescale = {"de":"Dosisfaktor", "en": "Dose factor"}
+        
         self.dp = {"de": "Dosisquerverteilungen", "en": "Dose profiles"}
         
         self.linestyle = {"de": "Linienart", "en": "Line type"}
@@ -122,7 +126,7 @@ class Text:
         self.local = {"de": "Lokal", "en": "Local"}
         self.globalg = {"de": "Global", "en": "Global"}
         self.gammatype = {"de": "Gamma-Typ", "en": "Gamma type"}
-        self.loadsim = {"de": "Simulationsergebnis laden", "en": "Load simulation"}
+        self.loadsim = {"de": "Simulation laden", "en": "Load simulation"}
 
         self.marker = {"de": "Symbolgröße", "en": "Marker Size"}
         self.markerline = {"de": "Liniendicke", "en": "Line width"}
