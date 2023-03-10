@@ -19,6 +19,7 @@ class Text:
             "de": "Parameter konnten nicht berechnen werden!",
             "en": "Parameters could not be calculated!",
         }
+        self.criterion = {"de": "Kriterium", "en": "Criterion"}
         self.calcparams = {"de": "Parameter berechnen", "en": "Calculate parameters"}
         self.calculate = {"de": "Berechnen", "en": "Calculate"}
         self.caxcorrection = {
@@ -27,6 +28,7 @@ class Text:
         }
         self.centeraxis = {"de": "Zentralstrahl", "en": "Center axis"}
         self.changefilename = {"de": "Neuer Name:", "en": "New Name:"}
+        self.change = {"de": "Ändern", "en": "Change"}
         self.changeerr = {"de": "Darstellung ändern", "en": "Switch view"}
         self.choosenormalization = {"de": "Normieren auf ...", "en": "Normalize to ..."}
         self.close = {
@@ -56,6 +58,8 @@ class Text:
         self.data = {"de": "Daten", "en": "Data"}
         
         self.dp = {"de": "Dosisquerverteilungen", "en": "Dose profiles"}
+        
+        self.linestyle = {"de": "Linienart", "en": "Line type"}
         self.dash = {"de": "Linie", "en": "Line"}
         self.dashdot = {"de": "Punkt-Linie", "en": "Dash-Dot"}
         self.dot = {"de": "Punkt", "en": "Dot"}
@@ -72,11 +76,12 @@ class Text:
         self.plateau = {"de": "Plateau", "en": "Plateau"}
         self.fullscreen = {"de": "Vollbild", "en": "Fullscreen"}
         self.fwhm = {"de": "HWB", "en": "FWHM"}
-        self.gamma = {"de": "Ändern", "en": "Change"}
+        self.gamma = {"de": "Gammaanalyse", "en": "Gamma analysis"}
         self.gammamenu = {"de": "Gamma-Index", "en": "Gamma-Index"}
         self.german = {"de": "Deutsch", "en": "German"}
         self.half = {"de": "Halbe Querverteilung anzeigen", "en": "Show half profile"}
         self.graphinfo = {"de": "Werte über Maus anzeigen", "en": "Show value on hover"}
+        self.graphsettings = {"de": "Grapheinstellungen", "en": "Graph settings"}
         self.help = {"de": "Füge einen neuen Tab hinzu [Ctrl+N],\noder ziehe eine Datei in das Fenster, um anzufangen!", "en": "Add a new tab [Ctrl+N],\nor drag and drop a file to begin!"}
         self.histnum = {
             "de": "Anzahl der Historien in der Simulation:",
@@ -104,17 +109,23 @@ class Text:
             },
         }
         self.language = {"de": "Sprache", "en": "Language"}
+        self.shift = {"de": "Linie verschieben/skalieren", "en": "Shift/rescale graph"}
         self.settings = {"de": "Einstellungen", "en": "Settings"}
         self.languageset = {
             "en": "Das geöffnete Projekt wird geschlossen. Fortfahren?",
             "de": "The current project will be closed. Continue?",
         }
         self.light = {"de": "Hell", "en": "Light"}
+        self.linethickness = {"de": "Linienstärke", "en": "Line thickness"}
+        self.linecolor = {"de": "Linienfarbe", "en": "Line color"}
         self.loadmeasurement = {"de": "Messung laden", "en": "Load measurement"}
+        self.local = {"de": "Lokal", "en": "Local"}
+        self.globalg = {"de": "Global", "en": "Global"}
+        self.gammatype = {"de": "Gamma-Typ", "en": "Gamma type"}
         self.loadsim = {"de": "Simulationsergebnis laden", "en": "Load simulation"}
 
         self.marker = {"de": "Symbolgröße", "en": "Marker Size"}
-        self.markerline = {"de": "Liniendicke", "en": "Line Width"}
+        self.markerline = {"de": "Liniendicke", "en": "Line width"}
         self.measurement = {"de": "Messung", "en": "Measurement"}
         self.measurementdata = {"de": "Messdaten", "en": "Measurement Data"}
         self.metric = {"de": "Metrik", "en": "Metric"}
@@ -127,15 +138,18 @@ class Text:
         self.options = {"de": "Optionen", "en": "Options"}
         self.orr = {"de": "oder", "en": "or"}
         self.parameters = {"de": "Parameter", "en": "Parameters"}
+        self.plotsettings = {"de": "Linieneinstellungen", "en": "Plot settings"}
         self.percentage = {"de": "Prozentual", "en": "Percentage"}
         self.pdd = {"de": "TDK", "en": "PDD"}
         self.ptw = {"de": "PTW tbaScan", "en": "PTW tbaScan"}
         self.restart = {"de": "Neu starten, um Änderungen\nzu übernehmen!", "en":"Restart the application to\napply the changes!"}
         self.radcalc = {"de": "RadCalc", "en": "RadCalc"}
         self.recent = {"de": "Zuletzt verwendet", "en": "Recent files"}
-        self.renamet = {"de": "Titel ändern", "en": "Change Title"}
+        self.renamet = {"de": "Titel ändern", "en": "Rename title"}
         self.renamex = {"de": "X-Achse umbenennen", "en": "Rename X-axis"}
         self.renamey = {"de": "Y-Achse umbenennen", "en": "Rename Y-axis"}
+        self.renameplot = {"de": "Linie umbenennen", "en": "Rename plot"}
+        self.plotselector = {"de": "Linie auswählen:", "en": "Select plot:"}
         self.revert = {"de": "Rückgängig", "en": "Undo"}
         self.reset = {"de": "Zurücksetzen", "en": "Reset"}
         self.resetcolors = {"de": "Farbschema zurücksetzen", "en": "Reset color scheme"}
@@ -163,6 +177,8 @@ class Text:
         self.submit = {"de": "Fertig", "en": "Submit"}
         self.symmetry = {"de": "Symmetrie", "en": "Symmetry"}
         self.tabnames = {"de": "Tabs", "en": "Tabs"}
+        self.reference = {"de": "Referenzlinie:", "en": "Reference plot:"}
+        self.test = {"de":"Auswertungslinie:", "en":"Evaluation plot:"}
         self.topas = {"de": "TOPAS Simulationsdateien", "en": "TOPAS Simulation Data"}
         self.topasunit = {"de": "Dosis", "en": "Dose"}
         self.themeselection = {"de": "Farbschema", "en": "Color Scheme"}

@@ -1,14 +1,12 @@
 import customtkinter as ctk
-import tkinter as tk
 
 # Adapted from https://gist.github.com/mp035/9f2027c3ef9172264532fcd6262f3b01
-
 
 class ScrollFrame(ctk.CTkFrame):
     def __init__(self, parent):
         super().__init__(parent, border_color="black", border_width=1)
 
-        self.canvas = tk.Canvas(
+        self.canvas = ctk.CTkCanvas(
             self,
             
         )

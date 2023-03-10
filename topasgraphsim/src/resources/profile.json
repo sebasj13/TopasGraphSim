@@ -1,9 +1,9 @@
 {
-    "geometry": "960x540+26+26",
-    "state": "normal",
+    "geometry": " ",
+    "state": "zoomed",
     "draganddrop": true,
-    "color_scheme": "dark",
-    "language": "de",
+    "color_scheme": "light",
+    "language": "en",
     "markersize": 1.0,
     "linewidth": 1.0,
     "normalize": 1,

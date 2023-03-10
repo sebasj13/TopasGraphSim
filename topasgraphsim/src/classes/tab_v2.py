@@ -23,7 +23,7 @@ class Tab(ctk.CTkFrame):
         super().__init__(self.parent, border_color="black", border_width=1)
         
         self.columnconfigure(0, weight=1)
-        self.columnconfigure(1, minsize=300)
+        self.columnconfigure(1, minsize=310)
         self.rowconfigure(0, weight=1)
         self.figure, self.ax = plt.subplots()
         
