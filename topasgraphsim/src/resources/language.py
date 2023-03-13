@@ -57,7 +57,8 @@ class Text:
             "en": "Show difference plot",
         }
         self.data = {"de": "Daten", "en": "Data"}
-        
+        self.gammasettings = {"de": "Gamma-Einstellungen", "en": "Gamma settings"}
+        self.generalsettings = {"de": "Allgemeine Einstellungen", "en": "General settings"}
         self.axshift = {"de": "Achsenoffset", "en": "Axis shift"}
         self.apply = {"de":"Anwenden", "en":"Apply"}
         self.doseshift = {"de":"Dosisoffset", "en": "Dose offset"}
@@ -119,6 +120,7 @@ class Text:
         self.language = {"de": "Sprache", "en": "Language"}
         self.shift = {"de": "Linie verschieben/skalieren", "en": "Shift/rescale graph"}
         self.settings = {"de": "Einstellungen", "en": "Settings"}
+        self.savesettings = {"de": "Einstellungen speichern", "en": "Save settings"}
         self.languageset = {
             "en": "Das geöffnete Projekt wird geschlossen. Fortfahren?",
             "de": "The current project will be closed. Continue?",
@@ -146,7 +148,7 @@ class Text:
         self.options = {"de": "Optionen", "en": "Options"}
         self.orr = {"de": "oder", "en": "or"}
         self.parameters = {"de": "Parameter", "en": "Parameters"}
-        self.plotsettings = {"de": "Linieneinstellungen", "en": "Plot settings"}
+        self.plotsettings = {"de": "Grapheinstellungen", "en": "Plot settings"}
         self.percentage = {"de": "Prozentual", "en": "Percentage"}
         self.pdd = {"de": "TDK", "en": "PDD"}
         self.ptw = {"de": "PTW tbaScan", "en": "PTW tbaScan"}

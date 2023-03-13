@@ -8,7 +8,6 @@ from pymedphys import gamma
 
 from ..resources.language import Text
 from ..classes.scrollframe_v2 import ScrollFrame
-from ..classes.profile import ProfileHandler
 from ..classes.tgs_graph_v2 import TGS_Plot
 from ..classes.sim_import import Simulation
 
@@ -316,17 +315,17 @@ class Options(ctk.CTkTabview):
         plot_labels = [plot.label for plot in self.parent.plots]
         index = plot_labels.index(self.current_plot.get())
         
-        if direction =="up":
-            if index > 0:
+        if direction == "up":
+            if index-1 >= 0:
                 self.parent.plots[index], self.parent.plots[index-1] = self.parent.plots[index-1], self.parent.plots[index]
                 self.plotbuttons[index], self.plotbuttons[index-1] = self.plotbuttons[index-1], self.plotbuttons[index]
                 [button.grid_forget() for button in self.plotbuttons]
                 [button.grid(row=i, padx=5, pady=5, sticky="w") for i, button in enumerate(self.plotbuttons)]
         
         elif direction == "down":
-            if index <= len(self.plotbuttons):
-                self.parent.plots[index], self.parent.plots[index-1] = self.parent.plots[index-1], self.parent.plots[index]
-                self.plotbuttons[index], self.plotbuttons[index-1] = self.plotbuttons[index-1], self.plotbuttons[index]
+            if index+1 < len(self.plotbuttons):
+                self.parent.plots[index], self.parent.plots[index+1] = self.parent.plots[index+1], self.parent.plots[index]
+                self.plotbuttons[index], self.plotbuttons[index+1] = self.plotbuttons[index+1], self.plotbuttons[index]
                 [button.grid_forget() for button in self.plotbuttons]
                 [button.grid(row=i, padx=5, pady=5, sticky="w") for i, button in enumerate(self.plotbuttons)]
                 

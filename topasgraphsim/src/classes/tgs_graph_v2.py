@@ -18,7 +18,7 @@ class TGS_Plot():
         self.linethickness = 1
         self.linestyle = Text().dashdot[self.lang]
         self.linestyledict = {Text().dashdot[self.lang]:"-.", Text().dash[self.lang]:"-", Text().dot[self.lang]:"dotted"}
-        self.linecolor =  ProfileHandler().get_attribute("default_colors")[len(self.options.parent.plots)]
+        self.linecolor =  ProfileHandler().get_attribute("default_colors")[len(self.options.parent.plots)%len(ProfileHandler().get_attribute("default_colors"))]
         
         self.dosefactor = 1
         self.doseshift = 0

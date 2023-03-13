@@ -152,7 +152,7 @@ class TabView(ctk.CTkTabview):
         tabname = Text().settings[self.lang]
         self.add(tabname)
         self.tabnames.append(tabname)
-        tab = Settings(self.tab(tabname), tabname, self.lang)
+        tab = Settings(self.tab(tabname), tabname, len(self.tabnames)-1, self.lang)
         setattr(self.tab(tabname), "tab", tab)
         self.parent.parent.set_theme()
         tab.pack(fill="both", expand=True)

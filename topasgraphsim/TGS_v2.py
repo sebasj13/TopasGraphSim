@@ -66,7 +66,10 @@ class TopasGraphSim(Tk):
         self.mainloop()
         
     def settings(self):
-        self.frame.tabview.add_settings()
+        try:
+            self.frame.tabview.add_settings()
+        except ValueError:
+            self.frame.tabview.set(Text().settings[self.lang.get()])
         
     def set_language(self):
         ProfileHandler().set_attribute("language", self.lang.get())

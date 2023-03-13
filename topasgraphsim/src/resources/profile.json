@@ -1,13 +1,13 @@
 {
-    "geometry": "960x540+130+130",
+    "geometry": "960x540+437+283",
     "state": "normal",
     "draganddrop": true,
     "color_scheme": "light",
-    "language": "de",
+    "language": "en",
     "markersize": 1.0,
     "linewidth": 1.0,
     "normalize": 1,
-    "zoom": 0,
+    "zoom": false,
     "fullscreen": false,
     "halfview": false,
     "default_colors": [
@@ -58,5 +58,6 @@
         "o--",
         "o--"
     ],
-    "recent_files": []
+    "recent_files": [],
+    "zoomed": true
 }
