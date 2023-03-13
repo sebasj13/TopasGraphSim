@@ -65,6 +65,9 @@ class TopasGraphSim(Tk):
                 
         self.mainloop()
         
+    def settings(self):
+        self.frame.tabview.add_settings()
+        
     def set_language(self):
         ProfileHandler().set_attribute("language", self.lang.get())
         
@@ -102,34 +105,48 @@ class TopasGraphSim(Tk):
         fontcolor = fontcolors[ProfileHandler().get_attribute("color_scheme")]
         self.frame.configure(bg=color2)
         for tab in self.frame.tabview.tabnames:
-            for w in self.frame.tabview.tab(tab).winfo_children():
+            if tab != Text().settings[self.lang.get()]:
                 self.frame.tabview.tab(tab).tab.options.configure(bg_color=color2)
                 self.frame.tabview.tab(tab).tab.options.graphlist.configure(fg_color=color2)
                 self.frame.tabview.tab(tab).tab.options.graphlist.canvas.configure(bg=color3, highlightbackground=color3)
                 self.frame.tabview.tab(tab).tab.options.graphlist.scrollbar.configure(fg_color=color3)
-                if hasattr(w, "figure"):
-                    if w.options.showlegend.get():
-                        for text in w.ax.get_legend().get_texts():
-                            text.set_color(fontcolor)
-                    w.ax.set_title(w.ax.get_title(), color=fontcolor)
-                    w.ax.set_xlabel(w.ax.get_xlabel(), color=fontcolor)
-                    w.ax.set_ylabel(w.ax.get_ylabel(), color=fontcolor)
-                    w.figure.patch.set_facecolor(color2)
-                    w.ax.set_facecolor(color)
-                    w.ax.spines["bottom"].set_color(fontcolor)
-                    w.ax.spines["top"].set_color(fontcolor)
-                    w.ax.spines["right"].set_color(fontcolor)
-                    w.ax.spines["left"].set_color(fontcolor)
-                    w.ax.tick_params(axis="x", colors=fontcolor)
-                    w.ax.tick_params(axis="y", colors=fontcolor)
-                    w.navbar.config(background=color2)
-                    w.navbar._message_label.config(background=color)
-                    for t in w.navbar.winfo_children():
-                        t.config(background=color2)
-                        if t.winfo_class() != "Frame":
-                            t.config(foreground=fontcolor)
-                    w.navbar.update()
-                    w.canvas.draw()
+                for w in self.frame.tabview.tab(tab).winfo_children():
+                    if hasattr(w, "figure"):
+                        if w.options.showlegend.get():
+                            for text in w.ax.get_legend().get_texts():
+                                text.set_color(fontcolor)
+                        w.ax.set_title(w.ax.get_title(), color=fontcolor)
+                        w.ax.set_xlabel(w.ax.get_xlabel(), color=fontcolor)
+                        w.ax.set_ylabel(w.ax.get_ylabel(), color=fontcolor)
+                        w.figure.patch.set_facecolor(color2)
+                for w in self.frame.tabview.tab(tab).winfo_children():
+                    self.frame.tabview.tab(tab).tab.options.configure(bg_color=color2)
+                    self.frame.tabview.tab(tab).tab.options.graphlist.configure(fg_color=color2)
+                    self.frame.tabview.tab(tab).tab.options.graphlist.canvas.configure(bg=color3, highlightbackground=color3)
+                    self.frame.tabview.tab(tab).tab.options.graphlist.scrollbar.configure(fg_color=color3)
+                    if hasattr(w, "figure"):
+                        if w.options.showlegend.get():
+                            for text in w.ax.get_legend().get_texts():
+                                text.set_color(fontcolor)
+                        w.ax.set_title(w.ax.get_title(), color=fontcolor)
+                        w.ax.set_xlabel(w.ax.get_xlabel(), color=fontcolor)
+                        w.ax.set_ylabel(w.ax.get_ylabel(), color=fontcolor)
+                        w.figure.patch.set_facecolor(color2)
+                        w.ax.set_facecolor(color)
+                        w.ax.spines["bottom"].set_color(fontcolor)
+                        w.ax.spines["top"].set_color(fontcolor)
+                        w.ax.spines["right"].set_color(fontcolor)
+                        w.ax.spines["left"].set_color(fontcolor)
+                        w.ax.tick_params(axis="x", colors=fontcolor)
+                        w.ax.tick_params(axis="y", colors=fontcolor)
+                        w.navbar.config(background=color2)
+                        w.navbar._message_label.config(background=color)
+                        for t in w.navbar.winfo_children():
+                            t.config(background=color2)
+                            if t.winfo_class() != "Frame":
+                                t.config(foreground=fontcolor)
+                        w.navbar.update()
+                        w.canvas.draw()
         self.frame.pack(fill="both", expand=True)
 
     def exit(self):

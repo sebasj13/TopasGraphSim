@@ -17,6 +17,7 @@ class MainViewer(Frame):
         self.register_drop_target("*")
         self.bind("<<Drop>>", self.drop)
 
+
     def drop(self, event):
         if len(self.tabview.tabnames) == 0:
             self.tabview.add_tab(name = True)

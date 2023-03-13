@@ -3,6 +3,7 @@ from PIL import Image
 import customtkinter as ctk
 
 from .tab_v2 import Tab
+from .settings_v2 import Settings
 from ..resources.language import Text
 
 
@@ -58,7 +59,6 @@ class TabView(ctk.CTkTabview):
             if len (self.tabnames) == 1:
                 self.logolabel.place_forget()
                 
-            print(self.tabnames[0])
         else:        
             window = ctk.CTkToplevel(self.parent.parent)
             window.wm_attributes("-toolwindow", True)
@@ -105,7 +105,7 @@ class TabView(ctk.CTkTabview):
         """Remove a tab from the tabview.
         """
         
-        if self.tab(self.tabnames[index]).tab.options.saved == False:
+        if self.tab(self.tabnames[index]).tab.saved == False:
             
             self.parent.parent.bell()
             window = ctk.CTkToplevel(self.parent.parent)
@@ -146,3 +146,19 @@ class TabView(ctk.CTkTabview):
             if len(self.tabnames) == 0:
                 self.logolabel.place(relx=0.5, rely=0.5, anchor="center")
             self.parent.parent.menubar.tabmenu.delete(index+2)
+            
+    def add_settings(self):
+        
+        tabname = Text().settings[self.lang]
+        self.add(tabname)
+        self.tabnames.append(tabname)
+        tab = Settings(self.tab(tabname), tabname, self.lang)
+        setattr(self.tab(tabname), "tab", tab)
+        self.parent.parent.set_theme()
+        tab.pack(fill="both", expand=True)
+
+        self.parent.parent.menubar.tabmenu.add_command(label=Text().closetab[self.lang].format(tab.name), command=lambda: self.remove_tab(self.tabnames.index(tab.name)))
+        self.set(self.tabnames[-1])
+        
+        if len (self.tabnames) == 1:
+            self.logolabel.place_forget()

@@ -24,6 +24,7 @@ class MenuBar(tk.Menu):
         self.filemenu.add_command(command=self.load_topas, label=text.loadsim[l], accelerator="Ctrl+O")
         self.filemenu.add_separator()
         self.filemenu.add_cascade(label=text.language[l], menu=self.languagemenu)
+        self.filemenu.add_command(label=text.settings[l], command=self.parent.settings)
         self.filemenu.add_command(label = text.end[l], command=self.parent.exit)
     
         self.viewmenu = tk.Menu(self, tearoff=False)

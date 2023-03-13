@@ -22,7 +22,7 @@ class Options(ctk.CTkTabview):
         self.parent = parent      
         self.index = index
         self.lang = lang
-        self.saved = True
+        self.parent.saved = True
         super().__init__(self.parent, width=200, border_color="black", border_width=1)
         
         self.newtabname = ""
@@ -302,7 +302,7 @@ class Options(ctk.CTkTabview):
     def save(self):
         fname = fd.asksaveasfilename(title = Text().saveplottitle[self.lang], filetypes = (("PNG","*.png"),(Text().allfiles[self.lang],"*.*")))
         self.parent.figure.savefig(fname=fname, dpi=300,)
-        self.saved = True
+        self.parent.saved = True
     
     def on_enter(self, widget, command, event=None):
         widget.bind("<Return>", command)
@@ -312,7 +312,7 @@ class Options(ctk.CTkTabview):
         
                 
     def change_order(self, direction):
-        self.saved = False
+        self.parent.saved = False
         plot_labels = [plot.label for plot in self.parent.plots]
         index = plot_labels.index(self.current_plot.get())
         
@@ -353,7 +353,7 @@ class Options(ctk.CTkTabview):
                         pass
         
     def remove_plot(self):
-        self.saved = False
+        self.parent.saved = False
         plot_labels = [plot.label for plot in self.parent.plots]
         index = plot_labels.index(self.current_plot.get())
         current_name = self.current_plot.get()
@@ -381,7 +381,7 @@ class Options(ctk.CTkTabview):
         
         
     def change_normalization(self, event=None):
-        self.saved = False
+        self.parent.saved = False
         for plot in self.parent.plots:
             plot.normalize = self.normalize.get()
             plot.normalization = self.normalization.get()
@@ -429,7 +429,7 @@ class Options(ctk.CTkTabview):
         
 
     def choose_linecolor(self):
-        self.saved = False
+        self.parent.saved = False
         color = colorchooser.askcolor()
         self.plotcolor.set(color[1])
         self.linecolorbutton.configure(fg_color = color[1])
@@ -443,7 +443,7 @@ class Options(ctk.CTkTabview):
         self.parent.canvas.draw()
         
     def rename_plot(self, event=None):
-        self.saved = False
+        self.parent.saved = False
         new_name = self.plottitleentry.get()
         plot_labels = [plot.label for plot in self.parent.plots]
         index = plot_labels.index(self.current_plot.get())
@@ -462,7 +462,7 @@ class Options(ctk.CTkTabview):
         self.parent.update()    
         
     def change_linestyle(self, value):
-        self.saved = False
+        self.parent.saved = False
         plot_labels = [plot.label for plot in self.parent.plots]
         index = plot_labels.index(self.current_plot.get())
         self.parent.plots[index].linestyle = value
@@ -471,7 +471,7 @@ class Options(ctk.CTkTabview):
         self.parent.canvas.draw()
         
     def change_linethickness(self, value):
-        self.saved = False
+        self.parent.saved = False
         plot_labels = [plot.label for plot in self.parent.plots]
         index = plot_labels.index(self.current_plot.get())
         self.parent.ax.lines[index].set_linewidth(value)
@@ -480,17 +480,17 @@ class Options(ctk.CTkTabview):
         self.parent.canvas.draw()
         
     def rename_title(self, event=None):
-        self.saved = False
+        self.parent.saved = False
         self.parent.ax.set_title(self.title.get())
         self.parent.canvas.draw()
         
     def rename_x(self, event=None):
-        self.saved = False
+        self.parent.saved = False
         self.parent.ax.set_xlabel(self.xtitle.get())
         self.parent.canvas.draw()
         
     def rename_y(self, event=None):
-        self.saved = False
+        self.parent.saved = False
         self.parent.ax.set_ylabel(self.ytitle.get())
         self.parent.canvas.draw()
         
@@ -548,7 +548,7 @@ class Options(ctk.CTkTabview):
             if len(self.parent.plots) == 1:
                 self.enable_all_buttons()
                 
-            self.saved = False
+            self.parent.saved = False
             self.parent.update()
             
     def change_current_plot(self, event=None):
