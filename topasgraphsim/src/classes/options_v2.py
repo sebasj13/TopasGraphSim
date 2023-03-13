@@ -1,9 +1,15 @@
 import customtkinter as ctk
+import numpy as np
 import tkinter.filedialog as fd
+from tkinter import colorchooser
+from PIL import Image
+import os
+from pymedphys import gamma
+
 from ..resources.language import Text
 from ..classes.scrollframe_v2 import ScrollFrame
-from tkinter import colorchooser
-
+from ..classes.profile import ProfileHandler
+from ..classes.tgs_graph_v2 import TGS_Plot
 from ..classes.sim_import import Simulation
 
 class Options(ctk.CTkTabview):
@@ -15,10 +21,13 @@ class Options(ctk.CTkTabview):
         
         self.parent = parent      
         self.index = index
-        self.lang = lang  
+        self.lang = lang
+        self.saved = True
         super().__init__(self.parent, width=200, border_color="black", border_width=1)
         
         self.newtabname = ""
+        
+        self.plotbuttons = []
         
         self.add(Text().data[self.lang])
         self.add(Text().analysis[self.lang])
@@ -34,23 +43,35 @@ class Options(ctk.CTkTabview):
         self.dataframe1 = ctk.CTkFrame(self.tab(Text().data[self.lang]))
         self.dataframe2 = ctk.CTkFrame(self.tab(Text().data[self.lang]), border_color="black", border_width=1)
         self.dataframe1.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
-        self.dataframe1.pack_propagate(False)
+        self.dataframe1.grid_propagate(False)
+        self.dataframe1.rowconfigure(1, weight=1)
+        self.dataframe1.rowconfigure(3, weight=1)
+        self.dataframe1.columnconfigure(0, weight=1)
         self.dataframe2.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
         self.dataframe2.grid_propagate(False)
-        self.dataframe2.columnconfigure(0, weight=1)
+        self.dataframe2.columnconfigure(0, weight=1, minsize=144)
         self.dataframe2.columnconfigure(1, weight=1)
-        
+                
         self.graphlist = ScrollFrame(self.dataframe1)
-        self.graphlist.pack(fill="both", expand=True)
-    
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)),"..","resources")
+        self.uparrowimage = ctk.CTkImage(Image.open(os.path.join(path,"uparrow.png")), size=(20,20))
+        self.downarrowimage = ctk.CTkImage(Image.open(os.path.join(path,"downarrow.png")), size=(20,20))
+        self.uparrow = ctk.CTkButton(self.dataframe1, text="",image=self.uparrowimage, width=20, command = lambda: self.change_order("up"))
+        self.downarrow = ctk.CTkButton(self.dataframe1, text="",image=self.downarrowimage, width=20, command = lambda: self.change_order("down"))
+        self.closeimage = ctk.CTkImage(Image.open(os.path.join(path,"close.png")), size=(20,20))
+        self.closebutton = ctk.CTkButton(self.dataframe1, text="", image = self.closeimage, width=20, fg_color="red", command = self.remove_plot)
+        self.uparrow.grid(column=1, row=0, sticky="nsew", padx=(0,5), pady=5)
+        self.downarrow.grid(column=1, row=2, sticky="nsew", padx=(0,5), pady=5)
+        self.closebutton.grid(column=1, row=4, sticky="nsew", padx=(0,5), pady=5)
+        self.graphlist.grid(column=0, row=0, rowspan=5, sticky="nsew", padx=5, pady=5)
     
         self.load_topas_button = ctk.CTkButton(self.dataframe2, text = Text().loadsim[self.lang], command = self.load_topas, width=20)
         self.load_topas_button.grid(row=0, column=0, sticky="nsew", pady=5, padx=5)
 
-        self.normalize=ctk.BooleanVar(value=True)
+        self.normalize=ctk.BooleanVar(value=False)
         self.normalization = ctk.StringVar(value=Text().maximum[self.lang])
-        self.normalize_button = ctk.CTkCheckBox(self.dataframe2, text=Text().normalize[self.lang], variable=self.normalize, command=self.parent.update, font=("Bahnschrift", 12, "bold"))
-        self.normalize_options = ctk.CTkOptionMenu(self.dataframe2, values=[Text().maximum[self.lang], Text().plateau[self.lang], Text().centeraxis[self.lang]], variable=self.normalization, command=self.parent.update)
+        self.normalize_button = ctk.CTkCheckBox(self.dataframe2, text=Text().normalize[self.lang], variable=self.normalize, command=self.change_normalization, font=("Bahnschrift", 12, "bold"))
+        self.normalize_options = ctk.CTkOptionMenu(self.dataframe2, values=[Text().maximum[self.lang], Text().plateau[self.lang], Text().centeraxis[self.lang]], variable=self.normalization, command=self.change_normalization)
         self.normalize_button.grid(row=2, column=0, sticky="nsew", pady=5, padx=5)
         self.normalize_options.grid(row=2, column=1, sticky="nsew", pady=5, padx=5)
         
@@ -58,6 +79,7 @@ class Options(ctk.CTkTabview):
         self.close_tab_button = ctk.CTkButton(self.dataframe2, text=Text().closetab1[self.lang], command = lambda: self.parent.master.master.remove_tab(self.parent.master.master.tabnames.index(self.parent.name)), width=20, fg_color="red")
         self.close_tab_button.grid(row=4, column=1, sticky="nsew", pady=5, padx=5)
         self.change_name_button.grid(row=4, column=0, sticky="nsew", pady=5, padx=5)
+        
         
         #######################################################################################################################
                
@@ -78,18 +100,24 @@ class Options(ctk.CTkTabview):
         
         self.title = ctk.StringVar()
         self.titleentry = ctk.CTkEntry(self.graphsettingsframe, textvariable=self.title, width=130)
+        self.titleentry.bind("<Enter>", lambda x : self.on_enter(self.titleentry, self.rename_title, x))
+        self.titleentry.bind("<Leave>", lambda x : self.on_leave(self.titleentry, x))
         self.titlebutton = ctk.CTkButton(self.graphsettingsframe, text=Text().renamet[self.lang], command = self.rename_title)
         self.titleentry.grid(column=0, row=1, padx=5, pady=3)
         self.titlebutton.grid(column=1, row=1, padx=5, pady=3)
         
         self.xtitle = ctk.StringVar()
         self.xentry = ctk.CTkEntry(self.graphsettingsframe, textvariable=self.xtitle, width=130)
+        self.xentry.bind("<Enter>", lambda x : self.on_enter(self.xentry, self.rename_x, x))
+        self.xentry.bind("<Leave>", lambda x : self.on_leave(self.xentry, x))
         self.xbutton = ctk.CTkButton(self.graphsettingsframe, text=Text().renamex[self.lang], command = self.rename_x)
         self.xentry.grid(column=0, row=2, padx=5, pady=3)
         self.xbutton.grid(column=1, row=2, padx=5, pady=3)
         
         self.ytitle = ctk.StringVar()
         self.yentry = ctk.CTkEntry(self.graphsettingsframe, textvariable=self.ytitle, width=130)
+        self.yentry.bind("<Enter>", lambda x : self.on_enter(self.yentry, self.rename_y, x))
+        self.yentry.bind("<Leave>", lambda x : self.on_leave(self.yentry, x))
         self.ybutton = ctk.CTkButton(self.graphsettingsframe, text=Text().renamey[self.lang], command = self.rename_y)
         self.yentry.grid(column=0, row=3, padx=5, pady=3)
         self.ybutton.grid(column=1, row=3, padx=5, pady=3)
@@ -122,21 +150,23 @@ class Options(ctk.CTkTabview):
         self.plotsettingsframe = ctk.CTkFrame(self.tab(Text().settings[self.lang]), border_color="black", border_width=1)
         self.plotsettingsframe.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
         
-        self.plotsettingsframe.columnconfigure(0, weight=1)
+        self.plotsettingsframe.columnconfigure(0, weight=1, minsize=144)
         self.plotsettingsframe.columnconfigure(1, weight=1)
         self.plotsettingsframe.grid_propagate(False)   
         
         self.plotsettingslabel = ctk.CTkLabel(self.plotsettingsframe, text=Text().plotsettings[self.lang], font=("Bahnschrift",16, "bold"))
         self.plotsettingslabel.grid(column=0, row=0, columnspan=2, sticky="nsew", padx=5, pady=(1,5))
         
-        self.current_plot = ctk.IntVar(value=0)
+        self.current_plot = ctk.StringVar(value="")
         self.plotselectorlabel = ctk.CTkLabel(self.plotsettingsframe, text=Text().plotselector[self.lang],  font=("Bahnschrift",14, "bold"))
         self.plotselectorlabel.grid(column=0, row=1, padx=5, pady=(3,5), sticky="w")
-        self.plotselector = ctk.CTkOptionMenu(self.plotsettingsframe, variable=self.current_plot, values=[])
+        self.plotselector = ctk.CTkOptionMenu(self.plotsettingsframe, variable=self.current_plot, values=[], command = self.change_current_plot)
         self.plotselector.grid(column=1, row=1, padx=5, pady=(3,5), sticky="nsew")
         
         self.plottitle = ctk.StringVar()
         self.plottitleentry = ctk.CTkEntry(self.plotsettingsframe, textvariable=self.plottitle, width=130)
+        self.plottitleentry.bind("<Enter>", lambda x : self.on_enter(self.plottitleentry, self.rename_plot, x))
+        self.plottitleentry.bind("<Leave>", lambda x : self.on_leave(self.plottitleentry, x))
         self.plottitlebutton = ctk.CTkButton(self.plotsettingsframe, text=Text().renameplot[self.lang], command = self.rename_plot)
         self.plottitleentry.grid(column=0, row=2, padx=5, pady=(5,3))
         self.plottitlebutton.grid(column=1, row=2, padx=5, pady=(5,3))
@@ -175,20 +205,30 @@ class Options(ctk.CTkTabview):
         
         self.plotselectorlabel2 = ctk.CTkLabel(self.shiftframe, text=Text().plotselector[self.lang], font=("Bahnschrift",14, "bold"))
         self.plotselectorlabel2.grid(column=0, row=1, padx=5, pady=(3,5), sticky="w")
-        self.plotselector2 = ctk.CTkOptionMenu(self.shiftframe, variable=self.current_plot, values=[])
+        self.plotselector2 = ctk.CTkOptionMenu(self.shiftframe, variable=self.current_plot, values=[], command = self.change_current_plot)
         self.plotselector2.grid(column=1, row=1, padx=5, pady=(3,5), sticky="nsew")
 
 
-        self.doseshift = ctk.DoubleVar(value=0.0)
-        self.axshift = ctk.DoubleVar(value= 0.0)
-        self.dosescale = ctk.DoubleVar(value=1.0)
+        self.doseshift = ctk.StringVar(value="0")
+        self.axshift = ctk.StringVar(value= "0")
+        self.dosescale = ctk.StringVar(value="1")
+        self.flip = ctk.BooleanVar(value=False)
         
-        self.doseshiftlabel = ctk.CTkLabel(self.shiftframe, text=Text().doseshift[self.lang], font=("Bahnschrift",12, "bold"))
-        self. axshiftlabel = ctk.CTkLabel(self.shiftframe, text=Text().axshift[self.lang], font=("Bahnschrift",12, "bold"))
-        self.doseshiftentry = ctk.CTkEntry(self.shiftframe, textvariable=self.doseshift, width=130)
-        self. axshiftentry = ctk.CTkEntry(self.shiftframe, textvariable=self.axshift, width=130)
         self.dosescalelabel = ctk.CTkLabel(self.shiftframe, text=Text().dosescale[self.lang], font=("Bahnschrift",12, "bold"))
         self.dosescaleentry = ctk.CTkEntry(self.shiftframe, textvariable=self.dosescale, width=130)
+        self.dosescaleentry.bind("<Enter>", lambda x : self.on_enter(self.dosescaleentry, self.apply, x))
+        self.dosescaleentry.bind("<Leave>", lambda x : self.on_leave(self.dosescaleentry, x))
+        
+        self.doseshiftlabel = ctk.CTkLabel(self.shiftframe, text=Text().doseshift[self.lang], font=("Bahnschrift",12, "bold"))
+        self.axshiftlabel = ctk.CTkLabel(self.shiftframe, text=Text().axshift[self.lang], font=("Bahnschrift",12, "bold"))
+        self.doseshiftentry = ctk.CTkEntry(self.shiftframe, textvariable=self.doseshift, width=130)
+        self.doseshiftentry.bind("<Enter>", lambda x : self.on_enter(self.doseshiftentry, self.apply, x))
+        self.doseshiftentry.bind("<Leave>", lambda x : self.on_leave(self.doseshiftentry, x))        
+        self.axshiftentry = ctk.CTkEntry(self.shiftframe, textvariable=self.axshift, width=130)
+        self.axshiftentry.bind("<Enter>", lambda x : self.on_enter(self.axshiftentry, self.apply, x))
+        self.axshiftentry.bind("<Leave>", lambda x : self.on_leave(self.axshiftentry, x))
+        self.flipbutton = ctk.CTkCheckBox(self.shiftframe, variable=self.flip, text=Text().flip[self.lang], font=("Bahnschrift",12, "bold"))
+        self.applybutton = ctk.CTkButton(self.shiftframe, text=Text().apply[self.lang], command = self.apply)
         
         self.dosescalelabel.grid(column=0, row=2, padx=5, pady=3, sticky="w")
         self.dosescaleentry.grid(column=1, row=2, padx=5, pady=3, sticky="nsew")
@@ -196,11 +236,10 @@ class Options(ctk.CTkTabview):
         self.doseshiftentry.grid(column=1, row=3, padx=5, pady=3, sticky="nsew")
         self.axshiftlabel.grid(column=0, row=4, padx=5, pady=3, sticky="w")
         self.axshiftentry.grid(column=1, row=4, padx=5, pady=3, sticky="nsew")
-        
-        
+        self.flipbutton.grid(column=0, row=5, columnspan=2, padx=5, pady=(3,5), sticky="nsew")
+        self.applybutton.grid(column=1, row=5, columnspan=2, padx=5, pady=(3,5), sticky="nsew")
 
         self.shiftframe.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
-        
         
         self.gammaframe = ctk.CTkFrame(self.tab(Text().analysis[self.lang]), border_color="black", border_width=1)
         self.gammaframe.columnconfigure(0, weight=1, minsize=130)
@@ -213,28 +252,28 @@ class Options(ctk.CTkTabview):
         self.gammaframetitle = ctk.CTkLabel(self.gammaframe, text=Text().gamma[self.lang], font=("Bahnschrift",16, "bold"))
         self.gammaframetitle.grid(row=0, column=0, columnspan=5, sticky="nsew", padx=5, pady=(1,5))
         
-        self.reference = ctk.IntVar()
+        self.reference = ctk.StringVar()
         self.referencelabel = ctk.CTkLabel(self.gammaframe, text=Text().reference[self.lang], font=("Bahnschrift",14, "bold"))
-        self.referenceselector = ctk.CTkOptionMenu(self.gammaframe, variable=self.reference, values=[])
+        self.referenceselector = ctk.CTkOptionMenu(self.gammaframe, variable=self.reference, values=[], command=self.clear_gamma)
         self.referencelabel.grid(column=0, row=1, padx=5, pady=(3,5), sticky="w")
         self.referenceselector.grid(column=1, columnspan=4, row=1, padx=5, pady=(3,5), sticky="nsew")
         
-        self.test = ctk.IntVar()
+        self.test = ctk.StringVar()
         self.testlabel = ctk.CTkLabel(self.gammaframe, text=Text().test[self.lang], font=("Bahnschrift",14, "bold"))
-        self.testselector = ctk.CTkOptionMenu(self.gammaframe, variable=self.test, values=[])
+        self.testselector = ctk.CTkOptionMenu(self.gammaframe, variable=self.test, values=[], command=self.clear_gamma)
         self.testlabel.grid(column=0, row=2, padx=5, pady=(3,5), sticky="w")
         self.testselector.grid(column=1, columnspan=4, row=2, padx=5, pady=(3,5), sticky="nsew")
         
-        self.gammatype = ctk.StringVar(value=Text().local[self.lang])
+        self.gammatype = ctk.BooleanVar(value=True)
         self.gammatypelabel = ctk.CTkLabel(self.gammaframe, text=Text().gammatype[self.lang], font=("Bahnschrift",12, "bold"))
-        self.local = ctk.CTkRadioButton(self.gammaframe, text=Text().local[self.lang], variable=self.gammatype, value=Text().local[self.lang], font=("Bahnschrift",12, "bold"))
-        self.globalg = ctk.CTkRadioButton(self.gammaframe, text=Text().globalg[self.lang], variable=self.gammatype, value=Text().globalg[self.lang], font=("Bahnschrift",12, "bold"))
+        self.local = ctk.CTkRadioButton(self.gammaframe, text=Text().local[self.lang], variable=self.gammatype, value=True, font=("Bahnschrift",12, "bold"))
+        self.globalg = ctk.CTkRadioButton(self.gammaframe, text=Text().globalg[self.lang], variable=self.gammatype, value=False, font=("Bahnschrift",12, "bold"))
         self.gammatypelabel.grid(column=0, row=3, padx=5, pady=(3,2), sticky="w")
         self.local.grid(column=1, columnspan=2, row=3, padx=5, pady=(2,5), sticky="nsew")
         self.globalg.grid(column=3, columnspan=2,  row=3, padx=5, pady=(2,5), sticky="nsew")
         
-        self.percent = ctk.DoubleVar(value=3)
-        self.distance = ctk.DoubleVar(value=3)
+        self.percent = ctk.StringVar(value="3")
+        self.distance = ctk.StringVar(value="3")
         self.criterialabel = ctk.CTkLabel(self.gammaframe, text=Text().criterion[self.lang], font=("Bahnschrift",12, "bold"))
         self.percententry = ctk.CTkEntry(self.gammaframe, textvariable=self.percent, width=35)
         self.percentlabel = ctk.CTkLabel(self.gammaframe, text="% ", font=("Bahnschrift",14, "bold"))
@@ -254,53 +293,206 @@ class Options(ctk.CTkTabview):
         
         
         self.gammaframe.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
-        
+        self.disable_all_buttons()
+       
     
     ######################################################################################################################################################################
 
+
+    def save(self):
+        fname = fd.asksaveasfilename(title = Text().saveplottitle[self.lang], filetypes = (("PNG","*.png"),(Text().allfiles[self.lang],"*.*")))
+        self.parent.figure.savefig(fname=fname, dpi=300,)
+        self.saved = True
+    
+    def on_enter(self, widget, command, event=None):
+        widget.bind("<Return>", command)
+            
+    def on_leave(self, widget, event=None):
+        widget.unbind("<Return>")
         
-    def calculate_gamma(self):
-        percent = self.percent.get()
-        distance = self.distance.get()
-        print(percent,"%, ", distance, "mm")
+                
+    def change_order(self, direction):
+        self.saved = False
+        plot_labels = [plot.label for plot in self.parent.plots]
+        index = plot_labels.index(self.current_plot.get())
         
+        if direction =="up":
+            if index > 0:
+                self.parent.plots[index], self.parent.plots[index-1] = self.parent.plots[index-1], self.parent.plots[index]
+                self.plotbuttons[index], self.plotbuttons[index-1] = self.plotbuttons[index-1], self.plotbuttons[index]
+                [button.grid_forget() for button in self.plotbuttons]
+                [button.grid(row=i, padx=5, pady=5, sticky="w") for i, button in enumerate(self.plotbuttons)]
         
-    def choose_linecolor(self):
-        color = colorchooser.askcolor()
-        self.plotcolor.set(color[1])
-        print(color)
-        self.linecolorbutton.configure(fg_color = color[1])
-        current_plot = self.current_plot.get()
+        elif direction == "down":
+            if index <= len(self.plotbuttons):
+                self.parent.plots[index], self.parent.plots[index-1] = self.parent.plots[index-1], self.parent.plots[index]
+                self.plotbuttons[index], self.plotbuttons[index-1] = self.plotbuttons[index-1], self.plotbuttons[index]
+                [button.grid_forget() for button in self.plotbuttons]
+                [button.grid(row=i, padx=5, pady=5, sticky="w") for i, button in enumerate(self.plotbuttons)]
+                
         self.parent.update()
         
-    def rename_plot(self):
+        
+    def disable_all_buttons(self):
+        for tab in self.winfo_children():
+            for frame in tab.winfo_children():
+                for widget in frame.winfo_children():
+                    try:
+                        if widget.master != self.dataframe2:
+                            widget.configure(state="disabled")
+                    except ValueError:
+                        pass
+            
+    def enable_all_buttons(self):
+        for tab in self.winfo_children():
+            for frame in tab.winfo_children():
+                for widget in frame.winfo_children():
+                    try:
+                        widget.configure(state="normal")
+                    except ValueError:
+                        pass
+        
+    def remove_plot(self):
+        self.saved = False
+        plot_labels = [plot.label for plot in self.parent.plots]
+        index = plot_labels.index(self.current_plot.get())
+        current_name = self.current_plot.get()
+        if self.reference.get() == current_name:
+            self.reference.set("")
+            self.clear_gamma()
+        if self.test.get() == current_name:
+            self.test.set("")
+            self.clear_gamma()
+        self.plotbuttons[index].grid_forget()
+        self.plotbuttons.pop(index)
+        self.parent.plots.pop(index)
+        if len(self.parent.plots) !=0:
+            if index == 0:
+                self.current_plot.set(self.parent.plots[0].label)
+            else:
+                self.current_plot.set(self.parent.plots[index-1].label)#
+        else:
+            self.current_plot.set("")
+            self.plottitleentry.delete(0, "end")
+        self.update_plotlist()
+        if len(self.parent.plots) == 0:
+            self.disable_all_buttons()
+        self.parent.update()
+        
+        
+    def change_normalization(self, event=None):
+        self.saved = False
+        for plot in self.parent.plots:
+            plot.normalize = self.normalize.get()
+            plot.normalization = self.normalization.get()
+        self.parent.update()
+        #self.parent.master.master.parent.parent.set_theme()
+        
+    def apply(self, event=None):
+        try:
+            plot_labels = [plot.label for plot in self.parent.plots]
+            index = plot_labels.index(self.current_plot.get())
+            current_plot = self.parent.plots[index]
+            current_plot.dosefactor = float(self.dosescaleentry.get())
+            current_plot.doseshift = float(self.doseshiftentry.get())
+            current_plot.axshift = float(self.axshiftentry.get())
+            current_plot.flip = self.flip.get()
+            self.calculate_gamma()
+            self.parent.update()
+        except ValueError:
+            pass
+        
+    def clear_gamma(self, event=None):
+        self.resultcanvas.configure(text="", fg_color="white")
+        
+    def calculate_gamma(self):
+        try:
+            percent = float(self.percent.get())
+            distance = float(self.distance.get())
+            local = self.gammatype.get()
+            plot_labels = [plot.label for plot in self.parent.plots]
+            reference_axes, reference_dose = self.parent.plots[plot_labels.index(self.reference.get())].data()
+            evaluation_axes, evaluation_dose = self.parent.plots[plot_labels.index(self.test.get())].data()
+            g = gamma(axes_reference=reference_axes, dose_reference=reference_dose, axes_evaluation=evaluation_axes, dose_evaluation=evaluation_dose, dose_percent_threshold=percent, distance_mm_threshold=distance, local_gamma=local, lower_percent_dose_cutoff=0, max_gamma =5)
+            gamma_index = len(np.where(g <= 1)[0])/len(g)*100
+            if gamma_index >= 95:
+                self.resultcanvas.configure(fg_color="green")
+            elif gamma_index <= 95 and gamma_index > 80:
+                self.resultcanvas.configure(fg_color="yellow")
+            else:
+                self.resultcanvas.configure(fg_color="red")
+                
+            self.resultcanvas.configure(text=str(round(gamma_index, 3)) + "%")
+            
+        except ValueError:
+            pass
+        
+
+    def choose_linecolor(self):
+        self.saved = False
+        color = colorchooser.askcolor()
+        self.plotcolor.set(color[1])
+        self.linecolorbutton.configure(fg_color = color[1])
+        plot_labels = [plot.label for plot in self.parent.plots]
+        index = plot_labels.index(self.current_plot.get())  
+        self.plotbuttons[index].configure(text_color=color[1])
+        current_plot = self.parent.plots[index]
+        current_plot.linecolor = color[1]
+        self.parent.ax.lines[index].set_color(color[1])
+        self.toggle_legend_options()
+        self.parent.canvas.draw()
+        
+    def rename_plot(self, event=None):
+        self.saved = False
         new_name = self.plottitleentry.get()
-        print(new_name)
-        current_plot = self.current_plot.get()
+        plot_labels = [plot.label for plot in self.parent.plots]
+        index = plot_labels.index(self.current_plot.get())
+        current_name = self.parent.plots[index].label
+        if self.reference.get() == current_name:
+            self.reference.set(new_name)
+        if self.test.get() == current_name:
+            self.test.set(new_name)
+        
+        self.plotbuttons[index].configure(text=new_name)
+        self.plotbuttons[index]._value = new_name
+        current_plot = self.parent.plots[index]
+        current_plot.label = new_name
+        self.current_plot.set(new_name)
+        self.update_plotlist()
         self.parent.update()    
         
     def change_linestyle(self, value):
-        print(value)
-        current_plot = self.current_plot.get()
-        self.parent.update()
+        self.saved = False
+        plot_labels = [plot.label for plot in self.parent.plots]
+        index = plot_labels.index(self.current_plot.get())
+        self.parent.plots[index].linestyle = value
+        self.parent.ax.lines[index].set_linestyle(self.parent.plots[index].linestyledict[self.parent.plots[index].linestyle])
+        self.toggle_legend_options()
+        self.parent.canvas.draw()
         
     def change_linethickness(self, value):
-        print(value)
-        current_plot = self.current_plot.get()
-        self.parent.update()
+        self.saved = False
+        plot_labels = [plot.label for plot in self.parent.plots]
+        index = plot_labels.index(self.current_plot.get())
+        self.parent.ax.lines[index].set_linewidth(value)
+        self.parent.plots[index].linethickness = value
+        self.toggle_legend_options()
+        self.parent.canvas.draw()
         
-        
-    def rename_title(self):
+    def rename_title(self, event=None):
+        self.saved = False
         self.parent.ax.set_title(self.title.get())
-        self.parent.update()
+        self.parent.canvas.draw()
         
-    def rename_x(self):
+    def rename_x(self, event=None):
+        self.saved = False
         self.parent.ax.set_xlabel(self.xtitle.get())
-        self.parent.update()
+        self.parent.canvas.draw()
         
-    def rename_y(self):
+    def rename_y(self, event=None):
+        self.saved = False
         self.parent.ax.set_ylabel(self.ytitle.get())
-        self.parent.update()
+        self.parent.canvas.draw()
         
     def toggle_legend_options(self):
         if self.showlegend.get():
@@ -310,17 +502,16 @@ class Options(ctk.CTkTabview):
                      Text().legendoptions3[self.lang]:"upper right",
                      Text().legendoptions4[self.lang]:"lower left",
                      Text().legendoptions5[self.lang]:"lower right"}.get(self.legendoptions.get())
-            self.parent.ax.legend(loc=which)
-            self.parent.update()
+            try: self.parent.ax.get_legend().remove()
+            except AttributeError: pass
+            self.parent.ax.legend(loc=which, reverse=True, framealpha=0)
+            self.parent.canvas.draw()
         else:
             self.showlegend_options.configure(state="disabled")
             try: self.parent.ax.get_legend().remove()
             except AttributeError: pass
-            self.parent.update()
+            self.parent.canvas.draw()
             
-        
-        
-        
     def toggle_grid_options(self):
         if self.showgrid.get():
             self.showgrid_options.configure(state="normal")
@@ -329,26 +520,44 @@ class Options(ctk.CTkTabview):
             self.parent.ax.grid(which="major", visible=True, axis="both", lw=1)
             if which == "both":
                 self.parent.ax.grid(which="minor", visible=True, axis="both", lw=0.5)
-            self.parent.update()
+            self.parent.canvas.draw()
         else:
             self.showgrid_options.configure(state="disabled")
             self.parent.ax.grid(False, which = "both", axis="both")
-            self.parent.update()
+            self.parent.canvas.draw()
+        
+    def update_plotlist(self):
+        plotnames = [plot.label for plot in self.parent.plots]
+        self.plotselector.configure(values=plotnames)
+        self.plotselector2.configure(values=plotnames)
+        self.referenceselector.configure(values=plotnames)
+        self.testselector.configure(values=plotnames)
         
     def load_topas(self):
         path = fd.askopenfilename(filetypes=[("TOPAS files", "*.csv")])
         
         if path != "":
-            sim = Simulation(path)
             
-            self.parent.ax.plot(sim.axis, sim.dose)
-            self.parent.canvas.draw()
+            
+            sim = TGS_Plot(self, Simulation(path))
+            self.parent.plots.append(sim)
+            self.current_plot.set(sim.label)
+            self.update_plotlist()     
+            self.plotbuttons.append(ctk.CTkRadioButton(self.graphlist.viewPort, text=sim.label, variable=self.current_plot, text_color = sim.linecolor, value=sim.label, command=self.change_current_plot, font=("Bahnschrift", 14, "bold")))
+            self.plotbuttons[-1].grid(sticky="w", padx=5, pady=5)
+            if len(self.parent.plots) == 1:
+                self.enable_all_buttons()
+                
+            self.saved = False
+            self.parent.update()
+            
+    def change_current_plot(self, event=None):
+        plot_labels = [plot.label for plot in self.parent.plots]
+        index = plot_labels.index(self.current_plot.get())
+        self.parent.plots[index].set_tab_data()
             
     def change_name(self):
         
-        
-        """Add a tab to the tabview.
-        """
         root = self.parent.master.master.parent        
         window = ctk.CTkToplevel(root)
         window.wm_attributes("-toolwindow", True)

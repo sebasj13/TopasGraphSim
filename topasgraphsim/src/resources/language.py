@@ -7,6 +7,7 @@ class Text:
     def __init__(self):
 
         self.absolute = {"de": "Absolut", "en": "Absolute"}
+        self.allfiles = {"de": "Alle Dateien", "en": "All files"}
         self.analysis = {"de": "Analyse", "en": "Analysis"}
         self.about = {"de": "Über TGS", "en": "About"}
         self.add = {"de": "Daten hinzufügen", "en": "Add Data"}
@@ -58,6 +59,7 @@ class Text:
         self.data = {"de": "Daten", "en": "Data"}
         
         self.axshift = {"de": "Achsenoffset", "en": "Axis shift"}
+        self.apply = {"de":"Anwenden", "en":"Apply"}
         self.doseshift = {"de":"Dosisoffset", "en": "Dose offset"}
         self.dosescale = {"de":"Dosisfaktor", "en": "Dose factor"}
         
@@ -76,9 +78,11 @@ class Text:
         self.errorbars = {"de": "Fehlerbalken anzeigen", "en": "Show error bars"}
         self.errlimmenu = {"de": "Fehlergrenze einstellen", "en": "Change error limits"}
         self.file = {"de": "Datei", "en": "File"}
+        self.flip = {"de": "Daten umkehren", "en": "Flip data"}
         self.fileerror = {"de": "Datei konnte nicht geladen werden!", "en": "File could not be loaded!"}
         self.plateau = {"de": "Plateau", "en": "Plateau"}
         self.fullscreen = {"de": "Vollbild", "en": "Fullscreen"}
+        self.saveplottitle = {"de": "Dateinahmen wählen...", "en": "Choose filename..."}
         self.fwhm = {"de": "HWB", "en": "FWHM"}
         self.gamma = {"de": "Gammaanalyse", "en": "Gamma analysis"}
         self.gammamenu = {"de": "Gamma-Index", "en": "Gamma-Index"}

@@ -5,7 +5,6 @@ from tkinter import StringVar
 
 from .src.resources.language import Text
 from .src.classes.menubar_v2 import MenuBar
-from .src.classes.install_dnd import InstallDnD
 from .src.classes.profile import ProfileHandler
 from .src.classes.main_viewer_v2 import MainViewer
 
@@ -109,6 +108,12 @@ class TopasGraphSim(Tk):
                 self.frame.tabview.tab(tab).tab.options.graphlist.canvas.configure(bg=color3, highlightbackground=color3)
                 self.frame.tabview.tab(tab).tab.options.graphlist.scrollbar.configure(fg_color=color3)
                 if hasattr(w, "figure"):
+                    if w.options.showlegend.get():
+                        for text in w.ax.get_legend().get_texts():
+                            text.set_color(fontcolor)
+                    w.ax.set_title(w.ax.get_title(), color=fontcolor)
+                    w.ax.set_xlabel(w.ax.get_xlabel(), color=fontcolor)
+                    w.ax.set_ylabel(w.ax.get_ylabel(), color=fontcolor)
                     w.figure.patch.set_facecolor(color2)
                     w.ax.set_facecolor(color)
                     w.ax.spines["bottom"].set_color(fontcolor)

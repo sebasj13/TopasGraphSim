@@ -105,8 +105,7 @@ class TabView(ctk.CTkTabview):
         """Remove a tab from the tabview.
         """
         
-        
-        if self.tab(self.tabnames[index]).tab.saved == False:
+        if self.tab(self.tabnames[index]).tab.options.saved == False:
             
             self.parent.parent.bell()
             window = ctk.CTkToplevel(self.parent.parent)

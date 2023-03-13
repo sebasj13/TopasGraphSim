@@ -1,6 +1,6 @@
 import customtkinter as ctk
-from tkinter import Frame
 import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.backends._backend_tk import NavigationToolbar2Tk
 from matplotlib.ticker import AutoLocator, AutoMinorLocator
@@ -20,6 +20,7 @@ class Tab(ctk.CTkFrame):
         
         self.saved = False
         
+        self.plots = []
         super().__init__(self.parent, border_color="black", border_width=1)
         
         self.columnconfigure(0, weight=1)
@@ -36,12 +37,19 @@ class Tab(ctk.CTkFrame):
         self.options = Options(self, index, self.lang)
         self.options.grid(row=0, rowspan=2, column=1, sticky="nsew")
         
+        self.navbar._buttons["Save"].config(command=self.options.save)
+        
         self.bind("<Configure>", lambda event: self.config(event))
         
     def config(self, event=None): 
         self.figure.subplots_adjust(left=0.08, right=0.92, top=0.92, bottom=0.09, wspace=0.2, hspace=0.2)
         
-    def update(self) -> None:
+    def update(self):
+        self.ax.clear()
+        for plot in self.plots[::-1]:
+            plot.plot(self.ax)
+        self.options.toggle_legend_options()
+        self.options.toggle_grid_options()
         self.ax.xaxis.set_major_locator(AutoLocator())
         self.ax.xaxis.set_minor_locator(AutoMinorLocator())
         self.ax.yaxis.set_major_locator(AutoLocator())
