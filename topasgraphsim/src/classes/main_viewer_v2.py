@@ -21,6 +21,8 @@ class MainViewer(Frame):
     def drop(self, event):
         if len(self.tabview.tabnames) == 0:
             self.tabview.add_tab(name = True)
-
+            print(event.data)
+            self.tabview.tab(self.tabview.tabnames[-1]).tab.options.load_topas(event.data[1:-1])
+            
         else:
-            print(self.tabview.tabnames[self.tabview.tabnames.index(self.tabview.get())])
+            self.tabview.tab(self.tabview.tabnames[self.tabview.tabnames.index(self.tabview.get())]).tab.options.load_topas(event.data[1:-1])

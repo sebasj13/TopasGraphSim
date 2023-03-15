@@ -545,8 +545,9 @@ class Options(ctk.CTkTabview):
         self.referenceselector.configure(values=plotnames)
         self.testselector.configure(values=plotnames)
         
-    def load_topas(self):
-        path = fd.askopenfilename(filetypes=[("TOPAS files", "*.csv")])
+    def load_topas(self, path = None):
+        if path == None:
+            path = fd.askopenfilename(filetypes=[("TOPAS files", "*.csv")])
         
         if path != "" and path not in self.filenames:
             
