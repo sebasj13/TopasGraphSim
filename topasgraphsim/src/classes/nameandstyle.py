@@ -52,7 +52,7 @@ class GraphNameAndStyle:
             )
             self.radiovar = tk.StringVar()
             self.radiovar.set(self.parent.DoseFigureHandler.marker[index])
-            self.values = [".", "-", "o--"]
+            self.values = ["dotted", "-", "o--"]
             self.styles = [
                 Text().dot[self.parent.lang],
                 Text().dash[self.parent.lang],

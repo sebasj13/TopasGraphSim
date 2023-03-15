@@ -1,7 +1,6 @@
 import os
 import tkinterDnD as tkdnd
 import customtkinter as ctk
-from tkinter import StringVar
 
 from .src.resources.language import Text
 from .src.classes.menubar_v2 import MenuBar
@@ -28,12 +27,12 @@ class TopasGraphSim(Tk):
         self.author = "Sebastian Schäfer"
         self.affiliation = "UK Halle\nMLU Halle-Wittenberg\nUK Hamburg-Eppendorf"
         self.title(f"{self.appname} - v.{self.version}")
-        self.lang = StringVar()
+        self.lang = ctk.StringVar()
         self.lang.set(ProfileHandler().get_attribute("language"))
         self.iconpath = os.path.join(os.path.dirname(__file__), "src", "resources","icon.ico")
         self.iconbitmap(self.iconpath)
         
-        self.colorscheme = StringVar(value=ProfileHandler().get_attribute("color_scheme"))
+        self.colorscheme = ctk.StringVar(value=ProfileHandler().get_attribute("color_scheme"))
         ctk.set_appearance_mode(self.colorscheme.get())
         ctk.set_default_color_theme("blue")
         
@@ -108,7 +107,7 @@ class TopasGraphSim(Tk):
         fontcolor = fontcolors[ProfileHandler().get_attribute("color_scheme")]
         self.frame.configure(bg=color2)
         for tab in self.frame.tabview.tabnames:
-            if tab != Text().settings[self.lang.get()]:
+            if tab not in Text().settings.values():
                 self.frame.tabview.tab(tab).tab.options.configure(bg_color=color2)
                 self.frame.tabview.tab(tab).tab.options.graphlist.configure(fg_color=color2)
                 self.frame.tabview.tab(tab).tab.options.graphlist.canvas.configure(bg=color3, highlightbackground=color3)

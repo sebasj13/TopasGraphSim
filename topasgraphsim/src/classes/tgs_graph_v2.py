@@ -10,20 +10,20 @@ class TGS_Plot():
         self.lang = self.options.lang
         self.dataObject = ImportedData
         self.direction = self.dataObject.direction
+        self.p = ProfileHandler()
         
-        self.normalize = False
+        self.normalize = self.p.get_attribute("normalize")
         self.normalization = "Maximum"
         
         self.label = self.dataObject.filename
-        self.linethickness = 1
-        self.linestyle = Text().dashdot[self.lang]
-        self.linestyledict = {Text().dashdot[self.lang]:"-.", Text().dash[self.lang]:"-", Text().dot[self.lang]:"dotted"}
+        self.linethickness = self.p.get_attribute("linethickness")
+        self.linestyle = self.p.get_attribute("linestyle")
         self.linecolor =  ProfileHandler().get_attribute("default_colors")[len(self.options.parent.plots)%len(ProfileHandler().get_attribute("default_colors"))]
         
-        self.dosefactor = 1
-        self.doseshift = 0
-        self.axshift = 0 
-        self.flip = False
+        self.dosefactor = self.p.get_attribute("dosefactor")
+        self.doseshift = self.p.get_attribute("doseoffset")
+        self.axshift = self.p.get_attribute("axshift")
+        self.flip = self.p.get_attribute("flip")
         
         self.set_tab_data()
         
@@ -33,7 +33,7 @@ class TGS_Plot():
         self.options.normalization.set(self.normalization)
         self.options.plottitle.set(self.label)
         self.options.linethicknessslider.set(self.linethickness)
-        self.options.linestyle.set(self.linestyle)
+        self.options.linestyle.set({"-.":Text().dashdot[self.lang], "-":Text().dash[self.lang], "dotted":Text().dot[self.lang]}[self.linestyle])
         self.options.plotcolor.set(self.linecolor)
         self.options.linecolorbutton.configure(fg_color=self.linecolor)
         self.options.doseshift.set(self.doseshift)
@@ -57,7 +57,7 @@ class TGS_Plot():
     def plot(self, ax):
     
         axis, dose = self.data()
-        ax.plot(axis, dose, label=self.label, lw=self.linethickness, color=self.linecolor, linestyle = self.linestyledict[self.linestyle])
+        ax.plot(axis, dose, label=self.label, lw=self.linethickness, color=self.linecolor, linestyle = self.linestyle)
         
         
         
