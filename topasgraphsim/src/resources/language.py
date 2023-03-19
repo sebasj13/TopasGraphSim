@@ -27,7 +27,10 @@ class Text:
             "de": "Zentralstrahlkorrektur",
             "en": "Center axis correction",
         }
+        self.beamquality = {"de":"Strahlungsqualitätsindex", "en":"Beam quality index"}
+        self.zmax = {"de":"Maximumstiefe", "en":"Depth of maximum"}
         self.centeraxis = {"de": "Zentralstrahl", "en": "Center axis"}
+        self.cax = {"de":"Zentralstrahlabweichung", "en":"Center axis deviation"}
         self.changefilename = {"de": "Neuer Name:", "en": "New Name:"}
         self.change = {"de": "Ändern", "en": "Change"}
         self.changeerr = {"de": "Darstellung ändern", "en": "Switch view"}
@@ -63,7 +66,12 @@ class Text:
         self.apply = {"de":"Anwenden", "en":"Apply"}
         self.doseshift = {"de":"Dosisoffset", "en": "Dose offset"}
         self.dosescale = {"de":"Dosisfaktor", "en": "Dose factor"}
-        
+        self.flatkrieger = {"de":"Flatness (Krieger)", "en":"Flatness (Krieger)"}
+        self.flatstddev = {"de":"Flatness (StdAbw)", "en":"Flatness (StdDev)"}
+        self.leftpenumbra = {"de":"Penumbra (Links)", "en": "Penumbra (left)"}
+        self.rightpenumbra = {"de":"Penumbra (Rechts)", "en": "Penumbra (right)"}
+        self.leftintegral = {"de":"Integral (Links)", "en": "Integral (left)"}
+        self.rightintegral = {"de":"Integral (Rechts)", "en": "Integral (right)"}
         self.dp = {"de": "Dosisquerverteilungen", "en": "Dose profiles"}
         self.defaulttitle = {"de": "Neuer Graph", "en": "New graph"}
         self.defaulttitlelabel = {"de": "Graphtitel", "en": "Graph title"}
@@ -125,6 +133,7 @@ class Text:
         self.language = {"de": "Sprache", "en": "Language"}
         self.shift = {"de": "Linie verschieben/skalieren", "en": "Shift/rescale graph"}
         self.settings = {"de": "Standardeinstellungen", "en": "Default settings"}
+        self.settings1 = {"de":"Einstellungen", "en":"Settings"}
         self.savesettings = {"de": "Einstellungen speichern", "en": "Save settings"}
         self.languageset = {
             "en": "Das geöffnete Projekt wird geschlossen. Fortfahren?",

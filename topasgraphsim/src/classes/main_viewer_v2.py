@@ -19,9 +19,12 @@ class MainViewer(Frame):
 
 
     def drop(self, event):
+        path = event.data
+        if "{" in path and "}" in path:
+            path = path[1:-1]
         if len(self.tabview.tabnames) == 0:
             self.tabview.add_tab(name = True)
-            self.tabview.tab(self.tabview.tabnames[-1]).tab.options.load_topas(event.data[1:-1])
+            self.tabview.tab(self.tabview.tabnames[-1]).tab.options.load_topas(path)
             
         else:
-            self.tabview.tab(self.tabview.tabnames[self.tabview.tabnames.index(self.tabview.get())]).tab.options.load_topas(event.data[1:-1])
+            self.tabview.tab(self.tabview.tabnames[self.tabview.tabnames.index(self.tabview.get())]).tab.options.load_topas(path)

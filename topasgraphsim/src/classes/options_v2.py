@@ -11,6 +11,7 @@ from .scrollframe_v2 import ScrollFrame
 from .tgs_graph_v2 import TGS_Plot
 from .sim_import import Simulation
 from .profile import ProfileHandler
+from .paramframe_v2 import Parameters
 
 class Options(ctk.CTkTabview):
     
@@ -18,7 +19,7 @@ class Options(ctk.CTkTabview):
     """
     
     def __init__(self, parent, index, lang):
-        
+
         self.parent = parent      
         self.index = index
         self.lang = lang
@@ -34,7 +35,7 @@ class Options(ctk.CTkTabview):
         self.add(Text().data[self.lang])
         self.add(Text().analysis[self.lang])
         self.add(Text().parameters[self.lang])
-        self.add(Text().settings[self.lang])
+        self.add(Text().settings1[self.lang])
         
 
         self.tab(Text().data[self.lang]).rowconfigure(0, weight=1)
@@ -85,12 +86,12 @@ class Options(ctk.CTkTabview):
         
         #######################################################################################################################
                
-        self.tab(Text().settings[self.lang]).rowconfigure(0, weight=1)
-        self.tab(Text().settings[self.lang]).rowconfigure(1, weight=1)  
-        self.tab(Text().settings[self.lang]).columnconfigure(0, weight=1)     
-        self.tab(Text().settings[self.lang]).grid_propagate(False)  
+        self.tab(Text().settings1[self.lang]).rowconfigure(0, weight=1)
+        self.tab(Text().settings1[self.lang]).rowconfigure(1, weight=1)  
+        self.tab(Text().settings1[self.lang]).columnconfigure(0, weight=1)     
+        self.tab(Text().settings1[self.lang]).grid_propagate(False)  
         
-        self.graphsettingsframe = ctk.CTkFrame(self.tab(Text().settings[self.lang]), border_color="black", border_width=1)
+        self.graphsettingsframe = ctk.CTkFrame(self.tab(Text().settings1[self.lang]), border_color="black", border_width=1)
         self.graphsettingsframe.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
         
         self.graphsettingsframe.columnconfigure(0, weight=1)
@@ -151,7 +152,7 @@ class Options(ctk.CTkTabview):
         self.showlegend_button.grid(column=0, row=5, padx=5, pady=(3,5), sticky="w")
         self.showlegend_options.grid(column=1, row=5, padx=5, pady=(3,5), sticky="w")
         
-        self.plotsettingsframe = ctk.CTkFrame(self.tab(Text().settings[self.lang]), border_color="black", border_width=1)
+        self.plotsettingsframe = ctk.CTkFrame(self.tab(Text().settings1[self.lang]), border_color="black", border_width=1)
         self.plotsettingsframe.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
         
         self.plotsettingsframe.columnconfigure(0, weight=1, minsize=144)
@@ -195,7 +196,19 @@ class Options(ctk.CTkTabview):
         self.linecolorbutton.grid(column=1, row=5, padx=5, pady=(3,5), sticky="e")
         
     ######################################################################################################################################################################
+   
+        self.tab(Text().parameters[self.lang]).columnconfigure(0, weight=1)
+        self.tab(Text().parameters[self.lang]).rowconfigure(0, weight=1)
+        self.tab(Text().parameters[self.lang]).grid_propagate(False)  
+        self.parameterframe = ctk.CTkFrame(self.tab(Text().parameters[self.lang]), border_color="black", border_width=1)
+        self.parameterframe.grid(sticky="nsew", padx=5, pady=5)
+        self.parameterframe.pack_propagate(False)
+        self.paramslist = ScrollFrame(self.parameterframe)
+        self.parameters = []
+        self.paramslist.pack(fill="both", expand=True)
+
     
+    ######################################################################################################################################################################
         self.tab(Text().analysis[self.lang]).rowconfigure(0, weight=1)
         self.tab(Text().analysis[self.lang]).rowconfigure(1, weight=1)  
         self.tab(Text().analysis[self.lang]).columnconfigure(0, weight=1)     
@@ -332,15 +345,20 @@ class Options(ctk.CTkTabview):
             if index-1 >= 0:
                 self.parent.plots[index], self.parent.plots[index-1] = self.parent.plots[index-1], self.parent.plots[index]
                 self.plotbuttons[index], self.plotbuttons[index-1] = self.plotbuttons[index-1], self.plotbuttons[index]
+                self.parameters[index], self.parameters[index-1] = self.parameters[index-1], self.parameters[index]
                 [button.grid_forget() for button in self.plotbuttons]
+                [params.grid_forget() for params in self.parameters]
                 [button.grid(row=i, padx=5, pady=5, sticky="w") for i, button in enumerate(self.plotbuttons)]
+                [params.grid(row=i, sticky="ew", padx=5, pady=5) for i, params in enumerate(self.parameters)]
         
         elif direction == "down":
             if index+1 < len(self.plotbuttons):
                 self.parent.plots[index], self.parent.plots[index+1] = self.parent.plots[index+1], self.parent.plots[index]
                 self.plotbuttons[index], self.plotbuttons[index+1] = self.plotbuttons[index+1], self.plotbuttons[index]
                 [button.grid_forget() for button in self.plotbuttons]
+                [params.grid_forget() for params in self.parameters]
                 [button.grid(row=i, padx=5, pady=5, sticky="w") for i, button in enumerate(self.plotbuttons)]
+                [params.grid(row=i, sticky="ew", padx=5, pady=5) for i, params in enumerate(self.parameters)]
                 
         self.parent.update()
         
@@ -378,6 +396,8 @@ class Options(ctk.CTkTabview):
         self.plotbuttons[index].grid_forget()
         self.plotbuttons.pop(index)
         self.parent.plots.pop(index)
+        self.parameters[index].grid_forget()
+        self.parameters.pop(index)
         if len(self.parent.plots) !=0:
             if index == 0:
                 self.current_plot.set(self.parent.plots[0].label)
@@ -448,6 +468,7 @@ class Options(ctk.CTkTabview):
         plot_labels = [plot.label for plot in self.parent.plots]
         index = plot_labels.index(self.current_plot.get())  
         self.plotbuttons[index].configure(text_color=color[1])
+        self.parameters[index].namelabel.configure(fg_color=color[1])
         current_plot = self.parent.plots[index]
         current_plot.linecolor = color[1]
         self.parent.ax.lines[index].set_color(color[1])
@@ -466,6 +487,7 @@ class Options(ctk.CTkTabview):
             self.test.set(new_name)
         
         self.plotbuttons[index].configure(text=new_name)
+        self.parameters[index].namelabel.configure(text=new_name)
         self.plotbuttons[index]._value = new_name
         current_plot = self.parent.plots[index]
         current_plot.label = new_name
@@ -545,6 +567,11 @@ class Options(ctk.CTkTabview):
         self.referenceselector.configure(values=plotnames)
         self.testselector.configure(values=plotnames)
         
+    def set_ax_names(self):
+        self.parent.ax.set_title(self.title.get())
+        self.parent.ax.set_xlabel(self.xtitle.get())
+        self.parent.ax.set_ylabel(self.ytitle.get())
+    
     def load_topas(self, path = None):
         if path == None:
             path = fd.askopenfilename(filetypes=[("TOPAS files", "*.csv")])
@@ -555,6 +582,8 @@ class Options(ctk.CTkTabview):
             sim = TGS_Plot(self, Simulation(path))
             self.parent.plots.append(sim)
             self.filenames.append(path)
+            self.parameters.append(Parameters(self.paramslist.viewPort, sim, self.lang))
+            self.parameters[-1].grid(row=len(self.parameters)-1, sticky="ew", padx=5, pady=5)
             self.current_plot.set(sim.label)
             self.update_plotlist()     
             self.plotbuttons.append(ctk.CTkRadioButton(self.graphlist.viewPort, text=sim.label, variable=self.current_plot, text_color = sim.linecolor, value=sim.label, command=self.change_current_plot, font=("Bahnschrift", 14, "bold")))

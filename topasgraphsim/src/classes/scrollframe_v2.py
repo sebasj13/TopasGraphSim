@@ -18,7 +18,7 @@ class ScrollFrame(ctk.CTkFrame):
                                     command=self.canvas.yview,
                                     width=15, corner_radius=10)
         self.canvas.configure(yscrollcommand=self.scrollbar.set)
-
+        self.viewPort.columnconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, minsize=15)
         self.rowconfigure(0, weight=1)

@@ -112,6 +112,10 @@ class TopasGraphSim(Tk):
                 self.frame.tabview.tab(tab).tab.options.graphlist.configure(fg_color=color2)
                 self.frame.tabview.tab(tab).tab.options.graphlist.canvas.configure(bg=color3, highlightbackground=color3)
                 self.frame.tabview.tab(tab).tab.options.graphlist.scrollbar.configure(fg_color=color3)
+                self.frame.tabview.tab(tab).tab.options.paramslist.configure(fg_color=color2)
+                self.frame.tabview.tab(tab).tab.options.paramslist.canvas.configure(bg=color3, highlightbackground=color3)
+                self.frame.tabview.tab(tab).tab.options.paramslist.scrollbar.configure(fg_color=color3)    
+            
                 for w in self.frame.tabview.tab(tab).winfo_children():
                     if hasattr(w, "figure"):
                         if w.options.showlegend.get():

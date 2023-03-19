@@ -48,6 +48,7 @@ class Tab(ctk.CTkFrame):
         self.ax.clear()
         for plot in self.plots[::-1]:
             plot.plot(self.ax)
+        self.options.set_ax_names()
         self.options.toggle_legend_options()
         self.options.toggle_grid_options()
         self.ax.xaxis.set_major_locator(AutoLocator())

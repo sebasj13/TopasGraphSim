@@ -64,12 +64,12 @@ class Settings(ctk.CTkFrame):
         self.normalizebutton = ctk.CTkCheckBox(self.generalframe, text=Text().normalize[self.lang], variable=self.normalize, font=("Bahnschrift", 16))
         self.normalizebutton.grid(row=4, column=0, columnspan=2, padx=5, pady=5, sticky="w")
         
-        self.grid = ctk.BooleanVar(value=ProfileHandler().get_attribute("grid"))
-        self.gridbutton = ctk.CTkCheckBox(self.generalframe, text=Text().showgrid[self.lang], variable=self.grid, font=("Bahnschrift", 16))
+        self.showgrid = ctk.BooleanVar(value=ProfileHandler().get_attribute("grid"))
+        self.gridbutton = ctk.CTkCheckBox(self.generalframe, text=Text().showgrid[self.lang], variable=self.showgrid, font=("Bahnschrift", 16))
         self.gridbutton.grid(row=5, column=0, columnspan=2, padx=5, pady=5, sticky="w")
         
-        self.legend = ctk.BooleanVar(value=ProfileHandler().get_attribute("legend"))
-        self.legendbutton = ctk.CTkCheckBox(self.generalframe, text=Text().showlegend[self.lang], variable=self.legend, font=("Bahnschrift", 16))
+        self.showlegend = ctk.BooleanVar(value=ProfileHandler().get_attribute("legend"))
+        self.legendbutton = ctk.CTkCheckBox(self.generalframe, text=Text().showlegend[self.lang], variable=self.showlegend, font=("Bahnschrift", 16))
         self.legendbutton.grid(row=6, column=0, columnspan=2, padx=5, pady=5, sticky="w")
         
         ############################
@@ -194,8 +194,8 @@ class Settings(ctk.CTkFrame):
         self.defaulxaxis.set(self.p.get_attribute("xaxislabel"))
         self.defaulyaxis.set(self.p.get_attribute("yaxislabel"))
         self.normalize.set(self.p.get_attribute("normalize"))
-        self.grid.set(self.p.get_attribute("grid"))
-        self.legend.set(self.p.get_attribute("legend"))
+        self.showgrid.set(self.p.get_attribute("grid"))
+        self.showlegend.set(self.p.get_attribute("legend"))
         
         self.linethickness.set(self.p.get_attribute("linethickness"))
         linestyledict = {"-.":Text().dashdot[self.lang], "-":Text().dash[self.lang], "dotted":Text().dot[self.lang]}
