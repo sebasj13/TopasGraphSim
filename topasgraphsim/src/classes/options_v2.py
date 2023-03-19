@@ -4,7 +4,10 @@ import tkinter.filedialog as fd
 from tkinter import colorchooser
 from PIL import Image
 import os
+import logging
 from pymedphys import gamma
+
+logging.getLogger("matplotlib").setLevel(level=logging.CRITICAL)
 
 from ..resources.language import Text
 from .scrollframe_v2 import ScrollFrame
@@ -401,8 +404,10 @@ class Options(ctk.CTkTabview):
         if len(self.parent.plots) !=0:
             if index == 0:
                 self.current_plot.set(self.parent.plots[0].label)
+                self.parent.plots[0].set_tab_data()
             else:
-                self.current_plot.set(self.parent.plots[index-1].label)#
+                self.current_plot.set(self.parent.plots[index-1].label)
+                self.parent.plots[index-1].set_tab_data()
         else:
             self.current_plot.set("")
             self.plottitleentry.delete(0, "end")

@@ -89,6 +89,7 @@ class Text:
         self.edittabname = {"de": "Tab umbenennen", "en": "Rename tab"}
         self.english = {"de": "Englisch", "en": "English"}
         self.error = {"de": "Abweichung", "en": "Difference"}
+        self.error1 = {"de": "Fehler bei der Parameterberechnung!", "en": "Failed to calculate parameters!"}
         self.errorbars = {"de": "Fehlerbalken anzeigen", "en": "Show error bars"}
         self.errlimmenu = {"de": "Fehlergrenze einstellen", "en": "Change error limits"}
         self.file = {"de": "Datei", "en": "File"}
