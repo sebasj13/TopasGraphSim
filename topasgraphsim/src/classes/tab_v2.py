@@ -29,18 +29,18 @@ class Tab(ctk.CTkFrame):
         self.figure, self.ax = plt.subplots()
         
         self.canvas = FigureCanvasTkAgg(self.figure, master=self)
-        self.navbar = NavigationToolbar2Tk(self.canvas, self, pack_toolbar=False)   
-        
-        self.canvas.get_tk_widget().grid(row=0, column=0, sticky="nsew")
-        self.navbar.grid(row=1, column=0, sticky="nsew")
-
+        self.navbar = NavigationToolbar2Tk(self.canvas, self, pack_toolbar=False)  
         self.options = Options(self, index, self.lang)
-        self.options.grid(row=0, rowspan=2, column=1, sticky="nsew")
+
         
         self.navbar._buttons["Save"].config(command=self.options.save)
         
         self.bind("<Configure>", lambda event: self.config(event))
         self.update()
+        
+        self.canvas.get_tk_widget().grid(row=0, column=0, sticky="nsew")
+        self.options.grid(row=0, rowspan=2, column=1, sticky="nsew")
+        self.navbar.grid(row=1, column=0, sticky="nsew")
         
     def config(self, event=None): 
         self.figure.subplots_adjust(left=0.08, right=0.92, top=0.92, bottom=0.09, wspace=0.2, hspace=0.2)

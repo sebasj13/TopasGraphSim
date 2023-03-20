@@ -37,9 +37,9 @@ setuptools.setup(
         "topasgraphsim.src.classes",
         "topasgraphsim.src.functions",
     ],
-    scripts=["topasgraphsim/topasgraphsim.py"],
+    scripts=["topasgraphsim/TGS_v2.py"],
     entry_points={
-        "console_scripts": ["topasgraphsim=topasgraphsim.topasgraphsim:topasgraphsim"],
+        "console_scripts": ["topasgraphsim=topasgraphsim.TGS_v2:TopasGraphSim"],
     },
     keywords=["topas", "monte-carlo", "python", "simulation"],
     python_requires=">=3.8",

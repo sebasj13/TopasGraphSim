@@ -97,7 +97,6 @@ class TopasGraphSim(Tk):
         window.bind("<Return>", lambda event: submit())
         
     def set_theme(self):
-        self.frame.pack_forget()
         ProfileHandler().set_attribute("color_scheme", self.colorscheme.get())
         ctk.set_appearance_mode(ProfileHandler().get_attribute("color_scheme"))
         colors = {"light": "#D9D9D9", "dark":"#1C1C1C"}
@@ -156,7 +155,6 @@ class TopasGraphSim(Tk):
                                 t.config(foreground=fontcolor)
                         w.navbar.update()
                         w.canvas.draw()
-        self.frame.pack(fill="both", expand=True)
 
     def exit(self):
         ProfileHandler().set_attribute("state", self.state())
