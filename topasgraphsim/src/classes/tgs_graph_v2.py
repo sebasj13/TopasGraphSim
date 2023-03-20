@@ -65,6 +65,7 @@ class TGS_Plot():
     
         axis, dose = self.data()
         ax.plot(axis, dose, label=self.label, lw=self.linethickness, color=self.linecolor, linestyle = self.linestyle)
+        #ax.scatter(axis, dose, label= "_", s=self.linethickness*20, color=self.linecolor, marker="x")
         
         
         

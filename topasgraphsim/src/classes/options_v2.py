@@ -474,11 +474,13 @@ class Options(ctk.CTkTabview):
         self.linecolorbutton.configure(fg_color = color[1])
         plot_labels = [plot.label for plot in self.parent.plots]
         index = plot_labels.index(self.current_plot.get())  
+        line_labels = [line._label for line in self.parent.ax.lines]
+        line_index = line_labels.index(self.current_plot.get())
         self.plotbuttons[index].configure(text_color=color[1])
         self.parameters[index].namelabel.configure(fg_color=color[1])
         current_plot = self.parent.plots[index]
         current_plot.linecolor = color[1]
-        self.parent.ax.lines[index].set_color(color[1])
+        self.parent.ax.lines[line_index].set_color(color[1])
         self.toggle_legend_options()
         self.parent.canvas.draw()
         
@@ -506,16 +508,20 @@ class Options(ctk.CTkTabview):
         self.parent.saved = False
         plot_labels = [plot.label for plot in self.parent.plots]
         index = plot_labels.index(self.current_plot.get())
+        line_labels = [line._label for line in self.parent.ax.lines]
+        line_index = line_labels.index(self.current_plot.get())
         self.parent.plots[index].linestyle = {Text().dashdot[self.lang]:"-.", Text().dash[self.lang]:"-", Text().dot[self.lang]:"dotted"}[value]
-        self.parent.ax.lines[index].set_linestyle(self.parent.plots[index].linestyle)
+        self.parent.ax.lines[line_index].set_linestyle(self.parent.plots[index].linestyle)
         self.toggle_legend_options()
         self.parent.canvas.draw()
         
     def change_linethickness(self, value):
         self.parent.saved = False
         plot_labels = [plot.label for plot in self.parent.plots]
+        line_labels = [line._label for line in self.parent.ax.lines]
+        line_index = line_labels.index(self.current_plot.get())
         index = plot_labels.index(self.current_plot.get())
-        self.parent.ax.lines[index].set_linewidth(value)
+        self.parent.ax.lines[line_index].set_linewidth(value)
         self.parent.plots[index].linethickness = value
         self.toggle_legend_options()
         self.parent.canvas.draw()
