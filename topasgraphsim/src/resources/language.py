@@ -190,7 +190,7 @@ class Text:
             "en": "Scan axis: [X = Yes | Y = No]",
         }
         self.showtable = {"de": "Wertetabelle anzeigen", "en": "Show parameter table"}
-        self.showerror = {"de": "Fehlerbalken anzeigen", "en": "Show errorbars"}
+        self.showerror = {"de": "Fehlerbalken", "en": "Error bars"}
         self.showgrid = {"de": "Raster anzeigen", "en": "Show grid"}
         self.gridoptions1 = {"de": "Große Gitterlinien", "en": "Large gridlines"}
         self.gridoptions2 = {"de":"Alle Gitterlinien", "en":"All gridlines"}

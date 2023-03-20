@@ -300,7 +300,7 @@ class Options(ctk.CTkTabview):
         self.testselector = ctk.CTkOptionMenu(self.gammaframe, variable=self.test, values=[], command=self.clear_gamma)
         self.testlabel.grid(column=0, row=2, padx=5, pady=(3,5), sticky="w")
         self.testselector.grid(column=1, columnspan=4, row=2, padx=5, pady=(3,5), sticky="nsew")
-        
+
         self.gammatype = ctk.BooleanVar(value=self.p.get_attribute("gammatype"))
         self.gammatypelabel = ctk.CTkLabel(self.gammaframe, text=Text().gammatype[self.lang], font=("Bahnschrift",12, "bold"))
         self.local = ctk.CTkRadioButton(self.gammaframe, text=Text().local[self.lang], variable=self.gammatype, value=True, font=("Bahnschrift",12, "bold"))
@@ -328,7 +328,6 @@ class Options(ctk.CTkTabview):
         self.resultcanvas = ctk.CTkLabel(self.gammaframe, fg_color="white", text="", corner_radius=10, font=("Bahnschrift",14, "bold"))
         self.resultcanvas.grid(column=1, columnspan=4, row=5, padx=5, pady=(3,5), sticky="nsew")
         
-        
         self.gammaframe.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
         if self.showlegend.get():
             self.parent.ax.legend()
@@ -350,8 +349,7 @@ class Options(ctk.CTkTabview):
             
     def on_leave(self, widget, event=None):
         widget.unbind("<Return>")
-        
-                
+                  
     def change_order(self, direction):
         self.parent.saved = False
         plot_labels = [plot.label for plot in self.parent.plots]
@@ -378,7 +376,6 @@ class Options(ctk.CTkTabview):
                 [params.grid(row=i, sticky="ew", padx=5, pady=5) for i, params in enumerate(self.parameters)]
                 
         self.parent.update()
-        
         
     def disable_all_buttons(self):
         for tab in self.winfo_children():

@@ -119,6 +119,12 @@ class PTWMultimporter:
 
         self.plots = []
         self.frame = ScrollFrame(self.options.tab(Text().data[self.lang]))
+        theme = ProfileHandler().get_attribute("color_scheme")
+        colors2 = {"light": "#E5E5E5", "dark":"#212121"}
+        colors3 = {"light": "#DBDBDB", "dark":"#2B2B2B"}
+        self.frame.configure(fg_color=colors2[theme])
+        self.frame.canvas.configure(bg=colors3[theme], highlightbackground=colors3[theme])
+        self.frame.scrollbar.configure(fg_color=colors3[theme])
         self.frame.grid_propagate(False)
         self.options.dataframe2.grid_remove()
         self.frame.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
