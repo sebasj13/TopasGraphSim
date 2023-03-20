@@ -48,32 +48,41 @@ class TGS_Plot():
         
         axis = np.add(self.dataObject.axis,self.axshift)
         dose = self.dataObject.dose.copy()
+        error = self.dataObject.std_dev.copy()
         if self.normalize:
             if self.normalization == "maximum":
+                error /= np.max(dose)
                 dose /= np.max(dose)
+
             elif self.normalization == "plateau":
                 l = len(dose)//2
+                error /= np.average(dose[l-5:l+5])
                 dose /= np.average(dose[l-5:l+5])
+
             elif self.normalization == "centeraxis":
+                error /= dose[len(dose)//2]
                 dose /= dose[len(dose)//2]
 
+
         dose = np.add(dose * self.dosefactor, self.doseshift)
+        error = np.add(error * self.dosefactor, self.doseshift)
+        
         if self.flip:
             dose = np.flip(dose)
+            error = np.flip(error)
             
-        return axis, dose
+        return axis, dose, error
         
     def plot(self, ax):
     
-        axis, dose = self.data()
-        ax.plot(axis, dose, label=self.label, lw=self.linethickness, color=self.linecolor, linestyle = self.linestyle)
+        axis, dose, error = self.data()
+        if self.error:
+            ax.errorbar(axis, dose, label="_", yerr=error, fmt="none", ecolor="red", elinewidth=0.625, capsize=1.25, capthick=0.25)
+            ax.plot(axis, dose, label=self.label, lw=self.linethickness, color=self.linecolor, linestyle = self.linestyle)
+        else:
+            ax.plot(axis, dose, label=self.label, lw=self.linethickness, color=self.linecolor, linestyle = self.linestyle)
         if self.points:
             ax.scatter(axis, dose, label= "_", s=self.linethickness*20, color=self.linecolor, marker="x")
-            
-        if self.error:
-            pass
-        
-        
         
         
         

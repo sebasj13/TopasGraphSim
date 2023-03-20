@@ -19,7 +19,7 @@ class PTWMeasurement:
         self.direction = list[4]
         self.normpoint = max(self.dose)
 
-        self.std_dev = []
+        self.std_dev = np.array([0.0 for i in range(len(self.dose))])
 
         self.filepath = list[2]
         

@@ -58,6 +58,8 @@ class Options(ctk.CTkTabview):
         self.dataframe2.grid_propagate(False)
         self.dataframe2.columnconfigure(0, weight=1, minsize=144)
         self.dataframe2.columnconfigure(1, weight=1)
+        self.dataframe2.rowconfigure(1, weight=1)
+        self.dataframe2.rowconfigure(5, weight=1)
                 
         self.graphlist = ScrollFrame(self.dataframe1)
         path = os.path.join(os.path.dirname(os.path.abspath(__file__)),"..","resources")
@@ -83,21 +85,37 @@ class Options(ctk.CTkTabview):
         self.normalization = ctk.StringVar(value=normtypedict[self.p.get_attribute("normtype")])
         self.normalize_button = ctk.CTkCheckBox(self.dataframe2, text=Text().normalize[self.lang], variable=self.normalize, command=self.change_normalization, font=("Bahnschrift", 12, "bold"))
         self.normalize_options = ctk.CTkOptionMenu(self.dataframe2, values=[Text().maximum[self.lang], Text().plateau[self.lang], Text().centeraxis[self.lang]], variable=self.normalization, command=self.change_normalization)
-        self.normalize_button.grid(row=2, column=0, sticky="nsew", pady=(50,5), padx=5)
-        self.normalize_options.grid(row=2, column=1, sticky="nsew", pady=(50,5), padx=5)
+        self.normalize_button.grid(row=2, column=0, sticky="nsew", pady=5, padx=5)
+        self.normalize_options.grid(row=2, column=1, sticky="ew", pady=5, padx=5)
         
-        self.show_points = ctk.BooleanVar(value=self.p.get_attribute("show_points"))
-        self.pointsbutton = ctk.CTkCheckBox(self.dataframe2, text=Text().showpoints[self.lang], variable=self.show_points, command=self.change_points, font=("Bahnschrift", 12, "bold"))
-        self.pointsbutton.grid(row=3, column=0, sticky="nsew", pady=5, padx=5)
+        self.showgrid = ctk.BooleanVar(value=self.p.get_attribute("grid"))
+
+        self.gridoptions = ctk.StringVar(value=Text().gridoptions1[self.lang])
+        self.showgrid_button = ctk.CTkCheckBox(self.dataframe2, text=Text().showgrid[self.lang], variable=self.showgrid, onvalue=True, offvalue=False, command = self.toggle_grid_options, font=("Bahnschrift",12, "bold"))
+        self.showgrid_options = ctk.CTkOptionMenu(self.dataframe2, variable=self.gridoptions, values=[Text().gridoptions1[self.lang], Text().gridoptions2[self.lang]], command = lambda x: self.toggle_grid_options())    
+        self.showgrid_button.grid(column=0, row=3, padx=5, pady=3, sticky = "w")
+        self.showgrid_options.grid(column=1, row=3, padx=5, pady=3, sticky = "w")   
         
-        self.show_error = ctk.BooleanVar(value=self.p.get_attribute("show_error"))
-        self.errorbutton = ctk.CTkCheckBox(self.dataframe2, text=Text().showerror[self.lang], variable=self.show_error, command=self.change_error, font=("Bahnschrift", 12, "bold"))
-        self.errorbutton.grid(row=3, column=1, sticky="nsew", pady=5, padx=5)
+        self.showlegend = ctk.BooleanVar(value = self.p.get_attribute("legend"))
+        self.legendoptions = ctk.StringVar(value=Text().legendoptions1[self.lang]) ##
+        
+        self.showlegend_button = ctk.CTkCheckBox(self.dataframe2, text=Text().showlegend[self.lang], variable=self.showlegend, onvalue=True, offvalue=False, command = self.toggle_legend_options, font=("Bahnschrift", 12, "bold"))
+        self.showlegend_options = ctk.CTkOptionMenu(self.dataframe2, 
+                                                    variable=self.legendoptions, 
+                                                    values=[Text().legendoptions1[self.lang], 
+                                                            Text().legendoptions2[self.lang], 
+                                                            Text().legendoptions3[self.lang],
+                                                            Text().legendoptions4[self.lang],
+                                                            Text().legendoptions5[self.lang]],
+                                                    command = lambda x: self.toggle_legend_options())
+        
+        self.showlegend_button.grid(column=0, row=4, padx=5, pady=(3,5), sticky="w")
+        self.showlegend_options.grid(column=1, row=4, padx=5, pady=(3,5), sticky="w")
         
         self.change_name_button = ctk.CTkButton(self.dataframe2, text=Text().edittabname[self.lang], command = self.change_name, width=20)
         self.close_tab_button = ctk.CTkButton(self.dataframe2, text=Text().closetab1[self.lang], command = lambda: self.parent.master.master.remove_tab(self.parent.master.master.tabnames.index(self.parent.name)), width=20, fg_color="red")
-        self.close_tab_button.grid(row=4, column=1, sticky="nsew", pady=5, padx=5)
-        self.change_name_button.grid(row=4, column=0, sticky="nsew", pady=5, padx=5)
+        self.close_tab_button.grid(row=6, column=1, sticky="nsew", pady=5, padx=5)
+        self.change_name_button.grid(row=6, column=0, sticky="nsew", pady=5, padx=5)
         
         
         #######################################################################################################################
@@ -144,29 +162,13 @@ class Options(ctk.CTkTabview):
         self.yentry.grid(column=0, row=3, padx=5, pady=3)
         self.ybutton.grid(column=1, row=3, padx=5, pady=3)
         
-        self.showgrid = ctk.BooleanVar(value=self.p.get_attribute("grid"))
-
-        self.gridoptions = ctk.StringVar(value=Text().gridoptions1[self.lang])
-        self.showgrid_button = ctk.CTkCheckBox(self.graphsettingsframe, text=Text().showgrid[self.lang], variable=self.showgrid, onvalue=True, offvalue=False, command = self.toggle_grid_options, font=("Bahnschrift",12, "bold"))
-        self.showgrid_options = ctk.CTkOptionMenu(self.graphsettingsframe, variable=self.gridoptions, values=[Text().gridoptions1[self.lang], Text().gridoptions2[self.lang]], state="disabled", command = lambda x: self.toggle_grid_options())    
-        self.showgrid_button.grid(column=0, row=4, padx=5, pady=3, sticky = "w")
-        self.showgrid_options.grid(column=1, row=4, padx=5, pady=3, sticky = "w")   
+        self.show_points = ctk.BooleanVar(value=self.p.get_attribute("show_points"))
+        self.pointsbutton = ctk.CTkCheckBox(self.graphsettingsframe, text=Text().showpoints[self.lang], variable=self.show_points, command=self.change_points, font=("Bahnschrift", 12, "bold"))
+        self.pointsbutton.grid(row=4, column=0, sticky="nsew", pady=5, padx=5)
         
-        self.showlegend = ctk.BooleanVar(value = self.p.get_attribute("legend"))
-        self.legendoptions = ctk.StringVar(value=Text().legendoptions1[self.lang]) ##
-        
-        self.showlegend_button = ctk.CTkCheckBox(self.graphsettingsframe, text=Text().showlegend[self.lang], variable=self.showlegend, onvalue=True, offvalue=False, command = self.toggle_legend_options, font=("Bahnschrift", 12, "bold"))
-        self.showlegend_options = ctk.CTkOptionMenu(self.graphsettingsframe, 
-                                                    variable=self.legendoptions, 
-                                                    values=[Text().legendoptions1[self.lang], 
-                                                            Text().legendoptions2[self.lang], 
-                                                            Text().legendoptions3[self.lang],
-                                                            Text().legendoptions4[self.lang],
-                                                            Text().legendoptions5[self.lang]],
-                                                    state="disabled", command = lambda x: self.toggle_legend_options())
-        
-        self.showlegend_button.grid(column=0, row=5, padx=5, pady=(3,5), sticky="w")
-        self.showlegend_options.grid(column=1, row=5, padx=5, pady=(3,5), sticky="w")
+        self.show_error = ctk.BooleanVar(value=self.p.get_attribute("show_error"))
+        self.errorbutton = ctk.CTkCheckBox(self.graphsettingsframe, text=Text().showerror[self.lang], variable=self.show_error, command=self.change_error, font=("Bahnschrift", 12, "bold"))
+        self.errorbutton.grid(row=5, column=0, sticky="nsew", pady=5, padx=5)
         
         self.plotsettingsframe = ctk.CTkFrame(self.tab(Text().settings1[self.lang]), border_color="black", border_width=1)
         self.plotsettingsframe.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
@@ -474,8 +476,8 @@ class Options(ctk.CTkTabview):
             distance = float(self.distance.get())
             local = self.gammatype.get()
             plot_labels = [plot.label for plot in self.parent.plots]
-            reference_axes, reference_dose = self.parent.plots[plot_labels.index(self.reference.get())].data()
-            evaluation_axes, evaluation_dose = self.parent.plots[plot_labels.index(self.test.get())].data()
+            reference_axes, reference_dose, _ = self.parent.plots[plot_labels.index(self.reference.get())].data()
+            evaluation_axes, evaluation_dose, _ = self.parent.plots[plot_labels.index(self.test.get())].data()
             g = gamma(axes_reference=reference_axes, dose_reference=reference_dose, axes_evaluation=evaluation_axes, dose_evaluation=evaluation_dose, dose_percent_threshold=percent, distance_mm_threshold=distance, local_gamma=local, lower_percent_dose_cutoff=0, max_gamma =5)
             gamma_index = len(np.where(g <= 1)[0])/len(g)*100
             if gamma_index >= 95:
@@ -487,8 +489,8 @@ class Options(ctk.CTkTabview):
                 
             self.resultcanvas.configure(text=str(round(gamma_index, 3)) + "%")
             
-        except ValueError:
-            pass
+        except ValueError as e:
+            print(e)
         
 
     def choose_linecolor(self):
@@ -629,7 +631,6 @@ class Options(ctk.CTkTabview):
                 self.enable_all_buttons()
                 
             self.parent.saved = False
-            self.parent.update()
             
     def load_measurement(self, path = None):
         if path == None:

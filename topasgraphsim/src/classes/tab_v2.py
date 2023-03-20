@@ -40,6 +40,7 @@ class Tab(ctk.CTkFrame):
         self.navbar._buttons["Save"].config(command=self.options.save)
         
         self.bind("<Configure>", lambda event: self.config(event))
+        self.update()
         
     def config(self, event=None): 
         self.figure.subplots_adjust(left=0.08, right=0.92, top=0.92, bottom=0.09, wspace=0.2, hspace=0.2)
