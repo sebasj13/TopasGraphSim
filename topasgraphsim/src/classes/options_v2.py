@@ -337,10 +337,8 @@ class Options(ctk.CTkTabview):
             self.parent.ax.grid(which="major", visible=True, axis="both", lw=1) 
             self.parent.canvas.draw() 
         self.disable_all_buttons()
-       
     
     ######################################################################################################################################################################
-
 
     def save(self):
         fname = fd.asksaveasfilename(title = Text().saveplottitle[self.lang], filetypes = (("PNG","*.png"),(Text().allfiles[self.lang],"*.*")))
