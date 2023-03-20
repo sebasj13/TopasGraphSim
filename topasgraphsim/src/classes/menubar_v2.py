@@ -92,5 +92,5 @@ class MenuBar(tk.Menu):
         
     def show_about(self):
 
-        show_info(self.parent)
-        print([i for i in self.parent.winfo_children()])
+        if len([i for i in self.parent.winfo_children() if isinstance(i,show_info)]) == 0:  
+            show_info(self.parent)

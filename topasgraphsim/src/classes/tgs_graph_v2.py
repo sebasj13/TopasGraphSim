@@ -35,7 +35,7 @@ class TGS_Plot():
         self.options.normalization.set(normtypedict[self.normalization])
         self.options.plottitle.set(self.label)
         self.options.linethicknessslider.set(self.linethickness)
-        self.options.linestyle.set({"-.":Text().dashdot[self.lang], "-":Text().dash[self.lang], "dotted":Text().dot[self.lang]}[self.linestyle])
+        self.options.linestyle.set({"-.":Text().dashdot[self.lang], "-":Text().dash[self.lang], "dotted":Text().dot[self.lang], " ":Text().none[self.lang]}[self.linestyle])
         self.options.plotcolor.set(self.linecolor)
         self.options.linecolorbutton.configure(fg_color=self.linecolor)
         self.options.doseshift.set(self.doseshift)

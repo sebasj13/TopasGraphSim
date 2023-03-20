@@ -141,6 +141,7 @@ class Text:
             "en": "Das geöffnete Projekt wird geschlossen. Fortfahren?",
             "de": "The current project will be closed. Continue?",
         }
+        self.none = {"de": "Keine", "en": "None"}
         self.light = {"de": "Hell", "en": "Light"}
         self.linethickness = {"de": "Linienstärke", "en": "Line thickness"}
         self.linecolor = {"de": "Linienfarbe", "en": "Line color"}

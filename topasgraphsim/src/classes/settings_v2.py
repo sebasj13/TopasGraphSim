@@ -102,9 +102,9 @@ class Settings(ctk.CTkFrame):
         
         self.linestylelabel = ctk.CTkLabel(self.plotframe, text=Text().linestyle[self.lang], font=("Bahnschrift",16))
         self.linestylelabel.grid(column=0, row=2, padx=5, pady=5, sticky="w")
-        self.linestyledict = {"-.":Text().dashdot[self.lang], "-":Text().dash[self.lang], "dotted":Text().dot[self.lang]}
+        self.linestyledict = {"-.":Text().dashdot[self.lang], "-":Text().dash[self.lang], "dotted":Text().dot[self.lang], " ":Text().none[self.lang]}
         self.linestyle = ctk.StringVar(value = self.linestyledict[self.p.get_attribute("linestyle")])
-        self.linestyleselector = ctk.CTkOptionMenu(self.plotframe, variable=self.linestyle, values=[Text().dashdot[self.lang], Text().dash[self.lang], Text().dot[self.lang]])
+        self.linestyleselector = ctk.CTkOptionMenu(self.plotframe, variable=self.linestyle, values=[Text().dashdot[self.lang], Text().dash[self.lang], Text().dot[self.lang], Text().none[self.lang]])
         self.linestyleselector.grid(column=1, row=2, padx=5, pady=5, sticky="ew")
         
         self.dosescale = ctk.StringVar(value=self.p.get_attribute("dosefactor"))
@@ -183,7 +183,7 @@ class Settings(ctk.CTkFrame):
         
         try: self.p.set_attribute("linethickness", round(float(self.linethickness.get()),2))
         except ValueError: pass
-        linestyledict = {Text().dashdot[self.lang]:"-.", Text().dash[self.lang]:"-", Text().dot[self.lang]:"dotted"}
+        linestyledict = {Text().dashdot[self.lang]:"-.", Text().dash[self.lang]:"-", Text().dot[self.lang]:"dotted", Text().none[self.lang]:" "}
         self.p.set_attribute("linestyle", linestyledict[self.linestyle.get()])
         try: self.p.set_attribute("dosefactor", float(self.dosescale.get()))
         except ValueError: pass
@@ -212,7 +212,7 @@ class Settings(ctk.CTkFrame):
         self.showlegend.set(self.p.get_attribute("legend"))
         
         self.linethickness.set(self.p.get_attribute("linethickness"))
-        linestyledict = {"-.":Text().dashdot[self.lang], "-":Text().dash[self.lang], "dotted":Text().dot[self.lang]}
+        linestyledict = {"-.":Text().dashdot[self.lang], "-":Text().dash[self.lang], "dotted":Text().dot[self.lang], " ":Text().none[self.lang]}
         self.linestyle.set(linestyledict[self.p.get_attribute("linestyle")])
         self.dosescale.set(self.p.get_attribute("dosefactor"))
         self.doseshift.set(self.p.get_attribute("doseoffset"))

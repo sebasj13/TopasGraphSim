@@ -196,9 +196,9 @@ class Options(ctk.CTkTabview):
         
         self.linestylelabel = ctk.CTkLabel(self.plotsettingsframe, text=Text().linestyle[self.lang], font=("Bahnschrift",12, "bold"))
         self.linestylelabel.grid(column=0, row=4, padx=5, pady=3, sticky="w")
-        self.linestyledict = {"-.":Text().dashdot[self.lang], "-":Text().dash[self.lang], "dotted":Text().dot[self.lang]}
+        self.linestyledict = {"-.":Text().dashdot[self.lang], "-":Text().dash[self.lang], "dotted":Text().dot[self.lang], " ":Text().none[self.lang]}
         self.linestyle = ctk.StringVar(value=self.linestyledict[self.p.get_attribute("linestyle")])
-        self.linestyleselector = ctk.CTkOptionMenu(self.plotsettingsframe, variable=self.linestyle, values=[Text().dashdot[self.lang], Text().dash[self.lang], Text().dot[self.lang]], command = self.change_linestyle)
+        self.linestyleselector = ctk.CTkOptionMenu(self.plotsettingsframe, variable=self.linestyle, values=[Text().dashdot[self.lang], Text().dash[self.lang], Text().dot[self.lang], Text().none[self.lang]], command = self.change_linestyle)
         self.linestyleselector.grid(column=1, row=4, padx=5, pady=3, sticky="e")
         
         self.plotcolor = ctk.StringVar()
@@ -524,7 +524,7 @@ class Options(ctk.CTkTabview):
         index = plot_labels.index(self.current_plot.get())
         line_labels = [line._label for line in self.parent.ax.lines]
         line_index = line_labels.index(self.current_plot.get())
-        self.parent.plots[index].linestyle = {Text().dashdot[self.lang]:"-.", Text().dash[self.lang]:"-", Text().dot[self.lang]:"dotted"}[value]
+        self.parent.plots[index].linestyle = {Text().dashdot[self.lang]:"-.", Text().dash[self.lang]:"-", Text().dot[self.lang]:"dotted", Text().none[self.lang]:" "}[value]
         self.parent.ax.lines[line_index].set_linestyle(self.parent.plots[index].linestyle)
         self.toggle_legend_options()
         self.parent.canvas.draw()
