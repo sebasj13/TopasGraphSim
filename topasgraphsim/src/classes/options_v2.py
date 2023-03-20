@@ -626,6 +626,7 @@ class Options(ctk.CTkTabview):
                 self.enable_all_buttons()
                 
             self.parent.saved = False
+            self.parent.update()
             
     def load_measurement(self, path = None):
         if path == None:
