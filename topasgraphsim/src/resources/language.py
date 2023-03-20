@@ -133,6 +133,7 @@ class Text:
         }
         self.language = {"de": "Sprache", "en": "Language"}
         self.shift = {"de": "Linie verschieben/skalieren", "en": "Shift/rescale graph"}
+        self.showpoints = {"de": "Punkte anzeigen", "en": "Show points"}
         self.settings = {"de": "Standardeinstellungen", "en": "Default settings"}
         self.settings1 = {"de":"Einstellungen", "en":"Settings"}
         self.savesettings = {"de": "Einstellungen speichern", "en": "Save settings"}

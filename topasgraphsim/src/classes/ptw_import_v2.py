@@ -9,7 +9,7 @@ from ..resources.language import Text
 from .profile import ProfileHandler
 from .tgs_graph_v2 import TGS_Plot
 from .paramframe_v2 import Parameters
-
+from .scrollframe_v2 import ScrollFrame
 
 class PTWMeasurement:
     def __init__(self, list, index):
@@ -118,37 +118,10 @@ class PTWMultimporter:
                     axes = {}
 
         self.plots = []
-        self.window = ctk.CTkToplevel()
-        # self.window.wm_attributes("-toolwindow", True)
-        self.window.overrideredirect(1)
-        self.window.title("PTW tbaScan")
-        self.window.resizable(False, False)
-        self.window.bind("<Return>", self.submit)
-        self.geometry = [
-            self.root.winfo_rootx(),
-            self.root.winfo_rooty(),
-            self.root.winfo_width(),
-            self.root.winfo_height(),
-        ]
-        self.height = 10 + 29 * (len(self.alldata) + 1)
-        self.width = 220
-        if self.lang == "en":
-            self.width = 180
-        self.window.geometry(
-            f"{self.width}x{self.height}+{self.root.winfo_rootx()}+{self.root.parent.winfo_rooty()}"
-        )
-        self.window.iconbitmap(
-            str(
-                os.path.join(
-                    os.path.dirname(os.path.realpath(__file__)),
-                    "..",
-                    "resources",
-                    "icon.ico",
-                )
-            )
-        )
-        self.frame = ctk.CTkFrame(self.window)
-        self.frame.pack()
+        self.frame = ScrollFrame(self.options.tab(Text().data[self.lang]))
+        self.frame.grid_propagate(False)
+        self.options.dataframe2.grid_remove()
+        self.frame.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
         self.variables = [ctk.BooleanVar() for i in range(len(self.alldata))]
         [var.set(False) for var in self.variables]
         textdict = {
@@ -161,7 +134,7 @@ class PTWMultimporter:
         }
         self.buttons = [
             ctk.CTkCheckBox(
-                self.frame,
+                self.frame.viewPort,
                 variable=self.variables[i],
                 text=f"Scan {i+1}: {textdict[PTWMeasurement(self.alldata[i], i+1).direction]}",
             )
@@ -169,36 +142,11 @@ class PTWMultimporter:
         ]
         [button.grid(sticky="W") for button in self.buttons]
         self.submitbutton = ctk.CTkButton(
-            self.frame,
+            self.frame.viewPort,
             text=Text().submit[ProfileHandler().get_attribute("language")],
             command=self.submit,
         )
         self.submitbutton.grid(sticky="S")
-        self.window.protocol("WM_DELETE_WINDOW", self.close)
-
-        self.lift()
-
-    def lift(self):
-        self.new_geometry = [
-            self.root.winfo_rootx(),
-            self.root.winfo_rooty(),
-            self.root.winfo_width(),
-            self.root.winfo_height(),
-        ]
-
-        self.window.lift()
-        self.window.after(100, self.lift)
-        if self.new_geometry == self.geometry:
-            return
-
-        self.geometry = self.new_geometry
-        self.window.geometry(
-            f"{self.width}x{self.height}+{self.root.winfo_rootx()}+{self.root.winfo_rooty()}"
-        )
-
-    def close(self):
-        self.plots = []
-        self.window.destroy()
 
     def submit(self, event=None):
 
@@ -214,9 +162,14 @@ class PTWMultimporter:
                 self.options.plotbuttons[-1].grid(sticky="w", padx=5, pady=5)
             if len(self.options.parent.plots) == 1:
                 self.options.enable_all_buttons()
-                
-        self.options.current_plot.set(self.plotlist[-1].label)
-        self.options.filenames.append(self.path)
-        self.options.parent.saved = False
-        self.options.parent.update()
-        self.window.destroy()
+        try:
+            self.options.current_plot.set(self.plotlist[-1].label)
+            self.options.filenames.append(self.path)
+            self.options.parent.saved = False
+            self.options.update_plotlist()
+            self.options.parent.update()
+        except IndexError:
+            pass
+        
+        self.frame.destroy()
+        self.options.dataframe2.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)

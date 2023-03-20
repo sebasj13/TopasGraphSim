@@ -1,4 +1,5 @@
 import os
+import sys
 import tkinterDnD as tkdnd
 import customtkinter as ctk
 
@@ -61,7 +62,9 @@ class TopasGraphSim(Tk):
             
            
         self.protocol("WM_DELETE_WINDOW", self.exit)
-                
+        for i in sys.argv[1:]:
+            if os.path.exists(i):
+                self.frame.add_file(i)
         self.mainloop()
         
     def settings(self):

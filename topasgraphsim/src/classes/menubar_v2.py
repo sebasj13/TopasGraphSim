@@ -22,10 +22,14 @@ class MenuBar(tk.Menu):
         self.languagemenu.add_radiobutton(label=text.english[l], command=self.set_language, variable=self.parent.lang, value="en")
         self.languagemenu.add_radiobutton(label=text.german[l], command=self.set_language, variable=self.parent.lang, value="de")
         self.filemenu.add_command(command=self.load_topas, label=text.loadsim[l], accelerator="Ctrl+O")
+        self.filemenu.add_command(command=self.load_measurement, label=text.loadmeasurement[l], accelerator="Ctrl+P")
         self.filemenu.add_separator()
         self.filemenu.add_cascade(label=text.language[l], menu=self.languagemenu)
         self.filemenu.add_command(label=text.settings[l], command=self.parent.settings)
         self.filemenu.add_command(label = text.end[l], command=self.parent.exit)
+        
+        self.parent.bind("<Control-o>", lambda e: self.load_topas())
+        self.parent.bind("<Control-p>", lambda e: self.load_measurement())
     
         self.viewmenu = tk.Menu(self, tearoff=False)
         
@@ -47,7 +51,7 @@ class MenuBar(tk.Menu):
         
         self.add_cascade(label=text.file[l], menu = self.filemenu)
         self.add_cascade(label=text.view[l], menu=self.viewmenu)
-        self.add_command(label=text.about[l], command=lambda: show_info(self.parent))
+        self.add_command(label=text.about[l], command=self.show_about)
         
     def set_theme(self):
         """Switch between light and dark theme.
@@ -78,3 +82,15 @@ class MenuBar(tk.Menu):
             self.parent.frame.tabview.add_tab(name = True)
             current_tab = self.parent.frame.tabview.get()
         self.parent.frame.tabview.tab(current_tab).tab.options.load_topas()
+        
+    def load_measurement(self):
+        current_tab = self.parent.frame.tabview.get()
+        if current_tab == "":
+            self.parent.frame.tabview.add_tab(name = True)
+            current_tab = self.parent.frame.tabview.get()
+        self.parent.frame.tabview.tab(current_tab).tab.options.load_measurement()
+        
+    def show_about(self):
+
+        show_info(self.parent)
+        print([i for i in self.parent.winfo_children()])

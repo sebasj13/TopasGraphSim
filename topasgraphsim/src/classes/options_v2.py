@@ -86,6 +86,10 @@ class Options(ctk.CTkTabview):
         self.normalize_button.grid(row=2, column=0, sticky="nsew", pady=(50,5), padx=5)
         self.normalize_options.grid(row=2, column=1, sticky="nsew", pady=(50,5), padx=5)
         
+        self.show_points = ctk.BooleanVar(value=self.p.get_attribute("show_points"))
+        self.pointsbutton = ctk.CTkCheckBox(self.dataframe2, text=Text().showpoints[self.lang], variable=self.show_points, command=self.change_points, font=("Bahnschrift", 12, "bold"))
+        self.pointsbutton.grid(row=3, column=0, sticky="nsew", pady=5, padx=5)
+        
         self.change_name_button = ctk.CTkButton(self.dataframe2, text=Text().edittabname[self.lang], command = self.change_name, width=20)
         self.close_tab_button = ctk.CTkButton(self.dataframe2, text=Text().closetab1[self.lang], command = lambda: self.parent.master.master.remove_tab(self.parent.master.master.tabnames.index(self.parent.name)), width=20, fg_color="red")
         self.close_tab_button.grid(row=4, column=1, sticky="nsew", pady=5, padx=5)
@@ -363,6 +367,7 @@ class Options(ctk.CTkTabview):
             if index+1 < len(self.plotbuttons):
                 self.parent.plots[index], self.parent.plots[index+1] = self.parent.plots[index+1], self.parent.plots[index]
                 self.plotbuttons[index], self.plotbuttons[index+1] = self.plotbuttons[index+1], self.plotbuttons[index]
+                self.parameters[index], self.parameters[index+1] = self.parameters[index+1], self.parameters[index]
                 [button.grid_forget() for button in self.plotbuttons]
                 [params.grid_forget() for params in self.parameters]
                 [button.grid(row=i, padx=5, pady=5, sticky="w") for i, button in enumerate(self.plotbuttons)]
@@ -429,7 +434,12 @@ class Options(ctk.CTkTabview):
             normtypedict = {Text().maximum[self.lang]:"maximum", Text().plateau[self.lang]:"plateau", Text().centeraxis[self.lang]:"centeraxis"}
             plot.normalization = normtypedict[self.normalization.get()]
         self.parent.update()
-        #self.parent.master.master.parent.parent.set_theme()
+
+    def change_points(self, event=None):
+        self.parent.saved = False
+        for plot in self.parent.plots:
+            plot.points = self.show_points.get()
+        self.parent.update()
         
     def apply(self, event=None):
         try:

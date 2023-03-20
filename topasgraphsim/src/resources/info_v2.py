@@ -12,7 +12,7 @@ class show_info(ctk.CTkToplevel):
     
     def __init__(self, parent):
         
-        self.parent = parent
+        self.parent = parent        
         super().__init__(self.parent)
         
         self.title("")

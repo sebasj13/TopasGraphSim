@@ -17,6 +17,19 @@ class MainViewer(Frame):
         self.register_drop_target("*")
         self.bind("<<Drop>>", self.drop)
 
+    def add_file(self, path):
+        if len(self.tabview.tabnames) == 0:
+            self.tabview.add_tab(name = True)
+            if path[-4:] == ".csv":
+                self.tabview.tab(self.tabview.tabnames[-1]).tab.options.load_topas(path)
+            elif path[-4:] == ".mcc":
+                self.tabview.tab(self.tabview.tabnames[-1]).tab.options.load_measurement(path)
+            
+        else:
+            if path[-4:] == ".csv":
+                self.tabview.tab(self.tabview.tabnames[self.tabview.tabnames.index(self.tabview.get())]).tab.options.load_topas(path)
+            elif path[-4:] == ".mcc":
+                self.tabview.tab(self.tabview.tabnames[self.tabview.tabnames.index(self.tabview.get())]).tab.options.load_measurement(path)
 
     def drop(self, event):
         path = event.data
@@ -24,7 +37,13 @@ class MainViewer(Frame):
             path = path[1:-1]
         if len(self.tabview.tabnames) == 0:
             self.tabview.add_tab(name = True)
-            self.tabview.tab(self.tabview.tabnames[-1]).tab.options.load_topas(path)
+            if path[-4:] == ".csv":
+                self.tabview.tab(self.tabview.tabnames[-1]).tab.options.load_topas(path)
+            elif path[-4:] == ".mcc":
+                self.tabview.tab(self.tabview.tabnames[-1]).tab.options.load_measurement(path)
             
         else:
-            self.tabview.tab(self.tabview.tabnames[self.tabview.tabnames.index(self.tabview.get())]).tab.options.load_topas(path)
+            if path[-4:] == ".csv":
+                self.tabview.tab(self.tabview.tabnames[self.tabview.tabnames.index(self.tabview.get())]).tab.options.load_topas(path)
+            elif path[-4:] == ".mcc":
+                self.tabview.tab(self.tabview.tabnames[self.tabview.tabnames.index(self.tabview.get())]).tab.options.load_measurement(path)

@@ -1,5 +1,5 @@
 {
-    "geometry": "960x540+620+114",
+    "geometry": "960x540+78+78",
     "state": "normal",
     "draganddrop": true,
     "color_scheme": "light",
@@ -11,6 +11,7 @@
     "legend": true,
     "normalize": true,
     "normtype": "maximum",
+    "show_points": false,
     "graphtitle": "New graph",
     "xaxislabel": "X-Axis",
     "yaxislabel": "Y-Axis",
