@@ -13,6 +13,7 @@ from ..resources.language import Text
 from .scrollframe_v2 import ScrollFrame
 from .tgs_graph_v2 import TGS_Plot
 from .sim_import import Simulation
+from .ptw_import_v2 import PTWMultimporter
 from .profile import ProfileHandler
 from .paramframe_v2 import Parameters
 
@@ -73,14 +74,17 @@ class Options(ctk.CTkTabview):
     
         self.load_topas_button = ctk.CTkButton(self.dataframe2, text = Text().loadsim[self.lang], command = self.load_topas, width=20)
         self.load_topas_button.grid(row=0, column=0, sticky="nsew", pady=5, padx=5)
+        
+        self.load_mcc_button = ctk.CTkButton(self.dataframe2, text = Text().loadmeasurement[self.lang], command = self.load_measurement, width=20)
+        self.load_mcc_button.grid(row=0, column=1, sticky="nsew", padx=5, pady=5)
 
         self.normalize=ctk.BooleanVar(value=self.p.get_attribute("normalize"))
         normtypedict = {"maximum":Text().maximum[self.lang], "plateau":Text().plateau[self.lang], "centeraxis":Text().centeraxis[self.lang]}
         self.normalization = ctk.StringVar(value=normtypedict[self.p.get_attribute("normtype")])
         self.normalize_button = ctk.CTkCheckBox(self.dataframe2, text=Text().normalize[self.lang], variable=self.normalize, command=self.change_normalization, font=("Bahnschrift", 12, "bold"))
         self.normalize_options = ctk.CTkOptionMenu(self.dataframe2, values=[Text().maximum[self.lang], Text().plateau[self.lang], Text().centeraxis[self.lang]], variable=self.normalization, command=self.change_normalization)
-        self.normalize_button.grid(row=2, column=0, sticky="nsew", pady=5, padx=5)
-        self.normalize_options.grid(row=2, column=1, sticky="nsew", pady=5, padx=5)
+        self.normalize_button.grid(row=2, column=0, sticky="nsew", pady=(50,5), padx=5)
+        self.normalize_options.grid(row=2, column=1, sticky="nsew", pady=(50,5), padx=5)
         
         self.change_name_button = ctk.CTkButton(self.dataframe2, text=Text().edittabname[self.lang], command = self.change_name, width=20)
         self.close_tab_button = ctk.CTkButton(self.dataframe2, text=Text().closetab1[self.lang], command = lambda: self.parent.master.master.remove_tab(self.parent.master.master.tabnames.index(self.parent.name)), width=20, fg_color="red")
@@ -606,6 +610,14 @@ class Options(ctk.CTkTabview):
                 
             self.parent.saved = False
             self.parent.update()
+            
+    def load_measurement(self, path = None):
+        if path == None:
+            path = fd.askopenfilename(filetypes=[("MCC files", "*.mcc")])
+        
+        if path != "" and path not in self.filenames:
+            PTWMultimporter(path, self.parent.plots, self)
+
             
     def change_current_plot(self, event=None):
         plot_labels = [plot.label for plot in self.parent.plots]

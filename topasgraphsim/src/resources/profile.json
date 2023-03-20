@@ -20,9 +20,9 @@
     "doseoffset": 0.0,
     "axshift": 0.0,
     "flip": false,
-    "gammatype": true,
-    "dd": "1",
-    "dta": "1",
+    "gammatype": false,
+    "dd": "3",
+    "dta": "3",
     "default_colors": [
         "#009F6B",
         "#C40233",
