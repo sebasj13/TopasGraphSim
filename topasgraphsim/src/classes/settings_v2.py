@@ -72,13 +72,17 @@ class Settings(ctk.CTkFrame):
         self.pointsbutton = ctk.CTkCheckBox(self.generalframe, text=Text().showpoints[self.lang], variable=self.show_points, font=("Bahnschrift", 16))
         self.pointsbutton.grid(row=5, column=0, columnspan=2, padx=5, pady=5, sticky="w")
         
+        self.show_error = ctk.BooleanVar(value=ProfileHandler().get_attribute("show_error"))
+        self.errorbutton = ctk.CTkCheckBox(self.generalframe, text=Text().showerror[self.lang], variable=self.show_error, font=("Bahnschrift", 16))
+        self.errorbutton.grid(row=5, column=1, columnspan=2, padx=5, pady=5, sticky="w")
+        
         self.showgrid = ctk.BooleanVar(value=ProfileHandler().get_attribute("grid"))
         self.gridbutton = ctk.CTkCheckBox(self.generalframe, text=Text().showgrid[self.lang], variable=self.showgrid, font=("Bahnschrift", 16))
         self.gridbutton.grid(row=6, column=0, columnspan=2, padx=5, pady=5, sticky="w")
         
         self.showlegend = ctk.BooleanVar(value=ProfileHandler().get_attribute("legend"))
         self.legendbutton = ctk.CTkCheckBox(self.generalframe, text=Text().showlegend[self.lang], variable=self.showlegend, font=("Bahnschrift", 16))
-        self.legendbutton.grid(row=7, column=0, columnspan=2, padx=5, pady=5, sticky="w")
+        self.legendbutton.grid(row=6, column=1, columnspan=2, padx=5, pady=5, sticky="w")
         
         ############################
         
@@ -176,6 +180,7 @@ class Settings(ctk.CTkFrame):
         self.p.set_attribute("yaxislabel", self.defaulyaxis.get())
         self.p.set_attribute("normalize"    , self.normalize.get())
         self.p.set_attribute("show_points"   , self.show_points.get())
+        self.p.set_attribute("show_error"   , self.show_error.get())
         normtypedict = {Text().maximum[self.lang]:"maximum", Text().plateau[self.lang]:"plateau", Text().centeraxis[self.lang]:"centeraxis"}
         self.p.set_attribute("normtype", normtypedict[self.normtype.get()])
         self.p.set_attribute("legend"   , self.showlegend.get())
@@ -206,6 +211,7 @@ class Settings(ctk.CTkFrame):
         self.defaulyaxis.set(self.p.get_attribute("yaxislabel"))
         self.normalize.set(self.p.get_attribute("normalize"))
         self.show_points.set(self.p.get_attribute("show_points"))
+        self.show_error.set(self.p.get_attribute("show_error"))
         normtypedict = {"maximum":Text().maximum[self.lang], "plateau":Text().plateau[self.lang], "centeraxis":Text().centeraxis[self.lang]}
         self.normtype.set(normtypedict[self.p.get_attribute("normtype")])
         self.showgrid.set(self.p.get_attribute("grid"))

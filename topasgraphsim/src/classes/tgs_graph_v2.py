@@ -15,6 +15,7 @@ class TGS_Plot():
         self.normalize = self.p.get_attribute("normalize")
         self.normalization = self.p.get_attribute("normtype")
         self.points = self.p.get_attribute("show_points")
+        self.error = self.p.get_attribute("show_error")
         
         self.label = self.dataObject.filename
         self.linethickness = self.p.get_attribute("linethickness")
@@ -68,6 +69,9 @@ class TGS_Plot():
         ax.plot(axis, dose, label=self.label, lw=self.linethickness, color=self.linecolor, linestyle = self.linestyle)
         if self.points:
             ax.scatter(axis, dose, label= "_", s=self.linethickness*20, color=self.linecolor, marker="x")
+            
+        if self.error:
+            pass
         
         
         

@@ -12,6 +12,7 @@
     "normalize": true,
     "normtype": "maximum",
     "show_points": false,
+    "show_error": true,
     "graphtitle": "New graph",
     "xaxislabel": "X-Axis",
     "yaxislabel": "Y-Axis",

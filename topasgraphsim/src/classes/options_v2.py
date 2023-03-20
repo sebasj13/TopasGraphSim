@@ -90,6 +90,10 @@ class Options(ctk.CTkTabview):
         self.pointsbutton = ctk.CTkCheckBox(self.dataframe2, text=Text().showpoints[self.lang], variable=self.show_points, command=self.change_points, font=("Bahnschrift", 12, "bold"))
         self.pointsbutton.grid(row=3, column=0, sticky="nsew", pady=5, padx=5)
         
+        self.show_error = ctk.BooleanVar(value=self.p.get_attribute("show_error"))
+        self.errorbutton = ctk.CTkCheckBox(self.dataframe2, text=Text().showerror[self.lang], variable=self.show_error, command=self.change_error, font=("Bahnschrift", 12, "bold"))
+        self.errorbutton.grid(row=3, column=1, sticky="nsew", pady=5, padx=5)
+        
         self.change_name_button = ctk.CTkButton(self.dataframe2, text=Text().edittabname[self.lang], command = self.change_name, width=20)
         self.close_tab_button = ctk.CTkButton(self.dataframe2, text=Text().closetab1[self.lang], command = lambda: self.parent.master.master.remove_tab(self.parent.master.master.tabnames.index(self.parent.name)), width=20, fg_color="red")
         self.close_tab_button.grid(row=4, column=1, sticky="nsew", pady=5, padx=5)
@@ -439,6 +443,12 @@ class Options(ctk.CTkTabview):
         self.parent.saved = False
         for plot in self.parent.plots:
             plot.points = self.show_points.get()
+        self.parent.update()
+        
+    def change_error(self, event=None):
+        self.parent.saved = False
+        for plot in self.parent.plots:
+            plot.error = self.show_error.get()
         self.parent.update()
         
     def apply(self, event=None):
