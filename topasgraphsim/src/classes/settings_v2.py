@@ -62,7 +62,11 @@ class Settings(ctk.CTkFrame):
         
         self.normalize = ctk.BooleanVar(value=ProfileHandler().get_attribute("normalize"))
         self.normalizebutton = ctk.CTkCheckBox(self.generalframe, text=Text().normalize[self.lang], variable=self.normalize, font=("Bahnschrift", 16))
-        self.normalizebutton.grid(row=4, column=0, columnspan=2, padx=5, pady=5, sticky="w")
+        normtypedict = {"maximum":Text().maximum[self.lang], "plateau":Text().plateau[self.lang], "centeraxis":Text().centeraxis[self.lang]}
+        self.normtype = ctk.StringVar(value=normtypedict[ProfileHandler().get_attribute("normtype")])
+        self.normalize_options = ctk.CTkOptionMenu(self.generalframe, values=[Text().maximum[self.lang], Text().plateau[self.lang], Text().centeraxis[self.lang]], variable=self.normtype)
+        self.normalizebutton.grid(row=4, column=0, padx=5, pady=5, sticky="w")
+        self.normalize_options.grid(row=4, column=1, padx=5, pady=5)
         
         self.showgrid = ctk.BooleanVar(value=ProfileHandler().get_attribute("grid"))
         self.gridbutton = ctk.CTkCheckBox(self.generalframe, text=Text().showgrid[self.lang], variable=self.showgrid, font=("Bahnschrift", 16))
@@ -167,6 +171,8 @@ class Settings(ctk.CTkFrame):
         self.p.set_attribute("xaxislabel", self.defaulxaxis.get())
         self.p.set_attribute("yaxislabel", self.defaulyaxis.get())
         self.p.set_attribute("normalize"    , self.normalize.get())
+        normtypedict = {Text().maximum[self.lang]:"maximum", Text().plateau[self.lang]:"plateau", Text().centeraxis[self.lang]:"centeraxis"}
+        self.p.set_attribute("normtype", normtypedict[self.normtype.get()])
         self.p.set_attribute("legend"   , self.showlegend.get())
         self.p.set_attribute("grid"     , self.showgrid.get())
         
@@ -194,6 +200,8 @@ class Settings(ctk.CTkFrame):
         self.defaulxaxis.set(self.p.get_attribute("xaxislabel"))
         self.defaulyaxis.set(self.p.get_attribute("yaxislabel"))
         self.normalize.set(self.p.get_attribute("normalize"))
+        normtypedict = {"maximum":Text().maximum[self.lang], "plateau":Text().plateau[self.lang], "centeraxis":Text().centeraxis[self.lang]}
+        self.normtype.set(normtypedict[self.p.get_attribute("normtype")])
         self.showgrid.set(self.p.get_attribute("grid"))
         self.showlegend.set(self.p.get_attribute("legend"))
         

@@ -75,7 +75,8 @@ class Options(ctk.CTkTabview):
         self.load_topas_button.grid(row=0, column=0, sticky="nsew", pady=5, padx=5)
 
         self.normalize=ctk.BooleanVar(value=self.p.get_attribute("normalize"))
-        self.normalization = ctk.StringVar(value=Text().maximum[self.lang]) ##
+        normtypedict = {"maximum":Text().maximum[self.lang], "plateau":Text().plateau[self.lang], "centeraxis":Text().centeraxis[self.lang]}
+        self.normalization = ctk.StringVar(value=normtypedict[self.p.get_attribute("normtype")])
         self.normalize_button = ctk.CTkCheckBox(self.dataframe2, text=Text().normalize[self.lang], variable=self.normalize, command=self.change_normalization, font=("Bahnschrift", 12, "bold"))
         self.normalize_options = ctk.CTkOptionMenu(self.dataframe2, values=[Text().maximum[self.lang], Text().plateau[self.lang], Text().centeraxis[self.lang]], variable=self.normalization, command=self.change_normalization)
         self.normalize_button.grid(row=2, column=0, sticky="nsew", pady=5, padx=5)
@@ -421,7 +422,8 @@ class Options(ctk.CTkTabview):
         self.parent.saved = False
         for plot in self.parent.plots:
             plot.normalize = self.normalize.get()
-            plot.normalization = self.normalization.get()
+            normtypedict = {Text().maximum[self.lang]:"maximum", Text().plateau[self.lang]:"plateau", Text().centeraxis[self.lang]:"centeraxis"}
+            plot.normalization = normtypedict[self.normalization.get()]
         self.parent.update()
         #self.parent.master.master.parent.parent.set_theme()
         

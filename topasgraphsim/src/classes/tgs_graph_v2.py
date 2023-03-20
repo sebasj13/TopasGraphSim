@@ -13,7 +13,7 @@ class TGS_Plot():
         self.p = ProfileHandler()
         
         self.normalize = self.p.get_attribute("normalize")
-        self.normalization = "Maximum"
+        self.normalization = self.p.get_attribute("normtype")
         
         self.label = self.dataObject.filename
         self.linethickness = self.p.get_attribute("linethickness")
@@ -30,7 +30,8 @@ class TGS_Plot():
     def set_tab_data(self):
         
         self.options.normalize.set(self.normalize)
-        self.options.normalization.set(self.normalization)
+        normtypedict = {"maximum":Text().maximum[self.lang], "plateau":Text().plateau[self.lang], "centeraxis":Text().centeraxis[self.lang]}
+        self.options.normalization.set(normtypedict[self.normalization])
         self.options.plottitle.set(self.label)
         self.options.linethicknessslider.set(self.linethickness)
         self.options.linestyle.set({"-.":Text().dashdot[self.lang], "-":Text().dash[self.lang], "dotted":Text().dot[self.lang]}[self.linestyle])
@@ -46,7 +47,13 @@ class TGS_Plot():
         axis = np.add(self.dataObject.axis,self.axshift)
         dose = self.dataObject.dose.copy()
         if self.normalize:
-            dose /= np.max(dose)
+            if self.normalization == "maximum":
+                dose /= np.max(dose)
+            elif self.normalization == "plateau":
+                l = len(dose)//2
+                dose /= np.average(dose[l-5:l+5])
+            elif self.normalization == "centeraxis":
+                dose /= dose[len(dose)//2]
 
         dose = np.add(dose * self.dosefactor, self.doseshift)
         if self.flip:
