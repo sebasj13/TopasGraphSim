@@ -31,6 +31,7 @@ class TabView(ctk.CTkTabview):
                     os.path.dirname(os.path.realpath(__file__)),
                     "..",
                     "resources",
+                    "images",
                     "icon.png",
                             )
                      ).resize((size, size), Image.LANCZOS), size=(size, size)
