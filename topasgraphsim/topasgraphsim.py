@@ -4,9 +4,9 @@ import tkinterDnD as tkdnd
 import customtkinter as ctk
 
 from .src.resources.language import Text
-from .src.classes.menubar_v2 import MenuBar
+from .src.classes.menubar import MenuBar
 from .src.classes.profile import ProfileHandler
-from .src.classes.main_viewer_v2 import MainViewer
+from .src.classes.main_viewer import MainViewer
 
 class Tk(ctk.CTk, tkdnd.dnd.DnDWrapper):
     def __init__(self, *args, **kwargs):
@@ -30,7 +30,7 @@ class TopasGraphSim(Tk):
         self.title(f"{self.appname} - v.{self.version}")
         self.lang = ctk.StringVar()
         self.lang.set(ProfileHandler().get_attribute("language"))
-        self.iconpath = os.path.join(os.path.dirname(__file__), "src", "resources","icon.ico")
+        self.iconpath = os.path.join(os.path.dirname(__file__), "src", "resources","images", "icon.ico")
         self.iconbitmap(self.iconpath)
         
         self.colorscheme = ctk.StringVar(value=ProfileHandler().get_attribute("color_scheme"))

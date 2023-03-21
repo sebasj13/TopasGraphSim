@@ -10,12 +10,12 @@ from pymedphys import gamma
 logging.getLogger("matplotlib").setLevel(level=logging.CRITICAL)
 
 from ..resources.language import Text
-from .scrollframe_v2 import ScrollFrame
-from .tgs_graph_v2 import TGS_Plot
+from .scrollframe import ScrollFrame
+from .tgs_graph import TGS_Plot
 from .sim_import import Simulation
-from .ptw_import_v2 import PTWMultimporter
+from .ptw_import import PTWMultimporter
 from .profile import ProfileHandler
-from .paramframe_v2 import Parameters
+from .paramframe import Parameters
 
 class Options(ctk.CTkTabview):
     
@@ -63,7 +63,7 @@ class Options(ctk.CTkTabview):
         self.dataframe2.rowconfigure(5, weight=1)
                 
         self.graphlist = ScrollFrame(self.dataframe1)
-        path = os.path.join(os.path.dirname(os.path.abspath(__file__)),"..","resources")
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)),"..","resources", "images")
         self.uparrowimage = ctk.CTkImage(Image.open(os.path.join(path,"uparrow.png")), size=(20,20))
         self.downarrowimage = ctk.CTkImage(Image.open(os.path.join(path,"downarrow.png")), size=(20,20))
         self.uparrow = ctk.CTkButton(self.dataframe1, text="",image=self.uparrowimage, width=20, command = lambda: self.change_order("up"))

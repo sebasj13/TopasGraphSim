@@ -1,5 +1,5 @@
 from tkinter import Frame
-from .tabview_v2 import TabView
+from .tabview import TabView
 
 class MainViewer(Frame):
     

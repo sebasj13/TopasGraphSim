@@ -4,7 +4,7 @@ from matplotlib.lines import Line2D
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.backends._backend_tk import NavigationToolbar2Tk
 from matplotlib.ticker import AutoLocator, AutoMinorLocator
-from .options_v2 import Options
+from .options import Options
   
        
 class Tab(ctk.CTkFrame):

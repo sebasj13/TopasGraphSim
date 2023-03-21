@@ -1,4 +1,3 @@
-import topasgraphsim.TGS_v2 as TGS_v2	
+import topasgraphsim.topasgraphsim as topasgraphsim	
 
-#topasgraphsim.topasgraphsim.topasgraphsim()
-TGS_v2.TopasGraphSim()
+topasgraphsim.TopasGraphSim()

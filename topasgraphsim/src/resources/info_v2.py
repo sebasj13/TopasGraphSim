@@ -19,7 +19,7 @@ class show_info(ctk.CTkToplevel):
         self.wm_attributes("-toolwindow", True)
         
         im = Image.open(
-            os.path.join(os.path.dirname(os.path.realpath(__file__)), "icon.png")
+            os.path.join(os.path.dirname(os.path.realpath(__file__)), "images", "icon.png")
         )
         ph = ctk.CTkImage(im, size=(64,64))
         self.imagelabel = ctk.CTkLabel(self, image=ph, text="TopasGraphSim", compound="top", font=("Bahnschrift", 16))
@@ -32,10 +32,10 @@ class show_info(ctk.CTkToplevel):
             font=("Bahnschrift", 12)
         )
         ghimage_light = Image.open(
-            os.path.join(os.path.dirname(os.path.realpath(__file__)), f"gh_light.png")
+            os.path.join(os.path.dirname(os.path.realpath(__file__)), "images", f"gh_light.png")
         )
         ghimage_dark = Image.open(
-            os.path.join(os.path.dirname(os.path.realpath(__file__)), f"gh_dark.png")
+            os.path.join(os.path.dirname(os.path.realpath(__file__)), "images", f"gh_dark.png")
         )
         self.ghimage = ctk.CTkImage(ghimage_light, ghimage_dark, size=(32,32))
         self.button = ctk.CTkButton(self, image=self.ghimage, command=self.open_github, text="", width=64)

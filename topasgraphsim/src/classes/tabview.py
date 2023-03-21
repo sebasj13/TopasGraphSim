@@ -2,8 +2,8 @@ import os
 from PIL import Image
 import customtkinter as ctk
 
-from .tab_v2 import Tab
-from .settings_v2 import Settings
+from .tab import Tab
+from .settings import Settings
 from ..resources.language import Text
 
 

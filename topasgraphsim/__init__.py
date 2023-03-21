@@ -1,2 +1,1 @@
-#from topasgraphsim import topasgraphsim
-from topasgraphsim import TGS_v2
+from topasgraphsim import topasgraphsim
