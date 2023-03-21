@@ -43,7 +43,7 @@ class Tab(ctk.CTkFrame):
         self.navbar.grid(row=1, column=0, sticky="nsew")
         
     def config(self, event=None): 
-        self.figure.subplots_adjust(left=0.08, right=0.92, top=0.92, bottom=0.09, wspace=0.2, hspace=0.2)
+        self.figure.subplots_adjust(left=0.08, right=0.92, top=0.92, bottom=0.1, wspace=0.2, hspace=0.2)
         
     def update(self):
         self.ax.clear()

@@ -42,7 +42,7 @@ class Options(ctk.CTkTabview):
         self.add(Text().settings1[self.lang])
         
 
-        self.tab(Text().data[self.lang]).rowconfigure(0, weight=1)
+        self.tab(Text().data[self.lang]).rowconfigure(0, weight=1, minsize=220)
         self.tab(Text().data[self.lang]).rowconfigure(1, weight=1)  
         self.tab(Text().data[self.lang]).columnconfigure(0, weight=1)     
         self.tab(Text().data[self.lang]).grid_propagate(False)
@@ -56,6 +56,7 @@ class Options(ctk.CTkTabview):
         self.dataframe1.columnconfigure(0, weight=1)
         self.dataframe2.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
         self.dataframe2.grid_propagate(False)
+        self.dataframe2.pack_propagate(False)
         self.dataframe2.columnconfigure(0, weight=1, minsize=144)
         self.dataframe2.columnconfigure(1, weight=1)
         self.dataframe2.rowconfigure(1, weight=1)
@@ -317,7 +318,7 @@ class Options(ctk.CTkTabview):
         self.distanceentry = ctk.CTkEntry(self.gammaframe, textvariable=self.distance, width=35)
         self.distancelabel = ctk.CTkLabel(self.gammaframe, text="mm", font=("Bahnschrift",14, "bold"))
         self.criterialabel.grid(column=0, row=4, padx=5, pady=1, sticky="nsw")
-        self.percententry.grid(column=1, row=4, padx=5, pady=1, sticky="nse")
+        self.percententry.grid(column=1, row=4, padx=(0,5), pady=1, sticky="nse")
         self.percentlabel.grid(column=2, row=4, padx=5, pady=1, sticky="nsw")
         self.distanceentry.grid(column=3, row=4, padx=5, pady=1, sticky="nse")
         self.distancelabel.grid(column=4, row=4, padx=5, pady=1, sticky="nsw")

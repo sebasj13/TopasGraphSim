@@ -125,9 +125,13 @@ class PTWMultimporter:
         self.frame.configure(fg_color=colors2[theme])
         self.frame.canvas.configure(bg=colors3[theme], highlightbackground=colors3[theme])
         self.frame.scrollbar.configure(fg_color=colors3[theme])
-        self.frame.grid_propagate(False)
         self.options.dataframe2.grid_remove()
         self.frame.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
+        self.frame.grid_propagate(False)
+        self.frame.pack_propagate(False)
+        self.frame.canvas.pack_propagate(False)
+        self.label = ctk.CTkLabel(self.frame.viewPort, text=Text().select[self.lang], font=("Bahnschrift", 14, "bold"))
+        self.label.pack(anchor="n", pady=5)
         self.variables = [ctk.BooleanVar() for i in range(len(self.alldata))]
         [var.set(False) for var in self.variables]
         textdict = {
@@ -146,13 +150,13 @@ class PTWMultimporter:
             )
             for i in range(len(self.alldata))
         ]
-        [button.grid(sticky="W") for button in self.buttons]
+        [button.pack(anchor="w") for button in self.buttons]
         self.submitbutton = ctk.CTkButton(
             self.frame.viewPort,
             text=Text().submit[ProfileHandler().get_attribute("language")],
             command=self.submit,
         )
-        self.submitbutton.grid(sticky="S")
+        self.submitbutton.pack(anchor="s", pady=5)
 
     def submit(self, event=None):
 
@@ -177,5 +181,6 @@ class PTWMultimporter:
         except IndexError:
             pass
         
+        self.frame.canvas.unbind_all("<MouseWheel>")
         self.frame.destroy()
         self.options.dataframe2.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
