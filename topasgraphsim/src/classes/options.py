@@ -614,7 +614,7 @@ class Options(ctk.CTkTabview):
         if path == None:
             path = fd.askopenfilenames(filetypes=[("TOPAS files", "*.csv")])
         else:
-            path = (path)
+            path = [path]
         if path == "" :
             return
         for p in path:
