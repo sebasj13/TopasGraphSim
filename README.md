@@ -72,12 +72,13 @@ Since all my testing in done on Windows 11, I cannot guarantee this will work on
 
  ## Screenshots
  
-![Home](https://user-images.githubusercontent.com/87897942/226645582-40258076-d61a-4ec8-850c-e7f40f9b0aa7.png)
+![Home](https://user-images.githubusercontent.com/87897942/226722916-6028f3c8-7e1e-42d5-8ea4-94d8f78b111d.png)
 
 ![Graph](https://user-images.githubusercontent.com/87897942/226646220-f5dff844-4cd7-427f-b5e8-de7d111e3fa6.png)
 
  ## Manual
-![Gamma](https://user-images.githubusercontent.com/87897942/226646442-40dc390f-05ca-4c18-84e7-52f5631c99ec.png)
+ 
+![Analysis](https://user-images.githubusercontent.com/87897942/226722938-edf112c5-d174-466d-983f-25e0b7f3f182.png)
 
 ![Plot](https://user-images.githubusercontent.com/87897942/226646461-aafc4c98-82b1-4ba0-82f3-de280297eddf.png)
 
