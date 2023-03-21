@@ -7,6 +7,7 @@ from .src.resources.language import Text
 from .src.classes.menubar import MenuBar
 from .src.classes.profile import ProfileHandler
 from .src.classes.main_viewer import MainViewer
+from .src.classes.update import CheckForUpdates
 
 class Tk(ctk.CTk, tkdnd.dnd.DnDWrapper):
     def __init__(self, *args, **kwargs):
@@ -65,8 +66,9 @@ class TopasGraphSim(Tk):
         for i in sys.argv[1:]:
             if os.path.exists(i):
                 self.frame.add_file(i)
+        CheckForUpdates()
         self.mainloop()
-        
+ 
     def settings(self):
         try:
             self.frame.tabview.add_settings()
