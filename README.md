@@ -74,15 +74,25 @@ Since all my testing in done on Windows 11, I cannot guarantee this will work on
  
 ![Home](https://user-images.githubusercontent.com/87897942/226722916-6028f3c8-7e1e-42d5-8ea4-94d8f78b111d.png)
 
-![Graph](https://user-images.githubusercontent.com/87897942/226646220-f5dff844-4cd7-427f-b5e8-de7d111e3fa6.png)
+![Tab](https://user-images.githubusercontent.com/87897942/226646489-49aa1319-995b-4f7e-8d42-344768f6ed8e.png)
 
  ## Manual
  
+To begin, either create a new tab (View -> Tabs -> New tab) ot press Ctrl+N. Alternatively, you can directly open a TOPAS .csv file or a .mcc measurement by going to File -> Open ..., or by simply dragging the respective file onto the GUI.  Under the Data tab, you can then add more files, and set general visualization settings, such as whether to normalize all graphs, which grid to show, and whether to include a legend.
+
+![Graph](https://user-images.githubusercontent.com/87897942/226646220-f5dff844-4cd7-427f-b5e8-de7d111e3fa6.png)
+
+After opening a file, its relevant parameters are automatically calculated and displayed unter the Parameters tab. 
+
+Under the Analysis tab, you can scale the graph, as well as offset it along both axes. If you have more than one graph loaded, you can compare the two using the desired gamma criteria.
+
 ![Analysis](https://user-images.githubusercontent.com/87897942/226722938-edf112c5-d174-466d-983f-25e0b7f3f182.png)
+
+Unter the Settings tab, you find a variety of customization options. You can rename plots, change their display color, adjust the drawn line and its thickness. Additionally, you can customize the plot and axes titles, as well as displaying or hiding the individual points and error bars, if applicable. 
 
 ![Plot](https://user-images.githubusercontent.com/87897942/226646461-aafc4c98-82b1-4ba0-82f3-de280297eddf.png)
 
-![Tab](https://user-images.githubusercontent.com/87897942/226646489-49aa1319-995b-4f7e-8d42-344768f6ed8e.png)
+All settings can be customized in general by going to File -> Default settings.
 
  ## Parameters
 
