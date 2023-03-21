@@ -71,10 +71,17 @@ Since all my testing in done on Windows 11, I cannot guarantee this will work on
  (*) Not yet implemented
 
  ## Screenshots
+ 
+![Home](https://user-images.githubusercontent.com/87897942/226645582-40258076-d61a-4ec8-850c-e7f40f9b0aa7.png)
 
+![Graph](https://user-images.githubusercontent.com/87897942/226646220-f5dff844-4cd7-427f-b5e8-de7d111e3fa6.png)
 
  ## Manual
+![Gamma](https://user-images.githubusercontent.com/87897942/226646442-40dc390f-05ca-4c18-84e7-52f5631c99ec.png)
 
+![Plot](https://user-images.githubusercontent.com/87897942/226646461-aafc4c98-82b1-4ba0-82f3-de280297eddf.png)
+
+![Tab](https://user-images.githubusercontent.com/87897942/226646489-49aa1319-995b-4f7e-8d42-344768f6ed8e.png)
 
  ## Parameters
 
