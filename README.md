@@ -52,76 +52,31 @@ Since all my testing in done on Windows 11, I cannot guarantee this will work on
 ## Features
 
  - Reproducible graphing and analysis of 1D TOPAS simulation for medical physics
- - Simultaneous plotting and parameter calculation for up to 10 datasets
- - Calculation of the Gamma Index
+ - Simultaneous plotting and parameter calculation for all data sets
+ - Calculation of the Gamma Index with adjustable parameters
  - Graph adjustment options
      * Normalization (On/Off)
      * Error bars (On/Off)
-     * Difference plot between two datasets
      * Graph order and colors
      * Marker size and style
      * Line width
-     * Zoom-in window
-     * Half view of dose profiles
  - Drag and drop of files
- - Value indication on hover
- - Center axis deviation correction
- - Import of EGS and RadCalc simulation results
- - Import of custom measurements (as numpy .txt files)
+ - Center axis deviation correction *
+ - Import of EGS and RadCalc simulation results *
+ - Import of custom measurements (as numpy .txt files) *
  - Import of PTW tbaScan (MEPHYSTO mc<sup>2</sup>) measurements
- - Easy to use keyboard shortcuts (see manual below)
  - German and english language support
  - Dark mode
 
- ## Screenshots
- 
- ![dpp](https://user-images.githubusercontent.com/87897942/152709224-aff50e72-bea7-4782-a8c9-54f58a06cef3.png)
+ (*) Not yet implemented
 
-![dp](https://user-images.githubusercontent.com/87897942/152709235-7a1cf3d9-5002-4ddc-b144-cb51527693e3.png)
+ ## Screenshots
+
 
  ## Manual
 
- Most customization options are available via the menubar, however the workflow can be sped up greatly by using the included keyboard and mouse shortcuts documented below.
 
- ### Loading and saving data
-
-|Keyboard Shortcut| Associated Function |
-|---|---|
-| <kbd>Ctrl</kbd> + <kbd>O</kbd> | Open a TOPAS simulation file [*.csv *.bin] |
-| <kbd>Ctrl</kbd> + <kbd>P</kbd> | Open a PTW tbaScan file [*.mcc]            |
-| <kbd>Ctrl</kbd> + <kbd>T</kbd> | Open a PDD measurement file [*.txt]        |
-| <kbd>Ctrl</kbd> + <kbd>D</kbd> | Open a DP measurement file [*.txt]         |
-| <kbd>Ctrl</kbd> + <kbd>S</kbd> | Save the current graph [*.png *.jpg]       |
-| <kbd>Ctrl</kbd> + <kbd>Z</kbd> | Remove the last imported dataset           |
-| <kbd>Escape</kbd>              | Close the current project           |
-
-### Adjusting the Graph Style
-
-|Mouse/Keyboard Shortcut| Associated Function |
-|---|---|
-| <kbd>Ctrl</kbd> + <kbd>↑</kbd> <kbd>↓</kbd> | Increase/decrease the marker size|
-| <kbd>Ctrl</kbd> + <kbd>←</kbd> <kbd>→</kbd> | Increase/decrease the line width |
-| <kbd>Scrollwheel</kbd>                      | Increase/decrease the X-axis limits |
-| <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>+</kbd> <kbd>-</kbd> | Increase/decrease the error plot upper limits |
-| <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>+</kbd> <kbd>-</kbd> | Increase/decrease the error plot lower limits |
-| <kbd>Double Left Click</kbd> on <kbd>Graph</kbd>| Change zoom window location |
-| <kbd>Left Click</kbd> on <kbd>Top of Graph</kbd>| Add/change title|
-| <kbd>Left Click</kbd> on <kbd>Left Axis</kbd>| Rename left axis |
-| <kbd>Left Click</kbd> on <kbd>Bottom Axis</kbd>| Open axis range selector |
-| <kbd>Left Click</kbd> on <kbd>Bottom Axis</kbd>| Rename bottom axis |
-
-
-
-### Adjusting the Graph Legend
-
-|Mouse/Keyboard Shortcut| Associated Function |
-|---|---|
-| <kbd>Hover</kbd> over <kbd>Graph Name</kbd> + <kbd>↑</kbd> <kbd>↓</kbd>  | Change the graph order |
-| <kbd>Left Click</kbd> on <kbd>Graph Name</kbd> | Rename the selected graph          |
-| <kbd>Right Click</kbd> on <kbd>Graph Name</kbd>| Change color of the selected graph |
-
-
-## Parameters
+ ## Parameters
 
 Depending on the imported measurement, the following parameters can be calculated:
 
@@ -144,12 +99,9 @@ Depending on the imported measurement, the following parameters can be calculate
 
 ## Dependencies
 
-Built using the beautiful [Azure-ttk theme](https://github.com/rdbende/Azure-ttk-theme) by [@rdbende](https://github.com/rdbende).
-Requires python3, numpy, scipy, matplotlib, Pillow, python-opencv, pynput, requests, topas2numpy and tkinter.
+The UI is based on the [customtkinter](http://github.com/TomSchimansky/CustomTkinter) library.
 
-The drag-and-drop functionality is powered by [TkinterDnD2](http://tkinterdnd.sourceforge.net) by Michael Lange and [tkdnd](https://github.com/petasis/tkdnd) by [@petassis](https://github.com/petasis).
-
-
+Requires python3, numpy, scipy, matplotlib, Pillow, python-opencv, pynput, requests, topas2numpy, and python-tkdnd.
 ## Contact me!
 
 Thank you for using TopasGraphSim! Please let me know about any issues you encounter, or suggestions/wishes you might have! 
