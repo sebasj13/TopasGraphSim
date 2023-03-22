@@ -366,6 +366,7 @@ class Options(ctk.CTkTabview):
                 [params.grid_forget() for params in self.parameters]
                 [button.grid(row=i, padx=5, pady=5, sticky="w") for i, button in enumerate(self.plotbuttons)]
                 [params.grid(row=i, sticky="ew", padx=5, pady=5) for i, params in enumerate(self.parameters)]
+                self.update_plotlist()
         
         elif direction == "down":
             if index+1 < len(self.plotbuttons):
@@ -377,6 +378,7 @@ class Options(ctk.CTkTabview):
                 [params.grid_forget() for params in self.parameters]
                 [button.grid(row=i, padx=5, pady=5, sticky="w") for i, button in enumerate(self.plotbuttons)]
                 [params.grid(row=i, sticky="ew", padx=5, pady=5) for i, params in enumerate(self.parameters)]
+                self.update_plotlist()
                 
         self.parent.update()
         
