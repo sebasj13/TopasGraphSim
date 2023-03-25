@@ -13,6 +13,7 @@ class TGS_Plot():
         self.p = ProfileHandler()
         
         self.normalize = self.p.get_attribute("normalize")
+        self.caxcorrection = self.p.get_attribute("caxcorrection")
         self.normalization = self.p.get_attribute("normtype")
         self.points = self.p.get_attribute("show_points")
         self.error = self.p.get_attribute("show_error")
@@ -76,6 +77,10 @@ class TGS_Plot():
     def plot(self, ax):
     
         axis, dose, error = self.data()
+        if self.caxcorrection:
+            if self.direction != "Z":
+                axis = np.add(axis, self.dataObject.params()[1])
+        
         if self.error:
             ax.errorbar(axis, dose, label="_", yerr=error, fmt="none", ecolor="red", elinewidth=0.625, capsize=1.25, capthick=0.25)
             ax.plot(axis, dose, label=self.label, lw=self.linethickness, color=self.linecolor, linestyle = self.linestyle)

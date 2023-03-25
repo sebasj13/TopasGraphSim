@@ -97,6 +97,7 @@ class Settings(ctk.CTkFrame):
         self.axshift = ctk.StringVar(value= "0")
         self.dosescale = ctk.StringVar(value="1")
         self.flip = ctk.BooleanVar(value=False)
+        self.caxcorrection = ctk.BooleanVar(value=self.p.get_attribute("caxcorrection"))
         
         self.linethicknesslabel = ctk.CTkLabel(self.plotframe, text=Text().linethickness[self.lang], font=("Bahnschrift",16))
         self.linethicknesslabel.grid(column=0, row=1, padx=5, pady=5, sticky="w")
@@ -121,6 +122,7 @@ class Settings(ctk.CTkFrame):
         self.axshift = ctk.StringVar(value=self.p.get_attribute("axshift"))       
         self.axshiftentry = ctk.CTkEntry(self.plotframe, textvariable=self.axshift, width=130)
         self.flipbutton = ctk.CTkCheckBox(self.plotframe, variable=self.flip, text=Text().flip[self.lang], font=("Bahnschrift",16))
+        self.caxbutton = ctk.CTkCheckBox(self.plotframe, variable=self.caxcorrection, text=Text().cax[self.lang], font=("Bahnschrift",16))
         
         self.dosescalelabel.grid(column=0, row=3, padx=5, pady=5, sticky="w")
         self.dosescaleentry.grid(column=1, row=3, padx=5, pady=5, sticky="nsew")
@@ -129,6 +131,7 @@ class Settings(ctk.CTkFrame):
         self.axshiftlabel.grid(column=0, row=5, padx=5, pady=5, sticky="w")
         self.axshiftentry.grid(column=1, row=5, padx=5, pady=5, sticky="nsew")
         self.flipbutton.grid(column=0, row=6, columnspan=2, padx=5, pady=5, sticky="nsew")
+        self.caxbutton.grid(column=0, row=7, columnspan=2, padx=5, pady=5, sticky="nsew")
         
         
         ############################
@@ -197,6 +200,7 @@ class Settings(ctk.CTkFrame):
         try: self.p.set_attribute("axshift", float(self.axshift.get()))
         except ValueError: pass
         self.p.set_attribute("flip", self.flip.get())
+        self.p.set_attribute("caxcorrection", self.caxcorrection.get())
         
         self.p.set_attribute("gammatype", self.gammatype.get())
         self.p.set_attribute("dd", self.percent.get())
@@ -224,6 +228,7 @@ class Settings(ctk.CTkFrame):
         self.doseshift.set(self.p.get_attribute("doseoffset"))
         self.axshift.set(self.p.get_attribute("axshift"))
         self.flip.set(self.p.get_attribute("flip"))
+        self.caxcorrection.set(self.p.get_attribute("caxcorrection"))
         
         self.gammatype.set(self.p.get_attribute("gammatype"))
         self.percent.set(self.p.get_attribute("dd"))

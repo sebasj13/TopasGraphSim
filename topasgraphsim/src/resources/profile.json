@@ -10,6 +10,7 @@
     "grid": true,
     "legend": true,
     "normalize": true,
+    "caxcorrection": true,
     "normtype": "maximum",
     "show_points": false,
     "show_error": true,

@@ -59,8 +59,7 @@ class Options(ctk.CTkTabview):
         self.dataframe2.pack_propagate(False)
         self.dataframe2.columnconfigure(0, weight=1, minsize=144)
         self.dataframe2.columnconfigure(1, weight=1)
-        self.dataframe2.rowconfigure(1, weight=1)
-        self.dataframe2.rowconfigure(5, weight=1)
+
                 
         self.graphlist = ScrollFrame(self.dataframe1)
         path = os.path.join(os.path.dirname(os.path.abspath(__file__)),"..","resources", "images")
@@ -76,26 +75,31 @@ class Options(ctk.CTkTabview):
         self.graphlist.grid(column=0, row=0, rowspan=5, sticky="nsew", padx=5, pady=5)
     
         self.load_topas_button = ctk.CTkButton(self.dataframe2, text = Text().loadsim[self.lang], command = self.load_topas, width=20)
-        self.load_topas_button.grid(row=0, column=0, sticky="nsew", pady=5, padx=5)
+        self.load_topas_button.grid(row=0, column=0, sticky="nsew", pady=(5,2), padx=5)
         
         self.load_mcc_button = ctk.CTkButton(self.dataframe2, text = Text().loadmeasurement[self.lang], command = self.load_measurement, width=20)
-        self.load_mcc_button.grid(row=0, column=1, sticky="nsew", padx=5, pady=5)
+        self.load_mcc_button.grid(row=0, column=1, sticky="nsew", padx=5, pady=(5,2))
 
         self.normalize=ctk.BooleanVar(value=self.p.get_attribute("normalize"))
         normtypedict = {"maximum":Text().maximum[self.lang], "plateau":Text().plateau[self.lang], "centeraxis":Text().centeraxis[self.lang]}
         self.normalization = ctk.StringVar(value=normtypedict[self.p.get_attribute("normtype")])
         self.normalize_button = ctk.CTkCheckBox(self.dataframe2, text=Text().normalize[self.lang], variable=self.normalize, command=self.change_normalization, font=("Bahnschrift", 12, "bold"))
         self.normalize_options = ctk.CTkOptionMenu(self.dataframe2, values=[Text().maximum[self.lang], Text().plateau[self.lang], Text().centeraxis[self.lang]], variable=self.normalization, command=self.change_normalization)
-        self.normalize_button.grid(row=2, column=0, sticky="nsew", pady=5, padx=5)
-        self.normalize_options.grid(row=2, column=1, sticky="ew", pady=5, padx=5)
+        self.normalize_button.grid(row=2, column=0, sticky="nsew", pady=2, padx=5)
+        self.normalize_options.grid(row=2, column=1, sticky="ew", pady=2, padx=5)
+
+        self.caxcorrection = ctk.BooleanVar(value=self.p.get_attribute("caxcorrection"))
+
+        self.cax_button = ctk.CTkCheckBox(self.dataframe2, text=Text().caxcorrection[self.lang], variable=self.caxcorrection, onvalue=True, offvalue=False, command = self.toggle_cax_correction, font=("Bahnschrift",12, "bold"))
+        self.cax_button.grid(column=0, columnspan=2, row=3, padx=5, pady=2, sticky = "w")
         
         self.showgrid = ctk.BooleanVar(value=self.p.get_attribute("grid"))
 
         self.gridoptions = ctk.StringVar(value=Text().gridoptions1[self.lang])
         self.showgrid_button = ctk.CTkCheckBox(self.dataframe2, text=Text().showgrid[self.lang], variable=self.showgrid, onvalue=True, offvalue=False, command = self.toggle_grid_options, font=("Bahnschrift",12, "bold"))
         self.showgrid_options = ctk.CTkOptionMenu(self.dataframe2, variable=self.gridoptions, values=[Text().gridoptions1[self.lang], Text().gridoptions2[self.lang]], command = lambda x: self.toggle_grid_options())    
-        self.showgrid_button.grid(column=0, row=3, padx=5, pady=2, sticky = "w")
-        self.showgrid_options.grid(column=1, row=3, padx=5, pady=2, sticky = "w")   
+        self.showgrid_button.grid(column=0, row=4, padx=5, pady=2, sticky = "w")
+        self.showgrid_options.grid(column=1, row=4, padx=5, pady=2, sticky = "w")   
         
         self.showlegend = ctk.BooleanVar(value = self.p.get_attribute("legend"))
         self.legendoptions = ctk.StringVar(value=Text().legendoptions1[self.lang]) ##
@@ -110,13 +114,13 @@ class Options(ctk.CTkTabview):
                                                             Text().legendoptions5[self.lang]],
                                                     command = lambda x: self.toggle_legend_options())
         
-        self.showlegend_button.grid(column=0, row=4, padx=5, pady=2, sticky="w")
-        self.showlegend_options.grid(column=1, row=4, padx=5, pady=2, sticky="w")
+        self.showlegend_button.grid(column=0, row=5, padx=5, pady=2, sticky="w")
+        self.showlegend_options.grid(column=1, row=5, padx=5, pady=2, sticky="w")
         
         self.change_name_button = ctk.CTkButton(self.dataframe2, text=Text().edittabname[self.lang], command = self.change_name, width=20)
         self.close_tab_button = ctk.CTkButton(self.dataframe2, text=Text().closetab1[self.lang], command = lambda: self.parent.master.master.remove_tab(self.parent.master.master.tabnames.index(self.parent.name)), width=20, fg_color="red")
-        self.close_tab_button.grid(row=6, column=1, sticky="nsew", pady=5, padx=5)
-        self.change_name_button.grid(row=6, column=0, sticky="nsew", pady=5, padx=5)
+        self.close_tab_button.grid(row=6, column=1, sticky="new", pady=(5,2), padx=5)
+        self.change_name_button.grid(row=6, column=0, sticky="new", pady=(5,2), padx=5)
         
         
         #######################################################################################################################
@@ -432,7 +436,12 @@ class Options(ctk.CTkTabview):
         if len(self.parent.plots) == 0:
             self.disable_all_buttons()
         self.parent.update()
-        
+
+    def toggle_cax_correction(self, event=None):
+        self.parent.saved = False
+        for plot in self.parent.plots:
+            plot.caxcorrection = self.caxcorrection.get()
+        self.parent.update()
         
     def change_normalization(self, event=None):
         self.parent.saved = False
