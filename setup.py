@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="topasgraphsim",
-    version="23.0.1",
+    version="23.0.2",
     author="Sebastian Schäfer",
     author_email="sebastian.schaefer@student.uni-halle.de",
     description="GUI to analyze the results of a Monte-Carlo radiation simulation",
@@ -20,6 +20,7 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     install_requires=[
+        "customtkinter",
         "requests",
         "numpy",
         "scipy",
