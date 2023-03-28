@@ -1,4 +1,5 @@
 import os
+import sys
 import webbrowser
 from PIL import Image
 import customtkinter as ctk
@@ -18,14 +19,12 @@ class show_info(ctk.CTkToplevel):
         self.title("")
         self.wm_attributes("-toolwindow", True)
         
-        def resource_path(relative):
-            return os.path.join(
-                os.environ.get(
-                    "_MEIPASS2",
-                    os.path.abspath(".")
-                ),
-                relative
-            )     
+        def resource_path(relative_path):
+            """ Get absolute path to resource, works for dev and for PyInstaller """
+            if hasattr(sys, '_MEIPASS'):
+                return os.path.join(sys._MEIPASS, relative_path)
+
+            return os.path.join(os.path.abspath("."), relative_path) 
         
         im = Image.open(resource_path(os.path.join("topasgraphsim", "src", "resources", "images", "icon.png")))
         ph = ctk.CTkImage(im, size=(64,64))
