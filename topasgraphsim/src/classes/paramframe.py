@@ -34,6 +34,28 @@ class Parameters(ctk.CTkFrame):
                 
                 self.beamquality.grid(row=1, column=1, sticky="nsew", padx=2, pady=2)
                 self.zmax.grid(row=2, column=1, sticky="nsew", padx=2, pady=2)
+                
+            elif self.graph.direction == "s":
+                
+                self.binlabel = ctk.CTkLabel(self, text=self.text.bins[self.lang], font=self.font, height=14)
+                self.binsizelabel = ctk.CTkLabel(self, text=self.text.binsize[self.lang], font=self.font, height=14)
+                self.minlabel = ctk.CTkLabel(self, text=self.text.min[self.lang], font=self.font, height=14)
+                self.maxlabel = ctk.CTkLabel(self, text=self.text.max[self.lang], font=self.font, height=14)
+                
+                self.bins = ctk.CTkLabel(self, text=str(self.parameters[0]), font=self.font, height=14)
+                self.binsize = ctk.CTkLabel(self, text=str(self.parameters[1]), font=self.font, height=14)
+                self.min = ctk.CTkLabel(self, text=str(self.parameters[2]), font=self.font, height=14)
+                self.max = ctk.CTkLabel(self, text=str(self.parameters[3]), font=self.font, height=14)
+                
+                self.namelabel.grid(row=0, column=0, columnspan=2, sticky="nsew", padx=2, pady=2)
+                self.binlabel.grid(row=1, column=0, sticky="w", padx=2, pady=2)
+                self.bins.grid(row=1, column=1, sticky="nsew", padx=2, pady=2)
+                self.binsizelabel.grid(row=2, column=0, sticky="w", padx=2, pady=2)
+                self.binsize.grid(row=2, column=1, sticky="nsew", padx=2, pady=2)
+                self.minlabel.grid(row=3, column=0, sticky="w", padx=2, pady=2)
+                self.min.grid(row=3, column=1, sticky="nsew", padx=2, pady=2)
+                self.maxlabel.grid(row=4, column=0, sticky="w", padx=2, pady=2)
+                self.max.grid(row=4, column=1, sticky="nsew", padx=2, pady=2)
             
             else:
                 self.halfwidthlabel = ctk.CTkLabel(self, text=self.text.fwhm[self.lang], font=self.font, height=14)

@@ -50,6 +50,7 @@ class TGS_Plot():
         axis = np.add(self.dataObject.axis,self.axshift)
         dose = self.dataObject.dose.copy()
         error = self.dataObject.std_dev.copy()
+        
         if self.normalize:
             if self.normalization == "maximum":
                 error /= np.max(dose)
@@ -78,7 +79,7 @@ class TGS_Plot():
     
         axis, dose, error = self.data()
         if self.caxcorrection:
-            if self.direction != "Z":
+            if self.direction != "Z" and self.direction != "s":
                 axis = np.add(axis, self.dataObject.params()[1])
         
         if self.error:

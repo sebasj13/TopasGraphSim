@@ -20,6 +20,10 @@ class Text:
             "de": "Parameter konnten nicht berechnen werden!",
             "en": "Parameters could not be calculated!",
         }
+        self.bins = {"de": "Klassenanzahl", "en": "Number of bins"}
+        self.binsize = {"de": "Klassenbreite", "en": "Bin size"}
+        self.min = {"de": "Minimum", "en": "Minimum"}
+        self.max = {"de": "Maximum", "en": "Maximum"}
         self.criterion = {"de": "Kriterium", "en": "Criterion"}
         self.calcparams = {"de": "Parameter berechnen", "en": "Calculate parameters"}
         self.calculate = {"de": "Berechnen", "en": "Calculate"}

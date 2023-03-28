@@ -1,5 +1,6 @@
 from tkinter import simpledialog as sd
 
+import re
 import numpy as np
 import topas2numpy
 
@@ -17,6 +18,17 @@ class Simulation:
         else:
             self.filename = self.filepath.split("\\")[-1][:-4]
 
+        with open(self.filepath, "r") as f:
+            self.lines = f.readlines()
+            for line in self.lines:
+                if "Binned" in line:
+                    self.direction = "s"
+                    self.dose = np.array(self.lines[-1].split(","), dtype=np.float64)[1:-2]   
+                    self.bins, self.binsize, self.min, self.max = re.findall(r"[-+]?(?:\d*\.*\d+)", self.lines[-3])
+                    self.axis = np.linspace(float(self.min), float(self.max), int(self.bins))
+                    self.std_dev = np.zeros(len(self.dose))
+                    return
+                     
         self.data = topas2numpy.BinnedResult(self.filepath)
         bins = [dim.n_bins for dim in self.data.dimensions]
         if bins.count(1) != 2:
@@ -75,6 +87,8 @@ class Simulation:
                 self.dose / max(self.dose),
                 self.std_dev / max(self.dose),
             )
+        elif self.direction == "s":
+            return self.bins, self.binsize, self.min, self.max
         else:
             params = dp.calculate_parameters(
                 self.axis, self.dose / max(self.dose)
