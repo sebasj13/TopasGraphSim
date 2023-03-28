@@ -31,15 +31,13 @@ class TopasGraphSim(Tk):
         self.title(f"{self.appname} - v.{self.version}")
         self.lang = ctk.StringVar()
         self.lang.set(ProfileHandler().get_attribute("language"))
-        
-        def resource_path(relative):
-            return os.path.join(
-                os.environ.get(
-                    "_MEIPASS2",
-                    os.path.abspath(".")
-                ),
-                relative
-            )   
+            
+        def resource_path(relative_path):
+            """ Get absolute path to resource, works for dev and for PyInstaller """
+            if hasattr(sys, '_MEIPASS'):
+                return os.path.join(sys._MEIPASS, relative_path)
+
+            return os.path.join(os.path.abspath("."), relative_path)
         
         self.iconpath = resource_path(os.path.join("topasgraphsim", "src", "resources","images", "icon.ico"))
         self.iconbitmap(self.iconpath)

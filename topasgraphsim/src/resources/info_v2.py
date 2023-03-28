@@ -25,7 +25,7 @@ class show_info(ctk.CTkToplevel):
                     os.path.abspath(".")
                 ),
                 relative
-            )   
+            )     
         
         im = Image.open(resource_path(os.path.join("topasgraphsim", "src", "resources", "images", "icon.png")))
         ph = ctk.CTkImage(im, size=(64,64))

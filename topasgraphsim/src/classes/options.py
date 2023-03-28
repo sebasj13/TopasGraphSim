@@ -4,6 +4,7 @@ import tkinter.filedialog as fd
 from tkinter import colorchooser
 from PIL import Image
 import os
+import sys
 import logging
 from pymedphys import gamma
 
@@ -63,14 +64,12 @@ class Options(ctk.CTkTabview):
                 
         self.graphlist = ScrollFrame(self.dataframe1)
         
-        def resource_path(relative):
-            return os.path.join(
-                os.environ.get(
-                    "_MEIPASS2",
-                    os.path.abspath(".")
-                ),
-                relative
-            )   
+        def resource_path(relative_path):
+            """ Get absolute path to resource, works for dev and for PyInstaller """
+            if hasattr(sys, '_MEIPASS'):
+                return os.path.join(sys._MEIPASS, relative_path)
+
+            return os.path.join(os.path.abspath("."), relative_path) 
         
         path = resource_path(os.path.join("topasgraphsim", "src", "resources", "images"))
         self.uparrowimage = ctk.CTkImage(Image.open(os.path.join(path,"uparrow.png")), size=(20,20))
