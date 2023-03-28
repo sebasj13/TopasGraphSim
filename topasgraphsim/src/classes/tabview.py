@@ -28,8 +28,8 @@ class TabView(ctk.CTkTabview):
         self.logo = ctk.CTkImage(
             Image.open(
                 os.path.join(
-                    os.path.dirname(os.path.realpath(__file__)),
-                    "..",
+                    os.path.dirname(os.path.abspath(__file__)),
+                    os.pardir,
                     "resources",
                     "images",
                     "icon.png",

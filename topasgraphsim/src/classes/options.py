@@ -62,7 +62,7 @@ class Options(ctk.CTkTabview):
 
                 
         self.graphlist = ScrollFrame(self.dataframe1)
-        path = os.path.join(os.path.dirname(os.path.abspath(__file__)),"..","resources", "images")
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)),os.pardir,"resources", "images")
         self.uparrowimage = ctk.CTkImage(Image.open(os.path.join(path,"uparrow.png")), size=(20,20))
         self.downarrowimage = ctk.CTkImage(Image.open(os.path.join(path,"downarrow.png")), size=(20,20))
         self.uparrow = ctk.CTkButton(self.dataframe1, text="",image=self.uparrowimage, width=20, command = lambda: self.change_order("up"))
