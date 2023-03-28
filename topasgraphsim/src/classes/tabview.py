@@ -1,4 +1,5 @@
 import os
+import sys
 from PIL import Image
 import customtkinter as ctk
 
@@ -24,16 +25,23 @@ class TabView(ctk.CTkTabview):
         self.tabnames = []
         self.newtabname = ""
         
+        def resource_path(relative_path):
+            """ Get absolute path to resource, works for dev and for PyInstaller """
+            if hasattr(sys, '_MEIPASS'):
+                return os.path.join(sys._MEIPASS, "TopasGraphSim", relative_path)
+
+            return os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, os.pardir, os.pardir, relative_path)
+        
         size = self.parent.winfo_screenwidth()//8
         self.logo = ctk.CTkImage(
             Image.open(
-                os.path.join(
-                    os.path.dirname(os.path.abspath(__file__)),
-                    os.pardir,
+                resource_path(os.path.join(
+                    "topasgraphsim",
+                    "src",
                     "resources",
                     "images",
                     "icon.png",
-                            )
+                            ))
                      ).resize((size, size), Image.LANCZOS), size=(size, size)
                                 )
         
