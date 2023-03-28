@@ -32,18 +32,20 @@ class MainViewer(Frame):
                 self.tabview.tab(self.tabview.tabnames[self.tabview.tabnames.index(self.tabview.get())]).tab.options.load_measurement(path)
 
     def drop(self, event):
-        path = event.data
-        if "{" in path and "}" in path:
-            path = path[1:-1]
-        if len(self.tabview.tabnames) == 0:
-            self.tabview.add_tab(name = True)
-            if path[-4:] == ".csv":
-                self.tabview.tab(self.tabview.tabnames[-1]).tab.options.load_topas(path)
-            elif path[-4:] == ".mcc":
-                self.tabview.tab(self.tabview.tabnames[-1]).tab.options.load_measurement(path)
-            
+        if "}" in event.data:
+            paths = event.data.split("}")
         else:
-            if path[-4:] == ".csv":
-                self.tabview.tab(self.tabview.tabnames[self.tabview.tabnames.index(self.tabview.get())]).tab.options.load_topas(path)
-            elif path[-4:] == ".mcc":
-                self.tabview.tab(self.tabview.tabnames[self.tabview.tabnames.index(self.tabview.get())]).tab.options.load_measurement(path)
+            paths = event.data.split(" ")
+        for path in paths:
+            if path != "":
+                path = path.strip()
+                if "{" in path:
+                    path = path.replace("{", "")
+                if path[-4:] == ".csv":
+                    if len(self.tabview.tabnames) == 0:
+                        self.tabview.add_tab(name = True)
+                    self.tabview.tab(self.tabview.tabnames[-1]).tab.options.load_topas(path)
+                elif path[-4:] == ".mcc":
+                    if len(self.tabview.tabnames) == 0:
+                        self.tabview.add_tab(name = True)
+                    self.tabview.tab(self.tabview.tabnames[-1]).tab.options.load_measurement(path)
