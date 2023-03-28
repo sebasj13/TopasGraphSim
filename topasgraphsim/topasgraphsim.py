@@ -35,11 +35,11 @@ class TopasGraphSim(Tk):
         def resource_path(relative_path):
             """ Get absolute path to resource, works for dev and for PyInstaller """
             if hasattr(sys, '_MEIPASS'):
-                return os.path.join(sys._MEIPASS, relative_path)
+                return os.path.join(sys._MEIPASS, "TopasGraphSim", relative_path)
 
             return os.path.join(os.path.abspath("."), relative_path)
         
-        self.iconpath = resource_path(os.path.join("TopasGraphSim", "topasgraphsim", "src", "resources","images", "icon.ico"))
+        self.iconpath = resource_path(os.path.join("topasgraphsim", "src", "resources","images", "icon.ico"))
         self.iconbitmap(self.iconpath)
         
         self.colorscheme = ctk.StringVar(value=ProfileHandler().get_attribute("color_scheme"))
