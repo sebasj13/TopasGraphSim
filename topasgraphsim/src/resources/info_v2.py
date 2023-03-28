@@ -24,7 +24,7 @@ class show_info(ctk.CTkToplevel):
             if hasattr(sys, '_MEIPASS'):
                 return os.path.join(sys._MEIPASS, "TopasGraphSim", relative_path)
 
-            return os.path.join(os.path.abspath("."), relative_path) 
+            return os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, os.pardir, os.pardir, relative_path) 
         
         im = Image.open(resource_path(os.path.join("topasgraphsim", "src", "resources", "images", "icon.png")))
         ph = ctk.CTkImage(im, size=(64,64))

@@ -37,7 +37,7 @@ class TopasGraphSim(Tk):
             if hasattr(sys, '_MEIPASS'):
                 return os.path.join(sys._MEIPASS, "TopasGraphSim", relative_path)
 
-            return os.path.join(os.path.abspath("."), relative_path)
+            return os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, relative_path)
         
         self.iconpath = resource_path(os.path.join("topasgraphsim", "src", "resources","images", "icon.ico"))
         self.iconbitmap(self.iconpath)
