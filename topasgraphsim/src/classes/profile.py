@@ -14,6 +14,7 @@ class ProfileHandler:
             return os.path.join(os.path.abspath("."), relative_path)
 
         self.profile_path = resource_path(os.path.join(
+                "TopasGraphSim",
                 "topasgraphsim",
                 "src",
                 "resources",
