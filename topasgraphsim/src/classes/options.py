@@ -62,7 +62,17 @@ class Options(ctk.CTkTabview):
 
                 
         self.graphlist = ScrollFrame(self.dataframe1)
-        path = os.path.join(os.path.dirname(os.path.abspath(__file__)),os.pardir,"resources", "images")
+        
+        def resource_path(relative):
+            return os.path.join(
+                os.environ.get(
+                    "_MEIPASS2",
+                    os.path.abspath(".")
+                ),
+                relative
+            )   
+        
+        path = resource_path(os.path.join("topasgraphsim", "src", "resources", "images"))
         self.uparrowimage = ctk.CTkImage(Image.open(os.path.join(path,"uparrow.png")), size=(20,20))
         self.downarrowimage = ctk.CTkImage(Image.open(os.path.join(path,"downarrow.png")), size=(20,20))
         self.uparrow = ctk.CTkButton(self.dataframe1, text="",image=self.uparrowimage, width=20, command = lambda: self.change_order("up"))

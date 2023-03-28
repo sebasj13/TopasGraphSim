@@ -31,7 +31,17 @@ class TopasGraphSim(Tk):
         self.title(f"{self.appname} - v.{self.version}")
         self.lang = ctk.StringVar()
         self.lang.set(ProfileHandler().get_attribute("language"))
-        self.iconpath = os.path.join(os.path.dirname(__file__), "src", "resources","images", "icon.ico")
+        
+        def resource_path(relative):
+            return os.path.join(
+                os.environ.get(
+                    "_MEIPASS2",
+                    os.path.abspath(".")
+                ),
+                relative
+            )   
+        
+        self.iconpath = resource_path(os.path.join("topasgraphsim", "src", "resources","images", "icon.ico"))
         self.iconbitmap(self.iconpath)
         
         self.colorscheme = ctk.StringVar(value=ProfileHandler().get_attribute("color_scheme"))

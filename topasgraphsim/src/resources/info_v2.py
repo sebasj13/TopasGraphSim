@@ -18,9 +18,16 @@ class show_info(ctk.CTkToplevel):
         self.title("")
         self.wm_attributes("-toolwindow", True)
         
-        im = Image.open(
-            os.path.join(os.path.dirname(os.path.realpath(__file__)), "images", "icon.png")
-        )
+        def resource_path(relative):
+            return os.path.join(
+                os.environ.get(
+                    "_MEIPASS2",
+                    os.path.abspath(".")
+                ),
+                relative
+            )   
+        
+        im = Image.open(resource_path(os.path.join("topasgraphsim", "src", "resources", "images", "icon.png")))
         ph = ctk.CTkImage(im, size=(64,64))
         self.imagelabel = ctk.CTkLabel(self, image=ph, text="TopasGraphSim", compound="top", font=("Bahnschrift", 16))
         self.authorlabel = ctk.CTkLabel(self, text=self.parent.author+"\n\n"+self.parent.affiliation, font=("Bahnschrift", 12))
@@ -31,12 +38,8 @@ class show_info(ctk.CTkToplevel):
             text=f"Drag and Drop: {icon[ProfileHandler().get_attribute('draganddrop')]}",
             font=("Bahnschrift", 12)
         )
-        ghimage_light = Image.open(
-            os.path.join(os.path.dirname(os.path.realpath(__file__)), "images", f"gh_light.png")
-        )
-        ghimage_dark = Image.open(
-            os.path.join(os.path.dirname(os.path.realpath(__file__)), "images", f"gh_dark.png")
-        )
+        ghimage_light = Image.open(resource_path(os.path.join("topasgraphsim", "src", "resources", "images", "gh_light.png")))
+        ghimage_dark = Image.open(resource_path(os.path.join("topasgraphsim", "src", "resources", "images", "gh_dark.png")))
         self.ghimage = ctk.CTkImage(ghimage_light, ghimage_dark, size=(32,32))
         self.button = ctk.CTkButton(self, image=self.ghimage, command=self.open_github, text="", width=64)
         self.imagelabel.pack(side="top")

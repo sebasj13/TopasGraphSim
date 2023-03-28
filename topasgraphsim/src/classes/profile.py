@@ -4,12 +4,21 @@ import os
 
 class ProfileHandler:
     def __init__(self):
+        
+        def resource_path(relative):
+            return os.path.join(
+                os.environ.get(
+                    "_MEIPASS2",
+                    os.path.abspath(".")
+                ),
+                relative
+            )   
 
-        self.profile_path = os.path.join(
-                os.path.dirname(os.path.abspath(__file__)),
-                os.pardir,
+        self.profile_path = resource_path(os.path.join(
+                "topasgraphsim",
+                "src",
                 "resources",
-                "profile.json",)
+                "profile.json"))
         
         self.profile = self.read_data()
 
