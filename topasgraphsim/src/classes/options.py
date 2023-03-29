@@ -69,7 +69,7 @@ class Options(ctk.CTkTabview):
             if hasattr(sys, '_MEIPASS'):
                 return os.path.join(sys._MEIPASS, "TopasGraphSim", relative_path)
 
-            return os.path.join(os.path.dirname(os.path.abspath(__file__)), relative_path) 
+            return os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, os.pardir, os.pardir,  relative_path) 
         
         path = resource_path(os.path.join("topasgraphsim", "src", "resources", "images"))
         self.uparrowimage = ctk.CTkImage(Image.open(os.path.join(path,"uparrow.png")), size=(20,20))
