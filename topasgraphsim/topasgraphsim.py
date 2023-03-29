@@ -25,7 +25,7 @@ class TopasGraphSim(Tk):
         super().__init__()
         
         self.appname = "TopasGraphSim"
-        self.version = "23.1.0"
+        self.version = "23.1.1"
         self.author = "Sebastian Schäfer"
         self.affiliation = "UK Halle\nMLU Halle-Wittenberg\nUK Hamburg-Eppendorf"
         self.title(f"{self.appname} - v.{self.version}")
@@ -175,12 +175,12 @@ class TopasGraphSim(Tk):
 
             self.bell()
             window = ctk.CTkToplevel(self)
-            window.wm_attributes("-toolwindow", True)
+            window.overrideredirect(True)
             window.title("")
             
             def move(event):
                 window.lift()
-                window.geometry(f"200x100+{self.winfo_rootx()+self.winfo_width()//2-100}+{self.winfo_rooty()+self.winfo_height()//2-50}")
+                window.geometry(f"200x120+{self.winfo_rootx()+self.winfo_width()//2-100}+{self.winfo_rooty()+self.winfo_height()//2-60}")
             
             def submit():
                 window.destroy()
@@ -188,16 +188,19 @@ class TopasGraphSim(Tk):
             
             def cancel():
                 window.destroy()
+                
             
-            window.rowconfigure(0, weight=1)
+            window.rowconfigure(1, weight=1)
             window.columnconfigure(0, weight=1)
             window.columnconfigure(1, weight=1)
+            closebutton = ctk.CTkButton(window, text=" X ", command=cancel, width=2, height=1, font=("Bahnschrift", 12))
+            closebutton.grid(row=0, column=1, sticky="ne", padx=(0, 4), pady=(4, 4))
             textlabel = ctk.CTkLabel(window, text=Text().unsavedchanges1[self.lang.get()], font=("Bahnschrift", 16))
             submitbutton = ctk.CTkButton(window, text=Text().yes[self.lang.get()], command=submit, width=40, font=("Bahnschrift", 12))
             cancelbutton = ctk.CTkButton(window, text=Text().no[self.lang.get()], command=cancel, width = 40, font=("Bahnschrift", 12))
-            textlabel.grid(row=0, columnspan=2, padx=5, pady=5, sticky="nsew")
-            submitbutton.grid(row=1, column=0, padx=5, pady=5, sticky="nsew")
-            cancelbutton.grid(row=1, column=1, padx=5, pady=5, sticky="nsew")
+            textlabel.grid(row=1, columnspan=2, padx=5, pady=5, sticky="nsew")
+            submitbutton.grid(row=2, column=0, padx=5, pady=5, sticky="nsew")
+            cancelbutton.grid(row=2, column=1, padx=5, pady=5, sticky="nsew")
             window.bind("<Configure>", move)
             window.bind("<Escape>", lambda event: window.destroy())
             window.bind("<Return>", lambda event: submit())

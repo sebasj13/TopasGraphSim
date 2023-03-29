@@ -672,14 +672,14 @@ class Options(ctk.CTkTabview):
         
         root = self.parent.master.master.parent        
         window = ctk.CTkToplevel(root)
-        window.wm_attributes("-toolwindow", True)
-        window.geometry(f"180x120+{root.winfo_rootx()+root.winfo_width()//2-90}+{root.winfo_rooty()+root.winfo_height()//2-60}")
+        window.overrideredirect(True)
+        window.geometry(f"150x142+{root.winfo_rootx()+root.winfo_width()//2-75}+{root.winfo_rooty()+root.winfo_height()//2-71}")
         window.title("")
         
         def move(event):
             window.lift()
             entry.focus()
-            window.geometry(f"180x120+{root.winfo_rootx()+root.winfo_width()//2-90}+{root.winfo_rooty()+root.winfo_height()//2-60}")
+            window.geometry(f"150x142+{root.winfo_rootx()+root.winfo_width()//2-75}+{root.winfo_rooty()+root.winfo_height()//2-71}")
         
         def submit():
             self.newtabname = entry.get()
@@ -712,13 +712,18 @@ class Options(ctk.CTkTabview):
             self.parent.master.master._segmented_button.set(tab)
             self.parent.master.master._draw()
             return
-        
+        def close():
+            window.destroy()
+            
+        window.columnconfigure(0, weight=1)
+        closebutton = ctk.CTkButton(window, text=" X ", command=close, width=2, height=1, font=("Bahnschrift", 12))
+        closebutton.grid(row=0, column=0, sticky="ne", padx=(0, 4), pady=(4, 4))
         textlabel = ctk.CTkLabel(window, text=Text().newtabname[self.lang], font=("Bahnschrift", 16))
-        textlabel.pack(padx=5, pady=5, fill="x", expand=True)
+        textlabel.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
         entry = ctk.CTkEntry(window, takefocus=True)
         submitbutton = ctk.CTkButton(window, text="OK", command=submit, width=30, font=("Bahnschrift", 12))
-        entry.pack(fill="x", expand=True, padx=5, pady=5)
-        submitbutton.pack(padx=5, pady=5)
+        entry.grid(row=2, column=0, sticky="nsew", padx=5, pady=5)
+        submitbutton.grid(row=3, column=0, sticky="ns", padx=5, pady=5)
         entry.focus()
         window.bind("<Configure>", move)
         window.bind("<Escape>", lambda event: window.destroy())

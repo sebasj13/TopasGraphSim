@@ -70,13 +70,13 @@ class TabView(ctk.CTkTabview):
                 
         else:        
             window = ctk.CTkToplevel(self.parent.parent)
-            window.wm_attributes("-toolwindow", True)
+            window.overrideredirect(True)
             window.title("")
             
             def move(event):
                 window.lift()
                 entry.focus()
-                window.geometry(f"180x120+{self.parent.parent.winfo_rootx()+self.parent.parent.winfo_width()//2-90}+{self.parent.parent.winfo_rooty()+self.parent.parent.winfo_height()//2-60}")
+                window.geometry(f"150x142+{self.parent.parent.winfo_rootx()+self.parent.parent.winfo_width()//2-75}+{self.parent.parent.winfo_rooty()+self.parent.parent.winfo_height()//2-71}")
             
             def submit():
                 self.newtabname = entry.get()
@@ -98,13 +98,19 @@ class TabView(ctk.CTkTabview):
                 
                 if len (self.tabnames) == 1:
                     self.logolabel.place_forget()
+                    
+            def close():
+                window.destroy()
             
+            self.columnconfigure(0, weight=1)
+            self.closebutton = ctk.CTkButton(window, text=" X ", command=close, width=2, height=1, font=("Bahnschrift", 12))
+            self.closebutton.grid(row=0, column=0, sticky="ne", padx=(0, 4), pady=(4, 4))
             textlabel = ctk.CTkLabel(window, text=Text().newtabname[self.lang], font=("Bahnschrift", 16))
-            textlabel.pack(padx=5, pady=5, fill="x", expand=True)
+            textlabel.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
             entry = ctk.CTkEntry(window, takefocus=True)
             submitbutton = ctk.CTkButton(window, text="OK", command=submit, font=("Bahnschrift", 12), width=30)
-            entry.pack(fill="x", expand=True, padx=5, pady=5)
-            submitbutton.pack(padx=5, pady=5)
+            entry.grid(row=2, column=0, sticky="nsew", padx=5, pady=5)
+            submitbutton.grid(row=3, column=0, sticky="ns", padx=5, pady=5)
             entry.focus()
             window.bind("<Configure>", move)
             window.bind("<Escape>", lambda event: window.destroy())
