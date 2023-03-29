@@ -58,17 +58,7 @@ class TopasGraphSim(Tk):
         width = screen_width // 2
         height = screen_height // 2
         self.minsize(width, height)
-        self.pack_propagate(False)
-        
-        
-        self.state(ProfileHandler().get_attribute("state"))
-        try:
-            self.geometry(ProfileHandler().get_attribute("geometry"))
-        except Exception:
-            x = screen_width // 2 - width // 2
-            y = screen_height // 2 - height // 2
-            self.geometry(f"{width}x{height}+{x-25}+{y}")
-            
+        self.pack_propagate(False)            
            
         self.protocol("WM_DELETE_WINDOW", self.exit)
         for i in sys.argv[1:]:
@@ -76,6 +66,13 @@ class TopasGraphSim(Tk):
                 self.frame.add_file(i)
         CheckForUpdates()
         self.mainloop()
+        self.state(ProfileHandler().get_attribute("state"))
+        try:
+            self.geometry(ProfileHandler().get_attribute("geometry"))
+        except Exception:
+            x = screen_width // 2 - width // 2
+            y = screen_height // 2 - height // 2
+            self.geometry(f"{width}x{height}+{x-25}+{y}")
  
     def settings(self):
         try:
