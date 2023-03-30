@@ -74,7 +74,7 @@ class PTWMultimporter:
                     )
                     == True
                 ):
-                    axes["INPLANE_PROFILE"] = line.split("=")[-1][0]
+                    axes["INPLANE_PROFILE"] = line.split("=")[-1].strip()
                 elif (
                     bool(
                         re.match(
@@ -83,7 +83,7 @@ class PTWMultimporter:
                     )
                     == True
                 ):
-                    axes["CROSSPLANE_PROFILE"] = line.split("=")[-1][0]
+                    axes["CROSSPLANE_PROFILE"] = line.split("=")[-1].strip()
                 elif (
                     bool(
                         re.match(
@@ -92,16 +92,15 @@ class PTWMultimporter:
                     )
                     == True
                 ):
-                    axes["PDD"] = line.split("=")[-1][0]
+                    axes["PDD"] = line.split("=")[-1].strip()
 
                 elif "SCAN_CURVETYPE" in line:
                     direction = axes[line.split("=")[-1][:-1]]
-                    if direction == "x":
-                        direction = "X"
-                    elif direction == "y":
-                        direction = "Y"
-                    elif direction == "z":
-                        direction = "Z"
+                    if direction not in "xyzXYZ":
+                        rev_axes = {v: k for k, v in axes.items()}
+                        direcs = {"INPLANE_PROFILE":"X", "CROSSPLANE_PROFILE":"Y", "PDD":"Z"}
+                        
+                        direction = direcs[rev_axes[direction]]
 
                 if "BEGIN_DATA" in line:
                     xdata, ydata = [], []
@@ -116,7 +115,6 @@ class PTWMultimporter:
                     unit = ""
                     direction = ""
                     axes = {}
-
         self.plots = []
         self.frame = ScrollFrame(self.options.tab(Text().data[self.lang]))
         theme = ProfileHandler().get_attribute("color_scheme")
@@ -136,11 +134,8 @@ class PTWMultimporter:
         [var.set(False) for var in self.variables]
         textdict = {
             "X": f"{self.text.dp[self.lang]}" + " X",
-            "x": f"{self.text.dp[self.lang]}" + " X",
             "Y": f"{self.text.dp[self.lang]}" + " Y",
-            "y": f"{self.text.dp[self.lang]}" + " Y",
             "Z": f"{self.text.pdd[self.lang]}",
-            "z": f"{self.text.pdd[self.lang]}",
         }
         self.buttons = [
             ctk.CTkCheckBox(
