@@ -46,16 +46,18 @@ class PTWMeasurement:
             return params
 
 
-class PTWMultimporter:
-    def __init__(self, filepath, plotlist, options):
-
+class PTWMultimporter(ScrollFrame):
+    def __init__(self, filepath, parent, plotlist, options):
+        super().__init__(parent=parent)
         self.text = Text()
         self.lang = ProfileHandler().get_attribute("language")
         self.plotlist = plotlist
         self.path = filepath
         self.options = options
         self.root = self.options.parent.master.master.parent
-
+        self.pack_propagate(False)
+        self.grid_propagate(False)
+        self.canvas.pack_propagate(False)
         with open(filepath, "r") as file:
             lines = file.readlines()
             unit = ""
@@ -116,19 +118,16 @@ class PTWMultimporter:
                     direction = ""
                     axes = {}
         self.plots = []
-        self.frame = ScrollFrame(self.options.tab(Text().data[self.lang]))
         theme = ProfileHandler().get_attribute("color_scheme")
         colors2 = {"light": "#E5E5E5", "dark":"#212121"}
         colors3 = {"light": "#DBDBDB", "dark":"#2B2B2B"}
-        self.frame.configure(fg_color=colors2[theme])
-        self.frame.canvas.configure(bg=colors3[theme], highlightbackground=colors3[theme])
-        self.frame.scrollbar.configure(fg_color=colors3[theme])
+        self.configure(fg_color=colors2[theme])
+        self.canvas.configure(bg=colors3[theme], highlightbackground=colors3[theme])
+        self.scrollbar.configure(fg_color=colors3[theme])
         self.options.dataframe2.grid_remove()
-        self.frame.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
-        self.frame.grid_propagate(False)
-        self.frame.pack_propagate(False)
-        self.frame.canvas.pack_propagate(False)
-        self.label = ctk.CTkLabel(self.frame.viewPort, text=Text().select[self.lang], font=("Bahnschrift", 14, "bold"))
+        self.options.dataframe1.grid_remove()
+        self.grid(row=0, rowspan=2, column=0, sticky="nsew")
+        self.label = ctk.CTkLabel(self.viewPort, text=Text().select[self.lang], font=("Bahnschrift", 14, "bold"))
         self.label.pack(anchor="n", pady=5)
         self.variables = [ctk.BooleanVar() for i in range(len(self.alldata))]
         [var.set(False) for var in self.variables]
@@ -139,7 +138,7 @@ class PTWMultimporter:
         }
         self.buttons = [
             ctk.CTkCheckBox(
-                self.frame.viewPort,
+                self.viewPort,
                 variable=self.variables[i],
                 text=f"Scan {i+1}: {textdict[PTWMeasurement(self.alldata[i], i+1).direction]}",
             )
@@ -147,7 +146,7 @@ class PTWMultimporter:
         ]
         [button.pack(anchor="w") for button in self.buttons]
         self.submitbutton = ctk.CTkButton(
-            self.frame.viewPort,
+            self.viewPort,
             text=Text().submit[ProfileHandler().get_attribute("language")],
             command=self.submit,
         )
@@ -176,6 +175,7 @@ class PTWMultimporter:
         except IndexError:
             pass
         
-        self.frame.canvas.unbind_all("<MouseWheel>")
-        self.frame.destroy()
-        self.options.dataframe2.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
+        self.canvas.unbind_all("<MouseWheel>")
+        self.destroy()
+        self.options.dataframe1.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
+        self.options.dataframe2.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)

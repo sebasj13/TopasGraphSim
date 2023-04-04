@@ -25,7 +25,7 @@ class TopasGraphSim(Tk):
         super().__init__()
         
         self.appname = "TopasGraphSim"
-        self.version = "23.1.2"
+        self.version = "24.0.0"
         self.author = "Sebastian Schäfer"
         self.affiliation = "UK Halle\nMLU Halle-Wittenberg\nUK Hamburg-Eppendorf"
         self.title(f"{self.appname} - v.{self.version}")
@@ -65,8 +65,9 @@ class TopasGraphSim(Tk):
             if os.path.exists(i):
                 self.frame.add_file(i)
         CheckForUpdates()
+        self.after(0, lambda: self.state(ProfileHandler().get_attribute("state")))
         self.mainloop()
-        self.state(ProfileHandler().get_attribute("state"))
+
         try:
             self.geometry(ProfileHandler().get_attribute("geometry"))
         except Exception:

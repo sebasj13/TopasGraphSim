@@ -38,9 +38,10 @@ class Options(ctk.CTkTabview):
         self.filenames = []
         
         self.add(Text().data[self.lang])
+        self.add(Text().settings1[self.lang])
         self.add(Text().analysis[self.lang])
         self.add(Text().parameters[self.lang])
-        self.add(Text().settings1[self.lang])
+
         
 
         self.tab(Text().data[self.lang]).rowconfigure(0, weight=1, minsize=220)
@@ -50,12 +51,14 @@ class Options(ctk.CTkTabview):
                
         self.dataframe1 = ctk.CTkFrame(self.tab(Text().data[self.lang]))
         self.dataframe2 = ctk.CTkFrame(self.tab(Text().data[self.lang]), border_color="black", border_width=1)
-        self.dataframe1.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
+        self.dataframe1.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
         self.dataframe1.grid_propagate(False)
-        self.dataframe1.rowconfigure(1, weight=1)
-        self.dataframe1.rowconfigure(3, weight=1)
         self.dataframe1.columnconfigure(0, weight=1)
-        self.dataframe2.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
+        self.dataframe1.columnconfigure(1, weight=1)
+        self.dataframe1.columnconfigure(2, weight=1)
+        self.dataframe1.rowconfigure(0, weight=1)
+        self.dataframe1.rowconfigure(1, minsize=30)
+        self.dataframe2.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
         self.dataframe2.grid_propagate(False)
         self.dataframe2.pack_propagate(False)
         self.dataframe2.columnconfigure(0, weight=1, minsize=144)
@@ -78,29 +81,17 @@ class Options(ctk.CTkTabview):
         self.downarrow = ctk.CTkButton(self.dataframe1, text="",image=self.downarrowimage, width=20, command = lambda: self.change_order("down"))
         self.closeimage = ctk.CTkImage(Image.open(os.path.join(path,"close.png")), size=(20,20))
         self.closebutton = ctk.CTkButton(self.dataframe1, text="", image = self.closeimage, width=20, fg_color="red", command = self.remove_plot)
-        self.uparrow.grid(column=1, row=0, sticky="nsew", padx=(0,5), pady=5)
-        self.downarrow.grid(column=1, row=2, sticky="nsew", padx=(0,5), pady=5)
-        self.closebutton.grid(column=1, row=4, sticky="nsew", padx=(0,5), pady=5)
-        self.graphlist.grid(column=0, row=0, rowspan=5, sticky="nsew", padx=5, pady=5)
+        self.graphlist.grid(column=0, columnspan=3, row=0, sticky="nsew", padx=5, pady=5)
+        self.uparrow.grid(column=0, row=1, padx=(0,5), pady=5)
+        self.downarrow.grid(column=1, row=1, padx=(0,5), pady=5)
+        self.closebutton.grid(column=2, row=1, padx=(0,5), pady=5)
+
     
         self.load_topas_button = ctk.CTkButton(self.dataframe2, text = Text().loadsim[self.lang], command = self.load_topas, width=20)
         self.load_topas_button.grid(row=0, column=0, sticky="nsew", pady=(5,2), padx=5)
         
         self.load_mcc_button = ctk.CTkButton(self.dataframe2, text = Text().loadmeasurement[self.lang], command = self.load_measurement, width=20)
         self.load_mcc_button.grid(row=0, column=1, sticky="nsew", padx=5, pady=(5,2))
-
-        self.normalize=ctk.BooleanVar(value=self.p.get_attribute("normalize"))
-        normtypedict = {"maximum":Text().maximum[self.lang], "plateau":Text().plateau[self.lang], "centeraxis":Text().centeraxis[self.lang]}
-        self.normalization = ctk.StringVar(value=normtypedict[self.p.get_attribute("normtype")])
-        self.normalize_button = ctk.CTkCheckBox(self.dataframe2, text=Text().normalize[self.lang], variable=self.normalize, command=self.change_normalization, font=("Bahnschrift", 12, "bold"))
-        self.normalize_options = ctk.CTkOptionMenu(self.dataframe2, values=[Text().maximum[self.lang], Text().plateau[self.lang], Text().centeraxis[self.lang]], variable=self.normalization, command=self.change_normalization)
-        self.normalize_button.grid(row=2, column=0, sticky="nsew", pady=2, padx=5)
-        self.normalize_options.grid(row=2, column=1, sticky="ew", pady=2, padx=5)
-
-        self.caxcorrection = ctk.BooleanVar(value=self.p.get_attribute("caxcorrection"))
-
-        self.cax_button = ctk.CTkCheckBox(self.dataframe2, text=Text().caxcorrection[self.lang], variable=self.caxcorrection, onvalue=True, offvalue=False, command = self.toggle_cax_correction, font=("Bahnschrift",12, "bold"))
-        self.cax_button.grid(column=0, columnspan=2, row=3, padx=5, pady=2, sticky = "w")
         
         self.showgrid = ctk.BooleanVar(value=self.p.get_attribute("grid"))
 
@@ -176,13 +167,33 @@ class Options(ctk.CTkTabview):
         self.yentry.grid(column=0, row=3, padx=5, pady=2)
         self.ybutton.grid(column=1, row=3, padx=5, pady=2)
         
+        self.normalize=ctk.BooleanVar(value=self.p.get_attribute("normalize"))
+        normtypedict = {"maximum":Text().maximum[self.lang], "plateau":Text().plateau[self.lang], "centeraxis":Text().centeraxis[self.lang]}
+        self.normalization = ctk.StringVar(value=normtypedict[self.p.get_attribute("normtype")])
+        self.normalize_button = ctk.CTkCheckBox(self.graphsettingsframe, text=Text().normalize[self.lang], variable=self.normalize, command=self.change_normalization, font=("Bahnschrift", 12, "bold"))
+        self.normalize_options = ctk.CTkOptionMenu(self.graphsettingsframe, values=[Text().maximum[self.lang], Text().plateau[self.lang], Text().centeraxis[self.lang]], variable=self.normalization, command=self.change_normalization)
+        self.normalize_button.grid(row=4, column=0, sticky="nsew", pady=2, padx=5)
+        self.normalize_options.grid(row=4, column=1, sticky="ew", pady=2, padx=5)        
+        
+        self.spacerframe = ctk.CTkFrame(self.graphsettingsframe, fg_color = self.graphsettingsframe.cget("fg_color"))
+        self.spacerframe.grid(row=5, column=0, columnspan=2, padx=2)
+        self.spacerframe.columnconfigure(0, weight=2, minsize=115)
+        self.spacerframe.columnconfigure(1, weight=1)
+        self.spacerframe.columnconfigure(2, weight=2, minsize=90)
+        self.spacerframe.rowconfigure(0, weight=1)
+        
+        self.caxcorrection = ctk.BooleanVar(value=self.p.get_attribute("caxcorrection"))
+
+        self.cax_button = ctk.CTkCheckBox(self.spacerframe, text=Text().caxcorrection[self.lang], variable=self.caxcorrection, onvalue=True, offvalue=False, command = self.toggle_cax_correction, font=("Bahnschrift",12, "bold"))
+        self.cax_button.grid(column=0, row=0, padx=2, pady=5, sticky = "nsew")
+        
         self.show_points = ctk.BooleanVar(value=self.p.get_attribute("show_points"))
-        self.pointsbutton = ctk.CTkCheckBox(self.graphsettingsframe, text=Text().showpoints[self.lang], variable=self.show_points, command=self.change_points, font=("Bahnschrift", 12, "bold"))
-        self.pointsbutton.grid(row=4, column=0, sticky="nsew", pady=5, padx=5)
+        self.pointsbutton = ctk.CTkCheckBox(self.spacerframe, text=Text().showpoints[self.lang], variable=self.show_points, command=self.change_points, font=("Bahnschrift", 12, "bold"))
+        self.pointsbutton.grid(row=0, column=1, sticky="nsew", pady=2, padx=5)
         
         self.show_error = ctk.BooleanVar(value=self.p.get_attribute("show_error"))
-        self.errorbutton = ctk.CTkCheckBox(self.graphsettingsframe, text=Text().showerror[self.lang], variable=self.show_error, command=self.change_error, font=("Bahnschrift", 12, "bold"))
-        self.errorbutton.grid(row=5, column=0, sticky="nsew", pady=5, padx=5)
+        self.errorbutton = ctk.CTkCheckBox(self.spacerframe, text=Text().showerror[self.lang], variable=self.show_error, command=self.change_error, font=("Bahnschrift", 12, "bold"))
+        self.errorbutton.grid(row=0, column=2, sticky="nsew", pady=2, padx=2)
         
         self.plotsettingsframe = ctk.CTkFrame(self.tab(Text().settings1[self.lang]), border_color="black", border_width=1)
         self.plotsettingsframe.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
@@ -239,15 +250,14 @@ class Options(ctk.CTkTabview):
         self.parameters = []
         self.paramslist.pack(fill="both", expand=True)
 
-    
     ######################################################################################################################################################################
-        self.tab(Text().analysis[self.lang]).rowconfigure(0, weight=1)
+        self.tab(Text().analysis[self.lang]).rowconfigure(0, weight=1, minsize=258)
         self.tab(Text().analysis[self.lang]).rowconfigure(1, weight=1)  
         self.tab(Text().analysis[self.lang]).columnconfigure(0, weight=1)     
         self.tab(Text().analysis[self.lang]).grid_propagate(False)  
                 
         self.shiftframe = ctk.CTkFrame(self.tab(Text().analysis[self.lang]), border_color="black", border_width=1)
-        self.shiftframe.columnconfigure(0, weight=1, minsize=130)
+        self.shiftframe.columnconfigure(0, weight=1, minsize=144)
         self.shiftframe.columnconfigure(1, weight=1)
         self.shiftframe.grid_propagate(False)  
         
@@ -259,41 +269,48 @@ class Options(ctk.CTkTabview):
         self.plotselector2 = ctk.CTkOptionMenu(self.shiftframe, variable=self.current_plot, values=[], command = self.change_current_plot)
         self.plotselector2.grid(column=1, row=1, padx=5, pady=2, sticky="nsew")
 
+        self.spacerframe1 = ctk.CTkFrame(self.shiftframe, fg_color = self.shiftframe.cget("fg_color"))
+        self.spacerframe1.grid(column=0, row=2, columnspan=2, sticky="nsew", padx=2)
+        self.spacerframe1.rowconfigure(0, weight=1)
+        self.spacerframe1.rowconfigure(1, weight=1)
+        self.spacerframe1.columnconfigure(0, weight=1)
+        self.spacerframe1.columnconfigure(1, weight=1)
+        self.spacerframe1.columnconfigure(2, weight=1)
 
         self.doseshift = ctk.StringVar(value = self.p.get_attribute("doseoffset"))
         self.axshift = ctk.StringVar(value = self.p.get_attribute("axshift"))
         self.dosescale = ctk.StringVar(value = self.p.get_attribute("dosefactor"))
         self.flip = ctk.BooleanVar(value=self.p.get_attribute("flip"))
         
-        self.dosescalelabel = ctk.CTkLabel(self.shiftframe, text=Text().dosescale[self.lang], font=("Bahnschrift",12, "bold"))
-        self.dosescaleentry = ctk.CTkEntry(self.shiftframe, textvariable=self.dosescale, width=130)
+        self.dosescalelabel = ctk.CTkLabel(self.spacerframe1, text=Text().dosescale[self.lang], font=("Bahnschrift",12, "bold"))
+        self.dosescaleentry = ctk.CTkEntry(self.spacerframe1, textvariable=self.dosescale, width=130)
         self.dosescaleentry.bind("<Enter>", lambda x : self.on_enter(self.dosescaleentry, self.apply, x))
         self.dosescaleentry.bind("<Leave>", lambda x : self.on_leave(self.dosescaleentry, x))
         
-        self.doseshiftlabel = ctk.CTkLabel(self.shiftframe, text=Text().doseshift[self.lang], font=("Bahnschrift",12, "bold"))
-        self.axshiftlabel = ctk.CTkLabel(self.shiftframe, text=Text().axshift[self.lang], font=("Bahnschrift",12, "bold"))
-        self.doseshiftentry = ctk.CTkEntry(self.shiftframe, textvariable=self.doseshift, width=130)
+        self.doseshiftlabel = ctk.CTkLabel(self.spacerframe1, text=Text().doseshift[self.lang], font=("Bahnschrift",12, "bold"))
+        self.axshiftlabel = ctk.CTkLabel(self.spacerframe1, text=Text().axshift[self.lang], font=("Bahnschrift",12, "bold"))
+        self.doseshiftentry = ctk.CTkEntry(self.spacerframe1, textvariable=self.doseshift, width=130)
         self.doseshiftentry.bind("<Enter>", lambda x : self.on_enter(self.doseshiftentry, self.apply, x))
         self.doseshiftentry.bind("<Leave>", lambda x : self.on_leave(self.doseshiftentry, x))        
-        self.axshiftentry = ctk.CTkEntry(self.shiftframe, textvariable=self.axshift, width=130)
+        self.axshiftentry = ctk.CTkEntry(self.spacerframe1, textvariable=self.axshift, width=130)
         self.axshiftentry.bind("<Enter>", lambda x : self.on_enter(self.axshiftentry, self.apply, x))
         self.axshiftentry.bind("<Leave>", lambda x : self.on_leave(self.axshiftentry, x))
         self.flipbutton = ctk.CTkCheckBox(self.shiftframe, variable=self.flip, text=Text().flip[self.lang], font=("Bahnschrift",12, "bold"))
         self.applybutton = ctk.CTkButton(self.shiftframe, text=Text().apply[self.lang], command = self.apply)
         
-        self.dosescalelabel.grid(column=0, row=2, padx=5, pady=2, sticky="w")
-        self.dosescaleentry.grid(column=1, row=2, padx=5, pady=2, sticky="nsew")
-        self.doseshiftlabel.grid(column=0, row=3, padx=5, pady=2, sticky="w")
-        self.doseshiftentry.grid(column=1, row=3, padx=5, pady=2, sticky="nsew")
-        self.axshiftlabel.grid(column=0, row=4, padx=5, pady=2, sticky="w")
-        self.axshiftentry.grid(column=1, row=4, padx=5, pady=2, sticky="nsew")
-        self.flipbutton.grid(column=0, row=5, columnspan=2, padx=5, pady=2, sticky="nsew")
-        self.applybutton.grid(column=1, row=5, columnspan=2, padx=5, pady=2, sticky="nsew")
+        self.dosescalelabel.grid(column=0, row=0, padx=2, pady=2, sticky="n")
+        self.dosescaleentry.grid(column=0, row=1, padx=2, pady=2, sticky="nsew")
+        self.doseshiftlabel.grid(column=1, row=0, padx=2, pady=2, sticky="n")
+        self.doseshiftentry.grid(column=1, row=1, padx=2, pady=2, sticky="nsew")
+        self.axshiftlabel.grid(column=2, row=0, padx=2, pady=2, sticky="n")
+        self.axshiftentry.grid(column=2, row=1, padx=2, pady=2, sticky="nsew")
+        self.flipbutton.grid(column=0, row=3, padx=2, pady=2, sticky="ns")
+        self.applybutton.grid(column=1, row=3, padx=5, pady=2, sticky="nsew")
 
         self.shiftframe.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
         
         self.gammaframe = ctk.CTkFrame(self.tab(Text().analysis[self.lang]), border_color="black", border_width=1)
-        self.gammaframe.columnconfigure(0, weight=1, minsize=130)
+        self.gammaframe.columnconfigure(0, weight=1, minsize=144)
         self.gammaframe.columnconfigure(1, weight=1)
         self.gammaframe.columnconfigure(2, weight=1)
         self.gammaframe.columnconfigure(3, weight=1)
@@ -325,22 +342,34 @@ class Options(ctk.CTkTabview):
         
         self.percent = ctk.StringVar(value=self.p.get_attribute("dd"))
         self.distance = ctk.StringVar(value=self.p.get_attribute("dta"))
+        self.lowerthreshold = ctk.StringVar(value=self.p.get_attribute("lowerthreshold"))
         self.criterialabel = ctk.CTkLabel(self.gammaframe, text=Text().criterion[self.lang], font=("Bahnschrift",12, "bold"))
         self.percententry = ctk.CTkEntry(self.gammaframe, textvariable=self.percent, width=35)
         self.percentlabel = ctk.CTkLabel(self.gammaframe, text="% ", font=("Bahnschrift",14, "bold"))
         self.distanceentry = ctk.CTkEntry(self.gammaframe, textvariable=self.distance, width=35)
         self.distancelabel = ctk.CTkLabel(self.gammaframe, text="mm", font=("Bahnschrift",14, "bold"))
+        self.lowerthresholdlabel = ctk.CTkLabel(self.gammaframe, text=Text().lowerthreshold[self.lang], font=("Bahnschrift",12, "bold"))
+        self.lowerthresholdentry = ctk.CTkEntry(self.gammaframe, textvariable=self.lowerthreshold, width=35)
+        
         self.criterialabel.grid(column=0, row=4, padx=5, pady=1, sticky="nsw")
-        self.percententry.grid(column=1, row=4, padx=(0,5), pady=1, sticky="nse")
+        self.percententry.grid(column=1, row=4, padx=5, pady=1, sticky="nse")
         self.percentlabel.grid(column=2, row=4, padx=5, pady=1, sticky="nsw")
         self.distanceentry.grid(column=3, row=4, padx=5, pady=1, sticky="nse")
         self.distancelabel.grid(column=4, row=4, padx=5, pady=1, sticky="nsw")
+        self.lowerthresholdlabel.grid(column=0, row=5, padx=5, pady=1, sticky="nsw")
+        self.lowerthresholdentry.grid(column=1, columnspan=4, row=5, padx=5, pady=1, sticky="nsew")
         
-        self.calc_gamma_button = ctk.CTkButton(self.gammaframe, text=Text().calculate[self.lang], command=self.calculate_gamma, font=("Bahnschrift",14, "bold"), fg_color="green")
-        self.calc_gamma_button.grid(column=0, row=5, padx=5, pady=5, sticky="nsew")
+        self.difference = ctk.BooleanVar(value=False)
+        self.difference_button = ctk.CTkCheckBox(self.gammaframe, text=Text().difference[self.lang], variable=self.difference, font=("Bahnschrift",12, "bold"), command = self.clear_gam)
+        self.difference_button.grid(column=0, row=6, padx=5, pady=2, sticky="nsw")
+        self.plotgamma = ctk.BooleanVar(value=False)
+        self.plotgamma_button = ctk.CTkCheckBox(self.gammaframe, text=Text().plotgamma[self.lang], variable=self.plotgamma, font=("Bahnschrift",12, "bold"), command = self.clear_diff)
+        self.plotgamma_button.grid(column=1, columnspan=4, row=6, padx=5, pady=2, sticky="nsw")
+        self.calc_gamma_button = ctk.CTkButton(self.gammaframe, text=Text().calculate[self.lang], command=self.calculate_gamma, font=("Bahnschrift",12, "bold"), fg_color="green")
+        self.calc_gamma_button.grid(column=0, row=7, padx=5, pady=2, sticky="nsew")
         
         self.resultcanvas = ctk.CTkLabel(self.gammaframe, fg_color="white", text="", corner_radius=10, font=("Bahnschrift",14, "bold"))
-        self.resultcanvas.grid(column=1, columnspan=4, row=5, padx=5, pady=5, sticky="nsew")
+        self.resultcanvas.grid(column=1, columnspan=4, row=7, padx=5, pady=2, sticky="nsew")
         
         self.gammaframe.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
         if self.showlegend.get():
@@ -352,6 +381,12 @@ class Options(ctk.CTkTabview):
         self.disable_all_buttons()
     
     ######################################################################################################################################################################
+
+    def clear_gam(self):
+        self.plotgamma.set("False")
+        
+    def clear_diff(self):
+        self.difference.set("False")
 
     def save(self):
         fname = fd.asksaveasfilename(title = Text().saveplottitle[self.lang], filetypes = (("PNG","*.png"),(Text().allfiles[self.lang],"*.*")))
@@ -404,6 +439,13 @@ class Options(ctk.CTkTabview):
                             widget.configure(state="disabled")
                     except ValueError:
                         pass
+                    
+                    try:
+                        if widget.master != self.dataframe2:
+                            for child in widget.winfo_children():
+                                child.configure(state="disabled")
+                    except Exception:
+                        pass
             
     def enable_all_buttons(self):
         for tab in self.winfo_children():
@@ -413,8 +455,15 @@ class Options(ctk.CTkTabview):
                         widget.configure(state="normal")
                     except ValueError:
                         pass
+                
+                    try:
+                        for child in widget.winfo_children():
+                            child.configure(state="normal")
+                    except Exception:
+                        pass
         
     def remove_plot(self):
+        self.parent.difax.clear()
         self.parent.saved = False
         plot_labels = [plot.label for plot in self.parent.plots]
         index = plot_labels.index(self.current_plot.get())
@@ -487,6 +536,7 @@ class Options(ctk.CTkTabview):
             pass
         
     def clear_gamma(self, event=None):
+        self.parent.difax.yaxis.set_label_text("")
         self.resultcanvas.configure(text="", fg_color="white")
         
     def calculate_gamma(self):
@@ -494,10 +544,11 @@ class Options(ctk.CTkTabview):
             percent = float(self.percent.get())
             distance = float(self.distance.get())
             local = self.gammatype.get()
+            lower_percent_dose_cutoff = float(self.lowerthreshold.get())
             plot_labels = [plot.label for plot in self.parent.plots]
             reference_axes, reference_dose, _ = self.parent.plots[plot_labels.index(self.reference.get())].data()
             evaluation_axes, evaluation_dose, _ = self.parent.plots[plot_labels.index(self.test.get())].data()
-            g = gamma(axes_reference=reference_axes, dose_reference=reference_dose, axes_evaluation=evaluation_axes, dose_evaluation=evaluation_dose, dose_percent_threshold=percent, distance_mm_threshold=distance, local_gamma=local, lower_percent_dose_cutoff=0, max_gamma =5)
+            g = gamma(axes_reference=reference_axes, dose_reference=reference_dose, axes_evaluation=evaluation_axes, dose_evaluation=evaluation_dose, dose_percent_threshold=percent, distance_mm_threshold=distance, local_gamma=local, lower_percent_dose_cutoff=lower_percent_dose_cutoff, max_gamma =4)
             gamma_index = len(np.where(g <= 1)[0])/len(g)*100
             if gamma_index >= 95:
                 self.resultcanvas.configure(fg_color="green")
@@ -507,6 +558,33 @@ class Options(ctk.CTkTabview):
                 self.resultcanvas.configure(fg_color="red")
                 
             self.resultcanvas.configure(text=str(round(gamma_index, 3)) + "%")
+            
+            if self.difference.get():
+                self.parent.difax.clear()
+                evaluation_dose = np.interp(reference_axes, evaluation_axes, evaluation_dose)
+                self.parent.difax.plot(reference_axes, 100*np.array([(reference_dose[i]-evaluation_dose[i])/reference_dose[i] for i in range(len(reference_dose))]), color="black", lw=0.2, linestyle="--")
+                self.parent.difax.yaxis.set_label_text("%")
+                self.parent.difax.yaxis.set_label_position("right")
+                self.parent.update()
+                self.parent.ax.plot([],[], color="black", label="%")
+                self.toggle_legend_options()
+                self.parent.canvas.draw()
+                
+            elif self.plotgamma.get():
+                self.parent.difax.clear()
+                self.parent.difax.yaxis.set_label_text("Gamma-Index")
+                self.parent.difax.yaxis.set_label_position("right")
+                self.parent.difax.set_ylim(bottom=0, top=4.2)
+                self.parent.difax.scatter(reference_axes, g, marker="x",c=g, cmap="jet", vmin=0, vmax=2)
+                self.parent.update()
+                self.parent.ax.plot([],[], marker="x", lw=0, color="black", label="Gamma-Index")
+                self.toggle_legend_options()
+                self.parent.canvas.draw()
+                
+            else:
+                self.parent.difax.clear()
+                self.parent.difax.yaxis.set_label_text("")
+                self.parent.update()
             
         except ValueError as e:
             print(e)
@@ -660,7 +738,7 @@ class Options(ctk.CTkTabview):
             path = fd.askopenfilename(filetypes=[("MCC files", "*.mcc")])
         
         if path != "" and path not in self.filenames:
-            PTWMultimporter(path, self.parent.plots, self)
+            PTWMultimporter(path, self.tab(Text().data[self.lang]), self.parent.plots, self)
 
             
     def change_current_plot(self, event=None):

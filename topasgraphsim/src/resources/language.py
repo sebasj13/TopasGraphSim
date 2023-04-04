@@ -28,8 +28,8 @@ class Text:
         self.calcparams = {"de": "Parameter berechnen", "en": "Calculate parameters"}
         self.calculate = {"de": "Berechnen", "en": "Calculate"}
         self.caxcorrection = {
-            "de": "Zentralstrahlkorrektur",
-            "en": "Center axis correction",
+            "de": "CAX-Korrektur",
+            "en": "CAX correction",
         }
         self.beamquality = {"de":"Strahlungsqualitätsindex", "en":"Beam quality index"}
         self.zmax = {"de":"Maximumstiefe", "en":"Depth of maximum"}
@@ -94,7 +94,7 @@ class Text:
         self.english = {"de": "Englisch", "en": "English"}
         self.error = {"de": "Abweichung", "en": "Difference"}
         self.error1 = {"de": "Fehler bei der Parameterberechnung!", "en": "Failed to calculate parameters!"}
-        self.errorbars = {"de": "Fehlerbalken anzeigen", "en": "Show error bars"}
+        self.errorbars = {"de": "Fehlerbalken", "en": "Errorbars"}
         self.errlimmenu = {"de": "Fehlergrenze einstellen", "en": "Change error limits"}
         self.file = {"de": "Datei", "en": "File"}
         self.flip = {"de": "Daten umkehren", "en": "Flip data"}
@@ -137,7 +137,7 @@ class Text:
         }
         self.language = {"de": "Sprache", "en": "Language"}
         self.shift = {"de": "Linie verschieben/skalieren", "en": "Shift/rescale graph"}
-        self.showpoints = {"de": "Punkte anzeigen", "en": "Show points"}
+        self.showpoints = {"de": "Punkte", "en": "Points"}
         self.settings = {"de": "Standardeinstellungen", "en": "Default settings"}
         self.settings1 = {"de":"Einstellungen", "en":"Settings"}
         self.savesettings = {"de": "Einstellungen speichern", "en": "Save settings"}
@@ -193,9 +193,12 @@ class Text:
             "de": "Scanrichtung: [X = Ja | Y = Nein]",
             "en": "Scan axis: [X = Yes | Y = No]",
         }
+        self.lowerthreshold = {"de": "Dosislimit", "en": "Dose threshold"}
+        self.difference = {"de": "Differenzplot", "en": "Plot difference"}
+        self.plotgamma = {"de": "Gamma-Plot", "en": "Plot gamma"}
         self.showtable = {"de": "Wertetabelle anzeigen", "en": "Show parameter table"}
         self.select = {"de": "Messungen auswählen ...", "en": "Select measurements ..."}
-        self.showerror = {"de": "Fehlerbalken", "en": "Error bars"}
+        self.showerror = {"de": "Fehler", "en": "Errorbars"}
         self.showgrid = {"de": "Raster anzeigen", "en": "Show grid"}
         self.gridoptions1 = {"de": "Große Gitterlinien", "en": "Large gridlines"}
         self.gridoptions2 = {"de":"Alle Gitterlinien", "en":"All gridlines"}

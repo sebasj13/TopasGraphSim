@@ -27,6 +27,7 @@ class Tab(ctk.CTkFrame):
         self.columnconfigure(1, minsize=310)
         self.rowconfigure(0, weight=1)
         self.figure, self.ax = plt.subplots()
+        self.difax = self.ax.twinx()
         
         self.canvas = FigureCanvasTkAgg(self.figure, master=self)
         self.navbar = NavigationToolbar2Tk(self.canvas, self, pack_toolbar=False)  
@@ -43,7 +44,7 @@ class Tab(ctk.CTkFrame):
         self.navbar.grid(row=1, column=0, sticky="nsew")
         
     def config(self, event=None): 
-        self.figure.subplots_adjust(left=0.09, right=0.92, top=0.92, bottom=0.1, wspace=0.2, hspace=0.2)
+        self.figure.subplots_adjust(left=0.09, right=0.91, top=0.92, bottom=0.1, wspace=0.2, hspace=0.2)
         
     def update(self):
         self.ax.clear()

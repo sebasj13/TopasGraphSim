@@ -26,6 +26,7 @@
     "gammatype": false,
     "dd": "3",
     "dta": "3",
+    "lowerthreshold": "0",
     "default_colors": [
         "#009F6B",
         "#C40233",

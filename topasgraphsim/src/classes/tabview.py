@@ -61,6 +61,8 @@ class TabView(ctk.CTkTabview):
             setattr(self.tab(tab.name), "tab", tab)
             self.parent.parent.set_theme()
             tab.pack(fill="both", expand=True)
+            tab.grid_propagate(False)
+            tab.pack_propagate(False)
 
             self.parent.parent.menubar.tabmenu.add_command(label=Text().closetab[self.lang].format(tab.name), command=lambda: self.remove_tab(self.tabnames.index(tab.name)))
             self.set(self.tabnames[-1])
