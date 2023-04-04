@@ -29,6 +29,6 @@ class CheckForUpdates:
 
             if dialog == True:
                 try:
-                    webbrowser.open("https://pypi.org/project/topasgraphsim/")
+                    webbrowser.open("https://github.com/sebasj13/TopasGraphSim")
                 except Exception:
                     return
