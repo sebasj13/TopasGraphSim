@@ -50,6 +50,10 @@ Since all my testing in done on Windows 11, I cannot guarantee ToapsGrapSim will
 
 ## Features
 
+Visit the [wiki](https://github.com/sebasj13/TopasGraphSim/wiki) for detailed information!
+
+Highlights include:
+
  - Reproducible graphing and analysis of 1D TOPAS simulation for medical physics
  - Simultaneous plotting and parameter calculation for all data sets
  - Calculation of the Gamma Index with adjustable parameters
