@@ -34,18 +34,6 @@ Open compatible files from the command line:
 $ topasgraphsim "path_to_your_file"
 ```
 
-<b>Note:</b> Linux users need to have python3-tk installed. If it isnt installed yet, use:
-
-```console
-$ sudo apt-get install python3-tk
-```
-
-Also, you may need python-dev. Install if for your python version using:
-
-```console
-$ sudo apt-get install python<your main version>-dev
-```
-
 Since all my testing in done on Windows 11, I cannot guarantee ToapsGrapSim will work on any other plattform. I'm open to suggestions or PRs making the software work better cross-plattfrom!
 
 ## Features
