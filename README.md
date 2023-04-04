@@ -75,9 +75,9 @@ Highlights include:
 
  ## Screenshots
  
-![Home](https://user-images.githubusercontent.com/87897942/226722916-6028f3c8-7e1e-42d5-8ea4-94d8f78b111d.png)
+ ![main](https://user-images.githubusercontent.com/87897942/229850354-928239ef-dba8-49f3-b0bf-b5b7272b2e4c.png)
 
-![Tab](https://user-images.githubusercontent.com/87897942/226646489-49aa1319-995b-4f7e-8d42-344768f6ed8e.png)
+![tab](https://user-images.githubusercontent.com/87897942/229850628-639411bc-1b1f-4f13-bb67-0866a4d8decb.png)
 
  ## Parameters
 
