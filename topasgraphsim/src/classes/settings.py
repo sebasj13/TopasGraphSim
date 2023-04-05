@@ -66,7 +66,7 @@ class Settings(ctk.CTkFrame):
         self.normtype = ctk.StringVar(value=normtypedict[ProfileHandler().get_attribute("normtype")])
         self.normalize_options = ctk.CTkOptionMenu(self.generalframe, values=[Text().maximum[self.lang], Text().plateau[self.lang], Text().centeraxis[self.lang]], variable=self.normtype)
         self.normalizebutton.grid(row=4, column=0, padx=5, pady=5, sticky="w")
-        self.normalize_options.grid(row=4, column=1, padx=5, pady=5)
+        self.normalize_options.grid(row=4, column=1, padx=5, pady=5, sticky="nsew")
         
         self.show_points = ctk.BooleanVar(value=ProfileHandler().get_attribute("show_points"))
         self.pointsbutton = ctk.CTkCheckBox(self.generalframe, text=Text().showpoints[self.lang], variable=self.show_points, font=("Bahnschrift", 16))
@@ -138,11 +138,11 @@ class Settings(ctk.CTkFrame):
         
         self.gammalabel = ctk.CTkLabel(self.gammaframe, text=Text().gammasettings[self.lang], font=("Bahnschrift", 24))
         self.gammalabel.grid(columnspan=5, pady = 5, sticky="nsew", padx=5)
-        self.gammaframe.columnconfigure(0, weight=1, minsize=115)
+        self.gammaframe.columnconfigure(0, weight=1, minsize=130)
         self.gammaframe.columnconfigure(1, weight=1)
-        self.gammaframe.columnconfigure(2, weight=1)
+        self.gammaframe.columnconfigure(2, weight=1, minsize=40)
         self.gammaframe.columnconfigure(3, weight=1)
-        self.gammaframe.columnconfigure(4, weight=1)
+        self.gammaframe.columnconfigure(4, weight=1, minsize=40)
         
         self.gammatype = ctk.BooleanVar(value=self.p.get_attribute("gammatype"))
         self.gammatypelabel = ctk.CTkLabel(self.gammaframe, text=Text().gammatype[self.lang], font=("Bahnschrift",16))
@@ -154,16 +154,21 @@ class Settings(ctk.CTkFrame):
         
         self.percent = ctk.StringVar(value=self.p.get_attribute("dd"))
         self.distance = ctk.StringVar(value=self.p.get_attribute("dta"))
+        self.lowerthreshold = ctk.StringVar(value=self.p.get_attribute("lowerthreshold"))
         self.criterialabel = ctk.CTkLabel(self.gammaframe, text=Text().criterion[self.lang], font=("Bahnschrift",16))
         self.percententry = ctk.CTkEntry(self.gammaframe, textvariable=self.percent)
         self.percentlabel = ctk.CTkLabel(self.gammaframe, text="% ", font=("Bahnschrift",16))
         self.distanceentry = ctk.CTkEntry(self.gammaframe, textvariable=self.distance)
         self.distancelabel = ctk.CTkLabel(self.gammaframe, text="mm", font=("Bahnschrift",16))
+        self.lowerthresholdlabel = ctk.CTkLabel(self.gammaframe, text=Text().lowerthreshold[self.lang], font=("Bahnschrift",16))
+        self.lowerthresholdentry = ctk.CTkEntry(self.gammaframe, textvariable=self.lowerthreshold)
         self.criterialabel.grid(column=0, row=4, padx=5, pady=5, sticky="w")
         self.percententry.grid(column=1, row=4, padx=5, pady=5, sticky="e")
         self.percentlabel.grid(column=2, row=4, padx=5, pady=5, sticky="w")
         self.distanceentry.grid(column=3, row=4, padx=5, pady=5, sticky="e")
         self.distancelabel.grid(column=4, row=4, padx=5, pady=5, sticky="w")
+        self.lowerthresholdlabel.grid(column=0, row=5, padx=5, pady=5, sticky="w")
+        self.lowerthresholdentry.grid(column=1, row=5, padx=5, pady=5, sticky="e")
         
         ############################
         
@@ -205,6 +210,7 @@ class Settings(ctk.CTkFrame):
         self.p.set_attribute("gammatype", self.gammatype.get())
         self.p.set_attribute("dd", self.percent.get())
         self.p.set_attribute("dta", self.distance.get())
+        self.p.set_attribute("lowerthreshold", self.lowerthreshold.get())
         
         self.saved = True
 
@@ -233,6 +239,7 @@ class Settings(ctk.CTkFrame):
         self.gammatype.set(self.p.get_attribute("gammatype"))
         self.percent.set(self.p.get_attribute("dd"))
         self.distance.set(self.p.get_attribute("dta"))
+        self.lowerthreshold.set(self.p.get_attribute("lowerthreshold"))
         self.saved = True
     
     def close(self):
