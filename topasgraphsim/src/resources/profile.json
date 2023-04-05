@@ -1,5 +1,5 @@
 {
-    "geometry": "960x540+182+182",
+    "geometry": "960x540+0+0",
     "state": "normal",
     "draganddrop": true,
     "color_scheme": "light",
@@ -26,7 +26,7 @@
     "gammatype": false,
     "dd": "3",
     "dta": "3",
-    "lowerthreshold": "20",
+    "lowerthreshold": "0",
     "default_colors": [
         "#009F6B",
         "#C40233",
