@@ -54,7 +54,7 @@ Highlights include:
  - Drag and drop of files
  - Center axis deviation correction
  - Import of EGS and RadCalc simulation results *
- - Import of custom measurements (as numpy .txt files) *
+ - Import of custom measurements (as numpy .txt files)
  - Import of PTW tbaScan (MEPHYSTO mc<sup>2</sup>) measurements
  - German and english language support
  - Dark mode
