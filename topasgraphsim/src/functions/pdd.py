@@ -14,6 +14,7 @@ def calculate_parameters(axis, dose, std_dev):
     if type(std_dev) != np.ndarray or std_dev == []:
         TD20 = dose[(np.abs(axis - 200)).argmin()]
         TD10 = dose[(np.abs(axis - 100)).argmin()]
+        print(TD10)
         Q = round(1.2661 * TD20 / TD10 - 0.0595, 5)
         zmax = round(axis[int(np.where(dose == max(dose))[0][0])], 5)
 
@@ -57,5 +58,5 @@ def calculate_parameters(axis, dose, std_dev):
         5,
     )
     zmax = round(axis[int(np.where(dose == max(dose))[0][0])], 5)
-
+    print(TD10)
     return [Q, dQ, zmax]

@@ -49,3 +49,8 @@ class MainViewer(Frame):
                     if len(self.tabview.tabnames) == 0:
                         self.tabview.add_tab(name = True)
                     self.tabview.tab(self.tabview.tabnames[-1]).tab.options.load_measurement(path)
+                    
+                elif path[-4:] == ".txt":
+                    if len(self.tabview.tabnames) == 0:
+                        self.tabview.add_tab(name = True)
+                    self.tabview.tab(self.tabview.tabnames[-1]).tab.options.load_txt(path)

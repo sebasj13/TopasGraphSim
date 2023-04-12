@@ -15,6 +15,7 @@ from .scrollframe import ScrollFrame
 from .tgs_graph import TGS_Plot
 from .sim_import import Simulation
 from .ptw_import import PTWMultimporter
+from .meas_import import TXTImporter
 from .profile import ProfileHandler
 from .paramframe import Parameters
 
@@ -717,18 +718,19 @@ class Options(ctk.CTkTabview):
             return
         for p in path:
             if p not in self.filenames:
-        
+                
                 sim = TGS_Plot(self, Simulation(p))
-                self.parent.plots.append(sim)
-                self.filenames.append(p)
-                self.parameters.append(Parameters(self.paramslist.viewPort, sim, self.lang))
-                self.parameters[-1].grid(row=len(self.parameters)-1, sticky="ew", padx=5, pady=5)
-                self.current_plot.set(sim.label)
-                self.update_plotlist()     
-                self.plotbuttons.append(ctk.CTkRadioButton(self.graphlist.viewPort, text=sim.label, variable=self.current_plot, text_color = sim.linecolor, value=sim.label, command=self.change_current_plot, font=("Bahnschrift", 14, "bold")))
-                self.plotbuttons[-1].grid(sticky="w", padx=5, pady=5)
-                if len(self.parent.plots) == 1:
-                    self.enable_all_buttons()
+                if sim.fail == False:
+                    self.parent.plots.append(sim)
+                    self.filenames.append(p)
+                    self.parameters.append(Parameters(self.paramslist.viewPort, sim, self.lang))
+                    self.parameters[-1].grid(row=len(self.parameters)-1, sticky="ew", padx=5, pady=5)
+                    self.current_plot.set(sim.label)
+                    self.update_plotlist()     
+                    self.plotbuttons.append(ctk.CTkRadioButton(self.graphlist.viewPort, text=sim.label, variable=self.current_plot, text_color = sim.linecolor, value=sim.label, command=self.change_current_plot, font=("Bahnschrift", 14, "bold")))
+                    self.plotbuttons[-1].grid(sticky="w", padx=5, pady=5)
+                    if len(self.parent.plots) == 1:
+                        self.enable_all_buttons()
                 
             self.parent.saved = False
             self.parent.update()
@@ -739,8 +741,14 @@ class Options(ctk.CTkTabview):
         
         if path != "" and path not in self.filenames:
             PTWMultimporter(path, self.tab(Text().data[self.lang]), self.parent.plots, self)
-
             
+    def load_txt(self, path = None):
+        if path == None:
+            path = fd.askopenfilename(filetypes=[("TXT files", "*.txt")])
+        
+        if path != "" and path not in self.filenames:
+            TXTImporter(path, self.tab(Text().data[self.lang]), self.parent.plots, self)
+
     def change_current_plot(self, event=None):
         plot_labels = [plot.label for plot in self.parent.plots]
         index = plot_labels.index(self.current_plot.get())

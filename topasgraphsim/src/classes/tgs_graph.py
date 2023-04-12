@@ -6,29 +6,35 @@ class TGS_Plot():
     
     def __init__(self, Options, ImportedData):
         
-        self.options = Options
-        self.lang = self.options.lang
-        self.dataObject = ImportedData
-        self.direction = self.dataObject.direction
-        self.p = ProfileHandler()
-        
-        self.normalize = self.p.get_attribute("normalize")
-        self.caxcorrection = self.p.get_attribute("caxcorrection")
-        self.normalization = self.p.get_attribute("normtype")
-        self.points = self.p.get_attribute("show_points")
-        self.error = self.p.get_attribute("show_error")
-        
-        self.label = self.dataObject.filename
-        self.linethickness = self.p.get_attribute("linethickness")
-        self.linestyle = self.p.get_attribute("linestyle")
-        self.linecolor =  ProfileHandler().get_attribute("default_colors")[len(self.options.parent.plots)%len(ProfileHandler().get_attribute("default_colors"))]
-        
-        self.dosefactor = self.p.get_attribute("dosefactor")
-        self.doseshift = self.p.get_attribute("doseoffset")
-        self.axshift = self.p.get_attribute("axshift")
-        self.flip = self.p.get_attribute("flip")
-        
-        self.set_tab_data()
+        try:
+            self.fail = False
+            self.options = Options
+            self.lang = self.options.lang
+            self.dataObject = ImportedData
+            self.direction = self.dataObject.direction
+            self.p = ProfileHandler()
+            
+            self.normalize = self.p.get_attribute("normalize")
+            self.caxcorrection = self.p.get_attribute("caxcorrection")
+            self.normalization = self.p.get_attribute("normtype")
+            self.points = self.p.get_attribute("show_points")
+            self.error = self.p.get_attribute("show_error")
+            
+            self.label = self.dataObject.filename
+            self.linethickness = self.p.get_attribute("linethickness")
+            self.linestyle = self.p.get_attribute("linestyle")
+            self.linecolor =  ProfileHandler().get_attribute("default_colors")[len(self.options.parent.plots)%len(ProfileHandler().get_attribute("default_colors"))]
+            
+            self.dosefactor = self.p.get_attribute("dosefactor")
+            self.doseshift = self.p.get_attribute("doseoffset")
+            self.axshift = self.p.get_attribute("axshift")
+            self.flip = self.p.get_attribute("flip")
+            
+            self.set_tab_data()
+        except Exception:
+            self.options.bell()
+            self.fail = True
+            return
         
     def set_tab_data(self):
         

@@ -63,6 +63,7 @@ class Text:
             "de": "Differenzgraph anzeigen",
             "en": "Show difference plot",
         }
+        self.direction = {"de": "Richtung asuwählen...", "en": "Select direction..."}
         self.data = {"de": "Daten", "en": "Data"}
         self.gammasettings = {"de": "Gamma", "en": "Gamma"}
         self.generalsettings = {"de": "Allgemein", "en": "General"}
@@ -198,6 +199,7 @@ class Text:
         self.plotgamma = {"de": "Gamma-Plot", "en": "Plot gamma"}
         self.showtable = {"de": "Wertetabelle anzeigen", "en": "Show parameter table"}
         self.select = {"de": "Messungen auswählen ...", "en": "Select measurements ..."}
+        
         self.showerror = {"de": "Fehler", "en": "Errorbars"}
         self.showgrid = {"de": "Raster anzeigen", "en": "Show grid"}
         self.gridoptions1 = {"de": "Große Gitterlinien", "en": "Large gridlines"}

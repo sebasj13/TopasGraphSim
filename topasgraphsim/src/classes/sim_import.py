@@ -28,8 +28,8 @@ class Simulation:
                     self.axis = np.linspace(float(self.min), float(self.max), int(self.bins))
                     self.std_dev = np.zeros(len(self.dose))
                     return
-                     
-        self.data = topas2numpy.BinnedResult(self.filepath)
+        try: self.data = topas2numpy.BinnedResult(self.filepath)
+        except Exception: return
         bins = [dim.n_bins for dim in self.data.dimensions]
         if bins.count(1) != 2:
             print("Unsupported Experiment Type!")
