@@ -550,7 +550,8 @@ class Options(ctk.CTkTabview):
             reference_axes, reference_dose, _ = self.parent.plots[plot_labels.index(self.reference.get())].data()
             evaluation_axes, evaluation_dose, _ = self.parent.plots[plot_labels.index(self.test.get())].data()
             g = gamma(axes_reference=reference_axes, dose_reference=reference_dose, axes_evaluation=evaluation_axes, dose_evaluation=evaluation_dose, dose_percent_threshold=percent, distance_mm_threshold=distance, local_gamma=local, lower_percent_dose_cutoff=lower_percent_dose_cutoff, max_gamma =4)
-            gamma_index = len(np.where(g <= 1)[0])/len(g)*100
+            g1 = np.array([i for i in g if np.isnan(i) == False])
+            gamma_index = len(np.where(g1 <= 1)[0])/len(g1)*100
             if gamma_index >= 95:
                 self.resultcanvas.configure(fg_color="green")
             elif gamma_index <= 95 and gamma_index > 80:
