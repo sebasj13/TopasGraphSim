@@ -5,6 +5,9 @@ from tkinter import colorchooser
 from PIL import Image
 import os
 import sys
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.backends._backend_tk import NavigationToolbar2Tk
 import logging
 from pymedphys import gamma
 
@@ -378,6 +381,8 @@ class Options(ctk.CTkTabview):
             self.parent.canvas.draw()
         if self.showgrid.get(): 
             self.parent.ax.grid(which="major", visible=True, axis="both", lw=1) 
+            try: self.parent.ax2.grid(which="major", visible=True, axis="both", lw=1) 
+            except Exception: pass
             self.parent.canvas.draw() 
         self.disable_all_buttons()
     
@@ -537,7 +542,8 @@ class Options(ctk.CTkTabview):
             pass
         
     def clear_gamma(self, event=None):
-        self.parent.difax.yaxis.set_label_text("")
+        try: self.parent.ax2.yaxis.set_label_text("")
+        except Exception: pass
         self.resultcanvas.configure(text="", fg_color="white")
         
     def calculate_gamma(self):
@@ -562,32 +568,57 @@ class Options(ctk.CTkTabview):
             self.resultcanvas.configure(text=str(round(gamma_index, 3)) + "%")
             
             if self.difference.get():
-                self.parent.difax.clear()
+                if self.parent.ax2 == None:
+                    self.parent.figure, self.parent.ax = plt.subplots(nrows=2, ncols=1, sharex=True, height_ratios=[6, 2])
+                    self.parent.ax, self.parent.ax2 = self.parent.ax
+                    self.parent.canvas = FigureCanvasTkAgg(self.parent.figure, master=self.parent)
+                    self.parent.navbar = NavigationToolbar2Tk(self.parent.canvas, self.parent, pack_toolbar=False) 
+                    self.parent.master.master.parent.parent.set_theme() 
+                    self.parent.canvas.get_tk_widget().grid(row=0, column=0, sticky="nsew")
+                    self.parent.navbar.grid(row=1, column=0, sticky="nsew")
+                self.parent.ax2.clear()
                 evaluation_dose = np.interp(reference_axes, evaluation_axes, evaluation_dose)
-                self.parent.difax.plot(reference_axes, 100*np.array([(reference_dose[i]-evaluation_dose[i])/reference_dose[i] for i in range(len(reference_dose))]), color="black", lw=0.2, linestyle="--")
-                self.parent.difax.yaxis.set_label_text("%")
-                self.parent.difax.yaxis.set_label_position("right")
+                difference = 100*np.array([(reference_dose[i]-evaluation_dose[i])/reference_dose[i] for i in range(len(reference_dose))])
+                self.parent.ax2.plot(reference_axes, difference, color="black", lw=1, linestyle="--", label=f"Ø-{Text().difference2[self.lang]}: {np.average(np.abs(difference)):.3f}%")
+                self.parent.ax2.yaxis.set_label_text(Text().difference2[self.lang] + " %")
+                self.parent.ax2.legend(loc="upper right", framealpha=0)
                 self.parent.update()
-                self.parent.ax.plot([],[], color="black", label="%")
                 self.toggle_legend_options()
                 self.parent.canvas.draw()
                 
             elif self.plotgamma.get():
-                self.parent.difax.clear()
-                self.parent.difax.yaxis.set_label_text("Gamma-Index")
-                self.parent.difax.yaxis.set_label_position("right")
-                self.parent.difax.set_ylim(bottom=0, top=4.2)
-                self.parent.difax.scatter(reference_axes, g, marker="x",c=g, cmap="jet", vmin=0, vmax=2)
+                if self.parent.ax2 == None:
+                    self.parent.figure, self.parent.ax = plt.subplots(nrows=2, ncols=1, sharex=True, height_ratios=[6, 2])
+                    self.parent.ax, self.parent.ax2 = self.parent.ax
+                    self.parent.canvas = FigureCanvasTkAgg(self.parent.figure, master=self.parent)
+                    self.parent.navbar = NavigationToolbar2Tk(self.parent.canvas, self.parent, pack_toolbar=False)  
+                    self.parent.master.master.parent.parent.set_theme() 
+                    self.parent.canvas.get_tk_widget().grid(row=0, column=0, sticky="nsew")
+                    self.parent.navbar.grid(row=1, column=0, sticky="nsew")
+                self.parent.ax2.clear()
+                self.parent.ax2.yaxis.set_label_text("Gamma-Index")
+                self.parent.ax2.set_ylim(bottom=-0.2, top=4.2)
+                self.parent.ax2.scatter(reference_axes, g, marker="x",c=g, cmap="jet", vmin=0, vmax=2, label = f"Ø-Gamma: {np.average(g):.3f}")
+                self.parent.ax2.legend(loc="upper right", framealpha=0)
                 self.parent.update()
-                self.parent.ax.plot([],[], marker="x", lw=0, color="black", label="Gamma-Index")
                 self.toggle_legend_options()
                 self.parent.canvas.draw()
                 
             else:
-                self.parent.difax.clear()
-                self.parent.difax.yaxis.set_label_text("")
-                self.parent.update()
+                try: 
+                    if self.parent.ax2 != None:
+                        self.parent.ax2 = None
+                        self.parent.figure, self.parent.ax = plt.subplots()
+                        self.parent.canvas = FigureCanvasTkAgg(self.parent.figure, master=self.parent)
+                        self.parent.navbar = NavigationToolbar2Tk(self.parent.canvas, self.parent, pack_toolbar=False)  
+                        self.parent.master.master.parent.parent.set_theme() 
+                        self.parent.canvas.get_tk_widget().grid(row=0, column=0, sticky="nsew")
+                        self.parent.navbar.grid(row=1, column=0, sticky="nsew")    
+                        self.parent.update()    
+                        
             
+                except AttributeError: pass
+                
         except ValueError as e:
             print(e)
         
@@ -690,12 +721,20 @@ class Options(ctk.CTkTabview):
             which = {Text().gridoptions1[self.lang]:"major", Text().gridoptions2[self.lang]:"both"}.get(self.gridoptions.get())
             self.parent.ax.grid(False, which = "both", axis="both")
             self.parent.ax.grid(which="major", visible=True, axis="both", lw=1)
+            try:
+                self.parent.ax2.grid(False, which = "both", axis="both")
+                self.parent.ax2.grid(which="major", visible=True, axis="both", lw=1)
+            except AttributeError: pass
             if which == "both":
                 self.parent.ax.grid(which="minor", visible=True, axis="both", lw=0.5)
+                try: self.parent.ax2.grid(which="minor", visible=True, axis="both", lw=0.5)
+                except AttributeError: pass
             self.parent.canvas.draw()
         else:
             self.showgrid_options.configure(state="disabled")
             self.parent.ax.grid(False, which = "both", axis="both")
+            try: self.parent.ax2.grid(False, which = "both", axis="both")
+            except AttributeError: pass
             self.parent.canvas.draw()
         
     def update_plotlist(self):

@@ -49,6 +49,7 @@ class PTWMeasurement:
 class PTWMultimporter(ScrollFrame):
     def __init__(self, filepath, parent, plotlist, options):
         super().__init__(parent=parent)
+        self.parent = parent
         self.text = Text()
         self.lang = ProfileHandler().get_attribute("language")
         self.plotlist = plotlist
@@ -151,6 +152,7 @@ class PTWMultimporter(ScrollFrame):
             command=self.submit,
         )
         self.submitbutton.pack(anchor="s", pady=5)
+        self.parent.master.master.parent.bind("<Return>", self.submit)
 
     def submit(self, event=None):
 

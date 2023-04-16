@@ -129,8 +129,10 @@ class TopasGraphSim(Tk):
                 for w in self.frame.tabview.tab(tab).winfo_children():
                     if hasattr(w, "figure"):
                         if w.options.showlegend.get():
-                            for text in w.ax.get_legend().get_texts():
-                                text.set_color(fontcolor)
+                            try:
+                                for text in w.ax.get_legend().get_texts():
+                                    text.set_color(fontcolor)
+                            except AttributeError: pass
                         w.ax.set_title(w.ax.get_title(), color=fontcolor)
                         w.ax.set_xlabel(w.ax.get_xlabel(), color=fontcolor)
                         w.ax.set_ylabel(w.ax.get_ylabel(), color=fontcolor)
@@ -142,19 +144,31 @@ class TopasGraphSim(Tk):
                     self.frame.tabview.tab(tab).tab.options.graphlist.scrollbar.configure(fg_color=color3)
                     if hasattr(w, "figure"):
                         if w.options.showlegend.get():
-                            for text in w.ax.get_legend().get_texts():
-                                text.set_color(fontcolor)
+                            try:
+                                for text in w.ax.get_legend().get_texts():
+                                    text.set_color(fontcolor)
+                            except AttributeError: pass
                         w.ax.set_title(w.ax.get_title(), color=fontcolor)
                         w.ax.set_xlabel(w.ax.get_xlabel(), color=fontcolor)
                         w.ax.set_ylabel(w.ax.get_ylabel(), color=fontcolor)
                         w.figure.patch.set_facecolor(color2)
                         w.ax.set_facecolor(color)
+                        try: w.ax2.set_facecolor(color)
+                        except AttributeError: pass
                         w.ax.spines["bottom"].set_color(fontcolor)
                         w.ax.spines["top"].set_color(fontcolor)
                         w.ax.spines["right"].set_color(fontcolor)
                         w.ax.spines["left"].set_color(fontcolor)
                         w.ax.tick_params(axis="x", colors=fontcolor)
                         w.ax.tick_params(axis="y", colors=fontcolor)
+                        try:
+                            w.ax2.spines["bottom"].set_color(fontcolor)
+                            w.ax2.spines["top"].set_color(fontcolor)
+                            w.ax2.spines["right"].set_color(fontcolor)
+                            w.ax2.spines["left"].set_color(fontcolor)
+                            w.ax2.tick_params(axis="x", colors=fontcolor)
+                            w.ax2.tick_params(axis="y", colors=fontcolor)
+                        except AttributeError: pass
                         w.navbar.config(background=color2)
                         w.navbar._message_label.config(background=color)
                         for t in w.navbar.winfo_children():

@@ -27,7 +27,7 @@ class Tab(ctk.CTkFrame):
         self.columnconfigure(1, minsize=310)
         self.rowconfigure(0, weight=1)
         self.figure, self.ax = plt.subplots()
-        self.difax = self.ax.twinx()
+        self.ax2 = None
         
         self.canvas = FigureCanvasTkAgg(self.figure, master=self)
         self.navbar = NavigationToolbar2Tk(self.canvas, self, pack_toolbar=False)  
@@ -57,6 +57,12 @@ class Tab(ctk.CTkFrame):
         self.ax.xaxis.set_minor_locator(AutoMinorLocator())
         self.ax.yaxis.set_major_locator(AutoLocator())
         self.ax.yaxis.set_minor_locator(AutoMinorLocator())
+        try:
+            self.ax2.xaxis.set_major_locator(AutoLocator())
+            self.ax2.xaxis.set_minor_locator(AutoMinorLocator())
+            self.ax2.yaxis.set_major_locator(AutoLocator())
+            self.ax2.yaxis.set_minor_locator(AutoMinorLocator())
+        except AttributeError: pass
         self.canvas.draw()
             
 

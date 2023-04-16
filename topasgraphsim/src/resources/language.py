@@ -49,6 +49,7 @@ class Text:
             "de": "Graph wurde noch nicht gespeichert. Trotzdem Schließen?",
             "en": "Graph was not saved. Close anyways?",
         }
+        self.difference2 = {"de": "Differenz", "en": "Difference"}
         self.dark = {"de": "Dunkel", "en": "Dark"}
         self.decrease = {"de": "Verkleinern", "en": "Decrease"}
         self.decreaseupper = {
