@@ -599,7 +599,7 @@ class Options(ctk.CTkTabview):
                 self.parent.ax2.clear()
                 self.parent.ax2.yaxis.set_label_text("Gamma-Index")
                 self.parent.ax2.set_ylim(bottom=-0.2, top=4.2)
-                self.parent.ax2.scatter(reference_axes, g, marker="x",c=g, cmap="jet", vmin=0, vmax=2, label = f"Ø-Gamma: {np.average(g):.3f}")
+                self.parent.ax2.scatter(reference_axes, g, marker="x",c=g, cmap="jet", vmin=0, vmax=2, label = f"Ø-Gamma: {np.average(g1):.3f}")
                 self.parent.ax2.legend(loc="upper right", framealpha=0)
                 self.parent.update()
                 self.toggle_legend_options()
