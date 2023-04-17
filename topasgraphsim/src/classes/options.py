@@ -416,8 +416,8 @@ class Options(ctk.CTkTabview):
                 self.plotbuttons[index], self.plotbuttons[index-1] = self.plotbuttons[index-1], self.plotbuttons[index]
                 self.parameters[index], self.parameters[index-1] = self.parameters[index-1], self.parameters[index]
                 self.filenames[index], self.filenames[index-1] = self.filenames[index-1], self.filenames[index]
-                [button.grid_forget() for button in self.plotbuttons]
-                [params.grid_forget() for params in self.parameters]
+                #[button.grid_forget() for button in self.plotbuttons]
+                #[params.grid_forget() for params in self.parameters]
                 [button.grid(row=i, padx=5, pady=5, sticky="w") for i, button in enumerate(self.plotbuttons)]
                 [params.grid(row=i, sticky="ew", padx=5, pady=5) for i, params in enumerate(self.parameters)]
                 self.update_plotlist()
@@ -428,8 +428,8 @@ class Options(ctk.CTkTabview):
                 self.plotbuttons[index], self.plotbuttons[index+1] = self.plotbuttons[index+1], self.plotbuttons[index]
                 self.parameters[index], self.parameters[index+1] = self.parameters[index+1], self.parameters[index]
                 self.filenames[index], self.filenames[index+1] = self.filenames[index+1], self.filenames[index]
-                [button.grid_forget() for button in self.plotbuttons]
-                [params.grid_forget() for params in self.parameters]
+                #[button.grid_forget() for button in self.plotbuttons]
+                #[params.grid_forget() for params in self.parameters]
                 [button.grid(row=i, padx=5, pady=5, sticky="w") for i, button in enumerate(self.plotbuttons)]
                 [params.grid(row=i, sticky="ew", padx=5, pady=5) for i, params in enumerate(self.parameters)]
                 self.update_plotlist()
@@ -469,7 +469,8 @@ class Options(ctk.CTkTabview):
                         pass
         
     def remove_plot(self):
-        self.parent.difax.clear()
+        try: self.parent.ax2.clear()
+        except AttributeError: pass
         self.parent.saved = False
         plot_labels = [plot.label for plot in self.parent.plots]
         index = plot_labels.index(self.current_plot.get())
