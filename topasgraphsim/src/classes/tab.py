@@ -5,6 +5,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.backends._backend_tk import NavigationToolbar2Tk
 from matplotlib.ticker import AutoLocator, AutoMinorLocator
 from .options import Options
+from .xrange_slider import Slider
   
        
 class Tab(ctk.CTkFrame):
@@ -26,13 +27,19 @@ class Tab(ctk.CTkFrame):
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, minsize=310)
         self.rowconfigure(0, weight=1)
+        self.rowconfigure(0, minsize=100)
         self.figure, self.ax = plt.subplots()
         self.ax2 = None
         
         self.canvas = FigureCanvasTkAgg(self.figure, master=self)
         self.navbar = NavigationToolbar2Tk(self.canvas, self, pack_toolbar=False)  
+        self.navbar.pack_propagate(False)
+        self.navbar.grid_propagate(False)
         self.options = Options(self, index, self.lang)
-
+        self.slider1 = Slider(self.navbar, self.options.update_xlim)
+        self.slider2 = Slider(self.navbar, self.options.update_xlim)
+        self.slider1.pack(side="left", expand=False, padx=10)
+        self.slider2.pack(side="left", expand=False)
         
         self.navbar._buttons["Save"].config(command=self.options.save)
         
@@ -48,8 +55,10 @@ class Tab(ctk.CTkFrame):
         
     def update(self):
         self.ax.clear()
+        
         for plot in self.plots[::-1]:
             plot.plot(self.ax)
+        self.options.set_xlim()
         self.options.set_ax_names()
         self.options.toggle_legend_options()
         self.options.toggle_grid_options()

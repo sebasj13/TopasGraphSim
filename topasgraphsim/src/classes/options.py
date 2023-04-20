@@ -575,6 +575,7 @@ class Options(ctk.CTkTabview):
                     self.parent.canvas = FigureCanvasTkAgg(self.parent.figure, master=self.parent)
                     self.parent.navbar = NavigationToolbar2Tk(self.parent.canvas, self.parent, pack_toolbar=False) 
                     self.parent.master.master.parent.parent.set_theme() 
+                    self.parent.config()
                     self.parent.canvas.get_tk_widget().grid(row=0, column=0, sticky="nsew")
                     self.parent.navbar.grid(row=1, column=0, sticky="nsew")
                 self.parent.ax2.clear()
@@ -594,6 +595,7 @@ class Options(ctk.CTkTabview):
                     self.parent.canvas = FigureCanvasTkAgg(self.parent.figure, master=self.parent)
                     self.parent.navbar = NavigationToolbar2Tk(self.parent.canvas, self.parent, pack_toolbar=False)  
                     self.parent.master.master.parent.parent.set_theme() 
+                    self.parent.config()
                     self.parent.canvas.get_tk_widget().grid(row=0, column=0, sticky="nsew")
                     self.parent.navbar.grid(row=1, column=0, sticky="nsew")
                 self.parent.ax2.clear()
@@ -613,6 +615,7 @@ class Options(ctk.CTkTabview):
                         self.parent.canvas = FigureCanvasTkAgg(self.parent.figure, master=self.parent)
                         self.parent.navbar = NavigationToolbar2Tk(self.parent.canvas, self.parent, pack_toolbar=False)  
                         self.parent.master.master.parent.parent.set_theme() 
+                        self.parent.config()
                         self.parent.canvas.get_tk_widget().grid(row=0, column=0, sticky="nsew")
                         self.parent.navbar.grid(row=1, column=0, sticky="nsew")    
                         self.parent.update()    
@@ -622,7 +625,19 @@ class Options(ctk.CTkTabview):
                 
         except ValueError as e:
             print(e)
+            
+    def set_xlim(self):
+        self.parent.slider1.var.set(self.parent.ax.get_xlim()[0])
+        self.parent.slider2.var.set(self.parent.ax.get_xlim()[1])
+        self.parent.slider1.slider.configure(from_=self.parent.ax.get_xlim()[0], to=self.parent.ax.get_xlim()[1])
+        self.parent.slider2.slider.configure(from_=self.parent.ax.get_xlim()[0], to=self.parent.ax.get_xlim()[1])
+        self.parent.slider1.text.configure(text=str(round(self.parent.slider1.var.get(), 2)))
+        self.parent.slider2.text.configure(text=str(round(self.parent.slider2.var.get(), 2)))
         
+    def update_xlim(self):
+        
+        self.parent.ax.set_xlim(self.parent.slider1.var.get(), self.parent.slider2.var.get())
+        self.parent.canvas.draw()
 
     def choose_linecolor(self):
         self.parent.saved = False

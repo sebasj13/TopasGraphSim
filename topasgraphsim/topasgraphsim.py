@@ -64,7 +64,7 @@ class TopasGraphSim(Tk):
         for i in sys.argv[1:]:
             if os.path.exists(i):
                 self.frame.add_file(i)
-        CheckForUpdates()
+        #CheckForUpdates()
         self.after(0, lambda: self.state(ProfileHandler().get_attribute("state")))
         self.mainloop()
 
@@ -172,9 +172,11 @@ class TopasGraphSim(Tk):
                         w.navbar.config(background=color2)
                         w.navbar._message_label.config(background=color)
                         for t in w.navbar.winfo_children():
-                            t.config(background=color2)
-                            if t.winfo_class() != "Frame":
-                                t.config(foreground=fontcolor)
+                            try:
+                                t.config(background=color2)
+                                if t.winfo_class() != "Frame":
+                                    t.config(foreground=fontcolor)
+                            except Exception: pass
                         w.navbar.update()
                         w.canvas.draw()
 
