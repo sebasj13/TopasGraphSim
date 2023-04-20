@@ -10,6 +10,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.backends._backend_tk import NavigationToolbar2Tk
 import logging
 from pymedphys import gamma
+from .xrange_slider import Slider
 
 logging.getLogger("matplotlib").setLevel(level=logging.CRITICAL)
 
@@ -574,6 +575,13 @@ class Options(ctk.CTkTabview):
                     self.parent.ax, self.parent.ax2 = self.parent.ax
                     self.parent.canvas = FigureCanvasTkAgg(self.parent.figure, master=self.parent)
                     self.parent.navbar = NavigationToolbar2Tk(self.parent.canvas, self.parent, pack_toolbar=False) 
+                    self.parent.slider1 = Slider(self.parent.navbar, self.parent.options.update_xlim)
+                    self.parent.slider2 = Slider(self.parent.navbar, self.parent.options.update_xlim)
+                    self.parent.slider1.pack(side="left", expand=False, padx=10)
+                    self.parent.slider2.pack(side="left", expand=False)
+                    self.parent.navbar._buttons["Save"].config(command=self.parent.options.save)
+                    self.set_xlim()
+                    self.update_xlim()
                     self.parent.master.master.parent.parent.set_theme() 
                     self.parent.config()
                     self.parent.canvas.get_tk_widget().grid(row=0, column=0, sticky="nsew")
@@ -592,8 +600,16 @@ class Options(ctk.CTkTabview):
                 if self.parent.ax2 == None:
                     self.parent.figure, self.parent.ax = plt.subplots(nrows=2, ncols=1, sharex=True, height_ratios=[6, 2])
                     self.parent.ax, self.parent.ax2 = self.parent.ax
+                    
                     self.parent.canvas = FigureCanvasTkAgg(self.parent.figure, master=self.parent)
                     self.parent.navbar = NavigationToolbar2Tk(self.parent.canvas, self.parent, pack_toolbar=False)  
+                    self.parent.slider1 = Slider(self.parent.navbar, self.update_xlim)
+                    self.parent.slider2 = Slider(self.parent.navbar, self.update_xlim)
+                    self.parent.slider1.pack(side="left", expand=False, padx=10)
+                    self.parent.slider2.pack(side="left", expand=False)
+                    self.parent.navbar._buttons["Save"].config(command=self.parent.options.save)
+                    self.set_xlim()
+                    self.update_xlim()
                     self.parent.master.master.parent.parent.set_theme() 
                     self.parent.config()
                     self.parent.canvas.get_tk_widget().grid(row=0, column=0, sticky="nsew")
@@ -614,6 +630,13 @@ class Options(ctk.CTkTabview):
                         self.parent.figure, self.parent.ax = plt.subplots()
                         self.parent.canvas = FigureCanvasTkAgg(self.parent.figure, master=self.parent)
                         self.parent.navbar = NavigationToolbar2Tk(self.parent.canvas, self.parent, pack_toolbar=False)  
+                        self.parent.slider1 = Slider(self.parent.navbar, self.parent.options.update_xlim)
+                        self.parent.slider2 = Slider(self.parent.navbar, self.parent.options.update_xlim)
+                        self.parent.slider1.pack(side="left", expand=False, padx=10)
+                        self.parent.slider2.pack(side="left", expand=False)
+                        self.parent.navbar._buttons["Save"].config(command=self.parent.options.save)
+                        self.set_xlim()
+                        self.update_xlim()
                         self.parent.master.master.parent.parent.set_theme() 
                         self.parent.config()
                         self.parent.canvas.get_tk_widget().grid(row=0, column=0, sticky="nsew")
