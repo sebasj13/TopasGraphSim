@@ -19,6 +19,7 @@ from .scrollframe import ScrollFrame
 from .tgs_graph import TGS_Plot
 from .sim_import import Simulation
 from .ptw_import import PTWMultimporter
+from .raystation_import import RayStationMultiImporter
 from .meas_import import TXTImporter
 from .profile import ProfileHandler
 from .paramframe import Parameters
@@ -97,6 +98,9 @@ class Options(ctk.CTkTabview):
         
         self.load_mcc_button = ctk.CTkButton(self.dataframe2, text = Text().loadmeasurement[self.lang], command = self.load_measurement, width=20)
         self.load_mcc_button.grid(row=0, column=1, sticky="nsew", padx=5, pady=(5,2))
+        
+        self.load_raystation_button = ctk.CTkButton(self.dataframe2, text = Text().loadraystation[self.lang], command = self.load_raystation, width=20)
+        self.load_raystation_button.grid(row=1, column=0, sticky="nsew", padx=5, pady=(5,2))
         
         self.showgrid = ctk.BooleanVar(value=self.p.get_attribute("grid"))
 
@@ -820,6 +824,13 @@ class Options(ctk.CTkTabview):
         
         if path != "" and path not in self.filenames:
             PTWMultimporter(path, self.tab(Text().data[self.lang]), self.parent.plots, self)
+            
+    def load_raystation(self, path = None):
+        if path == None:
+            path = fd.askopenfilename(filetypes=[("XLS files", "*.xls")])
+        
+        if path != "" and path not in self.filenames:
+            RayStationMultiImporter(path, self.tab(Text().data[self.lang]), self.parent.plots, self)
             
     def load_txt(self, path = None):
         if path == None:
