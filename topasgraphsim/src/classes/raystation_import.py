@@ -38,10 +38,18 @@ class RayStationData:
                 [],
             )
         else:
-            params = dp.calculate_parameters(
-                self.axis, self.dose / max(self.dose)
-            )
-            self.cax = params[1]
+            try:
+                params = dp.calculate_parameters(
+                    self.axis, self.dose / max(self.dose)
+                )
+                self.cax = params[1]
+            except ValueError:
+                self.axis = np.flip(self.axis)
+                self.dose = np.flip(self.dose)
+                params = dp.calculate_parameters(
+                    self.axis, self.dose / max(self.dose)
+                )
+                self.cax = params[1]
             return params
 
 
