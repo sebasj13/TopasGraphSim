@@ -56,20 +56,20 @@ class TGS_Plot():
         axis = np.add(self.dataObject.axis,self.axshift)
         dose = self.dataObject.dose.copy()
         error = self.dataObject.std_dev.copy()
-        
+               
         if self.normalize:
             if self.normalization == "maximum":
-                error /= np.max(dose)
-                dose /= np.max(dose)
+                error = np.divide(error,np.max(dose))
+                dose = np.divide(dose,np.max(dose))
 
             elif self.normalization == "plateau":
                 l = len(dose)//2
-                error /= np.average(dose[l-5:l+5])
-                dose /= np.average(dose[l-5:l+5])
+                error = np.divide(error,np.average(dose[l-5:l+5]))
+                dose = np.divide(dose,np.average(dose[l-5:l+5]))
 
             elif self.normalization == "centeraxis":
-                error /= dose[len(dose)//2]
-                dose /= dose[len(dose)//2]
+                error = np.divide(error,dose[len(dose)//2])
+                dose = np.divide(dose,dose[len(dose)//2])
 
 
         dose = np.add(dose * self.dosefactor, self.doseshift)
