@@ -25,7 +25,7 @@ class TopasGraphSim(Tk):
         super().__init__()
         
         self.appname = "TopasGraphSim"
-        self.version = "25.1.1"
+        self.version = "26.0.0"
         self.author = "Sebastian Schäfer"
         self.affiliation = "UK Halle\nMLU Halle-Wittenberg\nUK Hamburg-Eppendorf"
         self.title(f"{self.appname} - v.{self.version}")
