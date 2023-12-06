@@ -153,6 +153,7 @@ class Text:
         self.linecolor = {"de": "Linienfarbe", "en": "Line color"}
         self.loadmeasurement = {"de": "Messung laden", "en": "Load measurement"}
         self.loadraystation = {"de": "RayStation-Daten laden", "en": "Load RayStation data"}
+        self.loadradcalc = {"de": "RadCalc-Daten laden", "en": "Load RadCalc data"}
         self.local = {"de": "Lokal", "en": "Local"}
         self.globalg = {"de": "Global", "en": "Global"}
         self.gammatype = {"de": "Gamma-Typ", "en": "Gamma type"}

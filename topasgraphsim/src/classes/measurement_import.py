@@ -20,61 +20,27 @@ class Measurement:
 
         data = np.loadtxt(self.filepath, unpack=True)
         self.unit = ""
-        self.axis, self.dose = data[0], data[1]
+        self.axis, self.dose = np.array(data[0]), np.array(data[1])
         self.normpoint = max(self.dose)
 
         try:
-            self.std_dev = data[2]
+            self.std_dev = np.array(data[2])
         except IndexError:
-            self.std_dev = []
+            self.std_dev = (np.array([0 for i in range(len(self.dose))]))
 
-        self.axis = self.axis.tolist()
-
-        self.axis = {True: self.axis[len(self.axis) // 2 :], False: self.axis}
-        self.dose = {True: self.dose[len(self.dose) // 2 :], False: self.dose}
-        if self.std_dev != None:
-            self.std_dev = self.std_dev = {
-                True: self.std_dev[len(self.std_dev) // 2 :],
-                False: self.std_dev,
-            }
-
-        else:
-            self.std_dev = {
-                True: self.std_dev,
-                False: self.std_dev,
-            }
-
-        # try:
-        #    self.direction = "Z"
-        #    pdd.calculate_parameters(
-        #        np.array(self.axis[False]),
-        #        self.dose[False] / max(self.dose[False]),
-        #        [],
-        #    )
-        # except Exception:
-        #    try:
-        #        self.direction = "X"
-        #        dp.calculate_parameters(
-        #            np.array(self.axis[False]),
-        #            self.dose[False] / max(self.dose[False]),
-        #            [],
-        #        )
-        #        dialog = GetType(self, self.parent, "NoPDD")
-        #        self.parent.parent.wait_window(dialog.top)
-        #    except Exception:
         dialog = GetType(self, self.parent, "")
         self.parent.parent.wait_window(dialog.top)
 
     def params(self):
         if self.direction == "Z":
             return pdd.calculate_parameters(
-                np.array(self.axis[False]),
-                self.dose[False] / max(self.dose[False]),
+                np.array(self.axis),
+                self.dose / max(self.dose),
                 [],
             )
         else:
             params = dp.calculate_parameters(
-                self.axis[False], self.dose[False] / max(self.dose[False])
+                self.axis, self.dose[False] / max(self.dose)
             )
             self.cax = params[1]
             return params

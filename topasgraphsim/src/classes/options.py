@@ -20,6 +20,7 @@ from .tgs_graph import TGS_Plot
 from .sim_import import Simulation
 from .ptw_import import PTWMultimporter
 from .raystation_import import RayStationMultiImporter
+from .radcalc_import import RadCalc
 from .meas_import import TXTImporter
 from .profile import ProfileHandler
 from .paramframe import Parameters
@@ -101,6 +102,9 @@ class Options(ctk.CTkTabview):
         
         self.load_raystation_button = ctk.CTkButton(self.dataframe2, text = Text().loadraystation[self.lang], command = self.load_raystation, width=20)
         self.load_raystation_button.grid(row=1, column=0, sticky="nsew", padx=5, pady=(5,2))
+        
+        self.load_radcalc_button = ctk.CTkButton(self.dataframe2, text = Text().loadradcalc[self.lang], command = self.load_radcalc, width=20)
+        self.load_radcalc_button.grid(row=1, column=1, sticky="nsew", padx=5, pady=(5,2))
         
         self.showgrid = ctk.BooleanVar(value=self.p.get_attribute("grid"))
 
@@ -831,6 +835,14 @@ class Options(ctk.CTkTabview):
         
         if path != "" and path not in self.filenames:
             RayStationMultiImporter(path, self.tab(Text().data[self.lang]), self.parent.plots, self)
+            
+    def load_radcalc(self, path = None):
+        if path == None:
+            path = fd.askopenfilename(filetypes=[("CSV files", "*.csv")])
+        
+        if path != "" and path not in self.filenames:
+            RadCalc(path, self.tab(Text().data[self.lang]), self.parent.plots, self)
+            
             
     def load_txt(self, path = None):
         if path == None:
