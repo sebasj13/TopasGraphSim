@@ -9,7 +9,7 @@ def calculate_parameters(axis, dose, cax=False):
     A function to calculate the relevant
     descriptive parameters of dose profiles.
     """
-
+    
     interpolated_axis = np.linspace(axis[0], axis[-1], len(axis) * 100)
     akima_dose_interpolator = interpolate.Akima1DInterpolator(axis, dose)
     interpolated_dose = np.flip(akima_dose_interpolator.__call__(interpolated_axis))

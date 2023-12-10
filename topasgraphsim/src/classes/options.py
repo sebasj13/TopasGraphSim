@@ -849,7 +849,12 @@ class Options(ctk.CTkTabview):
             path = fd.askopenfilename(filetypes=[("TXT files", "*.txt")])
         
         if path != "" and path not in self.filenames:
-            TXTImporter(path, self.tab(Text().data[self.lang]), self.parent.plots, self)
+            with open(path, "r") as f:
+                line = f.readline()
+            if "Distance" in line:
+                TXTImporter(path, self.tab(Text().data[self.lang]), self.parent.plots, self, "slicer",delimiter = "\t", skiprows=1)
+            else:
+                TXTImporter(path, self.tab(Text().data[self.lang]), self.parent.plots, self, "txt", delimiter = ",")
 
     def change_current_plot(self, event=None):
         plot_labels = [plot.label for plot in self.parent.plots]
