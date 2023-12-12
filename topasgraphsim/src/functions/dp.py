@@ -105,24 +105,28 @@ def calculate_parameters(axis, dose, cax=False):
     XL80index = np.where(interpolated_axis == XL80)[0][0]
     XR20index = np.where(interpolated_axis == XR20)[0][0]
     XR80index = np.where(interpolated_axis == XR80)[0][0]
-    Lintegral = round(
-        abs(
-            integrate.simps(
-                interpolated_dose[XL20index:XL80index],
-                interpolated_axis[XL20index:XL80index],
-            )
-        ),
-        3,
-    )
-    Rintegral = round(
-        abs(
-            integrate.simps(
-                interpolated_dose[XR80index:XR20index],
-                interpolated_axis[XR80index:XR20index],
-            )
-        ),
-        3,
-    )
+    try:
+        Lintegral = round(
+            abs(
+                integrate.simps(
+                    interpolated_dose[XL20index:XL80index],
+                    interpolated_axis[XL20index:XL80index],
+                )
+            ),
+            3,
+        )
+        Rintegral = round(
+            abs(
+                integrate.simps(
+                    interpolated_dose[XR80index:XR20index],
+                    interpolated_axis[XR80index:XR20index],
+                )
+            ),
+            3,
+        )
+    except Exception:
+        Lintegral = 0
+        Rintegral = 0
 
     if CAXdev > 150:
         raise Exception
