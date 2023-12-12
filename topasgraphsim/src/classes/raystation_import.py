@@ -149,11 +149,11 @@ class RayStationMultiImporter(ScrollFrame):
                 self.options.parameters[-1].grid(row=len(self.options.parameters)-1, sticky="ew", padx=5, pady=5)
                 self.options.plotbuttons.append(ctk.CTkRadioButton(self.options.graphlist.viewPort, text=self.plotlist[-1].label, variable=self.options.current_plot, text_color = self.plotlist[-1].linecolor, value=self.plotlist[-1].label, command=self.options.change_current_plot, font=("Bahnschrift", 14, "bold")))
                 self.options.plotbuttons[-1].grid(sticky="w", padx=5, pady=5)
+                self.options.filenames.append(self.path)
             if len(self.options.parent.plots) == 1:
                 self.options.enable_all_buttons()
         try:
             self.options.current_plot.set(self.plotlist[-1].label)
-            self.options.filenames.append(self.path)
             self.options.parent.saved = False
             self.options.update_plotlist()
             self.options.parent.update()

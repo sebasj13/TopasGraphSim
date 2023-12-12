@@ -838,10 +838,12 @@ class Options(ctk.CTkTabview):
             
     def load_radcalc(self, path = None):
         if path == None:
-            path = fd.askopenfilename(filetypes=[("CSV files", "*.csv")])
-        
+            #path = fd.askopenfilename(filetypes=[("CSV files", "*.csv")])
+            path = fd.askdirectory()
+        import os
         if path != "" and path not in self.filenames:
-            RadCalc(path, self.tab(Text().data[self.lang]), self.parent.plots, self)
+            for p in os.listdir(path):
+                RadCalc(os.path.join(path,p), self.tab(Text().data[self.lang]), self.parent.plots, self)
             
             
     def load_txt(self, path = None):

@@ -13,6 +13,8 @@ class RadCalcData:
     def __init__(self, filename, axis, dose, std_dev, direction):
         
         self.filename = filename
+        filename = filename.split("_")
+        self.filename = filename[0]+ "_" +filename[6] + "_" + filename[9]
         self.axis = axis
         self.dose = dose
         self.std_dev = std_dev
@@ -68,12 +70,12 @@ class RadCalc:
             options.parameters[-1].grid(row=len(options.parameters)-1, sticky="ew", padx=5, pady=5)
             options.plotbuttons.append(ctk.CTkRadioButton(options.graphlist.viewPort, text=plotlist[-1].label, variable=options.current_plot, text_color = plotlist[-1].linecolor, value=plotlist[-1].label, command=options.change_current_plot, font=("Bahnschrift", 14, "bold")))
             options.plotbuttons[-1].grid(sticky="w", padx=5, pady=5)
+            options.filenames.append(self.filepath)
             if len(options.parent.plots) == 1:
                 options.enable_all_buttons()
             
         try:
             options.current_plot.set(plotlist[-1].label)
-            options.filenames.append(self.filepath)
             options.parent.saved = False
             options.update_plotlist()
             options.parent.update()
