@@ -53,13 +53,11 @@ Highlights include:
      * Line width
  - Drag and drop of files
  - Center axis deviation correction
- - Import of EGS and RadCalc simulation results *
+ - Import of RadCalc (OAR & PDD) and Slicer Line Profile simulation results
  - Import of custom measurements (as numpy .txt files)
  - Import of PTW tbaScan (MEPHYSTO mc<sup>2</sup>) measurements
  - German and english language support
  - Dark mode
-
- (*) Not yet implemented
 
  ## Screenshots
  
