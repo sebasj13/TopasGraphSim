@@ -3,9 +3,7 @@ import customtkinter as ctk
 import numpy as np
 
 from ..functions import dp, pdd
-from ..resources.language import Text
 from .profile import ProfileHandler
-from .measurement_import import GetType
 from .tgs_graph import TGS_Plot
 from .paramframe import Parameters
 
