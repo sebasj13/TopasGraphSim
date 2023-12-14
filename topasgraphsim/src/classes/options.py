@@ -846,15 +846,13 @@ class Options(ctk.CTkTabview):
     def load_txt(self, path = None):
         if path == None:
             path = fd.askopenfilename(filetypes=[("TXT files", "*.txt")])
-
-        for p in path:
-            if p not in self.filenames and p != "":
-                with open(p, "r") as f:
-                    line = f.readline()
-                if "Distance" in line:
-                    TXTImporter(p, self.tab(Text().data[self.lang]), self.parent.plots, self, "slicer",delimiter = "\t", skiprows=1)
-                else:
-                    TXTImporter(p, self.tab(Text().data[self.lang]), self.parent.plots, self, "txt", delimiter = ",")
+        if path not in self.filenames and path != "":
+            with open(path, "r") as f:
+                line = f.readline()
+            if "Distance" in line:
+                TXTImporter(path, self.tab(Text().data[self.lang]), self.parent.plots, self, "slicer",delimiter = "\t", skiprows=1)
+            else:
+                TXTImporter(path, self.tab(Text().data[self.lang]), self.parent.plots, self, "txt", delimiter = ",")
 
     def change_current_plot(self, event=None):
         plot_labels = [plot.label for plot in self.parent.plots]

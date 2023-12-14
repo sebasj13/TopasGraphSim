@@ -41,10 +41,14 @@ class TXTMeasurement:
 class TXTImporter(ScrollFrame):
     def __init__(self, filepath, parent, plotlist, options, meas_type, delimiter, skiprows=0):
         super().__init__(parent=parent)
-        try: self.data = np.loadtxt(filepath, delimiter=delimiter, skiprows=skiprows)
-        except Exception:
-            self.bell()
-            return
+        try: 
+            self.data = np.loadtxt(filepath, delimiter=delimiter, skiprows=skiprows)
+        except Exception as e:
+            try: 
+                self.data = np.loadtxt(filepath, skiprows=skiprows)
+            except Exception: 
+                self.bell()
+                return
         self.meas_type = meas_type
         self.text = Text()
         self.lang = ProfileHandler().get_attribute("language")
