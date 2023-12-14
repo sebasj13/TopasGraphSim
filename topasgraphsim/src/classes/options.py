@@ -838,25 +838,23 @@ class Options(ctk.CTkTabview):
             
     def load_radcalc(self, path = None):
         if path == None:
-            #path = fd.askopenfilename(filetypes=[("CSV files", "*.csv")])
-            path = fd.askdirectory()
-        import os
+            path = fd.askopenfilenames(filetypes=[("CSV files", "*.csv")])
         if path != "" and path not in self.filenames:
-            for p in os.listdir(path):
-                RadCalc(os.path.join(path,p), self.tab(Text().data[self.lang]), self.parent.plots, self)
+            RadCalc(path, self.tab(Text().data[self.lang]), self.parent.plots, self)
             
             
     def load_txt(self, path = None):
         if path == None:
             path = fd.askopenfilename(filetypes=[("TXT files", "*.txt")])
-        
-        if path != "" and path not in self.filenames:
-            with open(path, "r") as f:
-                line = f.readline()
-            if "Distance" in line:
-                TXTImporter(path, self.tab(Text().data[self.lang]), self.parent.plots, self, "slicer",delimiter = "\t", skiprows=1)
-            else:
-                TXTImporter(path, self.tab(Text().data[self.lang]), self.parent.plots, self, "txt", delimiter = ",")
+
+        for p in path:
+            if p not in self.filenames and p != "":
+                with open(p, "r") as f:
+                    line = f.readline()
+                if "Distance" in line:
+                    TXTImporter(p, self.tab(Text().data[self.lang]), self.parent.plots, self, "slicer",delimiter = "\t", skiprows=1)
+                else:
+                    TXTImporter(p, self.tab(Text().data[self.lang]), self.parent.plots, self, "txt", delimiter = ",")
 
     def change_current_plot(self, event=None):
         plot_labels = [plot.label for plot in self.parent.plots]

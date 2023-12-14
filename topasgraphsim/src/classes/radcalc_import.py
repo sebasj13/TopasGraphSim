@@ -11,8 +11,12 @@ class RadCalcData:
     def __init__(self, filename, axis, dose, std_dev, direction):
         
         self.filename = filename
-        filename = filename.split("_")
-        self.filename = filename[0]+ "_" +filename[6] + "_" + filename[9]
+        if "OAR" in self.filename:
+            filename = filename.split("_")
+            self.filename = filename[0]+ "_" +filename[6] + "_" + filename[9]
+        else:
+            filename = filename.split("_")
+            self.filename = filename[0] + "_" + filename[6] + "_SSD" + filename[7]
         self.axis = axis
         self.dose = dose
         self.std_dev = std_dev
