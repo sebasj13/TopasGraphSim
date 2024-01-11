@@ -37,6 +37,7 @@ class MainViewer(Frame):
         else:
             paths = event.data.split(" ")
         for path in paths:
+            print(path)
             if path != "":
                 path = path.strip()
                 if "{" in path:
@@ -44,7 +45,12 @@ class MainViewer(Frame):
                 if path[-4:] == ".csv":
                     if len(self.tabview.tabnames) == 0:
                         self.tabview.add_tab(name = True)
-                    self.tabview.tab(self.tabview.tabnames[-1]).tab.options.load_topas(path)
+                    with open(path,"r") as f:
+                        l = f.readline()
+                    if "Machine" in l:
+                        self.tabview.tab(self.tabview.tabnames[-1]).tab.options.load_radcalc([path])
+                    else:
+                        self.tabview.tab(self.tabview.tabnames[-1]).tab.options.load_topas(path)
                 elif path[-4:] == ".mcc":
                     if len(self.tabview.tabnames) == 0:
                         self.tabview.add_tab(name = True)
@@ -54,3 +60,8 @@ class MainViewer(Frame):
                     if len(self.tabview.tabnames) == 0:
                         self.tabview.add_tab(name = True)
                     self.tabview.tab(self.tabview.tabnames[-1]).tab.options.load_txt(path)
+
+                elif path[-5:] == ".data":
+                    if len(self.tabview.tabnames) == 0:
+                        self.tabview.add_tab(name = True)
+                    self.tabview.tab(self.tabview.tabnames[-1]).tab.options.load_eclipse([path])

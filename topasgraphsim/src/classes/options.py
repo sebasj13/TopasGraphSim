@@ -21,6 +21,7 @@ from .sim_import import Simulation
 from .ptw_import import PTWMultimporter
 from .raystation_import import RayStationMultiImporter
 from .radcalc_import import RadCalc
+from .eclipse_import import Eclipse
 from .meas_import import TXTImporter
 from .profile import ProfileHandler
 from .paramframe import Parameters
@@ -565,9 +566,14 @@ class Options(ctk.CTkTabview):
             plot_labels = [plot.label for plot in self.parent.plots]
             reference_axes, reference_dose, _ = self.parent.plots[plot_labels.index(self.reference.get())].data()
             evaluation_axes, evaluation_dose, _ = self.parent.plots[plot_labels.index(self.test.get())].data()
-            g = gamma(axes_reference=reference_axes, dose_reference=reference_dose, axes_evaluation=evaluation_axes, dose_evaluation=evaluation_dose, dose_percent_threshold=percent, distance_mm_threshold=distance, local_gamma=local, lower_percent_dose_cutoff=lower_percent_dose_cutoff, max_gamma =4)
-            g1 = np.array([i for i in g if np.isnan(i) == False])
-            gamma_index = len(np.where(g1 <= 1)[0])/len(g1)*100
+            try:
+                g = gamma(axes_reference=reference_axes, dose_reference=reference_dose, axes_evaluation=evaluation_axes, dose_evaluation=evaluation_dose, dose_percent_threshold=percent, distance_mm_threshold=distance, local_gamma=local, lower_percent_dose_cutoff=lower_percent_dose_cutoff, max_gamma =4)
+                g1 = np.array([i for i in g if np.isnan(i) == False])
+                gamma_index = len(np.where(g1 <= 1)[0])/len(g1)*100
+            except Exception:
+                g = np.zeros(len(reference_axes))
+                g1 = np.zeros(len(reference_axes))
+                gamma_index = 0
             if gamma_index >= 95:
                 self.resultcanvas.configure(fg_color="green")
             elif gamma_index <= 95 and gamma_index > 80:
@@ -839,8 +845,16 @@ class Options(ctk.CTkTabview):
     def load_radcalc(self, path = None):
         if path == None:
             path = fd.askopenfilenames(filetypes=[("CSV files", "*.csv")])
-        if path != "" and path not in self.filenames:
-            RadCalc(path, self.tab(Text().data[self.lang]), self.parent.plots, self)
+        for p in path:
+            if p != "" and p not in self.filenames:
+                RadCalc(p, self.tab(Text().data[self.lang]), self.parent.plots, self)
+
+    def load_eclipse(self, path = None):
+        if path == None:
+            path = fd.askopenfilenames(filetypes=[("DATA files", "*.data")])
+        for p in path:
+            if p != "" and p not in self.filenames:
+                Eclipse(p, self.tab(Text().data[self.lang]), self.parent.plots, self)
             
             
     def load_txt(self, path = None):
