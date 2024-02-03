@@ -37,7 +37,6 @@ class MainViewer(Frame):
         else:
             paths = event.data.split(" ")
         for path in paths:
-            print(path)
             if path != "":
                 path = path.strip()
                 if "{" in path:

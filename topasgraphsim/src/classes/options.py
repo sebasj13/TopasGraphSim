@@ -661,7 +661,7 @@ class Options(ctk.CTkTabview):
                 except AttributeError: pass
                 
         except ValueError as e:
-            print(e)
+            pass
             
     def set_xlim(self):
         self.parent.slider1.var.set(self.parent.ax.get_xlim()[0])
