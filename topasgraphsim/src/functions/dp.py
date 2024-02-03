@@ -14,61 +14,22 @@ def calculate_parameters(axis, dose, cax=False):
     akima_dose_interpolator = interpolate.Akima1DInterpolator(axis, dose)
     interpolated_dose = np.flip(akima_dose_interpolator.__call__(interpolated_axis))
 
-    D0 = (
-        interpolated_dose[int(len(interpolated_dose) / 2)]
-        + interpolated_dose[int(len(interpolated_dose) / 2) - 1]
-    ) / 2
-    XL20 = interpolated_axis[: int(len(interpolated_axis) / 2)][
-        (
-            np.abs(
-                interpolated_dose[: int(len(interpolated_axis) / 2)] - 0.2 * max(dose)
-            )
-        ).argmin()
-    ]
-    XL50 = interpolated_axis[: int(len(interpolated_axis) / 2)][
-        (
-            np.abs(
-                interpolated_dose[: int(len(interpolated_axis) / 2)] - 0.5 * max(dose)
-            )
-        ).argmin()
-    ]
-    XL80 = interpolated_axis[: int(len(interpolated_axis) / 2)][
-        (
-            np.abs(
-                interpolated_dose[: int(len(interpolated_axis) / 2)] - 0.8 * max(dose)
-            )
-        ).argmin()
-    ]
-    XR20 = interpolated_axis[int(len(interpolated_axis) / 2) :][
-        (
-            np.abs(
-                interpolated_dose[
-                    int(len(interpolated_axis) / 2) : len(interpolated_axis)
-                ]
-                - 0.2 * max(dose)
-            )
-        ).argmin()
-    ]
-    XR50 = interpolated_axis[int(len(interpolated_axis) / 2) :][
-        (
-            np.abs(
-                interpolated_dose[
-                    int(len(interpolated_axis) / 2) : len(interpolated_axis)
-                ]
-                - 0.5 * max(dose)
-            )
-        ).argmin()
-    ]
-    XR80 = interpolated_axis[int(len(interpolated_axis) / 2) :][
-        (
-            np.abs(
-                interpolated_dose[
-                    int(len(interpolated_axis) / 2) : len(interpolated_axis)
-                ]
-                - 0.8 * max(dose)
-            )
-        ).argmin()
-    ]
+    # Find the index of the maximum dose
+    max_dose_index = np.argmax(interpolated_dose)
+
+    # Use this index to split the axis and dose arrays
+    left_interpolated_axis = interpolated_axis[:max_dose_index]
+    right_interpolated_axis = interpolated_axis[max_dose_index:]
+    left_interpolated_dose = interpolated_dose[:max_dose_index]
+    right_interpolated_dose = interpolated_dose[max_dose_index:]
+
+    # Now use these new arrays to calculate your parameters
+    XL20 = left_interpolated_axis[(np.abs(left_interpolated_dose - 0.2 * max(dose))).argmin()]
+    XL50 = left_interpolated_axis[(np.abs(left_interpolated_dose - 0.5 * max(dose))).argmin()]
+    XL80 = left_interpolated_axis[(np.abs(left_interpolated_dose - 0.8 * max(dose))).argmin()]
+    XR20 = right_interpolated_axis[(np.abs(right_interpolated_dose - 0.2 * max(dose))).argmin()]
+    XR50 = right_interpolated_axis[(np.abs(right_interpolated_dose - 0.5 * max(dose))).argmin()]
+    XR80 = right_interpolated_axis[(np.abs(right_interpolated_dose - 0.8 * max(dose))).argmin()]
 
     HWB = round(abs(XR50 - XL50), 3)
     CAXdev = round(XL50 + 0.5 * HWB, 3)
@@ -80,7 +41,7 @@ def calculate_parameters(axis, dose, cax=False):
 
     flat_krieger = round(
         max([value for value in dose if value >= 0.95 * max(dose)])
-        - min([value for value in dose if value >= 0.95 * max(dose)]) / D0,
+        - min([value for value in dose if value >= 0.95 * max(dose)]) / np.max(interpolated_dose),
         5,
     )
     flat_stddev = round(np.std(Dose80), 3)
