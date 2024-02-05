@@ -64,17 +64,9 @@ class TGS_Plot():
 
             elif self.normalization == "plateau":
 
-                max_dose_index = np.argmax(dose)
-                left_index = max_dose_index
-                right_index = max_dose_index
-                while left_index > 0 and dose[left_index] >= 0.9 * dose[max_dose_index]:
-                    left_index -= 1
-                while right_index < len(dose) - 1 and dose[right_index] >= 0.9 * dose[max_dose_index]:
-                    right_index += 1
-                plateau_width =  right_index - left_index
-                average_dose = np.average(dose[max_dose_index - plateau_width // 2 : max_dose_index + plateau_width // 2])
-                error = np.divide(error, average_dose)
-                dose = np.divide(dose, average_dose)
+                plateau = np.max(dose) * self.dataObject.params()[-1]
+                error = np.divide(error, plateau)
+                dose = np.divide(dose, plateau)
 
             elif self.normalization == "centeraxis":
                 error = np.divide(error,dose[len(dose)//2])

@@ -25,15 +25,17 @@ def calculate_parameters(axis, dose, cax=False):
 
     # Now use these new arrays to calculate your parameters
     XL20 = left_interpolated_axis[(np.abs(left_interpolated_dose - 0.2 * max(dose))).argmin()]
-    XL50 = left_interpolated_axis[(np.abs(left_interpolated_dose - 0.5 * max(dose))).argmin()]
+    XL50 = left_interpolated_axis[XL50index:=((np.abs(left_interpolated_dose - 0.5 * max(dose))).argmin())]
     XL80 = left_interpolated_axis[(np.abs(left_interpolated_dose - 0.8 * max(dose))).argmin()]
     XR20 = right_interpolated_axis[(np.abs(right_interpolated_dose - 0.2 * max(dose))).argmin()]
-    XR50 = right_interpolated_axis[(np.abs(right_interpolated_dose - 0.5 * max(dose))).argmin()]
+    XR50 = right_interpolated_axis[XR50index:=((np.abs(right_interpolated_dose - 0.5 * max(dose))).argmin())]
     XR80 = right_interpolated_axis[(np.abs(right_interpolated_dose - 0.8 * max(dose))).argmin()]
 
     HWB = round(abs(XR50 - XL50), 3)
     CAXdev = round(XL50 + 0.5 * HWB, 3)
-
+    PlateauCenter = int(np.average([XL50index, XR50index]))
+    PlateauDose = np.average([interpolated_dose[PlateauCenter - 2:PlateauCenter+3]])
+    PlateauRatio = round(PlateauDose / max(dose), 3)
     Dose80 = [value for value in dose if value >= 0.8 * max(dose)]
 
     if cax == True:
@@ -102,4 +104,5 @@ def calculate_parameters(axis, dose, cax=False):
         Rpenumbra,
         Lintegral,
         Rintegral,
+        PlateauRatio,
     ]
