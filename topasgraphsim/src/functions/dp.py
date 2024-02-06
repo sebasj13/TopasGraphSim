@@ -95,7 +95,7 @@ def calculate_parameters(axis, dose, cax=False):
         raise Exception
 
     return [
-        HWB,
+        f"{HWB} ({round(XL50,2)}/{round(XR50,2)})",
         CAXdev,
         flat_krieger,
         flat_stddev,
