@@ -91,9 +91,6 @@ def calculate_parameters(axis, dose, cax=False):
         Lintegral = 0
         Rintegral = 0
 
-    if CAXdev > 150:
-        raise Exception
-
     return [
         f"{HWB} ({round(XL50,2)}/{round(XR50,2)})",
         CAXdev,
