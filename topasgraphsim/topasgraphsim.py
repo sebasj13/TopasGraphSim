@@ -24,7 +24,7 @@ class TopasGraphSim(Tk):
         
         super().__init__()
         
-        self.appname = "TopasGraphSim"
+        self.appname = "ESMOCA SimLab"
         self.version = "26.0.0"
         self.author = "Sebastian Schäfer"
         self.affiliation = "UK Halle\nMLU Halle-Wittenberg\nUK Hamburg-Eppendorf"
