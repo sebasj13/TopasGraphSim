@@ -566,6 +566,9 @@ class Options(ctk.CTkTabview):
             plot_labels = [plot.label for plot in self.parent.plots]
             reference_axes, reference_dose, _ = self.parent.plots[plot_labels.index(self.reference.get())].data()
             evaluation_axes, evaluation_dose, _ = self.parent.plots[plot_labels.index(self.test.get())].data()
+            if self.caxcorrection.get():
+                reference_axes = np.add(reference_axes, self.parent.plots[plot_labels.index(self.reference.get())].dataObject.params()[1])
+                evaluation_axes = np.add(evaluation_axes, self.parent.plots[plot_labels.index(self.test.get())].dataObject.params()[1])
             try:
                 g = gamma(axes_reference=reference_axes, dose_reference=reference_dose, axes_evaluation=evaluation_axes, dose_evaluation=evaluation_dose, dose_percent_threshold=percent, distance_mm_threshold=distance, local_gamma=local, lower_percent_dose_cutoff=lower_percent_dose_cutoff, max_gamma =4)
                 g1 = np.array([i for i in g if np.isnan(i) == False])
