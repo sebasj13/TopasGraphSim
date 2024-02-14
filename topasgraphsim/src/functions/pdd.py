@@ -11,7 +11,7 @@ def calculate_parameters(axis, dose, std_dev):
     descriptive parameters of depth doses.
     """
 
-    if type(std_dev) != np.ndarray or std_dev == []:
+    if len(std_dev) != len(dose):
         TD20 = dose[(np.abs(axis - 200)).argmin()]
         TD10 = dose[(np.abs(axis - 100)).argmin()]
         Q = round(1.2661 * TD20 / TD10 - 0.0595, 5)
