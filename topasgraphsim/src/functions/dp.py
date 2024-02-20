@@ -32,9 +32,11 @@ def calculate_parameters(axis, dose, cax=False):
     XR80 = right_interpolated_axis[(np.abs(right_interpolated_dose - 0.8 * max(dose))).argmin()]
 
     HWB = round(abs(XR50 - XL50), 3)
-    CAXdev = round(XL50 + 0.5 * HWB, 3)
-    PlateauCenter = int(np.average([XL50index, XR50index]))
-    PlateauDose = np.average([interpolated_dose[PlateauCenter - 2:PlateauCenter+3]])
+    CAXdev = (round(XL50 + 0.5 * HWB, 3) + round(XR50 - 0.5 * HWB, 3) )/ 2
+    #find the index of the axis af the cax_dev value
+    CAXdevindex = np.abs(interpolated_axis - CAXdev).argmin()
+    CAXdevpoints = int(abs(CAXdevindex - XL50index)//10)
+    PlateauDose = np.mean(interpolated_dose[CAXdevindex - CAXdevpoints : CAXdevindex + CAXdevpoints+1])
     PlateauRatio = round(PlateauDose / max(dose), 3)
     Dose80 = [value for value in dose if value >= 0.8 * max(dose)]
 
