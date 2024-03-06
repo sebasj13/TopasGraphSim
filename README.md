@@ -53,7 +53,7 @@ Highlights include:
      * Line width
  - Drag and drop of files
  - Center axis deviation correction
- - Import of RadCalc OAR and PDD data, RayStation depth doses and dose profiles, and Slicer line profiles 
+ - Import of RadCalc OAR and PDD data, RayStation and Eclipse depth doses and dose profiles, and Slicer line profiles 
  - Import of custom measurements (as numpy .txt files)
  - Import of PTW tbaScan (MEPHYSTO mc<sup>2</sup>) measurements
  - German and english language support
