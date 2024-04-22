@@ -860,7 +860,7 @@ class Options(ctk.CTkTabview):
                 Eclipse(p, self.tab(Text().data[self.lang]), self.parent.plots, self)
             
             
-    def load_txt(self, path = None):
+    def load_txt(self, path = None, direction=None):
         if path == None:
             path = fd.askopenfilename(filetypes=[("TXT files", "*.txt")])
         if path not in self.filenames and path != "":
@@ -869,7 +869,7 @@ class Options(ctk.CTkTabview):
             if "Distance" in line:
                 TXTImporter(path, self.tab(Text().data[self.lang]), self.parent.plots, self, "slicer",delimiter = "\t", skiprows=1)
             else:
-                TXTImporter(path, self.tab(Text().data[self.lang]), self.parent.plots, self, "txt", delimiter = ",")
+                TXTImporter(path, self.tab(Text().data[self.lang]), self.parent.plots, self, "txt", delimiter = ",", direction=direction)
 
     def change_current_plot(self, event=None):
         plot_labels = [plot.label for plot in self.parent.plots]

@@ -39,7 +39,7 @@ class TXTMeasurement:
         
         
 class TXTImporter(ScrollFrame):
-    def __init__(self, filepath, parent, plotlist, options, meas_type, delimiter, skiprows=0):
+    def __init__(self, filepath, parent, plotlist, options, meas_type, delimiter, skiprows=0, direction=None):
         super().__init__(parent=parent)
         try: 
             self.data = np.loadtxt(filepath, delimiter=delimiter, skiprows=skiprows)
@@ -68,18 +68,22 @@ class TXTImporter(ScrollFrame):
         self.options.dataframe2.grid_remove()
         self.options.dataframe1.grid_remove()
         self.grid(row=0, rowspan=2, column=0, sticky="nsew")
-        self.label = ctk.CTkLabel(self.viewPort, text=Text().direction[self.lang], font=("Bahnschrift", 14, "bold"))
-        self.label.pack(anchor="n", pady=5)
-        directions = ["X", "Y", "Z"]
-        self.direction = ctk.StringVar()
-        self.directions = [ctk.CTkRadioButton(self.viewPort, text=direction, variable=self.direction, value=direction) for direction in directions]
-        [button.pack(anchor="w", pady=5) for button in self.directions]
-        self.submitbutton = ctk.CTkButton(
-            self.viewPort,
-            text=Text().submit[ProfileHandler().get_attribute("language")],
-            command=self.submit,
-        )
-        self.submitbutton.pack(anchor="s", pady=5)
+        if direction == None:
+            self.label = ctk.CTkLabel(self.viewPort, text=Text().direction[self.lang], font=("Bahnschrift", 14, "bold"))
+            self.label.pack(anchor="n", pady=5)
+            directions = ["X", "Y", "Z"]
+            self.direction = ctk.StringVar()
+            self.directions = [ctk.CTkRadioButton(self.viewPort, text=direction, variable=self.direction, value=direction) for direction in directions]
+            [button.pack(anchor="w", pady=5) for button in self.directions]
+            self.submitbutton = ctk.CTkButton(
+                self.viewPort,
+                text=Text().submit[ProfileHandler().get_attribute("language")],
+                command=self.submit,
+            )
+            self.submitbutton.pack(anchor="s", pady=5)
+        else:
+            self.direction = ctk.StringVar(value=direction)
+            self.submit()
         
     def submit(self):
         

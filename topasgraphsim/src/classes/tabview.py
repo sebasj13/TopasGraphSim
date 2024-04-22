@@ -53,7 +53,10 @@ class TabView(ctk.CTkTabview):
         """
         
         if name != None:
-            tab = Text().untitled[self.lang]
+            if type(name) == str:
+                tab = name
+            else:
+                tab = Text().untitled[self.lang]
             self.newtabname = ""
             self.add(tab)
             self.tabnames.append(tab)

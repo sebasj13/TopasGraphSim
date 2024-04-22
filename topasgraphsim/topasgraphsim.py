@@ -24,8 +24,8 @@ class TopasGraphSim(Tk):
         
         super().__init__()
         
-        self.appname = "TopasGraphSim"
-        self.version = "26.0.0"
+        self.appname = "ESMoCa SimLab"
+        self.version = "1.0"
         self.author = "Sebastian Schäfer"
         self.affiliation = "UK Halle\nMLU Halle-Wittenberg\nUK Hamburg-Eppendorf"
         self.title(f"{self.appname} - v.{self.version}")
@@ -61,9 +61,12 @@ class TopasGraphSim(Tk):
         self.pack_propagate(False)            
            
         self.protocol("WM_DELETE_WINDOW", self.exit)
-        for i in sys.argv[1:]:
-            if os.path.exists(i):
-                self.frame.add_file(i)
+        if len(sys.argv[1:]) == 12:
+            self.frame.add_dose_profiles(sys.argv[1:])
+        else:
+            for i in sys.argv[1:]:
+                if os.path.exists(i):
+                    self.frame.add_file(i)
         CheckForUpdates()
         self.after(0, lambda: self.state(ProfileHandler().get_attribute("state")))
         self.mainloop()
