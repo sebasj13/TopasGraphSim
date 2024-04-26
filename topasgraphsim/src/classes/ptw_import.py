@@ -141,7 +141,7 @@ class PTWMultimporter(ScrollFrame):
             ctk.CTkCheckBox(
                 self.viewPort,
                 variable=self.variables[i],
-                text=f"Scan {i+1}: {textdict[PTWMeasurement(self.alldata[i], i+1).direction]}",
+                text=f"Scan {i+1}: {textdict[PTWMeasurement(self.alldata[i], i+1).direction.upper()]}",
             )
             for i in range(len(self.alldata))
         ]
