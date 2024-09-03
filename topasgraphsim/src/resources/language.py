@@ -31,6 +31,7 @@ class Text:
             "de": "CAX-Korrektur",
             "en": "CAX correction",
         }
+        self.doseadd = {"de": "Dosen addieren", "en": "Dose addition"}
         self.beamquality = {"de":"Strahlungsqualitätsindex", "en":"Beam quality index"}
         self.zmax = {"de":"Maximumstiefe", "en":"Depth of maximum"}
         self.centeraxis = {"de": "Zentralstrahl", "en": "Center axis"}
@@ -203,6 +204,7 @@ class Text:
         self.showtable = {"de": "Wertetabelle anzeigen", "en": "Show parameter table"}
         self.select = {"de": "Messungen auswählen ...", "en": "Select measurements ..."}
         
+        self.scale = {"de":"Faktor", "en":"Factor"}
         self.showerror = {"de": "Fehler", "en": "Errorbars"}
         self.showgrid = {"de": "Raster anzeigen", "en": "Show grid"}
         self.gridoptions1 = {"de": "Große Gitterlinien", "en": "Large gridlines"}

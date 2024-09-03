@@ -265,15 +265,20 @@ class Options(ctk.CTkTabview):
         self.paramslist.pack(fill="both", expand=True)
 
     ######################################################################################################################################################################
-        self.tab(Text().analysis[self.lang]).rowconfigure(0, weight=1, minsize=258)
-        self.tab(Text().analysis[self.lang]).rowconfigure(1, weight=1)  
-        self.tab(Text().analysis[self.lang]).columnconfigure(0, weight=1)     
-        self.tab(Text().analysis[self.lang]).grid_propagate(False)  
-                
-        self.shiftframe = ctk.CTkFrame(self.tab(Text().analysis[self.lang]), border_color="black", border_width=1)
+
+        self.analysis_frame = ctk.CTkFrame(self.tab(Text().analysis[self.lang]), border_color="black", border_width=1, fg_color=self.graphsettingsframe.cget("fg_color"))
+        self.analysis_frame.pack(fill="both", expand=True)
+        self.analysis_frame.pack_propagate(False)
+        self.analysis_scrollframe = ScrollFrame(self.analysis_frame)
+        self.analysis_scrollframe.configure(border_width=0)
+        self.analysis_scrollframe.canvas.configure(bg=self.graphsettingsframe.cget("fg_color")[0])
+        self.analysis_scrollframe.configure(fg_color=self.graphsettingsframe.cget("fg_color"))
+        self.analysis_scrollframe.viewPort.configure(fg_color=self.graphsettingsframe.cget("fg_color")) 
+        self.analysis_scrollframe.pack(fill="both", expand=True)
+
+        self.shiftframe = ctk.CTkFrame(self.analysis_scrollframe.viewPort, border_color="black", border_width=1)
         self.shiftframe.columnconfigure(0, weight=1, minsize=144)
         self.shiftframe.columnconfigure(1, weight=1)
-        self.shiftframe.grid_propagate(False)  
         
         self.shiftframetitle = ctk.CTkLabel(self.shiftframe, text=Text().shift[self.lang], font=("Bahnschrift",16, "bold"))
         self.shiftframetitle.grid(row=0, column=0, columnspan=2, sticky="nsew", padx=5, pady=(1,5))
@@ -310,7 +315,7 @@ class Options(ctk.CTkTabview):
         self.axshiftentry.bind("<Enter>", lambda x : self.on_enter(self.axshiftentry, self.apply, x))
         self.axshiftentry.bind("<Leave>", lambda x : self.on_leave(self.axshiftentry, x))
         self.flipbutton = ctk.CTkCheckBox(self.shiftframe, variable=self.flip, text=Text().flip[self.lang], font=("Bahnschrift",12, "bold"))
-        self.applybutton = ctk.CTkButton(self.shiftframe, text=Text().apply[self.lang], command = self.apply)
+        self.applybutton = ctk.CTkButton(self.shiftframe, text=Text().apply[self.lang], command = self.apply, fg_color="green")
         
         self.dosescalelabel.grid(column=0, row=0, padx=2, pady=2, sticky="n")
         self.dosescaleentry.grid(column=0, row=1, padx=2, pady=2, sticky="nsew")
@@ -323,13 +328,13 @@ class Options(ctk.CTkTabview):
 
         self.shiftframe.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
         
-        self.gammaframe = ctk.CTkFrame(self.tab(Text().analysis[self.lang]), border_color="black", border_width=1)
-        self.gammaframe.columnconfigure(0, weight=1, minsize=144)
+        self.gammaframe = ctk.CTkFrame(self.analysis_scrollframe.viewPort, border_color="black", border_width=1)
+        self.gammaframe.columnconfigure(0, weight=2, minsize=114)
         self.gammaframe.columnconfigure(1, weight=1)
         self.gammaframe.columnconfigure(2, weight=1)
         self.gammaframe.columnconfigure(3, weight=1)
         self.gammaframe.columnconfigure(4, weight=1)
-        self.gammaframe.grid_propagate(False)  
+        #self.gammaframe.grid_propagate(False)  
         
         self.gammaframetitle = ctk.CTkLabel(self.gammaframe, text=Text().gamma[self.lang], font=("Bahnschrift",16, "bold"))
         self.gammaframetitle.grid(row=0, column=0, columnspan=5, sticky="nsew", padx=5, pady=(1,5))
@@ -395,7 +400,36 @@ class Options(ctk.CTkTabview):
             except Exception: pass
             self.parent.canvas.draw() 
         self.disable_all_buttons()
-    
+
+        self.doseaddframe = ctk.CTkFrame(self.analysis_scrollframe.viewPort, border_color="black", border_width=1)
+        self.doseaddframe.grid(row=2, column=0, sticky="nsew", padx=5, pady=5)
+        self.doseaddframe.columnconfigure(0, weight=1, minsize=80)
+        self.doseaddframe.columnconfigure(1, weight=1)
+        self.doseaddframetitle = ctk.CTkLabel(self.doseaddframe, text=Text().doseadd[self.lang], font=("Bahnschrift",16, "bold"))
+        self.doseaddframetitle.grid(row=0, column=0, columnspan=2, sticky="nsew", padx=5, pady=(1,5))
+        self.doseaddreference = ctk.StringVar()
+        self.doseaddreferencelabel = ctk.CTkLabel(self.doseaddframe, text="Graph 1", font=("Bahnschrift",14, "bold"))
+        self.doseaddreferenceselector = ctk.CTkOptionMenu(self.doseaddframe, variable=self.reference, values=[])
+        self.doseaddreferencelabel.grid(column=0, row=1, padx=5, pady=1, sticky="nsw")
+        self.doseaddreferenceselector.grid(column=1, row=1, padx=5, pady=1, sticky="nsew")
+        self.doseaddtest = ctk.StringVar()
+        self.doseaddtestlabel = ctk.CTkLabel(self.doseaddframe, text="Graph 2", font=("Bahnschrift",14, "bold"))
+        self.doseaddtestselector = ctk.CTkOptionMenu(self.doseaddframe, variable=self.test, values=[])
+        self.doseaddtestlabel.grid(column=0, row=3, padx=5, pady=1, sticky="nsw")
+        self.doseaddtestselector.grid(column=1, row=3, padx=5, pady=1, sticky="nsew")
+        self.doseaddscale = ctk.StringVar(value="0.5")
+        self.doseaddscalelabel = ctk.CTkLabel(self.doseaddframe, text=Text().scale[self.lang], font=("Bahnschrift",12, "bold"))
+        self.doseaddscaleentry = ctk.CTkEntry(self.doseaddframe, textvariable=self.doseaddscale, width=70)
+        self.doseaddscalelabel.grid(column=0, row=2, padx=5, pady=1, sticky="nsw")
+        self.doseaddscaleentry.grid(column=1, row=2, padx=5, pady=1, sticky="nse")
+        self.doseaddscale2 = ctk.StringVar(value="0.5")
+        self.doseaddscalelabel2 = ctk.CTkLabel(self.doseaddframe, text=Text().scale[self.lang], font=("Bahnschrift",12, "bold"))
+        self.doseaddscaleentry2 = ctk.CTkEntry(self.doseaddframe, textvariable=self.doseaddscale, width=70)
+        self.doseaddscalelabel2.grid(column=0, row=4, padx=5, pady=1, sticky="nsw")
+        self.doseaddscaleentry2.grid(column=1, row=4, padx=5, pady=1, sticky="nse")
+        self.doseaddbutton = ctk.CTkButton(self.doseaddframe, text=Text().apply[self.lang], fg_color="green", width=110)
+        self.doseaddbutton.grid(column=1, row=5, padx=5, pady=(5,2), sticky="nse")
+
     ######################################################################################################################################################################
 
     def clear_gam(self):
@@ -799,6 +833,8 @@ class Options(ctk.CTkTabview):
         self.plotselector2.configure(values=plotnames)
         self.referenceselector.configure(values=plotnames)
         self.testselector.configure(values=plotnames)
+        self.doseaddreferenceselector.configure(values=plotnames)
+        self.doseaddtestselector.configure(values=plotnames)
         
     def set_ax_names(self):
         self.parent.ax.set_title(self.title.get())
@@ -840,7 +876,7 @@ class Options(ctk.CTkTabview):
             
     def load_raystation(self, path = None):
         if path == None:
-            path = fd.askopenfilename(filetypes=[("XLS files", "*.xls")])
+            path = fd.askopenfilename(filetypes=[("XLS files", "*.xls"), ("CSV Files", "*.csv")])
         
         if path != "" and path not in self.filenames:
             RayStationMultiImporter(path, self.tab(Text().data[self.lang]), self.parent.plots, self)

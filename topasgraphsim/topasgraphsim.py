@@ -9,6 +9,11 @@ from .src.classes.profile import ProfileHandler
 from .src.classes.main_viewer import MainViewer
 from .src.classes.update import CheckForUpdates
 
+#TODO
+"""
+Expand the Analysis Module by adding the ability to sum doses together
+"""
+
 class Tk(ctk.CTk, tkdnd.dnd.DnDWrapper):
     def __init__(self, *args, **kwargs):
         ctk.CTk.__init__(self, *args, **kwargs)
