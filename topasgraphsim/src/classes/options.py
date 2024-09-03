@@ -498,6 +498,7 @@ class Options(ctk.CTkTabview):
             self.remove_plot()
             SummedDose(new_filepath, new_filename, direction, new_axis, new_dose, self.parent.plots, self, normalize = self.normalize.get())
             self.current_plot.set(current_plot)
+            self.change_current_plot()
         else:
             SummedDose(new_filepath, new_filename, direction, new_axis, new_dose, self.parent.plots, self, normalize = self.normalize.get())
 
