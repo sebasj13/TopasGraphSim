@@ -4,7 +4,7 @@ from ..resources.language import Text
 
 class TGS_Plot():
     
-    def __init__(self, Options, ImportedData):
+    def __init__(self, Options, ImportedData, normalize = None):
         
         try:
             self.fail = False
@@ -14,7 +14,8 @@ class TGS_Plot():
             self.direction = self.dataObject.direction
             self.p = ProfileHandler()
             
-            self.normalize = self.p.get_attribute("normalize")
+            if normalize == None: self.normalize = self.p.get_attribute("normalize")
+            else: self.normalize = normalize
             self.caxcorrection = self.p.get_attribute("caxcorrection")
             self.normalization = self.p.get_attribute("normtype")
             self.points = self.p.get_attribute("show_points")
@@ -31,7 +32,8 @@ class TGS_Plot():
             self.flip = self.p.get_attribute("flip")
             
             self.set_tab_data()
-        except Exception:
+        except Exception as e:
+            print(e)
             self.options.bell()
             self.fail = True
             return
@@ -51,13 +53,13 @@ class TGS_Plot():
         self.options.dosescale.set(self.dosefactor)
         self.options.flip.set(self.flip)
         
-    def data(self):
+    def data(self, allow_normalization=True):
         
         axis = np.add(self.dataObject.axis,self.axshift)
         dose = self.dataObject.dose.copy()
         error = self.dataObject.std_dev.copy()
                
-        if self.normalize:
+        if (self.normalize==True & allow_normalization==True):
             if self.normalization == "maximum":
                 error = np.divide(error,np.max(dose))
                 dose = np.divide(dose,np.max(dose))

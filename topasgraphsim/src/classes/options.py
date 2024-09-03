@@ -10,11 +10,13 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.backends._backend_tk import NavigationToolbar2Tk
 import logging
 from pymedphys import gamma
+from scipy.interpolate import Akima1DInterpolator
 from .xrange_slider import Slider
 
 logging.getLogger("matplotlib").setLevel(level=logging.CRITICAL)
 
 from ..resources.language import Text
+from ..functions import dp, pdd
 from .scrollframe import ScrollFrame
 from .tgs_graph import TGS_Plot
 from .sim_import import Simulation
@@ -409,12 +411,12 @@ class Options(ctk.CTkTabview):
         self.doseaddframetitle.grid(row=0, column=0, columnspan=2, sticky="nsew", padx=5, pady=(1,5))
         self.doseaddreference = ctk.StringVar()
         self.doseaddreferencelabel = ctk.CTkLabel(self.doseaddframe, text="Graph 1", font=("Bahnschrift",14, "bold"))
-        self.doseaddreferenceselector = ctk.CTkOptionMenu(self.doseaddframe, variable=self.reference, values=[])
+        self.doseaddreferenceselector = ctk.CTkOptionMenu(self.doseaddframe, variable=self.doseaddreference, values=[])
         self.doseaddreferencelabel.grid(column=0, row=1, padx=5, pady=1, sticky="nsw")
         self.doseaddreferenceselector.grid(column=1, row=1, padx=5, pady=1, sticky="nsew")
         self.doseaddtest = ctk.StringVar()
         self.doseaddtestlabel = ctk.CTkLabel(self.doseaddframe, text="Graph 2", font=("Bahnschrift",14, "bold"))
-        self.doseaddtestselector = ctk.CTkOptionMenu(self.doseaddframe, variable=self.test, values=[])
+        self.doseaddtestselector = ctk.CTkOptionMenu(self.doseaddframe, variable=self.doseaddtest, values=[])
         self.doseaddtestlabel.grid(column=0, row=3, padx=5, pady=1, sticky="nsw")
         self.doseaddtestselector.grid(column=1, row=3, padx=5, pady=1, sticky="nsew")
         self.doseaddscale = ctk.StringVar(value="0.5")
@@ -424,13 +426,80 @@ class Options(ctk.CTkTabview):
         self.doseaddscaleentry.grid(column=1, row=2, padx=5, pady=1, sticky="nse")
         self.doseaddscale2 = ctk.StringVar(value="0.5")
         self.doseaddscalelabel2 = ctk.CTkLabel(self.doseaddframe, text=Text().scale[self.lang], font=("Bahnschrift",12, "bold"))
-        self.doseaddscaleentry2 = ctk.CTkEntry(self.doseaddframe, textvariable=self.doseaddscale, width=70)
+        self.doseaddscaleentry2 = ctk.CTkEntry(self.doseaddframe, textvariable=self.doseaddscale2, width=70)
         self.doseaddscalelabel2.grid(column=0, row=4, padx=5, pady=1, sticky="nsw")
         self.doseaddscaleentry2.grid(column=1, row=4, padx=5, pady=1, sticky="nse")
-        self.doseaddbutton = ctk.CTkButton(self.doseaddframe, text=Text().apply[self.lang], fg_color="green", width=110)
+        self.doseaddbutton = ctk.CTkButton(self.doseaddframe, text=Text().apply[self.lang], fg_color="green", width=110, command = self.add_doses)
         self.doseaddbutton.grid(column=1, row=5, padx=5, pady=(5,2), sticky="nse")
 
     ######################################################################################################################################################################
+
+    def add_doses(self):
+        plot_labels = [plot.label for plot in self.parent.plots]
+        reference_axes, reference_dose, _ = self.parent.plots[plot_labels.index(self.doseaddreference.get())].data(allow_normalization=False)
+        evaluation_axes, evaluation_dose, _ = self.parent.plots[plot_labels.index(self.doseaddtest.get())].data(allow_normalization=False)
+
+        akima_dose_interpolator = Akima1DInterpolator(evaluation_axes, evaluation_dose)
+        evaluation_dose = akima_dose_interpolator.__call__(reference_axes)
+
+        new_axis = reference_axes
+        new_dose = float(self.doseaddscale.get())*np.array(reference_dose) + float(self.doseaddscale2.get())*np.array(evaluation_dose)
+        new_filepath = self.parent.plots[plot_labels.index(self.doseaddreference.get())].dataObject.filepath + self.parent.plots[plot_labels.index(self.doseaddtest.get())].dataObject.filepath
+        new_filename = f"{self.doseaddscale.get()}*" + self.parent.plots[plot_labels.index(self.doseaddreference.get())].dataObject.filename + " + " + f"{self.doseaddscale2.get()}*" + self.parent.plots[plot_labels.index(self.doseaddtest.get())].dataObject.filename
+        if self.parent.plots[plot_labels.index(self.doseaddreference.get())].dataObject.direction == self.parent.plots[plot_labels.index(self.doseaddtest.get())].dataObject.direction:
+            direction = self.parent.plots[plot_labels.index(self.doseaddreference.get())].dataObject.direction
+        else: return
+       
+        class SummedDose:
+            def __init__(self, filepath, filename, direction, axis, dose, plotlist, options, normalize):
+
+                self.filepath = filepath
+                self.lang = ProfileHandler().get_attribute("language")
+                self.filename = filename
+                self.dose = np.array(dose)
+                self.axis = np.array(axis)
+                self.direction = direction
+                self.std_dev = np.array([0 for i in range(len(self.dose))])
+
+                plotlist += [TGS_Plot(options, self, normalize = normalize)]
+                options.parameters.append(Parameters(options.paramslist.viewPort, plotlist[-1], self.lang))
+                options.parameters[-1].grid(row=len(options.parameters)-1, sticky="ew", padx=5, pady=5)
+                options.plotbuttons.append(ctk.CTkRadioButton(options.graphlist.viewPort, text=plotlist[-1].label, variable=options.current_plot, text_color = plotlist[-1].linecolor, value=plotlist[-1].label, command=options.change_current_plot, font=("Bahnschrift", 14, "bold")))
+                options.plotbuttons[-1].grid(sticky="w", padx=5, pady=5)
+                options.filenames.append(self.filepath)
+                if len(options.parent.plots) == 1:
+                    options.enable_all_buttons()
+                    
+                try:
+                    options.current_plot.set(plotlist[-1].label)
+                    options.parent.saved = False
+                    options.update_plotlist()
+                    options.parent.update()
+                except IndexError:
+                    pass
+
+            def params(self):
+                if self.direction == "Z":
+                    return pdd.calculate_parameters(
+                        np.array(self.axis),
+                        self.dose / max(self.dose),
+                        [],
+                    )
+                else:
+                    params = dp.calculate_parameters(
+                        self.axis, self.dose / max(self.dose))
+                    self.cax = params[1]
+                    return params
+                
+        if new_filepath in self.filenames: 
+            plot_label = [plot for plot in self.parent.plots if plot.dataObject.filepath == new_filepath][0].label
+            current_plot = self.current_plot.get()
+            self.current_plot.set(plot_label)
+            self.remove_plot()
+            SummedDose(new_filepath, new_filename, direction, new_axis, new_dose, self.parent.plots, self, normalize = self.normalize.get())
+            self.current_plot.set(current_plot)
+        else:
+            SummedDose(new_filepath, new_filename, direction, new_axis, new_dose, self.parent.plots, self, normalize = self.normalize.get())
 
     def clear_gam(self):
         self.plotgamma.set("False")
@@ -525,6 +594,10 @@ class Options(ctk.CTkTabview):
         if self.test.get() == current_name:
             self.test.set("")
             self.clear_gamma()
+        if self.doseaddreference.get() == current_name:
+            self.doseaddreference.set("")
+        if self.doseaddtest.get() == current_name:
+            self.doseaddtest.set("")
         self.plotbuttons[index].grid_forget()
         self.plotbuttons.pop(index)
         self.parent.plots.pop(index)
@@ -582,6 +655,8 @@ class Options(ctk.CTkTabview):
             current_plot.axshift = float(self.axshiftentry.get())
             current_plot.flip = self.flip.get()
             self.calculate_gamma()
+            try: self.add_doses()
+            except ValueError: pass
             self.parent.update()
         except ValueError:
             pass
