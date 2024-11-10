@@ -69,6 +69,7 @@ class TGS_Plot():
                 plateau = np.max(dose) * self.dataObject.params()[-1]
                 error = np.divide(error, plateau)
                 dose = np.divide(dose, plateau)
+                print(plateau)
 
             elif self.normalization == "centeraxis":
                 error = np.divide(error,dose[len(dose)//2])

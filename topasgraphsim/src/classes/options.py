@@ -510,7 +510,13 @@ class Options(ctk.CTkTabview):
 
     def save(self):
         fname = fd.asksaveasfilename(title = Text().saveplottitle[self.lang], filetypes = (("PNG","*.png"),(Text().allfiles[self.lang],"*.*")))
+        color = self.parent.figure.patch.get_facecolor()
+        self.parent.figure.patch.set_facecolor("white")
+        color2 = plt.gca().get_facecolor()
+        plt.gca().set_facecolor("white")
         self.parent.figure.savefig(fname=fname, dpi=300,)
+        self.parent.figure.patch.set_facecolor(color)
+        plt.gca().set_facecolor(color2)
         self.parent.saved = True
     
     def on_enter(self, widget, command, event=None):
