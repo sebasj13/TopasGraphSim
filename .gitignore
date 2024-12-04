@@ -1,6 +1,7 @@
 topasgraphsim/src/resources/add_to_context_menu.py
 pyinstaller_config.txt
 output/*
+dist/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
