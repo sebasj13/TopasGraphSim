@@ -1,3 +1,4 @@
-import topasgraphsim.topasgraphsim as topasgraphsim	
+import topasgraphsim
 
-topasgraphsim.TopasGraphSim()
+try: topasgraphsim.TopasGraphSim()
+except AttributeError: topasgraphsim.topasgraphsim.TopasGraphSim()

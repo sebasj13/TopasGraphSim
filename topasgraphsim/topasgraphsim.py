@@ -3,11 +3,18 @@ import sys
 import tkinterDnD as tkdnd
 import customtkinter as ctk
 
-from .src.resources.language import Text
-from .src.classes.menubar import MenuBar
-from .src.classes.profile import ProfileHandler
-from .src.classes.main_viewer import MainViewer
-from .src.classes.update import CheckForUpdates
+try:
+    from .src.resources.language import Text
+    from .src.classes.menubar import MenuBar
+    from .src.classes.profile import ProfileHandler
+    from .src.classes.main_viewer import MainViewer
+    from .src.classes.update import CheckForUpdates
+except ImportError:
+    from src.resources.language import Text
+    from src.classes.menubar import MenuBar
+    from src.classes.profile import ProfileHandler
+    from src.classes.main_viewer import MainViewer
+    from src.classes.update import CheckForUpdates
 
 #TODO
 """
