@@ -1,5 +1,5 @@
 topasgraphsim/src/resources/add_to_context_menu.py
-auto-py-to-exe-config.json
+pyinstaller_config.txt
 output/*
 
 # Byte-compiled / optimized / DLL files
