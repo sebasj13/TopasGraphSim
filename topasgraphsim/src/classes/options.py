@@ -53,8 +53,6 @@ class Options(ctk.CTkTabview):
         self.add(Text().analysis[self.lang])
         self.add(Text().parameters[self.lang])
 
-        
-
         self.tab(Text().data[self.lang]).rowconfigure(0, weight=1, minsize=220)
         self.tab(Text().data[self.lang]).rowconfigure(1, weight=1)  
         self.tab(Text().data[self.lang]).columnconfigure(0, weight=1)     
@@ -75,7 +73,6 @@ class Options(ctk.CTkTabview):
         self.dataframe2.columnconfigure(0, weight=1, minsize=144)
         self.dataframe2.columnconfigure(1, weight=1)
 
-                
         self.graphlist = ScrollFrame(self.dataframe1)
         
         def resource_path(relative_path):
@@ -143,26 +140,20 @@ class Options(ctk.CTkTabview):
         #######################################################################################################################
                
         self.tab(Text().settings1[self.lang]).rowconfigure(0, weight=1)
-        self.tab(Text().settings1[self.lang]).rowconfigure(1, weight=1)  
         self.tab(Text().settings1[self.lang]).columnconfigure(0, weight=1)     
         self.tab(Text().settings1[self.lang]).grid_propagate(False) 
+        self.tab(Text().settings1[self.lang]).pack_propagate(False) 
 
-        self.settings_frame = ctk.CTkFrame(self.tab(Text().settings1[self.lang]), border_color="black", border_width=1)
-        self.settings_frame.pack(fill="both", expand=True)
-        self.settings_frame.pack_propagate(False)
-        self.settings_scrollframe = ScrollFrame(self.settings_frame)
+        self.settings_scrollframe = ScrollFrame(self.tab(Text().settings1[self.lang]))
         self.settings_scrollframe.pack(fill="both", expand=True)
        
-        self.graphsettingsframe = ctk.CTkFrame(self.settings_scrollframe.viewPort, border_color="black", border_width=1)
+        self.graphsettingsframe = ctk.CTkFrame(self.settings_scrollframe.viewPort, border_color="black", border_width=1, fg_color=self.dataframe1.cget("fg_color"))
         self.graphsettingsframe.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
 
-
-        self.tab(Text().settings1[self.lang]).configure(fg_color=self.graphsettingsframe.cget("fg_color"))
-        self.settings_frame.configure(fg_color=self.graphsettingsframe.cget("fg_color"))
         self.settings_scrollframe.configure(border_width=0)
-        self.settings_scrollframe.canvas.configure(bg=self.graphsettingsframe.cget("fg_color")[0])
-        self.settings_scrollframe.configure(fg_color=self.graphsettingsframe.cget("fg_color"))
-        self.settings_scrollframe.viewPort.configure(fg_color=self.graphsettingsframe.cget("fg_color")) 
+        self.settings_scrollframe.canvas.configure(bg=self.dataframe1.cget("fg_color")[0])
+        self.settings_scrollframe.configure(fg_color=self.dataframe1.cget("fg_color"))
+        self.settings_scrollframe.viewPort.configure(fg_color=self.dataframe1.cget("fg_color")) 
         
         self.graphsettingsframe.columnconfigure(0, weight=1)
         self.graphsettingsframe.columnconfigure(1, weight=1)
@@ -269,7 +260,7 @@ class Options(ctk.CTkTabview):
         self.linecolorlabel.grid(column=0, row=5, padx=5, pady=2, sticky="w")
         self.linecolorbutton.grid(column=1, row=5, padx=5, pady=2, sticky="e")
 
-        self.figuresettingsframe = ctk.CTkFrame(self.settings_scrollframe.viewPort, border_color="black", border_width=1, fg_color=self.graphsettingsframe.cget("fg_color"))
+        self.figuresettingsframe = ctk.CTkFrame(self.settings_scrollframe.viewPort, border_color="black", border_width=1, fg_color=self.graphsettingsframe.cget("fg_color"), height=172)
         self.figuresettingsframe.grid(row=2, column=0, sticky="nsew", padx=5, pady=5)
         self.figuresettingsframe.columnconfigure(0, weight=1, minsize=144)
         self.figuresettingsframe.columnconfigure(1, weight=1)
@@ -303,6 +294,7 @@ class Options(ctk.CTkTabview):
         self.tab(Text().parameters[self.lang]).columnconfigure(0, weight=1)
         self.tab(Text().parameters[self.lang]).rowconfigure(0, weight=1)
         self.tab(Text().parameters[self.lang]).grid_propagate(False)  
+        self.tab(Text().parameters[self.lang]).configure(fg_color=self.dataframe1.cget("fg_color"))
         self.parameterframe = ctk.CTkFrame(self.tab(Text().parameters[self.lang]), border_color="black", border_width=1)
         self.parameterframe.grid(sticky="nsew", padx=5, pady=5)
         self.parameterframe.pack_propagate(False)
@@ -312,19 +304,19 @@ class Options(ctk.CTkTabview):
 
     ######################################################################################################################################################################
 
-        self.analysis_frame = ctk.CTkFrame(self.tab(Text().analysis[self.lang]), border_color="black", border_width=1, fg_color=self.graphsettingsframe.cget("fg_color"))
-        self.analysis_frame.pack(fill="both", expand=True)
-        self.analysis_frame.pack_propagate(False)
-        self.analysis_scrollframe = ScrollFrame(self.analysis_frame)
+        self.tab(Text().analysis[self.lang]).configure(fg_color=self.dataframe1.cget("fg_color"))
+        self.tab(Text().analysis[self.lang]).pack_propagate(False)
+        self.analysis_scrollframe = ScrollFrame(self.tab(Text().analysis[self.lang]))
         self.analysis_scrollframe.configure(border_width=0)
-        self.analysis_scrollframe.canvas.configure(bg=self.graphsettingsframe.cget("fg_color")[0])
-        self.analysis_scrollframe.configure(fg_color=self.graphsettingsframe.cget("fg_color"))
-        self.analysis_scrollframe.viewPort.configure(fg_color=self.graphsettingsframe.cget("fg_color")) 
+        self.analysis_scrollframe.canvas.configure(bg=self.dataframe1.cget("fg_color")[0])
+        self.analysis_scrollframe.configure(fg_color=self.dataframe1.cget("fg_color"))
+        self.analysis_scrollframe.viewPort.configure(fg_color=self.dataframe1.cget("fg_color")) 
         self.analysis_scrollframe.pack(fill="both", expand=True)
 
         self.shiftframe = ctk.CTkFrame(self.analysis_scrollframe.viewPort, border_color="black", border_width=1)
         self.shiftframe.columnconfigure(0, weight=1, minsize=144)
         self.shiftframe.columnconfigure(1, weight=1)
+        self.shiftframe.configure(fg_color=self.dataframe1.cget("fg_color"))
         
         self.shiftframetitle = ctk.CTkLabel(self.shiftframe, text=Text().shift[self.lang], font=("Bahnschrift",16, "bold"))
         self.shiftframetitle.grid(row=0, column=0, columnspan=2, sticky="nsew", padx=5, pady=(1,5))
@@ -380,7 +372,7 @@ class Options(ctk.CTkTabview):
         self.gammaframe.columnconfigure(2, weight=1)
         self.gammaframe.columnconfigure(3, weight=1)
         self.gammaframe.columnconfigure(4, weight=1)
-        #self.gammaframe.grid_propagate(False)  
+        self.gammaframe.configure(fg_color=self.dataframe1.cget("fg_color"))
         
         self.gammaframetitle = ctk.CTkLabel(self.gammaframe, text=Text().gamma[self.lang], font=("Bahnschrift",16, "bold"))
         self.gammaframetitle.grid(row=0, column=0, columnspan=5, sticky="nsew", padx=5, pady=(1,5))
@@ -451,6 +443,7 @@ class Options(ctk.CTkTabview):
         self.disable_all_buttons()
 
         self.doseaddframe = ctk.CTkFrame(self.analysis_scrollframe.viewPort, border_color="black", border_width=1)
+        self.doseaddframe.configure(fg_color=self.dataframe1.cget("fg_color"))
         self.doseaddframe.grid(row=2, column=0, sticky="nsew", padx=5, pady=5)
         self.doseaddframe.columnconfigure(0, weight=1, minsize=80)
         self.doseaddframe.columnconfigure(1, weight=1)

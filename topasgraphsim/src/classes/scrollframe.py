@@ -12,7 +12,8 @@ class ScrollFrame(ctk.CTkFrame):
         )
         self.viewPort = ctk.CTkFrame(
             self.canvas,
-            corner_radius=0
+            corner_radius=0,
+            border_width=0
         )
         self.scrollbar = ctk.CTkScrollbar(self, orientation="vertical",
                                     command=self.canvas.yview,
