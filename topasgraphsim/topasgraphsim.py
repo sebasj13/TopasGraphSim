@@ -29,10 +29,10 @@ class TopasGraphSim(Tk):
         
         super().__init__()
         
-        self.appname = "ESMoCa SimLab"
-        self.version = "1.0"
+        self.appname = "TopasGraphSim"
+        self.version = "27.0"
         self.author = "Sebastian Schäfer"
-        self.affiliation = "UK Halle\nMLU Halle-Wittenberg\nUK Hamburg-Eppendorf"
+        self.affiliation = "UK Halle\nMLU Halle-Wittenberg\nUK Leipzig"
         self.title(f"{self.appname} - v.{self.version}")
         self.lang = ctk.StringVar()
         self.lang.set(ProfileHandler().get_attribute("language"))

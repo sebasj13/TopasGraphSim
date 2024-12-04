@@ -55,13 +55,13 @@ class Tab(ctk.CTkFrame):
         
     def update(self):
         self.ax.clear()
-        
+        self.options.toggle_grid_options(draw=False)
+        if self.plots == []: return
         for plot in self.plots[::-1]:
             plot.plot(self.ax)
-        self.options.set_xlim()
-        self.options.set_ax_names()
-        self.options.toggle_legend_options()
-        self.options.toggle_grid_options()
+        self.options.set_xlim(draw=False)
+        self.options.set_ax_names(draw=False)
+        self.options.toggle_legend_options(draw=False)
         self.ax.xaxis.set_major_locator(AutoLocator())
         self.ax.xaxis.set_minor_locator(AutoMinorLocator())
         self.ax.yaxis.set_major_locator(AutoLocator())

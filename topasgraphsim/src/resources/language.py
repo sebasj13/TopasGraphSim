@@ -29,7 +29,7 @@ class Text:
         self.calculate = {"de": "Berechnen", "en": "Calculate"}
         self.caxcorrection = {
             "de": "CAX-Korrektur",
-            "en": "CAX correction",
+            "en": "Correct CAX",
         }
         self.doseadd = {"de": "Dosen addieren", "en": "Dose addition"}
         self.beamquality = {"de":"Strahlungsqualitätsindex", "en":"Beam quality index"}
@@ -97,11 +97,14 @@ class Text:
         self.english = {"de": "Englisch", "en": "English"}
         self.error = {"de": "Abweichung", "en": "Difference"}
         self.error1 = {"de": "Fehler bei der Parameterberechnung!", "en": "Failed to calculate parameters!"}
-        self.errorbars = {"de": "Fehlerbalken", "en": "Errorbars"}
+        self.errorbars = {"de": "Fehler", "en": "Errorbar"}
         self.errlimmenu = {"de": "Fehlergrenze einstellen", "en": "Change error limits"}
         self.file = {"de": "Datei", "en": "File"}
         self.flip = {"de": "Daten umkehren", "en": "Flip data"}
         self.fileerror = {"de": "Datei konnte nicht geladen werden!", "en": "File could not be loaded!"}
+        self.figuresettings = {"de":"Bildeinstellungen", "en":"Figure settings"}
+        self.figuresize_x = {"de":"Bildgröße x [in]", "en":"Figure size x [in]"}
+        self.figuresize_y = {"de":"Bildgröße y [in]", "en":"Figure size y [in]"}
         self.plateau = {"de": "Plateau", "en": "Plateau"}
         self.fullscreen = {"de": "Vollbild", "en": "Fullscreen"}
         self.saveplottitle = {"de": "Dateinahmen wählen...", "en": "Choose filename..."}
@@ -178,6 +181,7 @@ class Text:
         self.percentage = {"de": "Prozentual", "en": "Percentage"}
         self.pdd = {"de": "TDK", "en": "PDD"}
         self.ptw = {"de": "PTW tbaScan", "en": "PTW tbaScan"}
+        self.preview = {"de":"Vorschau", "en":"Preview"}
         self.restart = {"de": "Neu starten, um Änderungen\nzu übernehmen!", "en":"Restart the application to\napply the changes!"}
         self.radcalc = {"de": "RadCalc", "en": "RadCalc"}
         self.recent = {"de": "Zuletzt verwendet", "en": "Recent files"}
@@ -205,7 +209,7 @@ class Text:
         self.select = {"de": "Messungen auswählen ...", "en": "Select measurements ..."}
         
         self.scale = {"de":"Faktor", "en":"Factor"}
-        self.showerror = {"de": "Fehler", "en": "Errorbars"}
+        self.showerror = {"de": "Fehler", "en": "Errorbar"}
         self.showgrid = {"de": "Raster anzeigen", "en": "Show grid"}
         self.gridoptions1 = {"de": "Große Gitterlinien", "en": "Large gridlines"}
         self.gridoptions2 = {"de":"Alle Gitterlinien", "en":"All gridlines"}
@@ -220,6 +224,7 @@ class Text:
         self.submit = {"de": "Fertig", "en": "Submit"}
         self.symmetry = {"de": "Symmetrie", "en": "Symmetry"}
         self.tabnames = {"de": "Tabs", "en": "Tabs"}
+        self.textsize = {"de":"Schriftgröße", "en": "Font size"}
         self.reference = {"de": "Referenzlinie:", "en": "Reference plot:"}
         self.test = {"de":"Auswertungslinie:", "en":"Evaluation plot:"}
         self.topas = {"de": "TOPAS Simulationsdateien", "en": "TOPAS Simulation Data"}

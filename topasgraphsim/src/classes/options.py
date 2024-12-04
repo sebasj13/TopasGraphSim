@@ -2,7 +2,8 @@ import customtkinter as ctk
 import numpy as np
 import tkinter.filedialog as fd
 from tkinter import colorchooser
-from PIL import Image
+from PIL import Image, ImageTk
+import io
 import os
 import sys
 import matplotlib.pyplot as plt
@@ -113,12 +114,12 @@ class Options(ctk.CTkTabview):
 
         self.gridoptions = ctk.StringVar(value=Text().gridoptions1[self.lang])
         self.showgrid_button = ctk.CTkCheckBox(self.dataframe2, text=Text().showgrid[self.lang], variable=self.showgrid, onvalue=True, offvalue=False, command = self.toggle_grid_options, font=("Bahnschrift",12, "bold"))
-        self.showgrid_options = ctk.CTkOptionMenu(self.dataframe2, variable=self.gridoptions, values=[Text().gridoptions1[self.lang], Text().gridoptions2[self.lang]], command = lambda x: self.toggle_grid_options())    
+        self.showgrid_options = ctk.CTkOptionMenu(self.dataframe2, variable=self.gridoptions, values=[Text().gridoptions1[self.lang], Text().gridoptions2[self.lang]], command = self.toggle_grid_options)    
         self.showgrid_button.grid(column=0, row=4, padx=5, pady=2, sticky = "w")
         self.showgrid_options.grid(column=1, row=4, padx=5, pady=2, sticky = "w")   
         
         self.showlegend = ctk.BooleanVar(value = self.p.get_attribute("legend"))
-        self.legendoptions = ctk.StringVar(value=Text().legendoptions1[self.lang]) ##
+        self.legendoptions = ctk.StringVar(value=Text().legendoptions1[self.lang]) 
         
         self.showlegend_button = ctk.CTkCheckBox(self.dataframe2, text=Text().showlegend[self.lang], variable=self.showlegend, onvalue=True, offvalue=False, command = self.toggle_legend_options, font=("Bahnschrift", 12, "bold"))
         self.showlegend_options = ctk.CTkOptionMenu(self.dataframe2, 
@@ -128,7 +129,7 @@ class Options(ctk.CTkTabview):
                                                             Text().legendoptions3[self.lang],
                                                             Text().legendoptions4[self.lang],
                                                             Text().legendoptions5[self.lang]],
-                                                    command = lambda x: self.toggle_legend_options())
+                                                    command = self.toggle_legend_options)
         
         self.showlegend_button.grid(column=0, row=5, padx=5, pady=2, sticky="w")
         self.showlegend_options.grid(column=1, row=5, padx=5, pady=2, sticky="w")
@@ -144,10 +145,24 @@ class Options(ctk.CTkTabview):
         self.tab(Text().settings1[self.lang]).rowconfigure(0, weight=1)
         self.tab(Text().settings1[self.lang]).rowconfigure(1, weight=1)  
         self.tab(Text().settings1[self.lang]).columnconfigure(0, weight=1)     
-        self.tab(Text().settings1[self.lang]).grid_propagate(False)  
-        
-        self.graphsettingsframe = ctk.CTkFrame(self.tab(Text().settings1[self.lang]), border_color="black", border_width=1)
+        self.tab(Text().settings1[self.lang]).grid_propagate(False) 
+
+        self.settings_frame = ctk.CTkFrame(self.tab(Text().settings1[self.lang]), border_color="black", border_width=1)
+        self.settings_frame.pack(fill="both", expand=True)
+        self.settings_frame.pack_propagate(False)
+        self.settings_scrollframe = ScrollFrame(self.settings_frame)
+        self.settings_scrollframe.pack(fill="both", expand=True)
+       
+        self.graphsettingsframe = ctk.CTkFrame(self.settings_scrollframe.viewPort, border_color="black", border_width=1)
         self.graphsettingsframe.grid(row=1, column=0, sticky="nsew", padx=5, pady=5)
+
+
+        self.tab(Text().settings1[self.lang]).configure(fg_color=self.graphsettingsframe.cget("fg_color"))
+        self.settings_frame.configure(fg_color=self.graphsettingsframe.cget("fg_color"))
+        self.settings_scrollframe.configure(border_width=0)
+        self.settings_scrollframe.canvas.configure(bg=self.graphsettingsframe.cget("fg_color")[0])
+        self.settings_scrollframe.configure(fg_color=self.graphsettingsframe.cget("fg_color"))
+        self.settings_scrollframe.viewPort.configure(fg_color=self.graphsettingsframe.cget("fg_color")) 
         
         self.graphsettingsframe.columnconfigure(0, weight=1)
         self.graphsettingsframe.columnconfigure(1, weight=1)
@@ -205,13 +220,13 @@ class Options(ctk.CTkTabview):
         
         self.show_points = ctk.BooleanVar(value=self.p.get_attribute("show_points"))
         self.pointsbutton = ctk.CTkCheckBox(self.spacerframe, text=Text().showpoints[self.lang], variable=self.show_points, command=self.change_points, font=("Bahnschrift", 12, "bold"))
-        self.pointsbutton.grid(row=0, column=1, sticky="nsew", pady=2, padx=5)
+        self.pointsbutton.grid(row=0, column=1, sticky="nsew", pady=2, padx=(0,2))
         
         self.show_error = ctk.BooleanVar(value=self.p.get_attribute("show_error"))
         self.errorbutton = ctk.CTkCheckBox(self.spacerframe, text=Text().showerror[self.lang], variable=self.show_error, command=self.change_error, font=("Bahnschrift", 12, "bold"))
-        self.errorbutton.grid(row=0, column=2, sticky="nsew", pady=2, padx=2)
+        self.errorbutton.grid(row=0, column=2, sticky="nsew", pady=2, padx=(10,2))
         
-        self.plotsettingsframe = ctk.CTkFrame(self.tab(Text().settings1[self.lang]), border_color="black", border_width=1)
+        self.plotsettingsframe = ctk.CTkFrame(self.settings_scrollframe.viewPort, border_color="black", border_width=1, fg_color=self.graphsettingsframe.cget("fg_color"))
         self.plotsettingsframe.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
         
         self.plotsettingsframe.columnconfigure(0, weight=1, minsize=144)
@@ -253,6 +268,35 @@ class Options(ctk.CTkTabview):
         self.linecolorbutton = ctk.CTkButton(self.plotsettingsframe, text=Text().change[self.lang], command = self.choose_linecolor)
         self.linecolorlabel.grid(column=0, row=5, padx=5, pady=2, sticky="w")
         self.linecolorbutton.grid(column=1, row=5, padx=5, pady=2, sticky="e")
+
+        self.figuresettingsframe = ctk.CTkFrame(self.settings_scrollframe.viewPort, border_color="black", border_width=1, fg_color=self.graphsettingsframe.cget("fg_color"))
+        self.figuresettingsframe.grid(row=2, column=0, sticky="nsew", padx=5, pady=5)
+        self.figuresettingsframe.columnconfigure(0, weight=1, minsize=144)
+        self.figuresettingsframe.columnconfigure(1, weight=1)
+        self.figuresettingsframe.grid_propagate(False)   
+        self.figuresettingslabel = ctk.CTkLabel(self.figuresettingsframe, text=Text().figuresettings[self.lang], font=("Bahnschrift",16, "bold"))
+        self.figuresettingslabel.grid(column=0, row=0, columnspan=2, sticky="nsew", padx=5, pady=(1,5))
+
+        self.dpilabel = ctk.CTkLabel(self.figuresettingsframe, text="DPI", font=("Bahnschrift",12, "bold"))
+        self.dpilabel.grid(column=0, row=1, padx=5, pady=2, sticky="w")
+        self.dpi = ctk.StringVar(value="600")
+        self.dpiselector = ctk.CTkOptionMenu(self.figuresettingsframe, variable=self.dpi, values=["150", "300", "600"],)
+        self.dpiselector.grid(column=1, row=1, padx=5, pady=2, sticky="e")
+
+        self.figuresize_x = ctk.StringVar(value="5.5")
+        self.figuresize_xentry = ctk.CTkEntry(self.figuresettingsframe, textvariable=self.figuresize_x, width=130)
+        self.figuresize_xlabel = ctk.CTkLabel(self.figuresettingsframe, text=Text().figuresize_x[self.lang], font=("Bahnschrift",14, "bold"))
+        self.figuresize_xentry.grid(column=1, row=2, padx=5, pady=(3,1), sticky="nsew")
+        self.figuresize_xlabel.grid(column=0, row=2, padx=5, pady=(3,1), sticky="w")
+
+        self.figuresize_y = ctk.StringVar(value="5.5")
+        self.figuresize_yentry = ctk.CTkEntry(self.figuresettingsframe, textvariable=self.figuresize_y, width=130)
+        self.figuresize_ylabel = ctk.CTkLabel(self.figuresettingsframe, text=Text().figuresize_y[self.lang],font=("Bahnschrift",14, "bold"))
+        self.figuresize_yentry.grid(column=1, row=3, padx=5, pady=(3,1), sticky="nsew")
+        self.figuresize_ylabel.grid(column=0, row=3, padx=5, pady=(3,1), sticky="w")
+
+        self.preview_button =  ctk.CTkButton(self.figuresettingsframe, text=Text().preview[self.lang], command = self.preview, width=20)
+        self.preview_button.grid(row=4, column=0, columnspan=2, sticky="s", padx=5, pady=5)
         
     ######################################################################################################################################################################
    
@@ -393,14 +437,17 @@ class Options(ctk.CTkTabview):
         self.resultcanvas.grid(column=1, columnspan=4, row=7, padx=5, pady=2, sticky="nsew")
         
         self.gammaframe.grid(row=0, column=0, sticky="nsew", padx=5, pady=5)
-        if self.showlegend.get():
-            self.parent.ax.legend()
-            self.parent.canvas.draw()
-        if self.showgrid.get(): 
-            self.parent.ax.grid(which="major", visible=True, axis="both", lw=1) 
-            try: self.parent.ax2.grid(which="major", visible=True, axis="both", lw=1) 
-            except Exception: pass
-            self.parent.canvas.draw() 
+        draw = False
+        if self.parent.plots != []:
+            if self.showlegend.get():
+                self.parent.ax.legend()
+                draw = True
+            if self.showgrid.get(): 
+                self.parent.ax.grid(which="major", visible=True, axis="both", lw=1) 
+                try: self.parent.ax2.grid(which="major", visible=True, axis="both", lw=1) 
+                except Exception: pass
+                draw = True
+        if draw == True: self.parent.canvas.draw()
         self.disable_all_buttons()
 
         self.doseaddframe = ctk.CTkFrame(self.analysis_scrollframe.viewPort, border_color="black", border_width=1)
@@ -509,15 +556,78 @@ class Options(ctk.CTkTabview):
         self.difference.set("False")
 
     def save(self):
+
+        try:
+            dpi = int(self.dpi.get())
+            size_x = float(self.figuresize_x.get())
+            size_y = float(self.figuresize_y.get())
+        except Exception: self.bell()
         fname = fd.asksaveasfilename(title = Text().saveplottitle[self.lang], filetypes = (("PNG","*.png"),(Text().allfiles[self.lang],"*.*")))
         color = self.parent.figure.patch.get_facecolor()
         self.parent.figure.patch.set_facecolor("white")
-        color2 = plt.gca().get_facecolor()
-        plt.gca().set_facecolor("white")
-        self.parent.figure.savefig(fname=fname, dpi=300,)
+        if self.parent.ax2 != None: 
+            color2 = plt.gcf()._axstack.as_list()[0].get_facecolor()
+            plt.gcf()._axstack.as_list()[0].set_facecolor("white")
+            color3 = plt.gcf()._axstack.as_list()[1].get_facecolor()
+            plt.gcf()._axstack.as_list()[1].set_facecolor("white")
+        else:
+            color2 = self.parent.ax.get_facecolor()
+            self.parent.ax.set_facecolor("white")
+
+        size = plt.gcf().get_size_inches()
+        plt.gcf().set_size_inches(size_x, size_y)
+        self.parent.figure.savefig(fname=fname, dpi=dpi)
         self.parent.figure.patch.set_facecolor(color)
-        plt.gca().set_facecolor(color2)
+        if self.parent.ax2 != None:
+            plt.gcf()._axstack.as_list()[0].set_facecolor(color2)
+            plt.gcf()._axstack.as_list()[1].set_facecolor(color3)
+        else:
+            self.parent.ax.set_facecolor(color2)
         self.parent.saved = True
+        plt.gcf().set_size_inches(size)
+
+    def preview(self):
+
+        try:
+            dpi = int(self.dpi.get())
+            size_x = float(self.figuresize_x.get())
+            size_y = float(self.figuresize_y.get())
+        except Exception: self.bell()
+        color = self.parent.figure.patch.get_facecolor()
+        self.parent.figure.patch.set_facecolor("white")
+        if self.parent.ax2 != None: 
+            color2 = plt.gcf()._axstack.as_list()[0].get_facecolor()
+            plt.gcf()._axstack.as_list()[0].set_facecolor("white")
+            color3 = plt.gcf()._axstack.as_list()[1].get_facecolor()
+            plt.gcf()._axstack.as_list()[1].set_facecolor("white")
+        else:
+            color2 = self.parent.ax.get_facecolor()
+            self.parent.ax.set_facecolor("white")
+        size = plt.gcf().get_size_inches()
+
+        plt.gcf().set_size_inches(size_x, size_y)
+        ps_buffer = io.BytesIO()
+        self.parent.canvas.print_figure(ps_buffer, format="png", dpi=dpi)
+        ps_buffer.seek(0)
+        image = Image.open(ps_buffer)
+        preview_window = ctk.CTkToplevel()
+        preview_window.title("Preview")
+        img_tk = ctk.CTkImage(light_image= image, size = image.size)
+        label = ctk.CTkLabel(preview_window, image=img_tk, text="")
+        label.image = img_tk
+        label.pack()
+        ps_buffer.close()
+        preview_window.lift()
+
+        self.parent.figure.patch.set_facecolor(color)
+        if self.parent.ax2 != None:
+            plt.gcf()._axstack.as_list()[0].set_facecolor(color2)
+            plt.gcf()._axstack.as_list()[1].set_facecolor(color3)
+        else:
+            self.parent.ax.set_facecolor(color2)
+        self.parent.saved = True
+        plt.gcf().set_size_inches(size)
+        return
     
     def on_enter(self, widget, command, event=None):
         widget.bind("<Return>", command)
@@ -727,7 +837,6 @@ class Options(ctk.CTkTabview):
                 self.parent.ax2.legend(loc="upper right", framealpha=0)
                 self.parent.update()
                 self.toggle_legend_options()
-                self.parent.canvas.draw()
                 
             elif self.plotgamma.get():
                 if self.parent.ax2 == None:
@@ -754,7 +863,6 @@ class Options(ctk.CTkTabview):
                 self.parent.ax2.legend(loc="upper right", framealpha=0)
                 self.parent.update()
                 self.toggle_legend_options()
-                self.parent.canvas.draw()
                 
             else:
                 try: 
@@ -782,7 +890,7 @@ class Options(ctk.CTkTabview):
         except ValueError as e:
             pass
             
-    def set_xlim(self):
+    def set_xlim(self, draw=True):
         self.parent.slider1.var.set(self.parent.ax.get_xlim()[0])
         self.parent.slider2.var.set(self.parent.ax.get_xlim()[1])
         self.parent.slider1.slider.configure(from_=self.parent.ax.get_xlim()[0], to=self.parent.ax.get_xlim()[1])
@@ -810,7 +918,6 @@ class Options(ctk.CTkTabview):
         current_plot.linecolor = color[1]
         self.parent.ax.lines[line_index].set_color(color[1])
         self.toggle_legend_options()
-        self.parent.canvas.draw()
         
     def rename_plot(self, event=None):
         self.parent.saved = False
@@ -841,7 +948,6 @@ class Options(ctk.CTkTabview):
         self.parent.plots[index].linestyle = {Text().dashdot[self.lang]:"-.", Text().dash[self.lang]:"-", Text().dot[self.lang]:"dotted", Text().none[self.lang]:" "}[value]
         self.parent.ax.lines[line_index].set_linestyle(self.parent.plots[index].linestyle)
         self.toggle_legend_options()
-        self.parent.canvas.draw()
         
     def change_linethickness(self, value):
         self.parent.saved = False
@@ -852,7 +958,6 @@ class Options(ctk.CTkTabview):
         self.parent.ax.lines[line_index].set_linewidth(value)
         self.parent.plots[index].linethickness = value
         self.toggle_legend_options()
-        self.parent.canvas.draw()
         
     def rename_title(self, event=None):
         self.parent.saved = False
@@ -869,7 +974,8 @@ class Options(ctk.CTkTabview):
         self.parent.ax.set_ylabel(self.ytitle.get())
         self.parent.canvas.draw()
         
-    def toggle_legend_options(self):
+    def toggle_legend_options(self, draw=True):
+        if self.parent.plots == []: return
         if self.showlegend.get():
             self.showlegend_options.configure(state="normal")
             which = {Text().legendoptions1[self.lang]:"best", 
@@ -880,14 +986,14 @@ class Options(ctk.CTkTabview):
             try: self.parent.ax.get_legend().remove()
             except AttributeError: pass
             self.parent.ax.legend(loc=which, reverse=True, framealpha=0)
-            self.parent.canvas.draw()
+            if draw: self.parent.canvas.draw()
         else:
             self.showlegend_options.configure(state="disabled")
             try: self.parent.ax.get_legend().remove()
             except AttributeError: pass
-            self.parent.canvas.draw()
+            if draw: self.parent.canvas.draw()
             
-    def toggle_grid_options(self):
+    def toggle_grid_options(self, draw=True):
         if self.showgrid.get():
             self.showgrid_options.configure(state="normal")
             which = {Text().gridoptions1[self.lang]:"major", Text().gridoptions2[self.lang]:"both"}.get(self.gridoptions.get())
@@ -901,13 +1007,13 @@ class Options(ctk.CTkTabview):
                 self.parent.ax.grid(which="minor", visible=True, axis="both", lw=0.5)
                 try: self.parent.ax2.grid(which="minor", visible=True, axis="both", lw=0.5)
                 except AttributeError: pass
-            self.parent.canvas.draw()
+            if draw: self.parent.canvas.draw()
         else:
             self.showgrid_options.configure(state="disabled")
             self.parent.ax.grid(False, which = "both", axis="both")
             try: self.parent.ax2.grid(False, which = "both", axis="both")
             except AttributeError: pass
-            self.parent.canvas.draw()
+            if draw: self.parent.canvas.draw()
         
     def update_plotlist(self):
         plotnames = [plot.label for plot in self.parent.plots]
@@ -918,7 +1024,7 @@ class Options(ctk.CTkTabview):
         self.doseaddreferenceselector.configure(values=plotnames)
         self.doseaddtestselector.configure(values=plotnames)
         
-    def set_ax_names(self):
+    def set_ax_names(self, draw=True):
         self.parent.ax.set_title(self.title.get())
         self.parent.ax.set_xlabel(self.xtitle.get())
         self.parent.ax.set_ylabel(self.ytitle.get())

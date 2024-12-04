@@ -51,7 +51,6 @@ class TabView(ctk.CTkTabview):
     def add_tab(self, name = None):
         """Add a tab to the tabview.
         """
-        
         if name != None:
             if type(name) == str:
                 tab = name
@@ -73,7 +72,7 @@ class TabView(ctk.CTkTabview):
             if len (self.tabnames) == 1:
                 self.logolabel.place_forget()
                 
-        else:        
+        else:       
             window = ctk.CTkToplevel(self.parent.parent)
             window.overrideredirect(True)
             window.title("")
