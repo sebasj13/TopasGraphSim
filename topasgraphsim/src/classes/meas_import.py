@@ -44,6 +44,7 @@ class TXTImporter(ScrollFrame):
         try: 
             self.data = np.loadtxt(filepath, delimiter=delimiter, skiprows=skiprows)
         except Exception as e:
+            print(e)
             try: 
                 self.data = np.loadtxt(filepath, skiprows=skiprows)
             except Exception: 
